@@ -44,60 +44,52 @@ async function main() {
     });
     console.log({ newChattings });
 
-    // --- GameGenres ---------------------
-    const newGameGenres = await prisma.gameGenre.createMany({
-        data: [],
-    });
-    console.log({ newGameGenres });
-
-    // --- GamePlatforms ------------------
-    const newGamePlatforms = await prisma.gamePlatform.createMany({
-        data: [],
-    });
-    console.log({ newGamePlatforms });
-
-    // --- GameThemes ---------------------
-    const newGameThemes = await prisma.gameTheme.createMany({
-        data: [],
-    });
-    console.log({ newGameThemes });
-
-    // --- Game ---------------------------
+    // IGDB API -> game*, genre, platform, theme, 받아오기
     const clientId = process.env.TWITCH_CLIENT_ID!;
     try {
         const accessToken = await getTwitchAccessToken();
+        // --- Game ---------------------------
+        const newGames = await prisma.game.createMany({
+            data: [],
+        });
+        console.log({ newGames });
+
+        // --- Genres -------------------------
+        const newGenres = await prisma.genre.createMany({
+            data: [],
+        });
+        console.log({ newGenres });
+
+        // --- Platforms ----------------------
+        const newPlatforms = await prisma.platform.createMany({
+            data: [],
+        });
+        console.log({ newPlatforms });
+
+        // --- Themes -------------------------
+        const newThemes = await prisma.theme.createMany({
+            data: [],
+        });
+        console.log({ newThemes });
+
+        // --- GameGenres ---------------------
+        const newGameGenres = await prisma.gameGenre.createMany({
+            data: [],
+        });
+        console.log({ newGameGenres });
+
+        // --- GamePlatforms ------------------
+        const newGamePlatforms = await prisma.gamePlatform.createMany({
+            data: [],
+        });
+        console.log({ newGamePlatforms });
+
+        // --- GameThemes ---------------------
+        const newGameThemes = await prisma.gameTheme.createMany({
+            data: [],
+        });
+        console.log({ newGameThemes });
     } catch {}
-    // IGDB API -> game*, genre, platform, theme, 받아오기
-    const newGames = await prisma.game.createMany({
-        data: [
-            {
-                id: 1,
-                title: "ADMIN",
-                developer: "관리자",
-                thumbnail: "",
-                releaseDate: "",
-            },
-        ],
-    });
-    console.log({ newGames });
-
-    // --- Platforms ----------------------
-    const newPlatforms = await prisma.platform.createMany({
-        data: [],
-    });
-    console.log({ newPlatforms });
-
-    // --- Genres -------------------------
-    const newGenres = await prisma.genre.createMany({
-        data: [],
-    });
-    console.log({ newGenres });
-
-    // --- Themes -------------------------
-    const newThemes = await prisma.theme.createMany({
-        data: [],
-    });
-    console.log({ newThemes });
 
     // --- Member -------------------------
     const newMembers = await prisma.member.createMany({
