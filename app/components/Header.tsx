@@ -1,12 +1,14 @@
-"use client";
+'use client';
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Button from "./Button";
 
 export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 테스트용 상태
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 테스트용
+  const router = useRouter();
 
   return (
     <header className="w-full h-[100px] bg-[#191919] flex items-center justify-between font-sans">
@@ -36,17 +38,14 @@ export default function Header() {
       <div className="flex items-center space-x-4 mr-[75px]">
         {isLoggedIn ? (
           <>
-            {/* 알림 아이콘 */}
             <button className="text-primary-purple-100 hover:opacity-80">
               <Image src="/icons/bell.svg" alt="알림" width={24} height={24} />
             </button>
 
-            {/* 마이페이지 버튼 */}
             <Link href="/profile">
               <Button label="마이 페이지" size="medium" type="black" />
             </Link>
 
-            {/* 로그아웃 버튼 */}
             <Button
               label="로그아웃"
               size="medium"
@@ -59,7 +58,7 @@ export default function Header() {
             label="로그인"
             size="medium"
             type="purple"
-            onClick={() => setIsLoggedIn(true)}
+            onClick={() => router.push("/log-in")}
           />
         )}
       </div>
