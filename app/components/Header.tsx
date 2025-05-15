@@ -18,7 +18,7 @@ export default function Header() {
 
         <nav className="flex space-x-10 ml-[75px]">
           <Link
-            href="/games"
+            href="/game"
             className="text-white text-[24px] leading-[32px] font-semibold hover:opacity-80"
           >
             게임
@@ -42,7 +42,7 @@ export default function Header() {
             </button>
 
             {/* 마이페이지 버튼 */}
-            <Link href="/mypage">
+            <Link href="/profile">
               <Button label="마이 페이지" size="medium" type="black" />
             </Link>
 
