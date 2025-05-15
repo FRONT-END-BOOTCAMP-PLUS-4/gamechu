@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/utils/tailwindUtil";
 
 type ButtonSize = "xs" | "small" | "medium" | "large";
-type ButtonType = "purple" | "blue" | "black" | "disabled";
+type ButtonType = "purple" | "blue" | "black";
 
 interface ButtonProps {
     label: string;
@@ -10,6 +10,7 @@ interface ButtonProps {
     type?: ButtonType;
     onClick?: () => void;
     htmlType?: "button" | "submit" | "reset";
+    disabled?: boolean;
 }
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -23,8 +24,9 @@ const typeClasses: Record<ButtonType, string> = {
     purple: "bg-primary-purple-200 text-font-100 hover:bg-primary-purple-300",
     blue: "bg-primary-blue-200 text-font-100 hover:bg-primary-blue-300",
     black: "bg-background-400 text-font-100 border border-line-100 hover:border-primary-purple-200",
-    disabled: "bg-primary-purple-100 text-font-200 cursor-not-allowed",
 };
+
+const disabledClass = "opacity-50 cursor-not-allowed pointer-events-none"; // 모든 타입 공통
 
 function Button({
     label,
@@ -32,9 +34,8 @@ function Button({
     type = "purple",
     onClick,
     htmlType = "button",
+    disabled = false,
 }: ButtonProps) {
-    const isDisabled = type === "disabled";
-
     const baseClass =
         "font-medium text-button rounded-[8px] transition duration-200";
 
@@ -42,14 +43,14 @@ function Button({
         baseClass,
         sizeClasses[size],
         typeClasses[type],
-        isDisabled && "pointer-events-none"
+        disabled && disabledClass
     );
 
     return (
         <button
             className={className}
             onClick={onClick}
-            disabled={isDisabled}
+            disabled={disabled}
             type={htmlType}
         >
             {label}
