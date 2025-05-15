@@ -1,20 +1,14 @@
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import "./globals.css";
-export { viewport } from "./viewport";
-
+// app/layout.tsx
 export default function RootLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return (
-        <html lang="ko">
-            <body className="font-sans bg-background-400 text-font-100">
-                <Header />
-                <main className="max-w-[1400px] mx-auto px-10">{children}</main>
-                <Footer />
-            </body>
-        </html>
-    );
+  return (
+    <html lang="ko">
+      <body className="font-sans bg-background-400 text-font-100">
+        {children}
+      </body>
+    </html>
+  );
 }

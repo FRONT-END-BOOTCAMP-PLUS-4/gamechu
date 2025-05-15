@@ -1,4 +1,4 @@
-import LandingCard from './components/LandingCard';
+import LandingCard from '../components/LandingCard';
 
 export default function Home() {
   return (
