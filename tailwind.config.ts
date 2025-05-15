@@ -4,11 +4,11 @@ const config: Config = {
     theme: {
         extend: {
             fontSize: {
-                headline: ["32px", "40px"], // 큰제목 (H1)
-                h2: ["24px", "32px"], // 소제목 (H2)
+                headline: ["32px", "40px"], // 큰제목
+                h2: ["24px", "32px"], // 소제목
                 body: ["16px", "24px"], // 본문
-                caption: ["12px", "16px"], // 캡션, 에러 메시지 등 작은 글
-                button: ["14px", "20px"], // 버튼 텍스트용 (추가)
+                caption: ["12px", "16px"], // 캡션, 에러 메시지 등
+                button: ["14px", "20px"], // 버튼 텍스트
             },
 
             fontFamily: {
@@ -27,14 +27,14 @@ const config: Config = {
                 },
                 primary: {
                     purple: {
-                        100: "#A855F7", // 버튼 배경
-                        200: "#9333EA", // 강조 텍스트
+                        100: "#A855F7", // 버튼 비활성화
+                        200: "#9333EA", // 버튼 배경, 기본 색상
                         300: "#7E22CE", // 호버 버튼 배경
                     },
                     blue: {
-                        100: "#2563EB",
-                        200: "#2A4DD0",
-                        300: "#1E3A8A",
+                        100: "#2563EB", // 버튼 비활성화
+                        200: "#2A4DD0", // 버튼 배경
+                        300: "#1E3A8A", // 호버 버튼 배경
                     },
                 },
                 line: {
@@ -50,6 +50,7 @@ const config: Config = {
     content: [
         "./src/**/*.{js,ts,jsx,tsx,mdx}",
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
+        "./components/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     plugins: [],
 };
