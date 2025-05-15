@@ -49,8 +49,8 @@ model Game {
   // entities
   id          Int      @id @default(autoincrement())
   title       String
-  developer   String
-  thumbnail   String
+  developer   String?
+  thumbnail   String?
   releaseDate DateTime @map("release_date")
 
   // relations

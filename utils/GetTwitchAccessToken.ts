@@ -1,4 +1,6 @@
 //utils/GetTwitchAccessToken.ts
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 
 export async function getTwitchAccessToken(): Promise<string> {
     const clientId = process.env.TWITCH_CLIENT_ID!;
@@ -15,7 +17,9 @@ export async function getTwitchAccessToken(): Promise<string> {
     });
 
     if (!tokenRes.ok) {
-        throw new Error("Failed to get Twitch token");
+        throw new Error(
+            `Failed to get Twitch token: ${tokenRes.status} - ${tokenRes.text}`
+        );
     }
 
     const tokenData = await tokenRes.json();

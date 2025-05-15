@@ -1,5 +1,7 @@
 import { getTwitchAccessToken } from "@/utils/GetTwitchAccessToken";
 import { PrismaClient } from "./generated";
+import { getEarliestReleaseDate } from "@/utils/GetEarliestReleaseDate";
+import { getDeveloperName } from "@/utils/GetDeveloperName";
 // import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -9,13 +11,12 @@ async function main() {
     const newArenas = await prisma.arena.createMany({
         data: [
             // {
-            //     id: 0,
             //     creatorId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
             //     challengerId: "e755441d-1979-4617-acd5-531f2f898b22",
             //     title: "홓의 황족 라인은 미드다",
             //     description: "근본 미드가 짱이다. 다른 라인은 들러리일 뿐.",
             //     status: 5,
-            //     startDate: "2023-10-01T00:00:00Z",
+            //     startDate: "2025-05-15T02:00:00Z",
             // },
         ],
     });
@@ -26,17 +27,17 @@ async function main() {
         data: [
             // {
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
-            //     arenaId: 0,
+            //     arenaId: 2,
             //     content:
             //         "미드가 롤도 가장 잘하고 가장 중요하니까 황족 라인에 가장 어울려!",
-            //     createdAt: new Date(),
+            //     createdAt: "2025-05-15T02:01:00Z",
             // },
             // {
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
-            //     arenaId: 0,
+            //     arenaId: 2,
             //     content:
             //         "아니야! 맵 전반적인 영향력은 정글이 더 중요해! 그러니까 정글이야말로 백정이 아닌 황족 라인이야!",
-            //     createdAt: new Date(),
+            //     createdAt: "2025-05-15T02:02:00Z",
             // },
         ],
     });
@@ -47,72 +48,187 @@ async function main() {
     try {
         const accessToken = await getTwitchAccessToken();
 
-        const genreResponse = await fetch("https://api.igdb.com/v4/genres", {
+        // --- Game ---------------------------
+        const gameResponse = await fetch("https://api.igdb.com/v4/games", {
             method: "POST",
             headers: {
                 "client-id": clientId,
                 Authorization: `Bearer ${accessToken}`,
             },
             body: `
-                fields id, name;
+                fields id, cover.url, genres, involved_companies.company.name, involved_companies.developer, name, platforms, release_dates.date, themes;
+                where platforms = (6, 34, 39, 48, 130, 163, 169, 390, 508);
+                sort id asc;
                 limit 50;
+                offset 0;
             `,
         });
-
-        if (!genreResponse.ok) {
+        if (!gameResponse.ok) {
             throw new Error("Failed to fetch games from IGDB");
         }
 
-        const genres = await genreResponse.json();
-        console.log(genres);
+        const games = await gameResponse.json();
+        games.forEach((game: any) => {
+            game.releaseDate = getEarliestReleaseDate(game);
+            game.developer = getDeveloperName(game);
+        });
 
-        // --- Game ---------------------------
         const newGames = await prisma.game.createMany({
-            data: [],
+            data: games.map((g: any) => {
+                return {
+                    id: g.id,
+                    title: g.name,
+                    developer: g.developer,
+                    thumbnail: g.cover.url,
+                    releaseDate: g.releaseDate,
+                };
+            }),
         });
         console.log({ newGames });
 
         // --- Genres -------------------------
-        const newGenres = await prisma.genre.createMany({
-            data: genres.map((g: any) => {
-                return {
-                    id: g.id,
-                    name: g.name,
-                };
-            }),
-        });
-        console.log({ newGenres });
+        // const genreResponse = await fetch("https://api.igdb.com/v4/genres", {
+        //     method: "POST",
+        //     headers: {
+        //         "client-id": clientId,
+        //         Authorization: `Bearer ${accessToken}`,
+        //     },
+        //     body: `
+        //     fields id, name;
+        //     limit 50;
+        //     `,
+        // });
+
+        // if (!genreResponse.ok) {
+        //     throw new Error("Failed to fetch genres from IGDB");
+        // }
+
+        // const genres = await genreResponse.json();
+        // const newGenres = await prisma.genre.createMany({
+        //     data: genres.map((g: any) => {
+        //         return {
+        //             id: g.id,
+        //             name: g.name,
+        //         };
+        //     }),
+        // });
+        // console.log({ newGenres });
 
         // --- Platforms ----------------------
-        const newPlatforms = await prisma.platform.createMany({
-            data: [],
-        });
-        console.log({ newPlatforms });
+        // const platformResponse = await fetch(
+        //     "https://api.igdb.com/v4/platforms",
+        //     {
+        //         method: "POST",
+        //         headers: {
+        //             "client-id": clientId,
+        //             Authorization: `Bearer ${accessToken}`,
+        //         },
+        //         body: `
+        //             fields id, name;
+        //             limit 400;
+        //         `,
+        //     }
+        // );
+
+        // if (!platformResponse.ok) {
+        //     throw new Error("Failed to fetch platforms from IGDB");
+        // }
+
+        // const platforms = await platformResponse.json();
+        // console.log(platforms);
+
+        // const newPlatforms = await prisma.platform.createMany({
+        //     data: platforms.map((p: any) => {
+        //         return {
+        //             id: p.id,
+        //             name: p.name,
+        //         };
+        //     }),
+        // });
+        // console.log({ newPlatforms });
 
         // --- Themes -------------------------
-        const newThemes = await prisma.theme.createMany({
-            data: [],
-        });
-        console.log({ newThemes });
+        // const themeResponse = await fetch("https://api.igdb.com/v4/themes", {
+        //     method: "POST",
+        //     headers: {
+        //         "client-id": clientId,
+        //         Authorization: `Bearer ${accessToken}`,
+        //     },
+        //     body: `
+        //     fields id, name;
+        //     limit 50;
+        //     `,
+        // });
+
+        // if (!themeResponse.ok) {
+        //     throw new Error("Failed to fetch themes from IGDB");
+        // }
+
+        // const themes = await themeResponse.json();
+        // console.log(themes);
+
+        // const newThemes = await prisma.theme.createMany({
+        //     data: themes.map((t: any) => {
+        //         return {
+        //             id: t.id,
+        //             name: t.name,
+        //         };
+        //     }),
+        // });
+        // console.log({ newThemes });
 
         // --- GameGenres ---------------------
+        const gameGenres = [];
+        for (const g of games) {
+            const genreIds = g.genres ?? [];
+            for (const genreId of genreIds) {
+                gameGenres.push({
+                    gameId: g.id,
+                    genreId,
+                });
+            }
+        }
         const newGameGenres = await prisma.gameGenre.createMany({
-            data: [],
+            data: gameGenres,
         });
         console.log({ newGameGenres });
 
         // --- GamePlatforms ------------------
+        const allowedPlatformIds = [6, 34, 39, 48, 130, 163, 169, 390, 508];
+        const gamePlatforms = [];
+        for (const g of games) {
+            const platformIds = g.platforms ?? [];
+            for (const platformId of platformIds) {
+                if (allowedPlatformIds.includes(platformId))
+                    gamePlatforms.push({
+                        gameId: g.id,
+                        platformId,
+                    });
+            }
+        }
         const newGamePlatforms = await prisma.gamePlatform.createMany({
-            data: [],
+            data: gamePlatforms,
         });
         console.log({ newGamePlatforms });
 
         // --- GameThemes ---------------------
+        const gameThemes = [];
+        for (const g of games) {
+            const themeIds = g.themes ?? [];
+            for (const themeId of themeIds) {
+                gameThemes.push({
+                    gameId: g.id,
+                    themeId,
+                });
+            }
+        }
         const newGameThemes = await prisma.gameTheme.createMany({
-            data: [],
+            data: gameThemes,
         });
         console.log({ newGameThemes });
-    } catch {}
+    } catch (error) {
+        console.error(`Error fetching game informations from IGDB: ${error}`);
+    }
 
     // --- Member -------------------------
     const newMembers = await prisma.member.createMany({
@@ -122,24 +238,24 @@ async function main() {
             //     nickname: "멋사",
             //     email: "mutsa@newlecture.com",
             //     password: "1234", // need to add encoding scheme later
-            //     imageUrl: "",
-            //     birthDate: "",
+            //     imageUrl: "@/public/images/default.png",
+            //     birthDate: "2000-01-02T00:00:00.000Z",
             //     isMale: true,
             //     score: 1250,
             //     isAttended: true,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T00:53:08.835Z",
             // },
             // {
             //     id: "e755441d-1979-4617-acd5-531f2f898b22",
             //     nickname: "겜잘알",
             //     email: "gamejalal@newlecture.com",
             //     password: "1234",
-            //     imageUrl: "",
-            //     birthDate: "",
+            //     imageUrl: "@/public/images/default.png",
+            //     birthDate: "1999-12-31T00:00:00.000Z",
             //     isMale: false,
             //     score: 3300,
             //     isAttended: true,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T01:12:34.835Z",
             // },
         ],
     });
@@ -149,18 +265,16 @@ async function main() {
     const newNotificationRecords = await prisma.notificationRecord.createMany({
         data: [
             // {
-            //     id: 0,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
-            //     typeId: 0,
+            //     typeId: 1,
             //     description: "실버 IV 단계로 승급하셨습니다. 축하합니다!",
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T00:55:08.835Z",
             // },
             // {
-            //     id: 1,
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
-            //     typeId: 1,
+            //     typeId: 2,
             //     description: "플래티넘 IV 단계로 강등되셨습니다.",
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T01:20:30.835Z",
             // },
         ],
     });
@@ -170,29 +284,24 @@ async function main() {
     const newNotificationTypes = await prisma.notificationType.createMany({
         data: [
             // {
-            //     id: 0,
             //     name: "티어 승급",
-            //     imageUrl: "",
+            //     imageUrl: "@/public/icons/Promote.ico",
             // },
             // {
-            //     id: 1,
             //     name: "티어 강등",
-            //     imageUrl: "",
+            //     imageUrl: "@/public/icons/Relegation.ico",
             // },
             // {
-            //     id: 2,
             //     name: "투기장 도전자 참여 완료",
-            //     imageUrl: "",
+            //     imageUrl: "@/public/icons/ArenaMatching.ico",
             // },
             // {
-            //     id: 3,
             //     name: "투기장 토론 시작",
-            //     imageUrl: "",
+            //     imageUrl: "@/public/icons/AranaStart.ico",
             // },
             // {
-            //     id: 4,
             //     name: "투기장 투표 완료",
-            //     imageUrl: "",
+            //     imageUrl: "@/public/icons/ArenaFinish.ico",
             // },
         ],
     });
@@ -202,29 +311,24 @@ async function main() {
     const newPreferredGenres = await prisma.preferredGenre.createMany({
         data: [
             // {
-            //     id: 0,
-            //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
-            //     genreId: 0,
-            // },
-            // {
-            //     id: 1,
-            //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
-            //     genreId: 1,
-            // },
-            // {
-            //     id: 2,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
             //     genreId: 2,
             // },
             // {
-            //     id: 3,
-            //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
-            //     genreId: 3,
+            //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
+            //     genreId: 4,
             // },
             // {
-            //     id: 4,
+            //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
+            //     genreId: 5,
+            // },
+            // {
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
-            //     genreId: 4,
+            //     genreId: 2,
+            // },
+            // {
+            //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
+            //     genreId: 8,
             // },
         ],
     });
@@ -234,27 +338,22 @@ async function main() {
     const newPreferredPlatforms = await prisma.preferredPlatform.createMany({
         data: [
             // {
-            //     id: 0,
-            //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
-            //     platformId: 0,
-            // },
-            // {
-            //     id: 1,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
             //     platformId: 1,
             // },
             // {
-            //     id: 2,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
             //     platformId: 2,
             // },
             // {
-            //     id: 3,
-            //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
-            //     platformId: 0,
+            //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
+            //     platformId: 3,
             // },
             // {
-            //     id: 4,
+            //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
+            //     platformId: 1,
+            // },
+            // {
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
             //     platformId: 3,
             // },
@@ -298,9 +397,8 @@ async function main() {
     const newReviewLikes = await prisma.reviewLike.createMany({
         data: [
             // {
-            //     id: 0,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
-            //     reviewId: 0,
+            //     reviewId: 1,
             // },
         ],
     });
@@ -310,21 +408,19 @@ async function main() {
     const newReviews = await prisma.review.createMany({
         data: [
             // {
-            //     id: 0,
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
             //     gameId: 0,
             //     content: "완전 갓겜입니다.",
             //     rating: 10,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T02:05:00.000Z",
             // },
             // {
-            //     id: 1,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
             //     gameId: 0,
             //     content: "망겜입니다.",
             //     rating: 1,
-            //     createdAt: "",
-            //     updatedAt: "",
+            //     createdAt: "2025-05-15T02:06:00.000Z",
+            //     updatedAt: "2025-05-15T02:07:00.000Z",
             // },
         ],
     });
@@ -334,39 +430,34 @@ async function main() {
     const newScorePolicies = await prisma.scorePolicy.createMany({
         data: [
             // {
-            //     id: 0,
             //     name: "출석",
             //     description: "하루 1회 로그인 시 받는 점수입니다.",
             //     score: 5,
-            //     imageUrl: "",
+            //     imageUrl: "@/public/icons/Attend.ico",
             // },
             // {
-            //     id: 1,
             //     name: "리뷰 등록",
             //     description: "게임 리뷰를 등록하면 받는 점수입니다.",
             //     score: 10,
-            //     imageUrl: "",
+            //     imageUrl: "@/public/icons/ReviewPost.ico",
             // },
             // {
-            //     id: 2,
             //     name: "리뷰 좋아요 받음",
             //     description: "하루 1회 로그인 시 받는 점수입니다.",
             //     score: 5,
-            //     imageUrl: "",
+            //     imageUrl: "@/public/icons/ReviewLiked.ico",
             // },
             // {
-            //     id: 3,
             //     name: "막고라 참여",
             //     description: "막고라에 참여하여 차감된 점수입니다.",
             //     score: -100,
-            //     imageUrl: "",
+            //     imageUrl: "@/pubic/icons/ArenaJoin.ico",
             // },
             // {
-            //     id: 4,
             //     name: "막고라 승리",
             //     description: "막고라에 승리하셔서 얻은 점수입니다.",
             //     score: 190,
-            //     imageUrl: "",
+            //     imageUrl: "@/public/icons/ArenaWin.ico",
             // },
         ],
     });
@@ -376,58 +467,49 @@ async function main() {
     const newScoreRecords = await prisma.scoreRecord.createMany({
         data: [
             // {
-            //     id: 0,
-            //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
-            //     policyId: 0,
-            //     createdAt: "",
-            // },
-            // {
-            //     id: 1,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
             //     policyId: 1,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T01:00:00.000Z",
             // },
             // {
-            //     id: 2,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
             //     policyId: 2,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T01:00:01.000Z",
             // },
             // {
-            //     id: 3,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
             //     policyId: 3,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T01:00:02.000Z",
             // },
             // {
-            //     id: 4,
-            //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
-            //     policyId: 0,
-            //     createdAt: "",
+            //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
+            //     policyId: 4,
+            //     createdAt: "2025-05-15T01:00:03.000Z",
             // },
             // {
-            //     id: 5,
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
             //     policyId: 1,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T01:01:00.000Z",
             // },
             // {
-            //     id: 6,
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
             //     policyId: 2,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T01:01:01.000Z",
             // },
             // {
-            //     id: 7,
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
             //     policyId: 3,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T01:01:02.000Z",
             // },
             // {
-            //     id: 8,
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
             //     policyId: 4,
-            //     createdAt: "",
+            //     createdAt: "2025-05-15T01:01:03.000Z",
+            // },
+            // {
+            //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
+            //     policyId: 5,
+            //     createdAt: "2025-05-15T01:01:04.000Z",
             // },
         ],
     });
@@ -437,9 +519,8 @@ async function main() {
     const newVotes = await prisma.vote.createMany({
         data: [
             // {
-            //     id: 0,
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
-            //     arenaId: 0,
+            //     arenaId: 2,
             //     votedTo: "e755441d-1979-4617-acd5-531f2f898b22",
             // },
         ],
@@ -450,17 +531,14 @@ async function main() {
     const newWishlists = await prisma.wishlist.createMany({
         data: [
             // {
-            //     id: 0,
             //     memberId: "7ae5e5c9-0c28-426f-952f-85bdfdcfc522",
             //     gameId: 0,
             // },
             // {
-            //     id: 1,
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
             //     gameId: 0,
             // },
             // {
-            //     id: 2,
             //     memberId: "e755441d-1979-4617-acd5-531f2f898b22",
             //     gameId: 1,
             // },

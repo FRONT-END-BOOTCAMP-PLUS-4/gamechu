@@ -4796,8 +4796,8 @@ export namespace Prisma {
   export type GameGroupByOutputType = {
     id: number
     title: string
-    developer: string
-    thumbnail: string
+    developer: string | null
+    thumbnail: string | null
     releaseDate: Date
     _count: GameCountAggregateOutputType | null
     _avg: GameAvgAggregateOutputType | null
@@ -4882,8 +4882,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       title: string
-      developer: string
-      thumbnail: string
+      developer: string | null
+      thumbnail: string | null
       releaseDate: Date
     }, ExtArgs["result"]["game"]>
     composites: {}
@@ -27134,8 +27134,8 @@ export namespace Prisma {
     NOT?: GameWhereInput | GameWhereInput[]
     id?: IntFilter<"Game"> | number
     title?: StringFilter<"Game"> | string
-    developer?: StringFilter<"Game"> | string
-    thumbnail?: StringFilter<"Game"> | string
+    developer?: StringNullableFilter<"Game"> | string | null
+    thumbnail?: StringNullableFilter<"Game"> | string | null
     releaseDate?: DateTimeFilter<"Game"> | Date | string
     wishlists?: WishlistListRelationFilter
     reviews?: ReviewListRelationFilter
@@ -27147,8 +27147,8 @@ export namespace Prisma {
   export type GameOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
-    developer?: SortOrder
-    thumbnail?: SortOrder
+    developer?: SortOrderInput | SortOrder
+    thumbnail?: SortOrderInput | SortOrder
     releaseDate?: SortOrder
     wishlists?: WishlistOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
@@ -27163,8 +27163,8 @@ export namespace Prisma {
     OR?: GameWhereInput[]
     NOT?: GameWhereInput | GameWhereInput[]
     title?: StringFilter<"Game"> | string
-    developer?: StringFilter<"Game"> | string
-    thumbnail?: StringFilter<"Game"> | string
+    developer?: StringNullableFilter<"Game"> | string | null
+    thumbnail?: StringNullableFilter<"Game"> | string | null
     releaseDate?: DateTimeFilter<"Game"> | Date | string
     wishlists?: WishlistListRelationFilter
     reviews?: ReviewListRelationFilter
@@ -27176,8 +27176,8 @@ export namespace Prisma {
   export type GameOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
-    developer?: SortOrder
-    thumbnail?: SortOrder
+    developer?: SortOrderInput | SortOrder
+    thumbnail?: SortOrderInput | SortOrder
     releaseDate?: SortOrder
     _count?: GameCountOrderByAggregateInput
     _avg?: GameAvgOrderByAggregateInput
@@ -27192,8 +27192,8 @@ export namespace Prisma {
     NOT?: GameScalarWhereWithAggregatesInput | GameScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Game"> | number
     title?: StringWithAggregatesFilter<"Game"> | string
-    developer?: StringWithAggregatesFilter<"Game"> | string
-    thumbnail?: StringWithAggregatesFilter<"Game"> | string
+    developer?: StringNullableWithAggregatesFilter<"Game"> | string | null
+    thumbnail?: StringNullableWithAggregatesFilter<"Game"> | string | null
     releaseDate?: DateTimeWithAggregatesFilter<"Game"> | Date | string
   }
 
@@ -28363,8 +28363,8 @@ export namespace Prisma {
 
   export type GameCreateInput = {
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistCreateNestedManyWithoutGameInput
     reviews?: ReviewCreateNestedManyWithoutGameInput
@@ -28376,8 +28376,8 @@ export namespace Prisma {
   export type GameUncheckedCreateInput = {
     id?: number
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
@@ -28388,8 +28388,8 @@ export namespace Prisma {
 
   export type GameUpdateInput = {
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUpdateManyWithoutGameNestedInput
     reviews?: ReviewUpdateManyWithoutGameNestedInput
@@ -28401,8 +28401,8 @@ export namespace Prisma {
   export type GameUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
@@ -28414,23 +28414,23 @@ export namespace Prisma {
   export type GameCreateManyInput = {
     id?: number
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
   }
 
   export type GameUpdateManyMutationInput = {
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GameUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29578,6 +29578,21 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type GamePlatformListRelationFilter = {
     every?: GamePlatformWhereInput
     some?: GamePlatformWhereInput
@@ -29638,6 +29653,24 @@ export namespace Prisma {
 
   export type GameSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type MemberScalarRelationFilter = {
@@ -30854,6 +30887,10 @@ export namespace Prisma {
     connect?: GameThemeWhereUniqueInput | GameThemeWhereUniqueInput[]
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type WishlistUpdateManyWithoutGameNestedInput = {
     create?: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput> | WishlistCreateWithoutGameInput[] | WishlistUncheckedCreateWithoutGameInput[]
     connectOrCreate?: WishlistCreateOrConnectWithoutGameInput | WishlistCreateOrConnectWithoutGameInput[]
@@ -31991,6 +32028,37 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type WishlistCreateWithoutMemberInput = {
     game: GameCreateNestedOneWithoutWishlistsInput
   }
@@ -32839,8 +32907,8 @@ export namespace Prisma {
 
   export type GameCreateWithoutWishlistsInput = {
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     reviews?: ReviewCreateNestedManyWithoutGameInput
     gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
@@ -32851,8 +32919,8 @@ export namespace Prisma {
   export type GameUncheckedCreateWithoutWishlistsInput = {
     id?: number
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
     gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
@@ -32939,8 +33007,8 @@ export namespace Prisma {
 
   export type GameUpdateWithoutWishlistsInput = {
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUpdateManyWithoutGameNestedInput
     gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
@@ -32951,8 +33019,8 @@ export namespace Prisma {
   export type GameUncheckedUpdateWithoutWishlistsInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
     gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
@@ -33017,8 +33085,8 @@ export namespace Prisma {
 
   export type GameCreateWithoutReviewsInput = {
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistCreateNestedManyWithoutGameInput
     gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
@@ -33029,8 +33097,8 @@ export namespace Prisma {
   export type GameUncheckedCreateWithoutReviewsInput = {
     id?: number
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
     gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
@@ -33136,8 +33204,8 @@ export namespace Prisma {
 
   export type GameUpdateWithoutReviewsInput = {
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUpdateManyWithoutGameNestedInput
     gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
@@ -33148,8 +33216,8 @@ export namespace Prisma {
   export type GameUncheckedUpdateWithoutReviewsInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
     gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
@@ -35065,8 +35133,8 @@ export namespace Prisma {
 
   export type GameCreateWithoutGamePlatformsInput = {
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistCreateNestedManyWithoutGameInput
     reviews?: ReviewCreateNestedManyWithoutGameInput
@@ -35077,8 +35145,8 @@ export namespace Prisma {
   export type GameUncheckedCreateWithoutGamePlatformsInput = {
     id?: number
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
@@ -35120,8 +35188,8 @@ export namespace Prisma {
 
   export type GameUpdateWithoutGamePlatformsInput = {
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUpdateManyWithoutGameNestedInput
     reviews?: ReviewUpdateManyWithoutGameNestedInput
@@ -35132,8 +35200,8 @@ export namespace Prisma {
   export type GameUncheckedUpdateWithoutGamePlatformsInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
@@ -35165,8 +35233,8 @@ export namespace Prisma {
 
   export type GameCreateWithoutGameGenresInput = {
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistCreateNestedManyWithoutGameInput
     reviews?: ReviewCreateNestedManyWithoutGameInput
@@ -35177,8 +35245,8 @@ export namespace Prisma {
   export type GameUncheckedCreateWithoutGameGenresInput = {
     id?: number
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
@@ -35220,8 +35288,8 @@ export namespace Prisma {
 
   export type GameUpdateWithoutGameGenresInput = {
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUpdateManyWithoutGameNestedInput
     reviews?: ReviewUpdateManyWithoutGameNestedInput
@@ -35232,8 +35300,8 @@ export namespace Prisma {
   export type GameUncheckedUpdateWithoutGameGenresInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
@@ -35265,8 +35333,8 @@ export namespace Prisma {
 
   export type GameCreateWithoutGameThemesInput = {
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistCreateNestedManyWithoutGameInput
     reviews?: ReviewCreateNestedManyWithoutGameInput
@@ -35277,8 +35345,8 @@ export namespace Prisma {
   export type GameUncheckedCreateWithoutGameThemesInput = {
     id?: number
     title: string
-    developer: string
-    thumbnail: string
+    developer?: string | null
+    thumbnail?: string | null
     releaseDate: Date | string
     wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
@@ -35320,8 +35388,8 @@ export namespace Prisma {
 
   export type GameUpdateWithoutGameThemesInput = {
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUpdateManyWithoutGameNestedInput
     reviews?: ReviewUpdateManyWithoutGameNestedInput
@@ -35332,8 +35400,8 @@ export namespace Prisma {
   export type GameUncheckedUpdateWithoutGameThemesInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
-    developer?: StringFieldUpdateOperationsInput | string
-    thumbnail?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
