@@ -36,9 +36,9 @@ export default function LoginPage() {
           />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6 items-center">
           {/* 이메일 */}
-          <div>
+          <div className="w-[250px]">
             <label className="block text-font-100 font-semibold mb-2 text-body">이메일</label>
             <Input
               type="email"
@@ -53,7 +53,7 @@ export default function LoginPage() {
           </div>
 
           {/* 비밀번호 */}
-          <div>
+          <div className="w-[250px]">
             <label className="block text-font-100 font-semibold mb-2 text-body">비밀번호</label>
             <Input
               type="password"
@@ -64,7 +64,7 @@ export default function LoginPage() {
           </div>
 
           {/* 로그인 버튼 */}
-          <div className="flex justify-center">
+          <div className="w-[250px] flex justify-center">
             <Button label="로그인" size="large" type="purple" htmlType="submit" />
           </div>
 
