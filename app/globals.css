@@ -5,23 +5,20 @@
 @tailwind utilities;
 
 @layer components {
+    /* 본문 */
     .font-regular {
         font-weight: 400;
     }
-
+    /* 버튼, 약한 강조 */
     .font-medium {
         font-weight: 500;
     }
-
+    /* 소제목, 강조 */
     .font-semibold {
         font-weight: 600;
     }
-
+    /* 제목, 강한 강조 */
     .font-bold {
         font-weight: 700;
-    }
-
-    .font-extrabold {
-        font-weight: 800;
     }
 }

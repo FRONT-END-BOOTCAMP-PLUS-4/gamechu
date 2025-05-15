@@ -1,9 +1,16 @@
-// tailwind.config.ts
 import type { Config } from "tailwindcss";
 
 const config: Config = {
     theme: {
         extend: {
+            fontSize: {
+                headline: ["32px", "40px"], // 큰제목 (H1)
+                h2: ["24px", "32px"], // 소제목 (H2)
+                body: ["16px", "24px"], // 본문
+                caption: ["12px", "16px"], // 캡션, 에러 메시지 등 작은 글
+                button: ["14px", "20px"], // 버튼 텍스트용 (추가)
+            },
+
             fontFamily: {
                 sans: ["Pretendard", "sans-serif"],
             },
