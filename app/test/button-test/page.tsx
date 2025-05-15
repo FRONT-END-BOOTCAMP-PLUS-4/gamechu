@@ -1,4 +1,3 @@
-// app/test/button-test/page.tsx
 "use client";
 
 import React from "react";
@@ -25,7 +24,15 @@ export default function ButtonTestPage() {
                     <Button label="Purple" type="purple" />
                     <Button label="Blue" type="blue" />
                     <Button label="Black" type="black" />
-                    <Button label="Disabled" type="disabled" />
+                </div>
+            </div>
+
+            <div className="space-y-4">
+                <h2 className="text-h2 font-semibold">Disabled 테스트</h2>
+                <div className="flex gap-4 flex-wrap">
+                    <Button label="Purple Disabled" type="purple" disabled />
+                    <Button label="Blue Disabled" type="blue" disabled />
+                    <Button label="Black Disabled" type="black" disabled />
                 </div>
             </div>
         </div>
