@@ -31,7 +31,7 @@ const config: Config = {
             colors: {
                 background: {
                     100: "#191919", // 헤더, 푸터 배경
-                    200: "#373737", // 외곽선 배경
+                    200: "#373737", // 인풋 배경
                     300: "#1F1F1F", // 페이지 내 컨테이너 배경
                     400: "#090909", // 페이지 전체 배경
                 },
@@ -64,7 +64,6 @@ const config: Config = {
     content: [
         "./src/**/*.{js,ts,jsx,tsx,mdx}",
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
-        "./components/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     plugins: [],
 };
