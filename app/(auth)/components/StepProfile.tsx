@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import Input from '@/app/components/Input';
 import Button from '@/app/components/Button';
@@ -14,7 +13,6 @@ export default function StepProfile({ onNext }: Props) {
   const [isEmailDuplicate, setIsEmailDuplicate] = useState<boolean | null>(null);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [emailError, setEmailError] = useState('');
   const [gender, setGender] = useState<'M' | 'F' | null>(null);
   const [birth, setBirth] = useState('');
   const [error, setError] = useState('');
@@ -25,7 +23,6 @@ export default function StepProfile({ onNext }: Props) {
     const year = parseInt(dateString.substring(0, 4), 10);
     const month = parseInt(dateString.substring(4, 6), 10);
     const day = parseInt(dateString.substring(6, 8), 10);
-
     const date = new Date(year, month - 1, day);
     return (
       date.getFullYear() === year &&
@@ -36,48 +33,41 @@ export default function StepProfile({ onNext }: Props) {
 
   const checkEmailDuplicate = async () => {
     if (!validateEmailFormat(email)) {
-      setEmailError('올바른 이메일 형식이 아닙니다.');
+      alert('올바른 이메일 형식이 아닙니다.');
       setIsEmailDuplicate(null);
       return;
     }
-
     const isDuplicate = await fakeCheckEmailAPI(email);
     setIsEmailDuplicate(isDuplicate);
-    setEmailError('');
+    alert(isDuplicate ? '이미 사용 중인 이메일입니다.' : '사용 가능한 이메일입니다.');
   };
 
   const handleNext = () => {
     if (!nickname || !email || !password || !confirm || !gender || !birth) {
-      setError('모든 필드를 입력해주세요.');
+      setError('모든 항목을 입력해주세요.');
       return;
     }
-
     if (!validateEmailFormat(email)) {
-      setEmailError('올바른 이메일 형식이 아닙니다.');
+      alert('올바른 이메일 형식이 아닙니다.');
       return;
     }
-
     if (isEmailDuplicate === null) {
       alert('이메일 중복 검사를 진행해주세요.');
       return;
     }
-
     if (isEmailDuplicate === true) {
       alert('이미 사용 중인 이메일입니다.');
       return;
     }
-
     if (password !== confirm) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
-
     const birthRegex = /^\d{8}$/;
     if (!birthRegex.test(birth) || !isValidDate(birth)) {
       alert('유효한 생년월일을 입력해주세요.');
       return;
     }
-
     onNext();
   };
 
@@ -103,7 +93,6 @@ export default function StepProfile({ onNext }: Props) {
                 setEmail(e.target.value);
                 setIsEmailDuplicate(null);
               }}
-              hasError={!!emailError || isEmailDuplicate === true}
             />
           </div>
           <Button
@@ -114,14 +103,6 @@ export default function StepProfile({ onNext }: Props) {
           />
         </div>
       </div>
-
-      {emailError && <p className="text-caption text-state-error">{emailError}</p>}
-      {isEmailDuplicate === true && (
-        <p className="text-caption text-state-error">이미 사용 중인 이메일입니다.</p>
-      )}
-      {isEmailDuplicate === false && (
-        <p className="text-caption text-green-400">사용 가능한 이메일입니다.</p>
-      )}
 
       <div>
         <label className="block mb-1 text-body text-font-100 font-semibold">비밀번호</label>
@@ -146,15 +127,31 @@ export default function StepProfile({ onNext }: Props) {
       <div>
         <label className="block mb-1 text-body text-font-100 font-semibold">성별</label>
         <div className="flex justify-center gap-4 mb-6">
-          <Button label="M" size="large" type="blue" onClick={() => setGender('M')} />
-          <Button label="F" size="large" type="purple" onClick={() => setGender('F')} />
+          <button
+            onClick={() => setGender('M')}
+            className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 
+              ${gender === 'M'
+                ? 'bg-primary-blue-200 text-white shadow-md'
+                : 'bg-background-200 text-font-100 border border-line-200 hover:border-primary-blue-200'}`}
+          >
+            남자
+          </button>
+          <button
+            onClick={() => setGender('F')}
+            className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 
+              ${gender === 'F'
+                ? 'bg-primary-purple-200 text-white shadow-md'
+                : 'bg-background-200 text-font-100 border border-line-200 hover:border-primary-purple-200'}`}
+          >
+            여자
+          </button>
         </div>
       </div>
 
       <div>
         <label className="block mb-1 text-body text-font-100 font-semibold">생년월일</label>
         <Input
-          placeholder="ex) 19900101"
+          placeholder="ex) 20000101"
           value={birth}
           onChange={(e) => setBirth(e.target.value)}
         />
@@ -169,7 +166,7 @@ export default function StepProfile({ onNext }: Props) {
   );
 }
 
-//API 예제: 실제로는 API 폴더 에서 작업할 예정정
+// 예제 API(나중에 수정할 예정)
 const fakeCheckEmailAPI = async (email: string): Promise<boolean> => {
   return new Promise((resolve) => {
     setTimeout(() => {
