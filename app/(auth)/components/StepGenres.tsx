@@ -32,7 +32,7 @@ export default function StepGenres({ onNext, onBack }: Props) {
 
   return (
     <div>
-      <h2 className="text-h2 font-bold mb-6">선호하는 게임 장르를 선택해주세요</h2>
+      <h2 className="text-body text-font-100 font-semibold mb-2">선호하는 게임 장르를 선택해주세요</h2>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
         {GENRES.map((genre) => (
