@@ -3,16 +3,18 @@ import Header from "../components/Header";
 import "../globals.css";
 export { viewport } from "../viewport";
 
-export default function RootLayout({
+export default function BaseLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
     return (
         <>
-                <Header />
-                <main>{children}</main>
-                <Footer />
-        </>   
+            <Header />
+            <main className="max-w-[1480px] mx-auto px-10 bg-background-400 text-font-100 font-sans">
+                {children}
+            </main>
+            <Footer />
+        </>
     );
 }
