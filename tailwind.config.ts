@@ -3,18 +3,23 @@ import type { Config } from "tailwindcss";
 const config: Config = {
     theme: {
         extend: {
-           animation: {
-            'fade-in-left': 'fadeInLeft 0.8s ease-out forwards',
-            'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+            animation: {
+                "fade-in-left": "fadeInLeft 0.8s ease-out forwards",
+                "fade-in-right": "fadeInRight 0.8s ease-out forwards",
+                "fade-in-up": "fadeInUp 0.8s ease-out forwards",
             },
             keyframes: {
                 fadeInLeft: {
-                    '0%': { opacity: '0', transform: 'translateX(-20px)' },
-                    '100%': { opacity: '1', transform: 'translateX(0)' },
+                    "0%": { opacity: "0", transform: "translateX(-20px)" },
+                    "100%": { opacity: "1", transform: "translateX(0)" },
+                },
+                fadeInRight: {
+                    "0%": { opacity: "0", transform: "translateX(20px)" },
+                    "100%": { opacity: "1", transform: "translateX(0)" },
                 },
                 fadeInUp: {
-                    '0%': { opacity: '0', transform: 'translateY(20px)' },
-                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                    "0%": { opacity: "0", transform: "translateY(20px)" },
+                    "100%": { opacity: "1", transform: "translateY(0)" },
                 },
             },
             fontSize: {
