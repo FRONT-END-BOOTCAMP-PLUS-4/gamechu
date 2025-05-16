@@ -17,10 +17,10 @@ export default function GameCard({
     backgroundImage,
 }: GameCardProps) {
     return (
-        <div className="w-[320px] h-[320px] flex flex-col rounded-[8px] overflow-hidden transition-all duration-100 hover:border-2 hover:border-primary-purple-200 border-transparent">
+        <div className="w-[330px] h-[330px] flex flex-col rounded-[8px] overflow-hidden transition-all duration-100 hover:border-2 hover:border-primary-purple-200 border-transparent">
             {/* 이미지 영역 */}
             <div
-                className="relative w-full h-[220px] bg-cover bg-center "
+                className="relative w-full h-[230px] bg-cover bg-center "
                 style={{ backgroundImage: `url(${backgroundImage})` }}
             >
                 {/* 플랫폼 태그 */}
