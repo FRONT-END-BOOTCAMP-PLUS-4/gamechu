@@ -13,6 +13,7 @@
         "bcryptjs": "^3.0.2",
         "clsx": "^2.1.1",
         "js-cookie": "^3.0.5",
+        "lottie-react": "^2.4.1",
         "next": "15.3.2",
         "next-auth": "^4.24.11",
         "react": "^19.0.0",

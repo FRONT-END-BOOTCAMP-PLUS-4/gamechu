@@ -76,7 +76,43 @@ const dummyComments = [
         profileImage: "/icons/bronze.svg",
         nickname: "유저",
         date: "2025.05.18",
-        tier: "/icons/.svg",
+        tier: "/icons/silver.svg",
+        rating: 3.8,
+        comment: "그럭저럭 할만했어요.",
+        likes: 10,
+    },
+    {
+        profileImage: "/icons/profile.svg",
+        nickname: "겜돌이",
+        date: "2025.05.19",
+        tier: "/icons/platinum.svg",
+        rating: 4.5,
+        comment: "정말 재밌는 게임이었습니다!",
+        likes: 24,
+    },
+    {
+        profileImage: "/icons/bronze.svg",
+        nickname: "일반유저",
+        date: "2025.05.18",
+        tier: "/icons/gold.svg",
+        rating: 3.8,
+        comment: "그럭저럭 할만했어요.",
+        likes: 10,
+    },
+    {
+        profileImage: "/icons/profile.svg",
+        nickname: "겜돌이",
+        date: "2025.05.19",
+        tier: "/icons/platinum.svg",
+        rating: 4.5,
+        comment: "정말 재밌는 게임이었습니다!",
+        likes: 24,
+    },
+    {
+        profileImage: "/icons/bronze.svg",
+        nickname: "일반유저",
+        date: "2025.05.18",
+        tier: "/icons/gold.svg",
         rating: 3.8,
         comment: "그럭저럭 할만했어요.",
         likes: 10,
@@ -111,7 +147,7 @@ export default function GameDetailPage() {
     return (
         <div className="min-h-screen bg-background-400 text-font-100 space-y-20 pb-20">
             {/* 상단 영역 */}
-            <div className="flex w-full w-[1400px] mx-auto justify-between gap-6 px-10 pt-10">
+            <div className="flex w-[1400px] mx-auto justify-between gap-6 px-10 pt-10">
                 <GameTitleCard
                     image="https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg"
                     title="Zelda: Tears of the Kingdom"
