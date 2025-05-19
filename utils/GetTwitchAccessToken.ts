@@ -5,7 +5,6 @@ dotenv.config({ path: ".env.local" });
 export async function getTwitchAccessToken(): Promise<string> {
     const clientId = process.env.TWITCH_CLIENT_ID!;
     const clientSecret = process.env.TWITCH_CLIENT_SECRET!;
-
     const tokenRes = await fetch("https://id.twitch.tv/oauth2/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
