@@ -145,9 +145,9 @@ export default function GameDetailPage() {
     );
 
     return (
-        <div className="min-h-screen bg-background-400 text-font-100 space-y-20 pb-20">
+        <div className="min-h-screen bg-background-400 text-font-100 space-y-20 pb-10">
             {/* 상단 영역 */}
-            <div className="flex w-[1400px] mx-auto justify-between gap-6 px-10 pt-10">
+            <div className="flex w-[1400px] mx-auto justify-between gap-6 px-10 pt-20 ">
                 <GameTitleCard
                     image="https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg"
                     title="Zelda: Tears of the Kingdom"
@@ -165,7 +165,7 @@ export default function GameDetailPage() {
             </div>
 
             {/* 하단 영역 */}
-            <div className="w-full bg-black-300 py-20 ">
+            <div className="w-full bg-black-300 ">
                 <div className="flex w-full max-w-[1400px] mx-auto gap-6 px-10 items-start">
                     {/* 왼쪽 리뷰 선택 */}
                     <ReviewSelector
