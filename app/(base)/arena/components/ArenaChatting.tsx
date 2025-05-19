@@ -1,17 +1,58 @@
 "use client";
 
 import Button from "@/app/components/Button";
-import React from "react";
+import { ChattingDto } from "@/backend/chatting/application/usecase/dto/ChattingDto";
+import React, { useEffect, useState } from "react";
 import { Typewriter } from "react-simple-typewriter";
 
 type ArenaStatus = "recruiting" | "waiting" | "active" | "voting" | "closed";
 
 interface ArenaChattingProps {
+    arenaId: number;
     status: ArenaStatus;
     startAt: string; // 예: "25.05.14 20:00"
 }
 
-export default function ArenaChatting({ status, startAt }: ArenaChattingProps) {
+export default function ArenaChatting({
+    arenaId,
+    status,
+    startAt,
+}: ArenaChattingProps) {
+    const [chats, setChats] = useState<ChattingDto[]>([]);
+    const [content, setContent] = useState("");
+
+    const handleSend = async () => {
+        const res = await fetch(`/api/arenas/${arenaId}/chattings`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ content }),
+        });
+
+        if (res.ok) {
+            console.log("✅ 전송 성공");
+            setContent("");
+        } else {
+            console.error("❌ 전송 실패");
+        }
+    };
+    useEffect(() => {
+        if (status !== "active") return;
+
+        const fetchChats = async () => {
+            try {
+                const res = await fetch(`/api/arenas/${arenaId}/chattings`);
+                const data = await res.json();
+                console.log("채팅 응답:", data);
+                setChats(data);
+            } catch (err) {
+                console.error("채팅 불러오기 실패:", err);
+            }
+        };
+
+        fetchChats();
+    }, [arenaId, status]);
     if (status === "recruiting") {
         return (
             <div className="w-full max-w-[1000px] px-4 py-6 mt-6 text-center text-font-200 bg-background-300 rounded-lg min-h-[740px] animate-fade-in-up">
@@ -57,18 +98,38 @@ export default function ArenaChatting({ status, startAt }: ArenaChattingProps) {
     return (
         <div className="w-full max-w-[1000px] mt-6 px-4 py-6 bg-background-300 rounded-lg min-h-[740px] flex flex-col animate-fade-in-up">
             <div>{/* 채팅 메시지 */}</div>
-
+            <div className="flex-1 overflow-y-auto space-y-3 pr-2 mb-4">
+                {chats.length === 0 ? (
+                    <p className="text-font-300 text-center mt-4">
+                        아직 채팅이 없습니다.
+                    </p>
+                ) : (
+                    chats.map((chat) => (
+                        <div
+                            key={chat.id}
+                            className="bg-background-400 p-3 rounded-lg"
+                        >
+                            <div className="text-font-100">{chat.content}</div>
+                            <div className="text-xs text-font-300 text-right mt-1">
+                                {new Date(chat.createdAt).toLocaleString()}
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
             {/* 입력창 + 버튼 */}
             <div className="flex items-end gap-2 mt-auto">
                 <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
                     placeholder="팀 알파의 의견을 작성하세요... (남은 메시지: 0/5)"
                     className="flex-1 resize-none rounded-lg bg-background-400 p-3 text-font-100 placeholder:text-font-300 h-[80px]"
                 />
                 <Button
-                    label="전송" // 나중에 svg파일로 변경해야함
+                    label="전송"
                     type="purple"
                     size="xs"
-                    htmlType="submit"
+                    onClick={handleSend}
                 />
             </div>
         </div>
