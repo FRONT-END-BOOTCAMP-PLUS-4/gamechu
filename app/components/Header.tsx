@@ -2,17 +2,29 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Button from "./Button";
+import { useAuthStore } from "@/stores/AuthStore";
+import { signOut } from "next-auth/react";
 
 export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 테스트용
+  const user = useAuthStore((state) => state.user);
+  const clearUser = useAuthStore((state) => state.clearUser);
   const router = useRouter();
+  const pathname = usePathname(); // ✅ 현재 페이지 경로 추출
+
+  const handleLogout = async () => {
+    clearUser();
+    await signOut({ redirect: false });
+    router.refresh(); // 미들웨어 트리거
+  };
+
+  const handleGoToLogin = () => {
+    router.push(`/log-in?callbackUrl=${encodeURIComponent(pathname)}`); // ✅ 경로 포함
+  };
 
   return (
     <header className="w-full h-[100px] bg-[#191919] flex items-center justify-between font-sans">
-      {/* 왼쪽: 로고 + 메뉴 */}
       <div className="flex items-center">
         <Link href="/" className="flex-shrink-0">
           <Image src="/icons/logo.svg" alt="GAMECHU 로고" width={100} height={100} priority />
@@ -34,9 +46,8 @@ export default function Header() {
         </nav>
       </div>
 
-      {/* 오른쪽: 상태에 따른 버튼 */}
       <div className="flex items-center space-x-4 mr-[75px]">
-        {isLoggedIn ? (
+        {user ? (
           <>
             <button className="text-primary-purple-100 hover:opacity-80">
               <Image src="/icons/bell.svg" alt="알림" width={24} height={24} />
@@ -50,7 +61,7 @@ export default function Header() {
               label="로그아웃"
               size="medium"
               type="purple"
-              onClick={() => setIsLoggedIn(false)}
+              onClick={handleLogout}
             />
           </>
         ) : (
@@ -58,7 +69,7 @@ export default function Header() {
             label="로그인"
             size="medium"
             type="purple"
-            onClick={() => router.push("/log-in")}
+            onClick={handleGoToLogin} // ✅ 로그인 버튼 클릭 시 현재 경로 포함 이동
           />
         )}
       </div>
