@@ -53,13 +53,17 @@ export default function LoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-background-400 font-sans">
             <div className="bg-background-300 p-10 rounded-xl w-full max-w-[400px] shadow-lg">
                 <div className="flex justify-center mb-8">
-                    <Image
-                        src="/icons/logo.svg"
-                        alt="GAMECHU 로고"
-                        width={160}
-                        height={160}
-                    />
+                    <Link href="/">
+                        <Image
+                            src="/icons/logo.svg"
+                            alt="GAMECHU 로고"
+                            width={160}
+                            height={160}
+                            className="cursor-pointer"
+                        />
+                    </Link>
                 </div>
+
 
                 <form
                     onSubmit={handleSubmit}

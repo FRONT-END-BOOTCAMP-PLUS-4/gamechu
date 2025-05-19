@@ -5,7 +5,7 @@ import { PrismaMemberRepository } from "@/backend/member/infra/repositories/pris
 import { LoginUsecase } from "@/backend/member/application/usecase/LoginUsecase";
 import { LoginRequestDto } from "@/backend/member/application/usecase/dto/LoginRequestDto";
 import { LoginResponseDto } from "@/backend/member/application/usecase/dto/LoginResponseDto";
-import { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -24,13 +24,8 @@ export const authOptions: NextAuthOptions = {
                     credentials.email,
                     credentials.password
                 );
-                const user = await usecase.execute(dto);
 
-                if (!user) return null;
-
-                return {
-                    ...user,
-                };
+                return await usecase.execute(dto);
             },
         }),
     ],
@@ -40,63 +35,19 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id;
-                token.email = user.email;
-                token.nickname = user.nickname;
-                token.imageUrl = user.imageUrl;
-                token.birthDate = user.birthDate;
-                token.isMale = user.isMale;
-                token.score = user.score;
-                token.isAttended = user.isAttended;
-                token.createdAt = user.createdAt;
-                token.deletedAt = user.deletedAt;
-
-                token.wishlists = user.wishlists;
-                token.reviews = user.reviews;
-                token.reviewLikes = user.reviewLikes;
-                token.arenasAsCreator = user.arenasAsCreator;
-                token.arenasAsChallenger = user.arenasAsChallenger;
-                token.chattings = user.chattings;
-                token.votes = user.votes;
-                token.notificationRecords = user.notificationRecords;
-                token.scoreRecords = user.scoreRecords;
-                token.preferredGenres = user.preferredGenres;
-                token.preferredPlatforms = user.preferredPlatforms;
-                token.preferredThemes = user.preferredThemes;
+                token.id = (user as LoginResponseDto).id;
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id;
-                session.user.email = token.email;
-                session.user.nickname = token.nickname;
-                session.user.imageUrl = token.imageUrl;
-                session.user.birthDate = token.birthDate;
-                session.user.isMale = token.isMale;
-                session.user.score = token.score;
-                session.user.isAttended = token.isAttended;
-                session.user.createdAt = token.createdAt;
-                session.user.deletedAt = token.deletedAt;
-
-                session.user.wishlists = token.wishlists;
-                session.user.reviews = token.reviews;
-                session.user.reviewLikes = token.reviewLikes;
-                session.user.arenasAsCreator = token.arenasAsCreator;
-                session.user.arenasAsChallenger = token.arenasAsChallenger;
-                session.user.chattings = token.chattings;
-                session.user.votes = token.votes;
-                session.user.notificationRecords = token.notificationRecords;
-                session.user.scoreRecords = token.scoreRecords;
-                session.user.preferredGenres = token.preferredGenres;
-                session.user.preferredPlatforms = token.preferredPlatforms;
-                session.user.preferredThemes = token.preferredThemes;
+                session.user.id = token.id as string;
             }
             return session;
         },
     },
     pages: {
-        signIn: "/login",
+        signIn: "/log-in",
     },
     secret: process.env.NEXTAUTH_SECRET,
 };

@@ -1,6 +1,5 @@
-// backend/member/domain/repositories/IMemberRepository.ts
-import { MemberWithRelations } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
+import { Member } from "@/prisma/generated";
 
 export interface MemberRepository {
-  findByEmail(email: string): Promise<MemberWithRelations | null>;
+    findByEmail(email: string): Promise<Member | null>;
 }

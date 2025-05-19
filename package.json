@@ -12,6 +12,7 @@
         "@prisma/client": "^6.7.0",
         "bcryptjs": "^3.0.2",
         "clsx": "^2.1.1",
+        "js-cookie": "^3.0.5",
         "next": "15.3.2",
         "next-auth": "^4.24.11",
         "react": "^19.0.0",
@@ -24,6 +25,7 @@
     "devDependencies": {
         "@eslint/eslintrc": "^3",
         "@tailwindcss/postcss": "^4",
+        "@types/js-cookie": "^3.0.6",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
