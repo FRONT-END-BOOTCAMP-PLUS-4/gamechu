@@ -15,28 +15,6 @@ export class LoginUsecase {
 
         return new LoginResponseDto(
             member.id,
-            member.nickname,
-            member.email,
-            member.password,
-            member.imageUrl,
-            member.birthDate,
-            member.isMale,
-            member.score,
-            member.isAttended,
-            member.createdAt,
-            member.deletedAt,
-            member.wishlists,
-            member.reviews,
-            member.reviewLikes,
-            member.arenasAsCreator,
-            member.arenasAsChallenger,
-            member.chattings,
-            member.votes,
-            member.notificationRecords,
-            member.scoreRecords,
-            member.preferredPlatforms,
-            member.preferredGenres,
-            member.preferredThemes
         );
     }
 }
