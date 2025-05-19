@@ -5,6 +5,7 @@ import ArenaChatting from "../components/ArenaChatting";
 import ArenaHeader from "../components/ArenaHeader";
 import React, { useState } from "react";
 import ArenaInfo from "../components/ArenaInfo";
+import { useParams } from "next/navigation";
 
 export default function ArenaDetailPage() {
     const [status, setStatus] = useState<
@@ -15,6 +16,9 @@ export default function ArenaDetailPage() {
     // 투표 수
     const leftVotes = 192;
     const rightVotes = 85;
+
+    const idParams = useParams().id;
+    const arenaId = Number(idParams);
 
     return (
         <div>
@@ -29,7 +33,11 @@ export default function ArenaDetailPage() {
                 {/* 왼쪽: 채팅, 투표 등 */}
                 <div className="flex flex-col flex-[3]">
                     <ArenaHeader />
-                    <ArenaChatting status={status} startAt={startAt} />
+                    <ArenaChatting
+                        arenaId={arenaId}
+                        status={status}
+                        startAt={startAt}
+                    />
                     <ArenaVote
                         status={status}
                         leftVotes={leftVotes}
