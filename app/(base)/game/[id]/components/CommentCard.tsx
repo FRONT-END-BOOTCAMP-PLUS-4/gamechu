@@ -25,14 +25,12 @@ export default function CommentCard({
     comment,
     likes,
 }: CommentCardProps) {
-    const [isExpanded, setIsExpanded] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
 
-    const handleToggleExpand = () => setIsExpanded((prev) => !prev);
     const handleLike = () => setIsLiked((prev) => !prev);
 
     return (
-        <div className="w-[1000px] min-h-[250px] bg-background-200 rounded-[4px] p-4 space-y-4 relative border border-line-100 border-opacity-50">
+        <div className="relative w-[1000px] min-h-[250px] bg-background-200 rounded-[4px] p-4 pb-16 space-y-4 border border-line-100 border-opacity-50">
             {/* 유저 정보 + 별점 */}
             <div className="flex justify-between items-start">
                 <div className="flex gap-3 items-start">
@@ -42,10 +40,10 @@ export default function CommentCard({
                         alt="profile"
                         width={50}
                         height={50}
-                        className="rounded-full border border-line-100 o"
+                        className="rounded-full border border-line-100"
                     />
 
-                    {/* 닉네임 + 날짜 + 티어 */}
+                    {/* 닉네임 + 날짜 */}
                     <div className="flex flex-col gap-1">
                         <span className="text-h2 text-font-100 font-medium">
                             {nickname}
@@ -63,23 +61,13 @@ export default function CommentCard({
                 <StarRating value={rating} variant="noText" readOnly />
             </div>
 
-            {/* 댓글 */}
+            {/* 댓글 영역 */}
             <div className="text-body text-font-100 whitespace-pre-wrap">
-                {isExpanded || comment.length <= 180
-                    ? comment
-                    : `${comment.slice(0, 180)}...`}
-                {comment.length > 180 && (
-                    <button
-                        onClick={handleToggleExpand}
-                        className="text-caption text-primary-purple-200 underline ml-2"
-                    >
-                        {isExpanded ? "접기" : "펼치기"}
-                    </button>
-                )}
+                {comment}
             </div>
 
             {/* 좋아요 */}
-            <div className="absolute bottom-4 left-4 flex items-center ">
+            <div className="absolute bottom-4 left-4 flex items-center gap-2">
                 <button onClick={handleLike}>
                     <div className="w-[50px] h-[50px] flex items-center justify-center">
                         {isLiked ? (
