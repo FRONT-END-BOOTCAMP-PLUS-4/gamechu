@@ -42,7 +42,7 @@ export default function CommentCard({
                         alt="profile"
                         width={50}
                         height={50}
-                        className="rounded-full border border-line-100"
+                        className="rounded-full border border-line-100 o"
                     />
 
                     {/* 닉네임 + 날짜 + 티어 */}
