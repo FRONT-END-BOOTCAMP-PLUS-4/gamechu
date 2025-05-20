@@ -72,8 +72,9 @@ export class PrismaNotificationRecordRepository
     }
 
     async save(record: NotificationRecord): Promise<NotificationRecord> {
+        const { id, ...recordWithoutID } = record;
         const data = await this.prisma.notificationRecord.create({
-            data: record,
+            data: recordWithoutID,
         });
 
         return data;
