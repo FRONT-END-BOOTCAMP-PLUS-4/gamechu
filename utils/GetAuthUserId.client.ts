@@ -1,26 +1,7 @@
-// utils/getAuthUserId.client.ts CSR 페이지
-import Cookies from "js-cookie";
+// utils/getAuthUserId.client.ts
+import { getSession } from "next-auth/react";
 
-interface AuthUser {
-    id: string;
-}
-
-interface PersistedAuthData {
-    state: {
-        user: AuthUser | null;
-    };
-    version: number;
-}
-
-export const getAuthUserId = (): string | null => {
-    const cookie = Cookies.get("auth-user");
-    if (!cookie) return null;
-
-    try {
-        const parsed = JSON.parse(cookie) as PersistedAuthData;
-        return parsed.state.user?.id ?? null;
-    } catch (e) {
-        console.error("CSR 쿠키 파싱 실패:", e);
-        return null;
-    }
+export const getAuthUserId = async (): Promise<string | null> => {
+    const session = await getSession();
+    return session?.user?.id ?? null;
 };
