@@ -292,7 +292,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\wojin\\Desktop\\Projects\\gamechu\\prisma\\generated",
+      "value": "/Users/imtaejunk/LikeLionProject2/gamechu/prisma/generated",
       "fromEnvVar": null
     },
     "config": {
@@ -301,12 +301,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\wojin\\Desktop\\Projects\\gamechu\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/imtaejunk/LikeLionProject2/gamechu/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -320,11 +320,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://gamechu:Tralala@new-cafe.com:5433/gamechudb?schema=public"
+        "value": null
       }
     }
   },
@@ -368,8 +369,8 @@ exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "prisma/generated/query_engine-windows.dll.node")
+path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
+path.join(process.cwd(), "prisma/generated/libquery_engine-darwin-arm64.dylib.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "prisma/generated/schema.prisma")

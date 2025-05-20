@@ -1,27 +1,38 @@
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface GameCardProps {
+    id: number;
     platform: string;
     title: string;
     rating: number;
     developer: string;
-    backgroundImage: string;
+    thumbnail: string;
 }
 
 export default function GameCard({
+    id,
     platform,
     title,
     rating,
     developer,
-    backgroundImage,
+    thumbnail,
 }: GameCardProps) {
+    const router = useRouter();
+    const handleClick = () => {
+        router.push(`/game/${id}`);
+    };
+
     return (
-        <div className="w-[330px] h-[330px] flex flex-col rounded-[8px] overflow-hidden transition-all duration-100 hover:border-2 hover:border-primary-purple-200 border-transparent">
+        <div
+            onClick={handleClick}
+            className="w-[330px] h-[330px] flex flex-col rounded-[8px] overflow-hidden transition-all duration-100 hover:border-2 hover:border-primary-purple-200 border-transparent"
+        >
             {/* 이미지 영역 */}
             <div
-                className="relative w-full h-[230px] bg-cover bg-center "
-                style={{ backgroundImage: `url(${backgroundImage})` }}
+                className="relative w-full h-[230px] bg-cover bg-center"
+                style={{ backgroundImage: `url(${thumbnail})` }} // ✅ 고친 부분
             >
                 {/* 플랫폼 태그 */}
                 <div className="absolute top-4 right-4 px-3 py-[2px] bg-background-100 text-caption text-font-100 rounded-[4px] border border-background-300">
@@ -36,7 +47,7 @@ export default function GameCard({
                     <h2 className="text-h2 font-semibold text-font-100 line-clamp-1">
                         {title}
                     </h2>
-                    <div className="flex items-center w-[50px] h-[25px] ">
+                    <div className="flex items-center w-[50px] h-[25px]">
                         <Image
                             src="/icons/empty-purple-star.svg"
                             alt="star"
@@ -44,7 +55,7 @@ export default function GameCard({
                             height={16}
                             className="mr-1"
                         />
-                        <span className="text-regular text-font-100 ">
+                        <span className="text-regular text-font-100">
                             {rating.toFixed(1)}
                         </span>
                     </div>

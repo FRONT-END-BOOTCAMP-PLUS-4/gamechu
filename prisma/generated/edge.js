@@ -291,7 +291,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\wojin\\Desktop\\Projects\\gamechu\\prisma\\generated",
+      "value": "/Users/imtaejunk/LikeLionProject2/gamechu/prisma/generated",
       "fromEnvVar": null
     },
     "config": {
@@ -300,12 +300,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\wojin\\Desktop\\Projects\\gamechu\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/imtaejunk/LikeLionProject2/gamechu/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -319,11 +319,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://gamechu:Tralala@new-cafe.com:5433/gamechudb?schema=public"
+        "value": null
       }
     }
   },
