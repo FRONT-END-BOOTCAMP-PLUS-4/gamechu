@@ -1,6 +1,5 @@
+// stores/AuthStore.ts
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { createCookieStorage } from "@/utils/cookieStorage";
 
 interface AuthUser {
     id: string;
@@ -12,16 +11,8 @@ interface AuthStore {
     clearUser: () => void;
 }
 
-export const useAuthStore = create<AuthStore>()(
-    persist(
-        (set) => ({
-            user: null,
-            setUser: (user) => set({ user }),
-            clearUser: () => set({ user: null }),
-        }),
-        {
-            name: "auth-user",
-            storage: createCookieStorage<AuthStore>(),
-        }
-    )
-);
+export const useAuthStore = create<AuthStore>((set) => ({
+    user: null,
+    setUser: (user) => set({ user }),
+    clearUser: () => set({ user: null }),
+}));

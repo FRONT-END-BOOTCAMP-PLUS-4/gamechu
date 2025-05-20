@@ -37,13 +37,12 @@ export default function LoginPage() {
         });
 
         if (res?.ok) {
-            const session = await getSession();
+            const session = await getSession(); // ✅ next-auth 세션 사용
             if (session?.user) {
-                useAuthStore
-                    .getState()
-                    .setUser(session.user as Session["user"]);
+                // ✅ zustand에 로그인된 사용자 저장 (SSR에는 영향 없음)
+                useAuthStore.getState().setUser(session.user as Session["user"]);
             }
-            router.push(callbackUrl); // ✅ 로그인 이전 페이지로 이동
+            router.push(callbackUrl);
         } else {
             alert("이메일 또는 비밀번호가 올바르지 않습니다.");
         }
@@ -63,7 +62,6 @@ export default function LoginPage() {
                         />
                     </Link>
                 </div>
-
 
                 <form
                     onSubmit={handleSubmit}

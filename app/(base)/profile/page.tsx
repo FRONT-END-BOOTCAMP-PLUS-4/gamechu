@@ -7,8 +7,12 @@ export default function ProfilePage() {
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
-        const id = getAuthUserId();
-        setUserId(id);
+        const fetchUserId = async () => {
+            const id = await getAuthUserId();
+            setUserId(id);
+        };
+
+        fetchUserId();
     }, []);
 
     return (
