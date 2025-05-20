@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import Input from "@/app/components/Input";
 import Button from "@/app/components/Button";
@@ -17,7 +18,8 @@ export default function StepProfile({ onNext }: Props) {
     const [confirm, setConfirm] = useState("");
     const [gender, setGender] = useState<"M" | "F" | null>(null);
     const [birth, setBirth] = useState("");
-    const [error, setError] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     const validateEmailFormat = (email: string) =>
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -35,47 +37,98 @@ export default function StepProfile({ onNext }: Props) {
     };
 
     const checkEmailDuplicate = async () => {
+        setSuccessMessage("");
+        setErrorMessage("");
+
         if (!validateEmailFormat(email)) {
-            alert("올바른 이메일 형식이 아닙니다.");
+            setErrorMessage("올바른 이메일 형식이 아닙니다.");
             setIsEmailDuplicate(null);
             return;
         }
-        const isDuplicate = await fakeCheckEmailAPI(email);
-        setIsEmailDuplicate(isDuplicate);
-        alert(
-            isDuplicate
-                ? "이미 사용 중인 이메일입니다."
-                : "사용 가능한 이메일입니다."
-        );
+
+        try {
+            const res = await fetch(
+                `/api/auth/email-check?email=${encodeURIComponent(email)}`
+            );
+            let data;
+            try {
+                data = await res.json();
+            } catch {
+                throw new Error("서버 응답을 처리할 수 없습니다.");
+            }
+
+            if (!res.ok) {
+                throw new Error(data.error || "중복 확인 실패");
+            }
+
+            setIsEmailDuplicate(data.isDuplicate);
+            setSuccessMessage(
+                data.isDuplicate
+                    ? "이미 사용 중인 이메일입니다."
+                    : "사용 가능한 이메일입니다."
+            );
+        } catch (err) {
+            const message =
+                err instanceof Error ? err.message : "오류가 발생했습니다.";
+            setErrorMessage(message);
+            setIsEmailDuplicate(null);
+        }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
+        setSuccessMessage("");
+        setErrorMessage("");
+
         if (!nickname || !email || !password || !confirm || !gender || !birth) {
-            setError("모든 항목을 입력해주세요.");
+            setErrorMessage("모든 항목을 입력해주세요.");
             return;
         }
         if (!validateEmailFormat(email)) {
-            alert("올바른 이메일 형식이 아닙니다.");
+            setErrorMessage("올바른 이메일 형식이 아닙니다.");
             return;
         }
         if (isEmailDuplicate === null) {
-            alert("이메일 중복 검사를 진행해주세요.");
+            setErrorMessage("이메일 중복 검사를 진행해주세요.");
             return;
         }
         if (isEmailDuplicate === true) {
-            alert("이미 사용 중인 이메일입니다.");
+            setErrorMessage("이미 사용 중인 이메일입니다.");
             return;
         }
         if (password !== confirm) {
-            alert("비밀번호가 일치하지 않습니다.");
+            setErrorMessage("비밀번호가 일치하지 않습니다.");
             return;
         }
         const birthRegex = /^\d{8}$/;
         if (!birthRegex.test(birth) || !isValidDate(birth)) {
-            alert("유효한 생년월일을 입력해주세요.");
+            setErrorMessage("유효한 생년월일을 입력해주세요.");
             return;
         }
-        onNext();
+
+        try {
+            const res = await fetch("/api/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    nickname,
+                    email,
+                    password,
+                    birthDate: birth,
+                    gender,
+                }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "회원가입 실패");
+
+            sessionStorage.setItem("memberId", data.memberId);
+            setSuccessMessage("회원가입 성공!");
+            onNext();
+        } catch (err) {
+            const message =
+                err instanceof Error ? err.message : "회원가입 중 오류 발생";
+            setErrorMessage(message);
+        }
     };
 
     return (
@@ -114,6 +167,18 @@ export default function StepProfile({ onNext }: Props) {
                     />
                 </div>
             </div>
+            <div>
+                {errorMessage && (
+                    <p className="text-caption text-state-error mb-4">
+                        {errorMessage}
+                    </p>
+                )}
+                {successMessage && (
+                    <p className="text-caption text-state-success mb-4">
+                        {successMessage}
+                    </p>
+                )}
+            </div>
 
             <div>
                 <label className="block mb-1 text-body text-font-100 font-semibold">
@@ -146,23 +211,21 @@ export default function StepProfile({ onNext }: Props) {
                 <div className="flex justify-center gap-4 mb-6">
                     <button
                         onClick={() => setGender("M")}
-                        className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 
-              ${
-                  gender === "M"
-                      ? "bg-primary-blue-200 text-white shadow-md"
-                      : "bg-background-200 text-font-100 border border-line-200 hover:border-primary-blue-200"
-              }`}
+                        className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 ${
+                            gender === "M"
+                                ? "bg-primary-blue-200 text-white shadow-md"
+                                : "bg-background-200 text-font-100 border border-line-200 hover:border-primary-blue-200"
+                        }`}
                     >
                         남자
                     </button>
                     <button
                         onClick={() => setGender("F")}
-                        className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 
-              ${
-                  gender === "F"
-                      ? "bg-primary-purple-200 text-white shadow-md"
-                      : "bg-background-200 text-font-100 border border-line-200 hover:border-primary-purple-200"
-              }`}
+                        className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 ${
+                            gender === "F"
+                                ? "bg-primary-purple-200 text-white shadow-md"
+                                : "bg-background-200 text-font-100 border border-line-200 hover:border-primary-purple-200"
+                        }`}
                     >
                         여자
                     </button>
@@ -180,22 +243,9 @@ export default function StepProfile({ onNext }: Props) {
                 />
             </div>
 
-            {error && (
-                <p className="text-caption text-state-error mb-4">{error}</p>
-            )}
-
             <div className="mt-8 text-right">
                 <Button label="다음 →" onClick={handleNext} />
             </div>
         </div>
     );
 }
-
-// 예제 API(나중에 수정할 예정)
-const fakeCheckEmailAPI = async (email: string): Promise<boolean> => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(email.toLowerCase() === "test@example.com");
-        }, 500);
-    });
-};
