@@ -1,35 +1,30 @@
-// components/Register/SelectionCard.tsx
-
-interface Props {
+type SelectionCardProps = {
+    label: string;
     selected: boolean;
     onClick: () => void;
-    label: string;
-    description?: string;
-}
+};
 
 export default function SelectionCard({
+    label,
     selected,
     onClick,
-    label,
-    description,
-}: Props) {
+}: SelectionCardProps) {
     return (
-        <div
+        <button
             onClick={onClick}
-            className={`cursor-pointer border rounded-xl p-4 text-center transition-all select-none
-        ${
-            selected
-                ? "border-primary-purple-200 bg-primary-purple-100/10"
-                : "border-line-200"
-        }
-        hover:shadow-md`}
+            className={`
+                w-[160px] h-[80px]
+                border rounded-xl 
+                flex items-center justify-center text-center
+                px-2 py-2 text-sm font-medium leading-snug
+                break-words whitespace-pre-wrap
+                transition-all duration-150
+                ${selected
+                    ? "bg-primary-purple-100 text-white border-primary-purple-100"
+                    : "bg-background-100 text-font-100 border-font-200 hover:bg-background-200"}
+            `}
         >
-            <div className="text-body font-semibold mb-1 text-font-100">
-                {label}
-            </div>
-            {description && (
-                <div className="text-caption text-font-200">{description}</div>
-            )}
-        </div>
+            <span className="block w-full">{label}</span>
+        </button>
     );
 }
