@@ -1,22 +1,23 @@
 import { create } from "zustand";
 
-type ModalType = "notification" | "createArena";
-type ModalPosition = "center" | "anchor-bottom";
+type ModalType = "notification" | "createArena" | null;
+type ModalPosition = "center" | "anchor-bottom" | null;
 
 interface ModalStore {
     modalType: ModalType;
+    modalPosition: ModalPosition;
     isOpen: boolean;
     modalProps: any;
-    modalPosition: ModalPosition;
-    openModal: (type: ModalType, props?: any) => void;
+    openModal: (type: ModalType, position: ModalPosition, props?: any) => void;
     closeModal: () => void;
 }
 
 const useModalStore = create<ModalStore>((set) => ({
     modalType: null,
+    modalPosition: null,
     isOpen: false,
     modalProps: null,
-    openModal: (type: ModalType, props: any = null, position: ModalPosition) =>
+    openModal: (type: ModalType, position: ModalPosition, props: any = null) =>
         set({
             modalType: type,
             modalProps: props,
