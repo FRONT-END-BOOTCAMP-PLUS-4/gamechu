@@ -1,96 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { cn } from "@/utils/tailwindUtil";
 
-const genres = [
-    "RPG",
-    "액션",
-    "전략",
-    "어드벤처",
-    "퍼즐",
-    "스포츠",
-    "슈팅",
-    "레이싱",
-    "MMORPG",
-    "생존",
-    "오픈월드",
-    "시뮬레이션",
-    "탑다운",
-    "로그라이크",
-    "플랫포머",
-    "생존 호러",
-    "서바이벌",
-    "탑다운 슈팅",
-    "턴제",
-    "카드",
-    "소셜",
-    "디펜스",
-    "방치형",
-    "리듬",
-    "VR",
-];
-const themes = [
-    "공포",
-    "SF",
-    "판타지",
-    "로맨스",
-    "코미디",
-    "전쟁",
-    "역사",
-    "음악",
-    "드라마",
-    "추리",
-    "스릴러",
-    "미스터리",
-    "스팀펑크",
-    "사이버펑크",
-    "고딕",
-    "호러",
-    "애니메이션",
-    "만화",
-    "우주",
-    "좀비",
-    "해양",
-    "고전",
-    "고대",
-    "미래",
-    "동화",
-    "신화",
-    "우화",
-];
-const platforms = [
-    "Switch",
-    "PS5",
-    "PC",
-    "Xbox",
-    "Mobile",
-    "VR",
-    "Steam",
-    "Epic Games",
-    "PlayStation Store",
-    "Xbox Store",
-    "Nintendo eShop",
-    "Google Play Store",
-    "Apple App Store",
-    "Oculus Store",
-    "GOG",
-    "Origin",
-    "Battle.net",
-    "Uplay",
-    "Humble Store",
-    "itch.io",
-    "Game Pass",
-    "PlayStation Now",
-];
+type TagType = "genre" | "theme";
 
-export default function GameFilter() {
-    const [isGenreExpanded, setIsGenreExpanded] = useState(false);
-    const [isPlatformExpanded, setIsPlatformExpanded] = useState(false);
-    const [selectedTag, setSelectedTag] = useState("");
-    const [selectedPlatform, setSelectedPlatform] = useState("");
+interface TagItem {
+    id: number;
+    name: string;
+    type: TagType;
+}
+interface FilterItem {
+    id: number;
+    name: string;
+}
 
-    const genreAndTheme = [...genres, ...themes];
+interface GameFilterProps {
+    selectedTag?: { id: number; type: "genre" | "theme" };
+    setSelectedTag: (tag?: { id: number; type: "genre" | "theme" }) => void;
+    selectedPlatformId?: number;
+    setSelectedPlatformId: (id?: number) => void;
+    genres: FilterItem[];
+    themes: FilterItem[];
+    platforms: FilterItem[];
+}
+
+export default function GameFilter({
+    selectedTag,
+    setSelectedTag,
+    selectedPlatformId,
+    setSelectedPlatformId,
+    genres,
+    themes,
+    platforms,
+}: GameFilterProps) {
+    const [isGenreExpanded, setIsGenreExpanded] = React.useState(false);
+    const [isPlatformExpanded, setIsPlatformExpanded] = React.useState(false);
+
+    const genreAndTheme: TagItem[] = [
+        ...genres.map((g) => ({ ...g, type: "genre" as const })),
+        ...themes.map((t) => ({ ...t, type: "theme" as const })),
+    ];
+
     const displayedTags = isGenreExpanded
         ? genreAndTheme
         : genreAndTheme.slice(0, 20);
@@ -98,34 +49,34 @@ export default function GameFilter() {
         ? platforms
         : platforms.slice(0, 10);
 
-    const handleSelectGenreTag = (tag: string) => {
-        setSelectedTag((prev) => (prev === tag ? "" : tag));
-    };
-
-    const handleSelectPlatform = (platform: string) => {
-        setSelectedPlatform((prev) => (prev === platform ? "" : platform));
-    };
-
     return (
         <div className="w-[300px] bg-background-300 p-4 rounded-lg space-y-6">
             {/* 장르 및 테마 */}
             <div>
                 <h2 className="text-h2 font-medium mb-2">장르 및 테마</h2>
                 <div className="grid grid-cols-2 gap-2">
-                    {displayedTags.map((tag) => (
-                        <button
-                            key={tag}
-                            onClick={() => handleSelectGenreTag(tag)}
-                            className={cn(
-                                "text-caption px-2 py-1 rounded-full border",
-                                selectedTag === tag
-                                    ? "bg-primary-purple-200 text-font-100 border-transparent"
-                                    : "bg-background-100 text-font-200 border-line-200"
-                            )}
-                        >
-                            {tag}
-                        </button>
-                    ))}
+                    {displayedTags.map((tag) => {
+                        const isSelected =
+                            selectedTag?.id === tag.id &&
+                            selectedTag?.type === tag.type;
+
+                        return (
+                            <button
+                                key={`${tag.type}-${tag.id}`}
+                                onClick={() =>
+                                    setSelectedTag(isSelected ? undefined : tag)
+                                }
+                                className={cn(
+                                    "text-caption px-2 py-1 rounded-full border",
+                                    isSelected
+                                        ? "bg-primary-purple-200 text-font-100 border-transparent"
+                                        : "bg-background-100 text-font-200 border-line-200"
+                                )}
+                            >
+                                {tag.name}
+                            </button>
+                        );
+                    })}
                 </div>
                 {genreAndTheme.length > 20 && (
                     <button
@@ -143,16 +94,22 @@ export default function GameFilter() {
                 <div className="flex flex-col gap-2">
                     {displayedPlatforms.map((platform) => (
                         <button
-                            key={platform}
-                            onClick={() => handleSelectPlatform(platform)}
+                            key={platform.id}
+                            onClick={() =>
+                                setSelectedPlatformId(
+                                    selectedPlatformId === platform.id
+                                        ? undefined
+                                        : platform.id
+                                )
+                            }
                             className={cn(
                                 "text-caption px-2 py-1 rounded-full border",
-                                selectedPlatform === platform
+                                selectedPlatformId === platform.id
                                     ? "bg-primary-purple-200 text-font-100 border-transparent"
                                     : "bg-background-100 text-font-200 border-line-200"
                             )}
                         >
-                            {platform}
+                            {platform.name}
                         </button>
                     ))}
                 </div>

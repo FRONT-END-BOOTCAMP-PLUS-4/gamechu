@@ -1,223 +1,83 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GameCardList from "./components/GameCardList";
 import GameFilter from "./components/GameFilter";
 import SearchBar from "./components/SearchBar";
 import Pager from "@/app/components/Pager";
 
-// 샘플 데이터
-const dummyGames = [
-    {
-        platform: "PC",
-        title: "Hollow Knight",
-        rating: 4.8,
-        developer: "Team Cherry",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "PS5",
-        title: "Final Fantasy XVI",
-        rating: 4.5,
-        developer: "Square Enix",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-    {
-        platform: "PC",
-        title: "Hollow Knight",
-        rating: 4.8,
-        developer: "Team Cherry",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "PS5",
-        title: "Final Fantasy XVI",
-        rating: 4.5,
-        developer: "Square Enix",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-    {
-        platform: "PC",
-        title: "Hollow Knight",
-        rating: 4.8,
-        developer: "Team Cherry",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "PS5",
-        title: "Final Fantasy XVI",
-        rating: 4.5,
-        developer: "Square Enix",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-    {
-        platform: "PC",
-        title: "Hollow Knight",
-        rating: 4.8,
-        developer: "Team Cherry",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "PS5",
-        title: "Final Fantasy XVI",
-        rating: 4.5,
-        developer: "Square Enix",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-    {
-        platform: "PC",
-        title: "Hollow Knight",
-        rating: 4.8,
-        developer: "Team Cherry",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "PS5",
-        title: "Final Fantasy XVI",
-        rating: 4.5,
-        developer: "Square Enix",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-    {
-        platform: "PC",
-        title: "Hollow Knight",
-        rating: 4.8,
-        developer: "Team Cherry",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "PS5",
-        title: "Final Fantasy XVI",
-        rating: 4.5,
-        developer: "Square Enix",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-    {
-        platform: "PC",
-        title: "Hollow Knight",
-        rating: 4.8,
-        developer: "Team Cherry",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "PS5",
-        title: "Final Fantasy XVI",
-        rating: 4.5,
-        developer: "Square Enix",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg",
-    },
-    {
-        platform: "Switch",
-        title: "Zelda: Tears of the Kingdom",
-        rating: 4.9,
-        developer: "Nintendo",
-        backgroundImage:
-            "https://cdn.cloudflare.steamstatic.com/steam/apps/239140/header.jpg",
-    },
-];
+interface GameCard {
+    id: number;
+    title: string;
+    thumbnail: string;
+    developer: string;
+    platform: string;
+}
+
+interface OptionItem {
+    id: number;
+    name: string;
+}
 
 export default function GamePage() {
     const itemsPerPage = 12;
+    const [games, setGames] = useState<GameCard[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedTag, setSelectedTag] = useState<
+        { id: number; type: "genre" | "theme" } | undefined
+    >();
+    const [selectedPlatformId, setSelectedPlatformId] = useState<
+        number | undefined
+    >();
+    const [genres, setGenres] = useState<OptionItem[]>([]);
+    const [themes, setThemes] = useState<OptionItem[]>([]);
+    const [platforms, setPlatforms] = useState<OptionItem[]>([]);
+    const [keyword, setKeyword] = useState("");
 
-    const totalItems = dummyGames.length;
+    const totalItems = games.length;
     const endPage = Math.ceil(totalItems / itemsPerPage);
     const pages = Array.from({ length: endPage }, (_, i) => i + 1);
+    const gamesForPage = games
+        .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+        .map((game) => ({ ...game, rating: 0 }));
 
-    const gamesForPage = dummyGames.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
+    useEffect(() => {
+        const fetchFilters = async () => {
+            const res = await fetch("/api/games/filters");
+            const data = await res.json();
+            setGenres(data.genres);
+            setThemes(data.themes);
+            setPlatforms(data.platforms);
+        };
+        fetchFilters();
+    }, []);
+
+    useEffect(() => {
+        const fetchGames = async () => {
+            const params = new URLSearchParams();
+            if (selectedTag)
+                params.append(selectedTag.type, selectedTag.id.toString());
+            if (selectedPlatformId)
+                params.append("platform", selectedPlatformId.toString());
+            if (keyword) params.append("keyword", keyword);
+
+            const res = await fetch(`/api/games?${params.toString()}`);
+            const data = await res.json();
+
+            if (Array.isArray(data)) {
+                setGames(data);
+                setCurrentPage(1);
+            } else {
+                console.error("게임 데이터 응답이 배열이 아님:", data);
+                setGames([]);
+            }
+        };
+
+        fetchGames();
+    }, [selectedTag, selectedPlatformId, keyword]);
 
     return (
         <div className="min-h-screen bg-background-400 text-font-100 py-12 space-y-10">
-            {/* 상단 타이틀 + 서치바 */}
             <div className="flex justify-between items-end">
                 <div>
                     <h1 className="text-headline font-bold">게임 찾기</h1>
@@ -225,15 +85,19 @@ export default function GamePage() {
                         다양한 장르와 플랫폼의 게임을 찾아보세요
                     </p>
                 </div>
-                <SearchBar />
+                <SearchBar keyword={keyword} setKeyword={setKeyword} />
             </div>
 
-            {/* 메인 콘텐츠 영역 */}
             <div className="flex gap-10 items-start">
-                {/* 좌측 필터 */}
-                <GameFilter />
-
-                {/* 우측 게임 카드 리스트 */}
+                <GameFilter
+                    genres={genres}
+                    themes={themes}
+                    platforms={platforms}
+                    selectedTag={selectedTag}
+                    setSelectedTag={setSelectedTag}
+                    selectedPlatformId={selectedPlatformId}
+                    setSelectedPlatformId={setSelectedPlatformId}
+                />
                 <div className="ml-auto w-[1020px] space-y-10">
                     <GameCardList games={gamesForPage} />
                     <Pager
