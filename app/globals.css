@@ -6,6 +6,10 @@
 
 @layer components {
     /* 본문 */
+
+    .font-small {
+        font-weight: 300;
+    }
     .font-regular {
         font-weight: 400;
     }
