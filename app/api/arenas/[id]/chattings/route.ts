@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
     req: NextRequest,
-    context: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     // const session = await getServerSession(authOptions);
     // if (!session || !session.user?.id) {
@@ -15,7 +15,7 @@ export async function POST(
     // const memberId = session.user.id;
     const id = -1;
     const memberId = "7ae5e5c9-0c28-426f-952f-85bdfdcfc522";
-    const arenaId = Number(context.params.id);
+    const arenaId = Number((await context.params).id);
     const { content } = await req.json();
     const createdAt = new Date();
 
@@ -47,8 +47,11 @@ export async function POST(
     return NextResponse.json(chatting, { status: 201 });
 }
 
-export async function GET(req: Request, context: { params: { id: string } }) {
-    const arenaId = Number(context.params.id);
+export async function GET(
+    req: Request,
+    context: { params: Promise<{ id: string }> }
+) {
+    const arenaId = Number((await context.params).id);
     if (isNaN(arenaId)) {
         return NextResponse.json({ error: "Invalid arenaId" }, { status: 400 });
     }
