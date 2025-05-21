@@ -47,6 +47,7 @@ export default function StepThemes({ onNext, onBack }: Props) {
             onNext();
             return;
         }
+
         try {
             const res = await fetch("/api/preferred-themes", {
                 method: "POST",
@@ -54,7 +55,7 @@ export default function StepThemes({ onNext, onBack }: Props) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    genreIds: selectedThemeIds, // ✅ memberId 제거
+                    themeIds: selectedThemeIds, // ✅ memberId 제거
                 }),
             });
 
