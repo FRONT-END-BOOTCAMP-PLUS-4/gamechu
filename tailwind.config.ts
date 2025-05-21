@@ -25,6 +25,7 @@ const config: Config = {
             fontSize: {
                 headline: ["32px", "40px"], // 큰제목
                 h2: ["24px", "32px"], // 소제목
+                h3: ["20px", "28px"],
                 body: ["16px", "24px"], // 본문
                 caption: ["12px", "16px"], // 캡션, 에러 메시지 등
                 button: ["14px", "20px"], // 버튼 텍스트
