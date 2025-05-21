@@ -10,11 +10,6 @@ interface Props {
     onBack: () => void;
 }
 
-// interface Platform {
-//     id: number;
-//     name: string;
-// }
-
 export default function StepPlatforms({ onSubmit, onBack }: Props) {
     const [platforms, setPlatforms] = useState<Platform[]>([]);
     const [selectedPlatformIds, setSelectedPlatformIds] = useState<number[]>([]);
