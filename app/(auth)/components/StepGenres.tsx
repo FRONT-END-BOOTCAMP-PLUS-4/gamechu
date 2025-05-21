@@ -10,11 +10,6 @@ interface Props {
     onBack: () => void;
 }
 
-// interface Genre {
-//     id: number;
-//     name: string;
-// }
-
 export default function StepGenres({ onNext, onBack }: Props) {
     const [genres, setGenres] = useState<Genre[]>([]);
     const [selectedGenreIds, setSelectedGenreIds] = useState<number[]>([]);

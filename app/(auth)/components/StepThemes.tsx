@@ -10,11 +10,6 @@ interface Props {
     onBack: () => void;
 }
 
-// interface Theme {
-//     id: number;
-//     name: string;
-// }
-
 export default function StepThemes({ onNext, onBack }: Props) {
     const [themes, setThemes] = useState<Theme[]>([]);
     const [selectedThemeIds, setSelectedThemeIds] = useState<number[]>([]);
