@@ -29,11 +29,11 @@ export default function ModalWrapper(modalWrapperProps: ModalWrapperProps) {
 
     return createPortal(
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50"
             onClick={modalWrapperProps.onClose}
         >
             <div
-                className="bg-gray-800 text-white rounded-xl p-4 shadow-xl"
+                className="bg-background-300 text-font-100 rounded-xl p-2.5 shadow-xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 {modalWrapperProps.children}

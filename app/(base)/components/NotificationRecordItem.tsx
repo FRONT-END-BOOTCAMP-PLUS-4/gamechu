@@ -2,8 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import styles from "./MessageItem.module.scss";
-
 import { useAuthStore } from "@/stores/AuthStore";
 
 import { NotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordDto";
@@ -39,37 +37,36 @@ export default function NotificationRecordItem(
     };
 
     return (
-        <div className="w-full flex flex-col justify-center items-start p-3 gap-3 border border-gray-300">
-            <nav className="w-full flex flex-row items-center justify-between whitespace-nowrap">
-                <div className="flex items-center gap-3">
-                    <Image
-                        src={notificationRecordDto.typeImageUrl}
-                        alt="타입 이미지"
-                        width={50}
-                        height={50}
-                        className="w-[50px] h-[50px] object-cover rounded-full border border-gray-300"
-                    />
-                    <div className="flex flex-col justify-center">
-                        <div className="text-lg font-semibold">
+        <div className="relative w-full p-2.5 rounded-lg bg-background-300 hover:outline hover:outline-1 hover:outline-primary-purple-200 transition-colors">
+            {/* 메시지와 우측 정보 영역을 flex로 정렬 */}
+            <div className="flex justify-between items-start gap-4">
+                {/* 왼쪽: 아이콘 + 메시지 */}
+                <div className="flex gap-4 items-start">
+                    <div className="w-6 h-6 min-w-[24px] min-h-[24px] mt-1">
+                        <Image
+                            src={notificationRecordDto.typeImageUrl}
+                            alt="알림 아이콘"
+                            width={24}
+                            height={24}
+                            className="object-contain"
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-1 text-font-100">
+                        <span className="font-semibold text-body">
                             {notificationRecordDto.typeName}
-                        </div>
-                        <div className="text-md text-gray-500">
-                            {formattedDate}
-                        </div>
+                        </span>
+                        <span className="font-small text-font-200 text-caption">
+                            {notificationRecordDto.description}
+                        </span>
                     </div>
                 </div>
 
-                <button
-                    className="text-md text-gray-500 hover:text-black hover:font-semibold transition-colors duration-200"
-                    onClick={async () =>
-                        await handleDelete(notificationRecordDto.id)
-                    }
-                >
-                    삭제
-                </button>
-            </nav>
-            <div className="w-full p-3 break-words whitespace-pre-line text-md">
-                {notificationRecordDto.description}
+                {/* 오른쪽: 날짜 + 삭제 버튼 (중앙 정렬) */}
+                <div className="flex flex-col items-end justify-center text-font-200 text-caption gap-2 min-w-max">
+                    <span>{formattedDate}</span>
+                    <button className="hover:text-white">삭제</button>
+                </div>
             </div>
         </div>
     );

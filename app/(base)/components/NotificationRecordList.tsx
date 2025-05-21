@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import styles from "./MessageList.module.scss";
 import NotificationRecordItem from "./NotificationRecordItem";
 import { NotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordDto";
 
@@ -16,9 +15,9 @@ export default function NotificationRecordList(
         <div className="w-full flex flex-col justify-center items-center gap-9">
             <ol className="w-full flex flex-col gap-6 p-0 m-0 list-none">
                 {props.notificationRecords.length === 0 ? (
-                    <li className="w-full flex flex-col justify-center items-center text-center text-gray-500 text-lg gap-4">
+                    <li className="w-full flex flex-col justify-center items-center text-center gap-4 text-font-200 text-body font-regular">
                         <Image
-                            src={"/images/NotificationEmpty.png"}
+                            src="/images/NotificationEmpty.png"
                             alt="새 알림 없음 이미지"
                             width={200}
                             height={200}
