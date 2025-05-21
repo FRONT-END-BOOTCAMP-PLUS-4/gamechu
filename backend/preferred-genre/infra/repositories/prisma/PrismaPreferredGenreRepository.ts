@@ -1,5 +1,5 @@
 import { PreferredGenreRepository } from "@/backend/preferred-genre/domain/repositories/PreferredGenreRepository";
-import { PrismaClient, } from "@/prisma/generated";
+import { PrismaClient } from "@/prisma/generated";
 
 export class PrismaPreferredGenreRepository implements PreferredGenreRepository {
     private prisma: PrismaClient;
