@@ -16,17 +16,21 @@ export default function NotificationModal(props: NotificationModalProps) {
 
     return (
         <ModalWrapper isOpen={isOpen} onClose={closeModal}>
-            <NotificationRecordList
-                notificationRecords={props.notificationRecordListDto.records}
-            />
-            <Pager
-                currentPage={props.notificationRecordListDto.currentPage}
-                pages={props.notificationRecordListDto.pages}
-                endPage={props.notificationRecordListDto.endPage}
-                onPageChange={(newPage: number) =>
-                    (props.notificationRecordListDto.currentPage = newPage)
-                }
-            />
+            <div className="w-[480px] max-h-[80vh] flex flex-col gap-4">
+                <NotificationRecordList
+                    notificationRecords={
+                        props.notificationRecordListDto.records
+                    }
+                />
+                <Pager
+                    currentPage={props.notificationRecordListDto.currentPage}
+                    pages={props.notificationRecordListDto.pages}
+                    endPage={props.notificationRecordListDto.endPage}
+                    onPageChange={(newPage: number) =>
+                        (props.notificationRecordListDto.currentPage = newPage)
+                    }
+                />
+            </div>
         </ModalWrapper>
     );
 }
