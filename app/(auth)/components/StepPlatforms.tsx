@@ -1,7 +1,6 @@
-// components/Register/StepPlatforms.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
 
@@ -10,27 +9,64 @@ interface Props {
     onBack: () => void;
 }
 
-const PLATFORMS = ["PC", "콘솔", "모바일", "클라우드", "VR/AR", "아케이드"];
+interface Platform {
+    id: number;
+    name: string;
+}
 
 export default function StepPlatforms({ onSubmit, onBack }: Props) {
-    const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
-    const [error, setError] = useState("");
+    const [platforms, setPlatforms] = useState<Platform[]>([]);
+    const [selectedPlatformIds, setSelectedPlatformIds] = useState<number[]>([]);
 
-    const togglePlatform = (platform: string) => {
-        setSelectedPlatforms((prev) =>
-            prev.includes(platform)
-                ? prev.filter((p) => p !== platform)
-                : [...prev, platform]
+    // ✅ 플랫폼 데이터 가져오기
+    useEffect(() => {
+        const fetchPlatforms = async () => {
+            try {
+                const res = await fetch("/api/platforms");
+                const data: Platform[] = await res.json();
+                setPlatforms(data);
+            } catch (e) {
+                console.error("플랫폼 불러오기 실패", e);
+            }
+        };
+
+        fetchPlatforms();
+    }, []);
+
+    const togglePlatform = (platformId: number) => {
+        setSelectedPlatformIds((prev) =>
+            prev.includes(platformId)
+                ? prev.filter((id) => id !== platformId)
+                : [...prev, platformId]
         );
     };
 
-    const handleSubmit = () => {
-        if (selectedPlatforms.length === 0) {
-            setError("이용하는 플랫폼을 하나 이상 선택해주세요.");
+    const handleSubmit = async () => {
+        if (selectedPlatformIds.length === 0) {
+            onSubmit();
             return;
         }
-        setError("");
-        onSubmit();
+
+        try {
+            const res = await fetch("/api/preferred-platforms", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    platformIds: selectedPlatformIds,
+                }),
+            });
+
+            if (res.ok) {
+                onSubmit();
+            } else {
+                alert("선호 플랫폼 저장에 실패했습니다.");
+            }
+        } catch (err) {
+            console.error("API 호출 오류:", err);
+            alert("오류가 발생했습니다.");
+        }
     };
 
     return (
@@ -40,19 +76,15 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
             </h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
-                {PLATFORMS.map((platform) => (
+                {platforms.map((platform) => (
                     <SelectionCard
-                        key={platform}
-                        label={platform}
-                        selected={selectedPlatforms.includes(platform)}
-                        onClick={() => togglePlatform(platform)}
+                        key={platform.id}
+                        label={platform.name}
+                        selected={selectedPlatformIds.includes(platform.id)}
+                        onClick={() => togglePlatform(platform.id)}
                     />
                 ))}
             </div>
-
-            {error && (
-                <p className="text-caption text-state-error mb-4">{error}</p>
-            )}
 
             <div className="flex justify-between mt-8">
                 <Button
