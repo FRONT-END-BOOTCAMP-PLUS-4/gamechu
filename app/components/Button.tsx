@@ -17,7 +17,7 @@ interface ButtonProps {
 
 const sizeClasses: Record<ButtonSize, string> = {
     xs: "w-[32px] h-[32px]",
-    send: "w=[50px] h-[50px]",
+    send: "w-[50px] h-[50px]",
     small: "w-[90px] h-[35px]",
     medium: "w-[150px] h-[50px]",
     large: "w-[250px] h-[40px]",
