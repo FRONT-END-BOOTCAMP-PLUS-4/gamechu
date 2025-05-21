@@ -17,9 +17,8 @@ interface Genre {
 export default function StepGenres({ onNext, onBack }: Props) {
     const [genres, setGenres] = useState<Genre[]>([]);
     const [selectedGenreIds, setSelectedGenreIds] = useState<number[]>([]);
-    const [error, setError] = useState("");
 
-    // ✅ 장르 데이터 가져오기
+    // ✅ 장르 목록 불러오기
     useEffect(() => {
         const fetchGenres = async () => {
             try {
@@ -43,35 +42,31 @@ export default function StepGenres({ onNext, onBack }: Props) {
     };
 
     const handleNext = async () => {
+        // 선택 안 했으면 그냥 다음
         if (selectedGenreIds.length === 0) {
-            setError("장르를 하나 이상 선택해주세요.");
-            return;
-        }
-
-        setError("");
-
-        const memberId = sessionStorage.getItem("memberId");
-        console.log("memberId", memberId);
-        if (!memberId) {
-            alert("회원 정보를 불러올 수 없습니다.");
-            return;
-        }
-
-        const res = await fetch("/api/preferred-genres", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                memberId,
-                genreIds: selectedGenreIds,
-            }),
-        });
-
-        if (res.ok) {
             onNext();
-        } else {
-            alert("선호 장르 저장에 실패했습니다.");
+            return;
+        }
+
+        try {
+            const res = await fetch("/api/preferred-genres", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    genreIds: selectedGenreIds, // ✅ memberId 제거
+                }),
+            });
+
+            if (res.ok) {
+                onNext();
+            } else {
+                alert("선호 장르 저장에 실패했습니다.");
+            }
+        } catch (err) {
+            console.error("API 호출 오류:", err);
+            alert("오류가 발생했습니다.");
         }
     };
 
@@ -91,10 +86,6 @@ export default function StepGenres({ onNext, onBack }: Props) {
                     />
                 ))}
             </div>
-
-            {error && (
-                <p className="text-caption text-state-error mb-4">{error}</p>
-            )}
 
             <div className="flex justify-between mt-8">
                 <Button

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import Input from "@/app/components/Input";
 import Button from "@/app/components/Button";
 
-interface Props {
+type Props = {
     onNext: () => void;
-}
+};
 
 export default function StepProfile({ onNext }: Props) {
     const [nickname, setNickname] = useState("");
@@ -92,6 +93,7 @@ export default function StepProfile({ onNext }: Props) {
         }
 
         try {
+            // 1. 회원가입
             const res = await fetch("/api/auth/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -101,9 +103,19 @@ export default function StepProfile({ onNext }: Props) {
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || "회원가입 실패");
 
-            sessionStorage.setItem("memberId", data.memberId);
-            setSuccessMessage("회원가입 성공!");
-            onNext();
+            // 2. 자동 로그인
+            const loginRes = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+            });
+
+            if (loginRes?.ok) {
+                setSuccessMessage("회원가입 및 로그인 성공!");
+                onNext();
+            } else {
+                setFieldErrors({ general: "회원가입은 성공했지만 로그인에 실패했습니다." });
+            }
         } catch (err) {
             const message = err instanceof Error ? err.message : "회원가입 중 오류 발생";
             setFieldErrors({ general: message });
@@ -115,9 +127,7 @@ export default function StepProfile({ onNext }: Props) {
             <div className="space-y-1">
                 <label className="block text-body text-font-100 font-semibold">닉네임</label>
                 <Input placeholder="닉네임을 입력하세요" value={nickname} onChange={(e) => setNickname(e.target.value)} />
-                <div className="min-h-8px]">
-                    {fieldErrors.nickname && <p className="text-caption text-state-error mt-1">{fieldErrors.nickname}</p>}
-                </div>
+                {fieldErrors.nickname && <p className="text-caption text-state-error mt-1">{fieldErrors.nickname}</p>}
             </div>
 
             <div className="space-y-1">
@@ -135,26 +145,20 @@ export default function StepProfile({ onNext }: Props) {
                     </div>
                     <Button label="중복 검사" size="small" type="black" onClick={checkEmailDuplicate} />
                 </div>
-                <div className="min-h-8px]">
-                    {fieldErrors.email && <p className="text-caption text-state-error mt-1">{fieldErrors.email}</p>}
-                    {!fieldErrors.email && successMessage && <p className="text-caption text-state-success mt-1">{successMessage}</p>}
-                </div>
+                {fieldErrors.email && <p className="text-caption text-state-error mt-1">{fieldErrors.email}</p>}
+                {!fieldErrors.email && successMessage && <p className="text-caption text-state-success mt-1">{successMessage}</p>}
             </div>
 
             <div className="space-y-1">
                 <label className="block text-body text-font-100 font-semibold">비밀번호</label>
                 <Input type="password" placeholder="비밀번호를 입력하세요" value={password} onChange={(e) => setPassword(e.target.value)} />
-                <div className="min-h-[8px]">
-                    {fieldErrors.password && <p className="text-caption text-state-error mt-1">{fieldErrors.password}</p>}
-                </div>
+                {fieldErrors.password && <p className="text-caption text-state-error mt-1">{fieldErrors.password}</p>}
             </div>
 
             <div className="space-y-1">
                 <label className="block text-body text-font-100 font-semibold">비밀번호 확인</label>
                 <Input type="password" placeholder="비밀번호를 다시 입력하세요" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
-                <div className="min-h-8px]">
-                    {fieldErrors.confirm && <p className="text-caption text-state-error mt-1">{fieldErrors.confirm}</p>}
-                </div>
+                {fieldErrors.confirm && <p className="text-caption text-state-error mt-1">{fieldErrors.confirm}</p>}
             </div>
 
             <div className="space-y-1">
@@ -181,17 +185,13 @@ export default function StepProfile({ onNext }: Props) {
                         여자
                     </button>
                 </div>
-                <div className="min-h-8px]">
-                    {fieldErrors.gender && <p className="text-caption text-state-error text-center mt-1">{fieldErrors.gender}</p>}
-                </div>
+                {fieldErrors.gender && <p className="text-caption text-state-error text-center mt-1">{fieldErrors.gender}</p>}
             </div>
 
             <div className="space-y-1">
                 <label className="block text-body text-font-100 font-semibold">생년월일</label>
                 <Input placeholder="ex) 20000101" value={birth} onChange={(e) => setBirth(e.target.value)} />
-                <div className="min-h-[8px]">
-                    {fieldErrors.birth && <p className="text-caption text-state-error mt-1">{fieldErrors.birth}</p>}
-                </div>
+                {fieldErrors.birth && <p className="text-caption text-state-error mt-1">{fieldErrors.birth}</p>}
             </div>
 
             {fieldErrors.general && (
