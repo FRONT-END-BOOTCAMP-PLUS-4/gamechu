@@ -13,7 +13,7 @@ export default function SelectionCard({
         <button
             onClick={onClick}
             className={`
-                w-[160px] h-[80px]
+                min-w-[140px] h-[80px]   // ✅ min-width로 변경해 반응형 대응
                 border rounded-xl 
                 flex items-center justify-center text-center
                 px-2 py-2 text-sm font-medium leading-snug

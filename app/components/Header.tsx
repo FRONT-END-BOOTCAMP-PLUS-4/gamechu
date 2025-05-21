@@ -1,22 +1,30 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { getAuthUserId } from "@/utils/GetAuthUserId.client";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
 import Button from "./Button";
-import { useAuthStore } from "@/stores/AuthStore";
-import { signOut } from "next-auth/react";
 
 export default function Header() {
-    const user = useAuthStore((state) => state.user);
-    const clearUser = useAuthStore((state) => state.clearUser);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const router = useRouter();
     const pathname = usePathname();
 
+    useEffect(() => {
+        const checkAuth = async () => {
+            const id = await getAuthUserId();
+            setIsLoggedIn(id !== null);
+        };
+        checkAuth();
+    }, []);
+
     const handleLogout = async () => {
-        clearUser();                            // ✅ 클라이언트 상태 초기화 (zustand)
-        await signOut({ redirect: false });     // ✅ NextAuth 세션 로그아웃
-        router.refresh();                       // ✅ 헤더 상태 반영 위해 리렌더링
+        await signOut({ redirect: false });
+        setIsLoggedIn(false);
+        router.refresh();
     };
 
     const handleGoToLogin = () => {
@@ -53,7 +61,7 @@ export default function Header() {
             </div>
 
             <div className="flex items-center space-x-4 mr-[75px]">
-                {user ? (
+                {isLoggedIn ? (
                     <>
                         <button className="text-primary-purple-100 hover:opacity-80">
                             <Image
@@ -63,7 +71,6 @@ export default function Header() {
                                 height={24}
                             />
                         </button>
-
                         <Link href="/profile">
                             <Button
                                 label="마이 페이지"
@@ -71,7 +78,6 @@ export default function Header() {
                                 type="black"
                             />
                         </Link>
-
                         <Button
                             label="로그아웃"
                             size="medium"
