@@ -1,7 +1,6 @@
-// components/Register/StepThemes.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
 
@@ -10,38 +9,64 @@ interface Props {
     onBack: () => void;
 }
 
-const THEMES = [
-    "공포",
-    "판타지",
-    "SF",
-    "좀비",
-    "디스토피아",
-    "역사",
-    "연애",
-    "일상",
-    "탐험",
-    "미스터리",
-];
+interface Theme {
+    id: number;
+    name: string;
+}
 
 export default function StepThemes({ onNext, onBack }: Props) {
-    const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-    const [error, setError] = useState("");
+    const [themes, setThemes] = useState<Theme[]>([]);
+    const [selectedThemeIds, setSelectedThemeIds] = useState<number[]>([]);
 
-    const toggleTheme = (theme: string) => {
-        setSelectedThemes((prev) =>
-            prev.includes(theme)
-                ? prev.filter((t) => t !== theme)
-                : [...prev, theme]
+    // ✅ 테마 데이터 가져오기
+    useEffect(() => {
+        const fetchThemes = async () => {
+            try {
+                const res = await fetch("/api/themes");
+                const data: Theme[] = await res.json();
+                setThemes(data);
+            } catch (e) {
+                console.error("테마 불러오기 실패", e);
+            }
+        };
+
+        fetchThemes();
+    }, []);
+
+    const toggleTheme = (themeId: number) => {
+        setSelectedThemeIds((prev) =>
+            prev.includes(themeId)
+                ? prev.filter((id) => id !== themeId)
+                : [...prev, themeId]
         );
     };
 
-    const handleNext = () => {
-        if (selectedThemes.length === 0) {
-            setError("테마를 하나 이상 선택해주세요.");
+    const handleNext = async () => {
+        //선택 안했으면 그냥 다음
+        if (selectedThemeIds.length === 0) {
+            onNext();
             return;
         }
-        setError("");
-        onNext();
+        try {
+            const res = await fetch("/api/preferred-themes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    genreIds: selectedThemeIds, // ✅ memberId 제거
+                }),
+            });
+
+            if (res.ok) {
+                onNext();
+            } else {
+                alert("선호 테마 저장에 실패했습니다.");
+            }
+        } catch (err) {
+            console.error("API 호출 오류:", err);
+            alert("오류가 발생했습니다.");
+        }
     };
 
     return (
@@ -51,19 +76,15 @@ export default function StepThemes({ onNext, onBack }: Props) {
             </h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
-                {THEMES.map((theme) => (
+                {themes.map((theme) => (
                     <SelectionCard
-                        key={theme}
-                        label={theme}
-                        selected={selectedThemes.includes(theme)}
-                        onClick={() => toggleTheme(theme)}
+                        key={theme.id}
+                        label={theme.name}
+                        selected={selectedThemeIds.includes(theme.id)}
+                        onClick={() => toggleTheme(theme.id)}
                     />
                 ))}
             </div>
-
-            {error && (
-                <p className="text-caption text-state-error mb-4">{error}</p>
-            )}
 
             <div className="flex justify-between mt-8">
                 <Button
