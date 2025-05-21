@@ -3,16 +3,17 @@
 import { useEffect, useState } from "react";
 import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
+import { Platform } from "@/prisma/generated";
 
 interface Props {
     onSubmit: () => void;
     onBack: () => void;
 }
 
-interface Platform {
-    id: number;
-    name: string;
-}
+// interface Platform {
+//     id: number;
+//     name: string;
+// }
 
 export default function StepPlatforms({ onSubmit, onBack }: Props) {
     const [platforms, setPlatforms] = useState<Platform[]>([]);

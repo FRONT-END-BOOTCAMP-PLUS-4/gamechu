@@ -3,16 +3,17 @@
 import { useEffect, useState } from "react";
 import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
+import { Genre } from "@/prisma/generated";
 
 interface Props {
     onNext: () => void;
     onBack: () => void;
 }
 
-interface Genre {
-    id: number;
-    name: string;
-}
+// interface Genre {
+//     id: number;
+//     name: string;
+// }
 
 export default function StepGenres({ onNext, onBack }: Props) {
     const [genres, setGenres] = useState<Genre[]>([]);

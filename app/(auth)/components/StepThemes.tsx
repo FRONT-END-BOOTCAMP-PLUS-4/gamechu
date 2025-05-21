@@ -3,16 +3,17 @@
 import { useEffect, useState } from "react";
 import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
+import { Theme } from "@/prisma/generated";
 
 interface Props {
     onNext: () => void;
     onBack: () => void;
 }
 
-interface Theme {
-    id: number;
-    name: string;
-}
+// interface Theme {
+//     id: number;
+//     name: string;
+// }
 
 export default function StepThemes({ onNext, onBack }: Props) {
     const [themes, setThemes] = useState<Theme[]>([]);
