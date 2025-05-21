@@ -1,7 +1,10 @@
+// app/profile/page.tsx
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
+import ProfileSummaryCard from "./components/ProfileSummaryCard";
+import ProfileTierCard from "./components/ProfileTierCard";
 
 export default function ProfilePage() {
     const [userId, setUserId] = useState<string | null>(null);
@@ -18,18 +21,14 @@ export default function ProfilePage() {
     }, [fetchUserId]);
 
     return (
-        <main style={{ padding: "2rem" }}>
-            <h1>프로필 페이지</h1>
-            <p>여기는 유저의 프로필 정보를 보여주는 페이지입니다.</p>
+        <main className="min-h-screen bg-background-400 font-sans text-font-100 p-10">
+            <div className="flex space-x-10 mb-10">
+                <ProfileSummaryCard />
+                <ProfileTierCard />
+            </div>
 
-            {loading ? (
-                <p>로딩 중...</p>
-            ) : userId ? (
-                <p>
-                    <strong>유저 ID:</strong> {userId}
-                </p>
-            ) : (
-                <p>로그인된 유저 정보가 없습니다.</p>
+            {!loading && userId && (
+                <p className="text-sm text-font-200 mb-4">유저 ID: {userId}</p>
             )}
         </main>
     );
