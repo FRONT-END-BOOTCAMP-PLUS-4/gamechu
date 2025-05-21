@@ -3,16 +3,11 @@
 import Button from "@/app/components/Button";
 
 interface ArenaVoteProps {
-    status: "recruiting" | "waiting" | "active" | "voting" | "closed";
     leftVotes: number;
     rightVotes: number;
 }
 
-export default function ArenaVote({
-    status,
-    leftVotes,
-    rightVotes,
-}: ArenaVoteProps) {
+export default function ArenaVote({ leftVotes, rightVotes }: ArenaVoteProps) {
     // 투표 합계
     const totalVotes = leftVotes + rightVotes;
 
@@ -21,7 +16,7 @@ export default function ArenaVote({
     const rightPercent = (rightVotes / totalVotes) * 100;
 
     // 투표 상태가 아닌 경우 렌더링 안 함
-    if (status !== "voting" && status !== "closed") return null;
+    // if (status !== "voting" && status !== "closed") return null;
 
     return (
         <div className="w-full max-w-[1000px] mt-6 bg-background-300 rounded-xl px-6 py-4 flex flex-col items-center justify-center gap-4 min-h-[200px] animate-fade-in-up">
@@ -29,7 +24,7 @@ export default function ArenaVote({
             <div className="w-full flex items-center justify-between">
                 {/* A 유저 */}
                 <div className="flex items-center gap-2 text-center">
-                    {status === "voting" ? (
+                    {"voting" === "voting" ? ( //todo: status가 4일때로
                         <Button label="투표" type="purple" />
                     ) : (
                         <div className="w-24 text-font-100 font-bold">
@@ -52,7 +47,7 @@ export default function ArenaVote({
 
                 {/* B 유저 */}
                 <div className="flex items-center gap-2 flex-row-reverse">
-                    {status === "voting" ? (
+                    {"voting" === "voting" ? (
                         <Button label="투표" type="blue" />
                     ) : (
                         <div className="w-24 text-font-100 font-bold text-center">
@@ -71,7 +66,7 @@ export default function ArenaVote({
             </div>
 
             {/* 게이지 바 (투표 종료 시만 보임) */}
-            {status === "closed" && (
+            {"closed" === "closed" && ( //todo: status가 5일때로 변경해야함
                 <div className="w-full mt-4 h-3 rounded-lg overflow-hidden flex">
                     <div
                         className="rounded-l-lg"
@@ -96,7 +91,7 @@ export default function ArenaVote({
 
             {/* 하단 상태 메시지 */}
             <div className="text-font-100 text-caption">
-                {status === "voting" ? (
+                {"voting" === "voting" ? ( //todo: status가 4일때로 변경해야함
                     <>
                         투표가 진행중입니다. 남은시간 :{" "}
                         <span className="font-bold">12h 23m</span>

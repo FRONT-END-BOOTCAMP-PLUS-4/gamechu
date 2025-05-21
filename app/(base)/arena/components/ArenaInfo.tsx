@@ -1,6 +1,6 @@
 "use client";
 
-export default function ArenaInfo() {
+export default function ArenaInfo({ arenaData }: { arenaData: any }) {
     return (
         <div className="rounded-xl overflow-hidden animate-fade-in-up">
             {/* 상단 제목 영역 */}
@@ -39,7 +39,7 @@ export default function ArenaInfo() {
                             진행 일정
                         </h3>
                         <p className="text-caption text-font-100">
-                            25.05.14 19:00~25.05.14 20:00
+                            {arenaData?.startDate ?? "25.05.14 20:00"} ~{" "}
                         </p>
                     </div>
                 </div>
