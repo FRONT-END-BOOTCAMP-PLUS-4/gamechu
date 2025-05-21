@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/GamePrismaRepository";
 import { GetFilteredGamesUsecase } from "@/backend/game/application/usecase/GetFilteredGamesUsecase";
 
-// GET /api/games?genre=1&theme=2&platform=3
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);

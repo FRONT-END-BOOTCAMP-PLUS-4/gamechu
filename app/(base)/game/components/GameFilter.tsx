@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useState } from "react";
 import { cn } from "@/utils/tailwindUtil";
 
 type TagType = "genre" | "theme";
@@ -34,8 +35,8 @@ export default function GameFilter({
     themes,
     platforms,
 }: GameFilterProps) {
-    const [isGenreExpanded, setIsGenreExpanded] = React.useState(false);
-    const [isPlatformExpanded, setIsPlatformExpanded] = React.useState(false);
+    const [isGenreExpanded, setIsGenreExpanded] = useState(false);
+    const [isPlatformExpanded, setIsPlatformExpanded] = useState(false);
 
     const genreAndTheme: TagItem[] = [
         ...genres.map((g) => ({ ...g, type: "genre" as const })),
