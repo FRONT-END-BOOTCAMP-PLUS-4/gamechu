@@ -1,6 +1,6 @@
 "use client";
 
-export default function ArenaHeader({ arenaData }: { arenaData: any }) {
+export default function ArenaDetailHeader({ arenaData }: { arenaData: any }) {
     console.log("arenaData: ", arenaData);
     return (
         <div className="w-full max-w-[1000px] flex flex-col gap-4">

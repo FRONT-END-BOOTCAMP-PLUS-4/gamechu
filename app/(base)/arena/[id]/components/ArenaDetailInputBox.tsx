@@ -10,7 +10,7 @@ interface ArenaInputBoxProps {
     disabled: boolean;
 }
 
-export default function ArenaInputBox({
+export default function ArenaDetailInputBox({
     content,
     onChange,
     onSend,

@@ -35,17 +35,17 @@ export class PrismaArenaRepository implements ArenaRepository {
         if (!creator) {
             throw new Error("Creator not found");
         }
-        const challenger = await this.prisma.member.findUnique({
-            where: { id: arena.challengerId },
-            select: { nickname: true },
-        });
-        if (!challenger) {
-            throw new Error("Challenger not found");
-        }
+        const challenger = arena.challengerId
+            ? await this.prisma.member.findUnique({
+                  where: { id: arena.challengerId },
+                  select: { nickname: true },
+              })
+            : null;
+
         return {
             id: arena.id,
             creatorName: creator.nickname,
-            challengerName: challenger?.nickname,
+            challengerName: challenger?.nickname ?? null,
             title: arena.title,
             description: arena.description,
             startDate: arena.startDate,
@@ -71,6 +71,19 @@ export class PrismaArenaRepository implements ArenaRepository {
         await this.prisma.arena.update({
             where: { id: arenaId },
             data: { status },
+        });
+    }
+    async updateChallengerAndStatus(
+        arenaId: number,
+        challengerId: string,
+        status: ArenaStatus
+    ): Promise<void> {
+        await this.prisma.arena.update({
+            where: { id: arenaId },
+            data: {
+                challengerId,
+                status,
+            },
         });
     }
 }

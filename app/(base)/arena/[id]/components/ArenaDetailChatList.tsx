@@ -8,7 +8,7 @@ interface ArenaChatListProps {
     arenaData: any;
 }
 
-const ArenaChatList = forwardRef<HTMLDivElement, ArenaChatListProps>(
+const ArenaDetailChatList = forwardRef<HTMLDivElement, ArenaChatListProps>(
     ({ chats, participants, arenaData }, ref) => {
         return (
             <div className="flex-1 overflow-y-auto space-y-3 pr-2 mb-4 max-h-[500px] custom-scroll">
@@ -61,7 +61,8 @@ const ArenaChatList = forwardRef<HTMLDivElement, ArenaChatListProps>(
                                         {isChallenger && (
                                             <div className="flex items-center mb-1 gap-2">
                                                 <span className="text-xs text-font-300">
-                                                    {arenaData?.challengerName}
+                                                    {arenaData?.challengerName}{" "}
+                                                    || 없음
                                                 </span>
                                                 <img
                                                     src="/icons/teamB.svg"
@@ -100,6 +101,6 @@ const ArenaChatList = forwardRef<HTMLDivElement, ArenaChatListProps>(
     }
 );
 
-ArenaChatList.displayName = "ArenaChatList";
+ArenaDetailChatList.displayName = "ArenaChatList";
 
-export default ArenaChatList;
+export default ArenaDetailChatList;

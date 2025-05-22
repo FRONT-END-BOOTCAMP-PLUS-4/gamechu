@@ -8,7 +8,6 @@ export async function GET(
     context: { params: Promise<{ id: string }> }
 ) {
     const arenaId = Number((await context.params).id);
-    console.log("arenaId", arenaId);
     if (isNaN(arenaId)) {
         return NextResponse.json({ error: "Invalid arenaId" }, { status: 400 });
     }
