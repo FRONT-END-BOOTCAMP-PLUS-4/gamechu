@@ -1,6 +1,9 @@
 "use client";
 
-export default function ArenaDetailInfo({ arenaData }: { arenaData: any }) {
+import useArenaStore from "@/stores/useArenaStore";
+
+export default function ArenaDetailInfo() {
+    const arenaData = useArenaStore((state) => state.arenaData);
     return (
         <div className="rounded-xl overflow-hidden animate-fade-in-up">
             {/* 상단 제목 영역 */}

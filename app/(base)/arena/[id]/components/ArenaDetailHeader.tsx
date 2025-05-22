@@ -1,7 +1,9 @@
 "use client";
 
-export default function ArenaDetailHeader({ arenaData }: { arenaData: any }) {
-    console.log("arenaData: ", arenaData);
+import useArenaStore from "@/stores/useArenaStore";
+
+export default function ArenaDetailHeader() {
+    const arenaData = useArenaStore((state) => state.arenaData);
     return (
         <div className="w-full max-w-[1000px] flex flex-col gap-4">
             {/* 상단: 제목 & 게시자 */}

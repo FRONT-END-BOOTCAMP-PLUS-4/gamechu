@@ -1,15 +1,17 @@
 "use client";
 
 import ArenaVote from "./components/ArenaDetailVote";
-import ArenaChatting from "./components/ArenaDetailContainer";
 import ArenaHeader from "./components/ArenaDetailHeader";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ArenaInfo from "./components/ArenaDetailInfo";
 import { useParams } from "next/navigation";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
+import useArenaStore from "@/stores/useArenaStore";
+import ArenaDetailContainer from "./components/ArenaDetailContainer";
 
 export default function ArenaDetailPage() {
-    const [arenaData, setArenaData] = useState<ArenaDetailDto>();
+    const setGlobalArenaData = useArenaStore((state) => state.setArenaData);
+    const clearGlobalArenaData = useArenaStore((state) => state.clearArenaData);
     const idParams = useParams().id;
     const arenaId = Number(idParams);
     // 투표 수
@@ -29,14 +31,17 @@ export default function ArenaDetailPage() {
                 }
 
                 const data: ArenaDetailDto = await res.json();
-                setArenaData(data);
+                setGlobalArenaData(data);
             } catch (error) {
                 console.error("Error fetching arena detail:", error);
             }
         };
 
         fetchArenaDetail();
-    }, [arenaId]);
+        return () => {
+            clearGlobalArenaData();
+        };
+    }, [arenaId, setGlobalArenaData, clearGlobalArenaData]);
     return (
         <div>
             {/* <div className="flex gap-4">
@@ -49,14 +54,14 @@ export default function ArenaDetailPage() {
             <div className="flex px-16 py-16 gap-8">
                 {/* 왼쪽: 채팅, 투표 등 */}
                 <div className="flex flex-col flex-[3]">
-                    <ArenaHeader arenaData={arenaData} />
-                    <ArenaChatting arenaData={arenaData} />
+                    <ArenaHeader />
+                    <ArenaDetailContainer />
                     <ArenaVote leftVotes={leftVotes} rightVotes={rightVotes} />
                 </div>
 
                 {/* 오른쪽: 정보 패널 */}
                 <div className="flex-[1] mt-16">
-                    <ArenaInfo arenaData={arenaData} />
+                    <ArenaInfo />
                 </div>
             </div>
         </div>

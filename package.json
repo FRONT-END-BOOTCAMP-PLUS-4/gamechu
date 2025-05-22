@@ -13,6 +13,7 @@
         "@prisma/client": "^6.7.0",
         "bcryptjs": "^3.0.2",
         "clsx": "^2.1.1",
+        "dayjs": "^1.11.13",
         "js-cookie": "^3.0.5",
         "lottie-react": "^2.4.1",
         "next": "15.3.2",

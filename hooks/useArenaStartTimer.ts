@@ -1,31 +1,28 @@
+import useArenaStore from "@/stores/useArenaStore";
 import { useEffect } from "react";
 
 interface UseArenaStartTimerProps {
-    arenaId: number;
-    status: number;
-    startAt: string;
-    challengerId: string | null;
     onStatusUpdate?: (newStatus: number) => void;
 }
 
 export function useArenaStartTimer({
-    arenaId,
-    status,
-    startAt,
-    challengerId,
     onStatusUpdate,
 }: UseArenaStartTimerProps) {
+    const arenaDetail = useArenaStore((state) => state.arenaData);
     useEffect(() => {
-        if (status !== 2 || !startAt) return;
+        if (arenaDetail?.status !== 2 || !arenaDetail?.startDate) return;
 
         const handleStart = async () => {
-            const newStatus = challengerId ? 3 : 5;
-            console.log("여기서도 떠야됨: ", challengerId);
+            const newStatus = arenaDetail.challengerId ? 3 : 5;
+            console.log("여기서도 떠야됨: ", arenaDetail.challengerId);
             try {
-                const res = await fetch(`/api/arenas/${arenaId}`, {
+                const res = await fetch(`/api/arenas/${arenaDetail?.id}`, {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ status: newStatus, challengerId }),
+                    body: JSON.stringify({
+                        status: newStatus,
+                        challengerId: arenaDetail?.challengerId,
+                    }),
                 });
 
                 if (!res.ok) throw new Error("상태 변경 실패");
@@ -37,7 +34,7 @@ export function useArenaStartTimer({
         };
 
         const now = new Date();
-        const startTime = new Date(startAt);
+        const startTime = new Date(arenaDetail.startDate);
         const msUntilStart = startTime.getTime() - now.getTime();
 
         if (msUntilStart <= 0) {
@@ -50,5 +47,11 @@ export function useArenaStartTimer({
         }, msUntilStart);
 
         return () => clearTimeout(timer);
-    }, [arenaId, status, startAt, challengerId, onStatusUpdate]);
+    }, [
+        arenaDetail?.id,
+        arenaDetail?.status,
+        arenaDetail?.startDate,
+        arenaDetail?.challengerId,
+        onStatusUpdate,
+    ]);
 }

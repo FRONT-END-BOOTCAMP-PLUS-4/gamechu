@@ -1,15 +1,13 @@
 "use client";
 import Button from "@/app/components/Button";
+import useArenaStore from "@/stores/useArenaStore";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import { useState } from "react";
 
-export default function ArenaDetailRecruiting({
-    arenaData,
-}: {
-    arenaData: any;
-}) {
+export default function ArenaDetailRecruiting() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const arenaDetail = useArenaStore((state) => state.arenaData);
 
     const handleJoin = async () => {
         setLoading(true);
@@ -18,7 +16,7 @@ export default function ArenaDetailRecruiting({
             const memberId = await getAuthUserId(); // 🔐 로그인된 유저 ID 가져오기
             if (!memberId) throw new Error("로그인이 필요합니다.");
 
-            const res = await fetch(`/api/arenas/${arenaData.id}`, {
+            const res = await fetch(`/api/arenas/${arenaDetail?.id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,8 +33,16 @@ export default function ArenaDetailRecruiting({
             }
 
             alert("참가 요청이 접수되었습니다!");
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            let errorMessage = "알 수 없는 오류가 발생했습니다.";
+            if (err instanceof Error) {
+                errorMessage = err.message;
+            } else if (typeof err === "string") {
+                errorMessage = err;
+            } else {
+                console.error("Catch된 알 수 없는 타입의 에러:", err);
+            }
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }

@@ -5,8 +5,8 @@ import { ChattingDto } from "@/backend/chatting/application/usecase/dto/Chatting
 import { ArenaStatus } from "@/types/arena-status";
 
 interface ArenaSocketProps {
-    arenaId: number;
-    status: ArenaStatus;
+    arenaId: number | undefined;
+    status: ArenaStatus | undefined;
     onReceive: (chat: ChattingDto) => void;
 }
 
@@ -22,6 +22,7 @@ export function useArenaSocket({
     useEffect(() => {
         onReceiveRef.current = onReceive; // 최신 onReceive 함수로 업데이트
     }, [onReceive]);
+
     function onConnect() {
         setIsConnected(true);
         setTransport(socket.io.engine.transport.name);
@@ -32,14 +33,14 @@ export function useArenaSocket({
             setTransport(transport.name);
         });
     }
+
     useEffect(() => {
-        if (status !== 3) return;
+        if (status !== 3) return; //
         if (socket.connected) {
             onConnect();
         }
-        // 방 입장
-        socket.emit("join room", arenaId.toString());
-        console.log("join room", arenaId.toString());
+        socket.emit("join room", arenaId?.toString()); // 클라이언트가 서버한테 "join room"이라는 이벤트 발생시킴
+        console.log("join room", arenaId?.toString());
 
         // 메시지 수신 핸들러
         const sendMessage = (msg: {
@@ -55,10 +56,10 @@ export function useArenaSocket({
                 content: msg.text,
                 createdAt: new Date(),
             };
-            onReceiveRef.current(newChat); // 새로운 채팅 수신 시 상태 업데이트
+            onReceiveRef.current(newChat); // useArenaSocket을 호출한 곳에서 넘겨준 onReceive콜백 함수 실행
         };
 
-        socket.on("chat message", sendMessage);
+        socket.on("chat message", sendMessage); // 서버에서 chat message 이벤트가 오면 실행
         return () => {
             socket.off("chat message", sendMessage);
         };
