@@ -1,6 +1,6 @@
 "use client";
 
-export default function ArenaInfo({ arenaData }: { arenaData: any }) {
+export default function ArenaDetailInfo({ arenaData }: { arenaData: any }) {
     return (
         <div className="rounded-xl overflow-hidden animate-fade-in-up">
             {/* 상단 제목 영역 */}

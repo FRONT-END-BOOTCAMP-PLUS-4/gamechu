@@ -1,10 +1,10 @@
 "use client";
 
-import ArenaVote from "../components/AnrenaVote";
-import ArenaChatting from "../components/ArenaChatting";
-import ArenaHeader from "../components/ArenaHeader";
+import ArenaVote from "./components/ArenaDetailVote";
+import ArenaChatting from "./components/ArenaDetailContainer";
+import ArenaHeader from "./components/ArenaDetailHeader";
 import React, { useEffect, useState } from "react";
-import ArenaInfo from "../components/ArenaInfo";
+import ArenaInfo from "./components/ArenaDetailInfo";
 import { useParams } from "next/navigation";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 

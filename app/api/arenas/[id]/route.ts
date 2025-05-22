@@ -28,20 +28,20 @@ export async function GET(
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { arenaId: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
-    const { status } = await req.json(); // status는 1 ~ 5 중 하나
-    const arenaId = parseInt(params.arenaId);
+    const { status, challengerId } = await req.json();
+    const arenaId = Number((await context.params).id);
 
     const repo = new PrismaArenaRepository();
     const usecase = new UpdateArenaStatusUsecase(repo);
-
+    console.log("떠야됨: ", challengerId);
     try {
-        await usecase.execute(arenaId, status);
+        await usecase.execute(arenaId, status, challengerId); // challengerId 없으면 undefined
         return NextResponse.json({ success: true });
-    } catch (err) {
+    } catch (err: any) {
         return NextResponse.json(
-            { success: false, error: err },
+            { success: false, error: err.message || "에러 발생" },
             { status: 500 }
         );
     }

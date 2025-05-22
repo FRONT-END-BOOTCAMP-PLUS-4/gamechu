@@ -6,7 +6,7 @@ interface ArenaWaitingProps {
     startAt: string;
 }
 
-export default function ArenaWaiting({ startAt }: ArenaWaitingProps) {
+export default function ArenaDetailWaiting({ startAt }: ArenaWaitingProps) {
     return (
         <div className="w-full max-w-[1000px] mt-6 px-4 py-6 text-center text-font-100 bg-background-300 rounded-lg min-h-[740px] animate-fade-in-up">
             <h2 className="text-lg mb-2 text-font-100">

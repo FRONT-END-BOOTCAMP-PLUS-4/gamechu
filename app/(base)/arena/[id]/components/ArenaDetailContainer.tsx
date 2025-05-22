@@ -7,24 +7,24 @@ import { socket } from "@/socket";
 import { useArenaSocket } from "@/hooks/useArenaSocket";
 import { ArenaParticipantsDto } from "@/backend/arena/application/usecase/dto/ArenaParticipantsDto";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
-import { ArenaRecruiting } from "./ArenaRecruiting";
-import ArenaWaiting from "./ArenaWaiting";
-import ArenaInputBox from "./ArenaInputBox";
-import ArenaChatList from "./ArenaChatList";
+import ArenaDetailRecruiting from "./ArenaDetailRecruiting";
+import ArenaDetailWaiting from "./ArenaDetailWaiting";
+import ArenaDetailInputBox from "./ArenaDetailInputBox";
+import ArenaDetailChatList from "./ArenaDetailChatList";
+import { useArenaStartTimer } from "@/hooks/useArenaStartTimer";
 
 export default function ArenaChatting({ arenaData }: { arenaData: any }) {
-    const [chats, setChats] = useState<ChattingDto[]>([]); // 채팅 목록
-    const [content, setContent] = useState(""); // 채팅 입력 내용
+    const [chats, setChats] = useState<ChattingDto[]>([]);
+    const [content, setContent] = useState("");
     const [participants, setParticipants] =
-        useState<ArenaParticipantsDto | null>(null); // 참가자 정보
-    const [userId, setUserId] = useState<string | null>(null); // 사용자 ID
+        useState<ArenaParticipantsDto | null>(null);
+    const [userId, setUserId] = useState<string | null>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchUserId = async () => {
             const id = await getAuthUserId();
             setUserId(id);
-            console.log("userId: ", userId);
         };
 
         fetchUserId();
@@ -45,7 +45,7 @@ export default function ArenaChatting({ arenaData }: { arenaData: any }) {
             const res = await fetch(
                 `/api/arenas/${arenaData?.id}/participants`
             );
-            const data = await res.json(); // { creatorId: string, challengerId: string | null }
+            const data = await res.json();
             setParticipants(data);
         } catch (err) {
             console.error("참가자 정보 불러오기 실패:", err);
@@ -72,7 +72,18 @@ export default function ArenaChatting({ arenaData }: { arenaData: any }) {
     useArenaSocket({
         arenaId: arenaData?.id,
         status: arenaData?.status,
-        onReceive: (newChat) => setChats((prev) => [...prev, newChat]), // 새로운 채팅 수신 시 상태 업데이트
+        onReceive: (newChat) => setChats((prev) => [...prev, newChat]),
+    });
+    useArenaStartTimer({
+        arenaId: arenaData?.id,
+        status: arenaData?.status,
+        startAt: arenaData?.startDate,
+        challengerId: participants?.challengerId ?? null,
+        onStatusUpdate: (newStatus) => {
+            if (newStatus === 3 || newStatus === 5) {
+                location.reload();
+            }
+        },
     });
 
     const sendMessage = async () => {
@@ -104,24 +115,22 @@ export default function ArenaChatting({ arenaData }: { arenaData: any }) {
     };
 
     if (arenaData?.status === 1) {
-        <ArenaRecruiting />;
+        return <ArenaDetailRecruiting arenaData={arenaData} />;
     }
 
     if (arenaData?.status === 2) {
-        return <ArenaWaiting startAt={arenaData.startAt} />;
+        return <ArenaDetailWaiting startAt={arenaData.startAt} />;
     }
 
     return (
         <div className="w-full max-w-[1000px] mt-6 px-4 py-6 bg-background-300 rounded-lg min-h-[740px] flex flex-col animate-fade-in-up">
-            {/* 채팅 메시지 목록 */}
-            <ArenaChatList
+            <ArenaDetailChatList
                 chats={chats}
                 participants={participants}
                 arenaData={arenaData}
                 ref={chatContainerRef}
             />
-            {/* 입력창 */}
-            <ArenaInputBox
+            <ArenaDetailInputBox
                 content={content}
                 onChange={(e) => setContent(e.target.value)}
                 onSend={sendMessage}

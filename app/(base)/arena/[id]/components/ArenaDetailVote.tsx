@@ -7,7 +7,10 @@ interface ArenaVoteProps {
     rightVotes: number;
 }
 
-export default function ArenaVote({ leftVotes, rightVotes }: ArenaVoteProps) {
+export default function ArenaDetailVote({
+    leftVotes,
+    rightVotes,
+}: ArenaVoteProps) {
     // 투표 합계
     const totalVotes = leftVotes + rightVotes;
 
