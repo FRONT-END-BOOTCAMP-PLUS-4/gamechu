@@ -1,35 +1,37 @@
 "use client";
 
-import Button from "@/app/components/Button";
-import { ChattingDto } from "@/backend/chatting/application/usecase/dto/ChattingDto";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { socket } from "@/socket";
-import { useArenaSocket } from "@/hooks/useArenaSocket";
-import { ArenaParticipantsDto } from "@/backend/arena/application/usecase/dto/ArenaParticipantsDto";
+import React, { useEffect, useRef, useState } from "react";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import ArenaDetailRecruiting from "./ArenaDetailRecruiting";
 import ArenaDetailWaiting from "./ArenaDetailWaiting";
 import ArenaDetailInputBox from "./ArenaDetailInputBox";
 import ArenaDetailChatList from "./ArenaDetailChatList";
 import { useArenaStartTimer } from "@/hooks/useArenaStartTimer";
+import useArenaStore from "@/stores/useArenaStore";
+import { useArenaChatManagement } from "@/hooks/useArenaChatManagement";
 
-export default function ArenaChatting({ arenaData }: { arenaData: any }) {
-    const [chats, setChats] = useState<ChattingDto[]>([]);
+export default function ArenaDetailContainer() {
+    const arenaDetail = useArenaStore((state) => state.arenaData);
+    const { chats, sendMessage } = useArenaChatManagement({
+        arenaId: arenaDetail?.id,
+        status: arenaDetail?.status,
+    });
+
+    // 채팅 입력창 상태 관리
     const [content, setContent] = useState("");
-    const [participants, setParticipants] =
-        useState<ArenaParticipantsDto | null>(null);
-    const [userId, setUserId] = useState<string | null>(null);
-    const chatContainerRef = useRef<HTMLDivElement>(null);
 
+    // 유저 ID 상태 관리
+    const [userId, setUserId] = useState<string | null>(null);
     useEffect(() => {
         const fetchUserId = async () => {
             const id = await getAuthUserId();
             setUserId(id);
         };
-
         fetchUserId();
     }, []);
 
+    // 채팅 목록 업데이트 될 때 스크롤하기
+    const chatContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollIntoView({
@@ -40,45 +42,8 @@ export default function ArenaChatting({ arenaData }: { arenaData: any }) {
         }
     }, [chats]);
 
-    const fetchParticipants = useCallback(async () => {
-        try {
-            const res = await fetch(
-                `/api/arenas/${arenaData?.id}/participants`
-            );
-            const data = await res.json();
-            setParticipants(data);
-        } catch (err) {
-            console.error("참가자 정보 불러오기 실패:", err);
-        }
-    }, [arenaData?.id]);
-
-    const fetchChats = useCallback(async () => {
-        try {
-            const res = await fetch(`/api/arenas/${arenaData?.id}/chattings`);
-            const data = await res.json();
-            setChats(data);
-        } catch (err) {
-            console.error("채팅 불러오기 실패:", err);
-        }
-    }, [arenaData?.id]);
-
-    useEffect(() => {
-        if (arenaData?.status === 3) {
-            fetchChats();
-            fetchParticipants();
-        }
-    }, [arenaData?.status, fetchChats, fetchParticipants]);
-
-    useArenaSocket({
-        arenaId: arenaData?.id,
-        status: arenaData?.status,
-        onReceive: (newChat) => setChats((prev) => [...prev, newChat]),
-    });
+    //todo: 토론 스타트 타이머 훅 아마 나중에 서버에서 자동으로 하거나 투기장 리스트 페이지 들어갔을 때로 바꿔야할듯?
     useArenaStartTimer({
-        arenaId: arenaData?.id,
-        status: arenaData?.status,
-        startAt: arenaData?.startDate,
-        challengerId: participants?.challengerId ?? null,
         onStatusUpdate: (newStatus) => {
             if (newStatus === 3 || newStatus === 5) {
                 location.reload();
@@ -86,59 +51,30 @@ export default function ArenaChatting({ arenaData }: { arenaData: any }) {
         },
     });
 
-    const sendMessage = async () => {
-        if (!content.trim()) return;
-
-        try {
-            const res = await fetch(`/api/arenas/${arenaData?.id}/chattings`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content }),
-            });
-
-            if (!res.ok) throw new Error("전송 실패");
-
-            const newChat = await res.json();
-
-            socket.emit("chat message", {
-                roomId: arenaData?.id.toString(),
-                memberId: userId,
-                nickname: userId,
-                text: newChat.content,
-            });
-
-            setChats((prev) => [...prev, newChat]);
-            setContent("");
-        } catch (err) {
-            console.error("채팅 전송 오류:", err);
-        }
-    };
-
-    if (arenaData?.status === 1) {
-        return <ArenaDetailRecruiting arenaData={arenaData} />;
+    if (arenaDetail?.status === 1) {
+        return <ArenaDetailRecruiting />;
     }
 
-    if (arenaData?.status === 2) {
-        return <ArenaDetailWaiting startAt={arenaData.startAt} />;
+    if (arenaDetail?.status === 2) {
+        return <ArenaDetailWaiting />;
     }
 
+    // 상태 3 이상일 때 (Active, Voting, Closed 등) 채팅 관련 UI 렌더링
     return (
         <div className="w-full max-w-[1000px] mt-6 px-4 py-6 bg-background-300 rounded-lg min-h-[740px] flex flex-col animate-fade-in-up">
-            <ArenaDetailChatList
-                chats={chats}
-                participants={participants}
-                arenaData={arenaData}
-                ref={chatContainerRef}
-            />
+            <ArenaDetailChatList chats={chats} ref={chatContainerRef} />
             <ArenaDetailInputBox
                 content={content}
                 onChange={(e) => setContent(e.target.value)}
-                onSend={sendMessage}
+                onSend={() => {
+                    sendMessage(content); // 훅에서 가져온 sendMessage 호출
+                    setContent(""); // 메시지 보낸 후 입력창 비우기
+                }}
                 disabled={
                     !userId ||
-                    !participants ||
-                    (userId !== participants.creatorId &&
-                        userId !== participants.challengerId)
+                    !arenaDetail ||
+                    (userId !== arenaDetail.creatorId &&
+                        userId !== arenaDetail.challengerId)
                 }
             />
         </div>

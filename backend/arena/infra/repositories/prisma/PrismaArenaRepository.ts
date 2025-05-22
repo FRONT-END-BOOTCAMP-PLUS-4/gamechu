@@ -1,8 +1,9 @@
 // infra/repositories/PrismaArenaRepository.ts
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
-import { ArenaParticipantsDto } from "@/backend/arena/application/usecase/dto/ArenaParticipantsDto";
 import { PrismaClient } from "@/prisma/generated";
 import { ArenaStatus } from "@/types/arena-status";
+import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
+import dayjs from "dayjs";
 
 export class PrismaArenaRepository implements ArenaRepository {
     private prisma: PrismaClient;
@@ -10,7 +11,7 @@ export class PrismaArenaRepository implements ArenaRepository {
     constructor() {
         this.prisma = new PrismaClient();
     }
-    async getArenaById(arenaId: number): Promise<any> {
+    async getArenaById(arenaId: number): Promise<ArenaDetailDto> {
         const arena = await this.prisma.arena.findUnique({
             where: { id: arenaId },
             select: {
@@ -44,28 +45,15 @@ export class PrismaArenaRepository implements ArenaRepository {
 
         return {
             id: arena.id,
+            creatorId: arena.creatorId,
             creatorName: creator.nickname,
+            challengerId: arena?.challengerId ?? null,
             challengerName: challenger?.nickname ?? null,
             title: arena.title,
             description: arena.description,
-            startDate: arena.startDate,
-            status: arena.status,
+            startDate: dayjs(arena.startDate).format("YYYY-MM-DD HH:mm:ss"),
+            status: arena.status as ArenaStatus,
         };
-    }
-    async getParticipants(arenaId: number): Promise<ArenaParticipantsDto> {
-        const arena = await this.prisma.arena.findUnique({
-            where: { id: arenaId },
-            select: {
-                creatorId: true,
-                challengerId: true,
-            },
-        });
-
-        if (!arena) {
-            throw new Error("Arena not found");
-        }
-
-        return new ArenaParticipantsDto(arena.creatorId, arena.challengerId);
     }
     async updateStatus(arenaId: number, status: ArenaStatus): Promise<void> {
         await this.prisma.arena.update({

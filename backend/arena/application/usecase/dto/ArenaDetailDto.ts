@@ -1,9 +1,15 @@
-export interface ArenaDetailDto {
-    id: number;
-    creatorName: string;
-    challengerId: string | null;
-    title: string;
-    description: string;
-    startDate: Date;
-    status: number;
+import { ArenaStatus } from "@/types/arena-status";
+
+export class ArenaDetailDto {
+    constructor(
+        public id: number,
+        public creatorId: string,
+        public creatorName: string,
+        public challengerId: string | null,
+        public challengerName: string | null,
+        public title: string,
+        public description: string,
+        public startDate: string,
+        public status: ArenaStatus
+    ) {}
 }
