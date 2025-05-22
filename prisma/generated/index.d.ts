@@ -2689,33 +2689,33 @@ export namespace Prisma {
    */
 
   export type MemberCountOutputType = {
-    wishlists: number
-    reviews: number
-    reviewLikes: number
-    arenasAsCreator: number
     arenasAsChallenger: number
+    arenasAsCreator: number
     chattings: number
-    votes: number
     notificationRecords: number
-    scoreRecords: number
-    preferredPlatforms: number
     preferredGenres: number
+    preferredPlatforms: number
     preferredThemes: number
+    reviewLikes: number
+    reviews: number
+    scoreRecords: number
+    votes: number
+    wishlists: number
   }
 
   export type MemberCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    wishlists?: boolean | MemberCountOutputTypeCountWishlistsArgs
-    reviews?: boolean | MemberCountOutputTypeCountReviewsArgs
-    reviewLikes?: boolean | MemberCountOutputTypeCountReviewLikesArgs
-    arenasAsCreator?: boolean | MemberCountOutputTypeCountArenasAsCreatorArgs
     arenasAsChallenger?: boolean | MemberCountOutputTypeCountArenasAsChallengerArgs
+    arenasAsCreator?: boolean | MemberCountOutputTypeCountArenasAsCreatorArgs
     chattings?: boolean | MemberCountOutputTypeCountChattingsArgs
-    votes?: boolean | MemberCountOutputTypeCountVotesArgs
     notificationRecords?: boolean | MemberCountOutputTypeCountNotificationRecordsArgs
-    scoreRecords?: boolean | MemberCountOutputTypeCountScoreRecordsArgs
-    preferredPlatforms?: boolean | MemberCountOutputTypeCountPreferredPlatformsArgs
     preferredGenres?: boolean | MemberCountOutputTypeCountPreferredGenresArgs
+    preferredPlatforms?: boolean | MemberCountOutputTypeCountPreferredPlatformsArgs
     preferredThemes?: boolean | MemberCountOutputTypeCountPreferredThemesArgs
+    reviewLikes?: boolean | MemberCountOutputTypeCountReviewLikesArgs
+    reviews?: boolean | MemberCountOutputTypeCountReviewsArgs
+    scoreRecords?: boolean | MemberCountOutputTypeCountScoreRecordsArgs
+    votes?: boolean | MemberCountOutputTypeCountVotesArgs
+    wishlists?: boolean | MemberCountOutputTypeCountWishlistsArgs
   }
 
   // Custom InputTypes
@@ -2732,35 +2732,14 @@ export namespace Prisma {
   /**
    * MemberCountOutputType without action
    */
-  export type MemberCountOutputTypeCountWishlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: WishlistWhereInput
-  }
-
-  /**
-   * MemberCountOutputType without action
-   */
-  export type MemberCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewWhereInput
-  }
-
-  /**
-   * MemberCountOutputType without action
-   */
-  export type MemberCountOutputTypeCountReviewLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewLikeWhereInput
-  }
-
-  /**
-   * MemberCountOutputType without action
-   */
-  export type MemberCountOutputTypeCountArenasAsCreatorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MemberCountOutputTypeCountArenasAsChallengerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ArenaWhereInput
   }
 
   /**
    * MemberCountOutputType without action
    */
-  export type MemberCountOutputTypeCountArenasAsChallengerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MemberCountOutputTypeCountArenasAsCreatorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ArenaWhereInput
   }
 
@@ -2774,29 +2753,8 @@ export namespace Prisma {
   /**
    * MemberCountOutputType without action
    */
-  export type MemberCountOutputTypeCountVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: VoteWhereInput
-  }
-
-  /**
-   * MemberCountOutputType without action
-   */
   export type MemberCountOutputTypeCountNotificationRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NotificationRecordWhereInput
-  }
-
-  /**
-   * MemberCountOutputType without action
-   */
-  export type MemberCountOutputTypeCountScoreRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ScoreRecordWhereInput
-  }
-
-  /**
-   * MemberCountOutputType without action
-   */
-  export type MemberCountOutputTypeCountPreferredPlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PreferredPlatformWhereInput
   }
 
   /**
@@ -2809,8 +2767,50 @@ export namespace Prisma {
   /**
    * MemberCountOutputType without action
    */
+  export type MemberCountOutputTypeCountPreferredPlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreferredPlatformWhereInput
+  }
+
+  /**
+   * MemberCountOutputType without action
+   */
   export type MemberCountOutputTypeCountPreferredThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PreferredThemeWhereInput
+  }
+
+  /**
+   * MemberCountOutputType without action
+   */
+  export type MemberCountOutputTypeCountReviewLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewLikeWhereInput
+  }
+
+  /**
+   * MemberCountOutputType without action
+   */
+  export type MemberCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewWhereInput
+  }
+
+  /**
+   * MemberCountOutputType without action
+   */
+  export type MemberCountOutputTypeCountScoreRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScoreRecordWhereInput
+  }
+
+  /**
+   * MemberCountOutputType without action
+   */
+  export type MemberCountOutputTypeCountVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VoteWhereInput
+  }
+
+  /**
+   * MemberCountOutputType without action
+   */
+  export type MemberCountOutputTypeCountWishlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WishlistWhereInput
   }
 
 
@@ -2819,19 +2819,19 @@ export namespace Prisma {
    */
 
   export type GameCountOutputType = {
-    wishlists: number
-    reviews: number
-    gamePlatforms: number
     gameGenres: number
+    gamePlatforms: number
     gameThemes: number
+    reviews: number
+    wishlists: number
   }
 
   export type GameCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    wishlists?: boolean | GameCountOutputTypeCountWishlistsArgs
-    reviews?: boolean | GameCountOutputTypeCountReviewsArgs
-    gamePlatforms?: boolean | GameCountOutputTypeCountGamePlatformsArgs
     gameGenres?: boolean | GameCountOutputTypeCountGameGenresArgs
+    gamePlatforms?: boolean | GameCountOutputTypeCountGamePlatformsArgs
     gameThemes?: boolean | GameCountOutputTypeCountGameThemesArgs
+    reviews?: boolean | GameCountOutputTypeCountReviewsArgs
+    wishlists?: boolean | GameCountOutputTypeCountWishlistsArgs
   }
 
   // Custom InputTypes
@@ -2848,15 +2848,8 @@ export namespace Prisma {
   /**
    * GameCountOutputType without action
    */
-  export type GameCountOutputTypeCountWishlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: WishlistWhereInput
-  }
-
-  /**
-   * GameCountOutputType without action
-   */
-  export type GameCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewWhereInput
+  export type GameCountOutputTypeCountGameGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameGenreWhereInput
   }
 
   /**
@@ -2869,15 +2862,22 @@ export namespace Prisma {
   /**
    * GameCountOutputType without action
    */
-  export type GameCountOutputTypeCountGameGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameGenreWhereInput
+  export type GameCountOutputTypeCountGameThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameThemeWhereInput
   }
 
   /**
    * GameCountOutputType without action
    */
-  export type GameCountOutputTypeCountGameThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameThemeWhereInput
+  export type GameCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewWhereInput
+  }
+
+  /**
+   * GameCountOutputType without action
+   */
+  export type GameCountOutputTypeCountWishlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WishlistWhereInput
   }
 
 
@@ -3019,13 +3019,13 @@ export namespace Prisma {
    */
 
   export type PlatformCountOutputType = {
-    preferredPlatforms: number
     gamePlatforms: number
+    preferredPlatforms: number
   }
 
   export type PlatformCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    preferredPlatforms?: boolean | PlatformCountOutputTypeCountPreferredPlatformsArgs
     gamePlatforms?: boolean | PlatformCountOutputTypeCountGamePlatformsArgs
+    preferredPlatforms?: boolean | PlatformCountOutputTypeCountPreferredPlatformsArgs
   }
 
   // Custom InputTypes
@@ -3042,15 +3042,15 @@ export namespace Prisma {
   /**
    * PlatformCountOutputType without action
    */
-  export type PlatformCountOutputTypeCountPreferredPlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PreferredPlatformWhereInput
+  export type PlatformCountOutputTypeCountGamePlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamePlatformWhereInput
   }
 
   /**
    * PlatformCountOutputType without action
    */
-  export type PlatformCountOutputTypeCountGamePlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GamePlatformWhereInput
+  export type PlatformCountOutputTypeCountPreferredPlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreferredPlatformWhereInput
   }
 
 
@@ -3059,13 +3059,13 @@ export namespace Prisma {
    */
 
   export type GenreCountOutputType = {
-    preferredGenres: number
     gameGenres: number
+    preferredGenres: number
   }
 
   export type GenreCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    preferredGenres?: boolean | GenreCountOutputTypeCountPreferredGenresArgs
     gameGenres?: boolean | GenreCountOutputTypeCountGameGenresArgs
+    preferredGenres?: boolean | GenreCountOutputTypeCountPreferredGenresArgs
   }
 
   // Custom InputTypes
@@ -3082,15 +3082,15 @@ export namespace Prisma {
   /**
    * GenreCountOutputType without action
    */
-  export type GenreCountOutputTypeCountPreferredGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PreferredGenreWhereInput
+  export type GenreCountOutputTypeCountGameGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameGenreWhereInput
   }
 
   /**
    * GenreCountOutputType without action
    */
-  export type GenreCountOutputTypeCountGameGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameGenreWhereInput
+  export type GenreCountOutputTypeCountPreferredGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreferredGenreWhereInput
   }
 
 
@@ -3099,13 +3099,13 @@ export namespace Prisma {
    */
 
   export type ThemeCountOutputType = {
-    preferredThemes: number
     gameThemes: number
+    preferredThemes: number
   }
 
   export type ThemeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    preferredThemes?: boolean | ThemeCountOutputTypeCountPreferredThemesArgs
     gameThemes?: boolean | ThemeCountOutputTypeCountGameThemesArgs
+    preferredThemes?: boolean | ThemeCountOutputTypeCountPreferredThemesArgs
   }
 
   // Custom InputTypes
@@ -3122,15 +3122,15 @@ export namespace Prisma {
   /**
    * ThemeCountOutputType without action
    */
-  export type ThemeCountOutputTypeCountPreferredThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PreferredThemeWhereInput
+  export type ThemeCountOutputTypeCountGameThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameThemeWhereInput
   }
 
   /**
    * ThemeCountOutputType without action
    */
-  export type ThemeCountOutputTypeCountGameThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameThemeWhereInput
+  export type ThemeCountOutputTypeCountPreferredThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreferredThemeWhereInput
   }
 
 
@@ -3384,18 +3384,18 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: boolean
     deletedAt?: boolean
-    wishlists?: boolean | Member$wishlistsArgs<ExtArgs>
-    reviews?: boolean | Member$reviewsArgs<ExtArgs>
-    reviewLikes?: boolean | Member$reviewLikesArgs<ExtArgs>
-    arenasAsCreator?: boolean | Member$arenasAsCreatorArgs<ExtArgs>
     arenasAsChallenger?: boolean | Member$arenasAsChallengerArgs<ExtArgs>
+    arenasAsCreator?: boolean | Member$arenasAsCreatorArgs<ExtArgs>
     chattings?: boolean | Member$chattingsArgs<ExtArgs>
-    votes?: boolean | Member$votesArgs<ExtArgs>
     notificationRecords?: boolean | Member$notificationRecordsArgs<ExtArgs>
-    scoreRecords?: boolean | Member$scoreRecordsArgs<ExtArgs>
-    preferredPlatforms?: boolean | Member$preferredPlatformsArgs<ExtArgs>
     preferredGenres?: boolean | Member$preferredGenresArgs<ExtArgs>
+    preferredPlatforms?: boolean | Member$preferredPlatformsArgs<ExtArgs>
     preferredThemes?: boolean | Member$preferredThemesArgs<ExtArgs>
+    reviewLikes?: boolean | Member$reviewLikesArgs<ExtArgs>
+    reviews?: boolean | Member$reviewsArgs<ExtArgs>
+    scoreRecords?: boolean | Member$scoreRecordsArgs<ExtArgs>
+    votes?: boolean | Member$votesArgs<ExtArgs>
+    wishlists?: boolean | Member$wishlistsArgs<ExtArgs>
     _count?: boolean | MemberCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["member"]>
 
@@ -3443,18 +3443,18 @@ export namespace Prisma {
 
   export type MemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nickname" | "email" | "password" | "imageUrl" | "birthDate" | "isMale" | "score" | "isAttended" | "createdAt" | "deletedAt", ExtArgs["result"]["member"]>
   export type MemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    wishlists?: boolean | Member$wishlistsArgs<ExtArgs>
-    reviews?: boolean | Member$reviewsArgs<ExtArgs>
-    reviewLikes?: boolean | Member$reviewLikesArgs<ExtArgs>
-    arenasAsCreator?: boolean | Member$arenasAsCreatorArgs<ExtArgs>
     arenasAsChallenger?: boolean | Member$arenasAsChallengerArgs<ExtArgs>
+    arenasAsCreator?: boolean | Member$arenasAsCreatorArgs<ExtArgs>
     chattings?: boolean | Member$chattingsArgs<ExtArgs>
-    votes?: boolean | Member$votesArgs<ExtArgs>
     notificationRecords?: boolean | Member$notificationRecordsArgs<ExtArgs>
-    scoreRecords?: boolean | Member$scoreRecordsArgs<ExtArgs>
-    preferredPlatforms?: boolean | Member$preferredPlatformsArgs<ExtArgs>
     preferredGenres?: boolean | Member$preferredGenresArgs<ExtArgs>
+    preferredPlatforms?: boolean | Member$preferredPlatformsArgs<ExtArgs>
     preferredThemes?: boolean | Member$preferredThemesArgs<ExtArgs>
+    reviewLikes?: boolean | Member$reviewLikesArgs<ExtArgs>
+    reviews?: boolean | Member$reviewsArgs<ExtArgs>
+    scoreRecords?: boolean | Member$scoreRecordsArgs<ExtArgs>
+    votes?: boolean | Member$votesArgs<ExtArgs>
+    wishlists?: boolean | Member$wishlistsArgs<ExtArgs>
     _count?: boolean | MemberCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MemberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3463,18 +3463,18 @@ export namespace Prisma {
   export type $MemberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Member"
     objects: {
-      wishlists: Prisma.$WishlistPayload<ExtArgs>[]
-      reviews: Prisma.$ReviewPayload<ExtArgs>[]
-      reviewLikes: Prisma.$ReviewLikePayload<ExtArgs>[]
-      arenasAsCreator: Prisma.$ArenaPayload<ExtArgs>[]
       arenasAsChallenger: Prisma.$ArenaPayload<ExtArgs>[]
+      arenasAsCreator: Prisma.$ArenaPayload<ExtArgs>[]
       chattings: Prisma.$ChattingPayload<ExtArgs>[]
-      votes: Prisma.$VotePayload<ExtArgs>[]
       notificationRecords: Prisma.$NotificationRecordPayload<ExtArgs>[]
-      scoreRecords: Prisma.$ScoreRecordPayload<ExtArgs>[]
-      preferredPlatforms: Prisma.$PreferredPlatformPayload<ExtArgs>[]
       preferredGenres: Prisma.$PreferredGenrePayload<ExtArgs>[]
+      preferredPlatforms: Prisma.$PreferredPlatformPayload<ExtArgs>[]
       preferredThemes: Prisma.$PreferredThemePayload<ExtArgs>[]
+      reviewLikes: Prisma.$ReviewLikePayload<ExtArgs>[]
+      reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      scoreRecords: Prisma.$ScoreRecordPayload<ExtArgs>[]
+      votes: Prisma.$VotePayload<ExtArgs>[]
+      wishlists: Prisma.$WishlistPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3882,18 +3882,18 @@ export namespace Prisma {
    */
   export interface Prisma__MemberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    wishlists<T extends Member$wishlistsArgs<ExtArgs> = {}>(args?: Subset<T, Member$wishlistsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WishlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    reviews<T extends Member$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Member$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    reviewLikes<T extends Member$reviewLikesArgs<ExtArgs> = {}>(args?: Subset<T, Member$reviewLikesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    arenasAsCreator<T extends Member$arenasAsCreatorArgs<ExtArgs> = {}>(args?: Subset<T, Member$arenasAsCreatorArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ArenaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     arenasAsChallenger<T extends Member$arenasAsChallengerArgs<ExtArgs> = {}>(args?: Subset<T, Member$arenasAsChallengerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ArenaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    arenasAsCreator<T extends Member$arenasAsCreatorArgs<ExtArgs> = {}>(args?: Subset<T, Member$arenasAsCreatorArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ArenaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chattings<T extends Member$chattingsArgs<ExtArgs> = {}>(args?: Subset<T, Member$chattingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChattingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    votes<T extends Member$votesArgs<ExtArgs> = {}>(args?: Subset<T, Member$votesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notificationRecords<T extends Member$notificationRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Member$notificationRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    scoreRecords<T extends Member$scoreRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Member$scoreRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScoreRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    preferredPlatforms<T extends Member$preferredPlatformsArgs<ExtArgs> = {}>(args?: Subset<T, Member$preferredPlatformsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredPlatformPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preferredGenres<T extends Member$preferredGenresArgs<ExtArgs> = {}>(args?: Subset<T, Member$preferredGenresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredGenrePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preferredPlatforms<T extends Member$preferredPlatformsArgs<ExtArgs> = {}>(args?: Subset<T, Member$preferredPlatformsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredPlatformPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preferredThemes<T extends Member$preferredThemesArgs<ExtArgs> = {}>(args?: Subset<T, Member$preferredThemesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredThemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reviewLikes<T extends Member$reviewLikesArgs<ExtArgs> = {}>(args?: Subset<T, Member$reviewLikesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reviews<T extends Member$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Member$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    scoreRecords<T extends Member$scoreRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Member$scoreRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScoreRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    votes<T extends Member$votesArgs<ExtArgs> = {}>(args?: Subset<T, Member$votesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wishlists<T extends Member$wishlistsArgs<ExtArgs> = {}>(args?: Subset<T, Member$wishlistsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WishlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4322,81 +4322,9 @@ export namespace Prisma {
   }
 
   /**
-   * Member.wishlists
+   * Member.arenasAsChallenger
    */
-  export type Member$wishlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Wishlist
-     */
-    select?: WishlistSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Wishlist
-     */
-    omit?: WishlistOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: WishlistInclude<ExtArgs> | null
-    where?: WishlistWhereInput
-    orderBy?: WishlistOrderByWithRelationInput | WishlistOrderByWithRelationInput[]
-    cursor?: WishlistWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: WishlistScalarFieldEnum | WishlistScalarFieldEnum[]
-  }
-
-  /**
-   * Member.reviews
-   */
-  export type Member$reviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Review
-     */
-    select?: ReviewSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Review
-     */
-    omit?: ReviewOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReviewInclude<ExtArgs> | null
-    where?: ReviewWhereInput
-    orderBy?: ReviewOrderByWithRelationInput | ReviewOrderByWithRelationInput[]
-    cursor?: ReviewWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
-  }
-
-  /**
-   * Member.reviewLikes
-   */
-  export type Member$reviewLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ReviewLike
-     */
-    select?: ReviewLikeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ReviewLike
-     */
-    omit?: ReviewLikeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReviewLikeInclude<ExtArgs> | null
-    where?: ReviewLikeWhereInput
-    orderBy?: ReviewLikeOrderByWithRelationInput | ReviewLikeOrderByWithRelationInput[]
-    cursor?: ReviewLikeWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ReviewLikeScalarFieldEnum | ReviewLikeScalarFieldEnum[]
-  }
-
-  /**
-   * Member.arenasAsCreator
-   */
-  export type Member$arenasAsCreatorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Member$arenasAsChallengerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Arena
      */
@@ -4418,9 +4346,9 @@ export namespace Prisma {
   }
 
   /**
-   * Member.arenasAsChallenger
+   * Member.arenasAsCreator
    */
-  export type Member$arenasAsChallengerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Member$arenasAsCreatorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Arena
      */
@@ -4466,30 +4394,6 @@ export namespace Prisma {
   }
 
   /**
-   * Member.votes
-   */
-  export type Member$votesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Vote
-     */
-    select?: VoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Vote
-     */
-    omit?: VoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VoteInclude<ExtArgs> | null
-    where?: VoteWhereInput
-    orderBy?: VoteOrderByWithRelationInput | VoteOrderByWithRelationInput[]
-    cursor?: VoteWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: VoteScalarFieldEnum | VoteScalarFieldEnum[]
-  }
-
-  /**
    * Member.notificationRecords
    */
   export type Member$notificationRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4511,54 +4415,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: NotificationRecordScalarFieldEnum | NotificationRecordScalarFieldEnum[]
-  }
-
-  /**
-   * Member.scoreRecords
-   */
-  export type Member$scoreRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ScoreRecord
-     */
-    select?: ScoreRecordSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ScoreRecord
-     */
-    omit?: ScoreRecordOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ScoreRecordInclude<ExtArgs> | null
-    where?: ScoreRecordWhereInput
-    orderBy?: ScoreRecordOrderByWithRelationInput | ScoreRecordOrderByWithRelationInput[]
-    cursor?: ScoreRecordWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ScoreRecordScalarFieldEnum | ScoreRecordScalarFieldEnum[]
-  }
-
-  /**
-   * Member.preferredPlatforms
-   */
-  export type Member$preferredPlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PreferredPlatform
-     */
-    select?: PreferredPlatformSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PreferredPlatform
-     */
-    omit?: PreferredPlatformOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PreferredPlatformInclude<ExtArgs> | null
-    where?: PreferredPlatformWhereInput
-    orderBy?: PreferredPlatformOrderByWithRelationInput | PreferredPlatformOrderByWithRelationInput[]
-    cursor?: PreferredPlatformWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PreferredPlatformScalarFieldEnum | PreferredPlatformScalarFieldEnum[]
   }
 
   /**
@@ -4586,6 +4442,30 @@ export namespace Prisma {
   }
 
   /**
+   * Member.preferredPlatforms
+   */
+  export type Member$preferredPlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreferredPlatform
+     */
+    select?: PreferredPlatformSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreferredPlatform
+     */
+    omit?: PreferredPlatformOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferredPlatformInclude<ExtArgs> | null
+    where?: PreferredPlatformWhereInput
+    orderBy?: PreferredPlatformOrderByWithRelationInput | PreferredPlatformOrderByWithRelationInput[]
+    cursor?: PreferredPlatformWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreferredPlatformScalarFieldEnum | PreferredPlatformScalarFieldEnum[]
+  }
+
+  /**
    * Member.preferredThemes
    */
   export type Member$preferredThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4607,6 +4487,126 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PreferredThemeScalarFieldEnum | PreferredThemeScalarFieldEnum[]
+  }
+
+  /**
+   * Member.reviewLikes
+   */
+  export type Member$reviewLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewLike
+     */
+    select?: ReviewLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewLike
+     */
+    omit?: ReviewLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewLikeInclude<ExtArgs> | null
+    where?: ReviewLikeWhereInput
+    orderBy?: ReviewLikeOrderByWithRelationInput | ReviewLikeOrderByWithRelationInput[]
+    cursor?: ReviewLikeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewLikeScalarFieldEnum | ReviewLikeScalarFieldEnum[]
+  }
+
+  /**
+   * Member.reviews
+   */
+  export type Member$reviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Review
+     */
+    select?: ReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Review
+     */
+    omit?: ReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewInclude<ExtArgs> | null
+    where?: ReviewWhereInput
+    orderBy?: ReviewOrderByWithRelationInput | ReviewOrderByWithRelationInput[]
+    cursor?: ReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
+  }
+
+  /**
+   * Member.scoreRecords
+   */
+  export type Member$scoreRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScoreRecord
+     */
+    select?: ScoreRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScoreRecord
+     */
+    omit?: ScoreRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScoreRecordInclude<ExtArgs> | null
+    where?: ScoreRecordWhereInput
+    orderBy?: ScoreRecordOrderByWithRelationInput | ScoreRecordOrderByWithRelationInput[]
+    cursor?: ScoreRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScoreRecordScalarFieldEnum | ScoreRecordScalarFieldEnum[]
+  }
+
+  /**
+   * Member.votes
+   */
+  export type Member$votesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vote
+     */
+    select?: VoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vote
+     */
+    omit?: VoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoteInclude<ExtArgs> | null
+    where?: VoteWhereInput
+    orderBy?: VoteOrderByWithRelationInput | VoteOrderByWithRelationInput[]
+    cursor?: VoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VoteScalarFieldEnum | VoteScalarFieldEnum[]
+  }
+
+  /**
+   * Member.wishlists
+   */
+  export type Member$wishlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wishlist
+     */
+    select?: WishlistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wishlist
+     */
+    omit?: WishlistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WishlistInclude<ExtArgs> | null
+    where?: WishlistWhereInput
+    orderBy?: WishlistOrderByWithRelationInput | WishlistOrderByWithRelationInput[]
+    cursor?: WishlistWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WishlistScalarFieldEnum | WishlistScalarFieldEnum[]
   }
 
   /**
@@ -4826,11 +4826,11 @@ export namespace Prisma {
     developer?: boolean
     thumbnail?: boolean
     releaseDate?: boolean
-    wishlists?: boolean | Game$wishlistsArgs<ExtArgs>
-    reviews?: boolean | Game$reviewsArgs<ExtArgs>
-    gamePlatforms?: boolean | Game$gamePlatformsArgs<ExtArgs>
     gameGenres?: boolean | Game$gameGenresArgs<ExtArgs>
+    gamePlatforms?: boolean | Game$gamePlatformsArgs<ExtArgs>
     gameThemes?: boolean | Game$gameThemesArgs<ExtArgs>
+    reviews?: boolean | Game$reviewsArgs<ExtArgs>
+    wishlists?: boolean | Game$wishlistsArgs<ExtArgs>
     _count?: boolean | GameCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["game"]>
 
@@ -4860,11 +4860,11 @@ export namespace Prisma {
 
   export type GameOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "developer" | "thumbnail" | "releaseDate", ExtArgs["result"]["game"]>
   export type GameInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    wishlists?: boolean | Game$wishlistsArgs<ExtArgs>
-    reviews?: boolean | Game$reviewsArgs<ExtArgs>
-    gamePlatforms?: boolean | Game$gamePlatformsArgs<ExtArgs>
     gameGenres?: boolean | Game$gameGenresArgs<ExtArgs>
+    gamePlatforms?: boolean | Game$gamePlatformsArgs<ExtArgs>
     gameThemes?: boolean | Game$gameThemesArgs<ExtArgs>
+    reviews?: boolean | Game$reviewsArgs<ExtArgs>
+    wishlists?: boolean | Game$wishlistsArgs<ExtArgs>
     _count?: boolean | GameCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type GameIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4873,11 +4873,11 @@ export namespace Prisma {
   export type $GamePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Game"
     objects: {
-      wishlists: Prisma.$WishlistPayload<ExtArgs>[]
-      reviews: Prisma.$ReviewPayload<ExtArgs>[]
-      gamePlatforms: Prisma.$GamePlatformPayload<ExtArgs>[]
       gameGenres: Prisma.$GameGenrePayload<ExtArgs>[]
+      gamePlatforms: Prisma.$GamePlatformPayload<ExtArgs>[]
       gameThemes: Prisma.$GameThemePayload<ExtArgs>[]
+      reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      wishlists: Prisma.$WishlistPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5279,11 +5279,11 @@ export namespace Prisma {
    */
   export interface Prisma__GameClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    wishlists<T extends Game$wishlistsArgs<ExtArgs> = {}>(args?: Subset<T, Game$wishlistsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WishlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    reviews<T extends Game$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Game$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    gamePlatforms<T extends Game$gamePlatformsArgs<ExtArgs> = {}>(args?: Subset<T, Game$gamePlatformsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePlatformPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gameGenres<T extends Game$gameGenresArgs<ExtArgs> = {}>(args?: Subset<T, Game$gameGenresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameGenrePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    gamePlatforms<T extends Game$gamePlatformsArgs<ExtArgs> = {}>(args?: Subset<T, Game$gamePlatformsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePlatformPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gameThemes<T extends Game$gameThemesArgs<ExtArgs> = {}>(args?: Subset<T, Game$gameThemesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameThemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reviews<T extends Game$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Game$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wishlists<T extends Game$wishlistsArgs<ExtArgs> = {}>(args?: Subset<T, Game$wishlistsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WishlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5706,51 +5706,27 @@ export namespace Prisma {
   }
 
   /**
-   * Game.wishlists
+   * Game.gameGenres
    */
-  export type Game$wishlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Game$gameGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Wishlist
+     * Select specific fields to fetch from the GameGenre
      */
-    select?: WishlistSelect<ExtArgs> | null
+    select?: GameGenreSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Wishlist
+     * Omit specific fields from the GameGenre
      */
-    omit?: WishlistOmit<ExtArgs> | null
+    omit?: GameGenreOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: WishlistInclude<ExtArgs> | null
-    where?: WishlistWhereInput
-    orderBy?: WishlistOrderByWithRelationInput | WishlistOrderByWithRelationInput[]
-    cursor?: WishlistWhereUniqueInput
+    include?: GameGenreInclude<ExtArgs> | null
+    where?: GameGenreWhereInput
+    orderBy?: GameGenreOrderByWithRelationInput | GameGenreOrderByWithRelationInput[]
+    cursor?: GameGenreWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: WishlistScalarFieldEnum | WishlistScalarFieldEnum[]
-  }
-
-  /**
-   * Game.reviews
-   */
-  export type Game$reviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Review
-     */
-    select?: ReviewSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Review
-     */
-    omit?: ReviewOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReviewInclude<ExtArgs> | null
-    where?: ReviewWhereInput
-    orderBy?: ReviewOrderByWithRelationInput | ReviewOrderByWithRelationInput[]
-    cursor?: ReviewWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
+    distinct?: GameGenreScalarFieldEnum | GameGenreScalarFieldEnum[]
   }
 
   /**
@@ -5778,30 +5754,6 @@ export namespace Prisma {
   }
 
   /**
-   * Game.gameGenres
-   */
-  export type Game$gameGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameGenre
-     */
-    select?: GameGenreSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameGenre
-     */
-    omit?: GameGenreOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameGenreInclude<ExtArgs> | null
-    where?: GameGenreWhereInput
-    orderBy?: GameGenreOrderByWithRelationInput | GameGenreOrderByWithRelationInput[]
-    cursor?: GameGenreWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: GameGenreScalarFieldEnum | GameGenreScalarFieldEnum[]
-  }
-
-  /**
    * Game.gameThemes
    */
   export type Game$gameThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5823,6 +5775,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: GameThemeScalarFieldEnum | GameThemeScalarFieldEnum[]
+  }
+
+  /**
+   * Game.reviews
+   */
+  export type Game$reviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Review
+     */
+    select?: ReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Review
+     */
+    omit?: ReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewInclude<ExtArgs> | null
+    where?: ReviewWhereInput
+    orderBy?: ReviewOrderByWithRelationInput | ReviewOrderByWithRelationInput[]
+    cursor?: ReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
+  }
+
+  /**
+   * Game.wishlists
+   */
+  export type Game$wishlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wishlist
+     */
+    select?: WishlistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wishlist
+     */
+    omit?: WishlistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WishlistInclude<ExtArgs> | null
+    where?: WishlistWhereInput
+    orderBy?: WishlistOrderByWithRelationInput | WishlistOrderByWithRelationInput[]
+    cursor?: WishlistWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WishlistScalarFieldEnum | WishlistScalarFieldEnum[]
   }
 
   /**
@@ -6030,24 +6030,24 @@ export namespace Prisma {
     id?: boolean
     memberId?: boolean
     gameId?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wishlist"]>
 
   export type WishlistSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     memberId?: boolean
     gameId?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wishlist"]>
 
   export type WishlistSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     memberId?: boolean
     gameId?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wishlist"]>
 
   export type WishlistSelectScalar = {
@@ -6058,23 +6058,23 @@ export namespace Prisma {
 
   export type WishlistOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "gameId", ExtArgs["result"]["wishlist"]>
   export type WishlistInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type WishlistIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type WishlistIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
 
   export type $WishlistPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Wishlist"
     objects: {
-      member: Prisma.$MemberPayload<ExtArgs>
       game: Prisma.$GamePayload<ExtArgs>
+      member: Prisma.$MemberPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6474,8 +6474,8 @@ export namespace Prisma {
    */
   export interface Prisma__WishlistClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     game<T extends GameDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GameDefaultArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7144,9 +7144,9 @@ export namespace Prisma {
     rating?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
-    game?: boolean | GameDefaultArgs<ExtArgs>
     reviewLikes?: boolean | Review$reviewLikesArgs<ExtArgs>
+    game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
@@ -7158,8 +7158,8 @@ export namespace Prisma {
     rating?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
   export type ReviewSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7170,8 +7170,8 @@ export namespace Prisma {
     rating?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
   export type ReviewSelectScalar = {
@@ -7186,26 +7186,26 @@ export namespace Prisma {
 
   export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "gameId" | "content" | "rating" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
-    game?: boolean | GameDefaultArgs<ExtArgs>
     reviewLikes?: boolean | Review$reviewLikesArgs<ExtArgs>
+    game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type ReviewIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     game?: boolean | GameDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
 
   export type $ReviewPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Review"
     objects: {
-      member: Prisma.$MemberPayload<ExtArgs>
-      game: Prisma.$GamePayload<ExtArgs>
       reviewLikes: Prisma.$ReviewLikePayload<ExtArgs>[]
+      game: Prisma.$GamePayload<ExtArgs>
+      member: Prisma.$MemberPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7609,9 +7609,9 @@ export namespace Prisma {
    */
   export interface Prisma__ReviewClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    game<T extends GameDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GameDefaultArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     reviewLikes<T extends Review$reviewLikesArgs<ExtArgs> = {}>(args?: Subset<T, Review$reviewLikesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    game<T extends GameDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GameDefaultArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9348,7 +9348,7 @@ export namespace Prisma {
   export type ArenaGroupByOutputType = {
     id: number
     creatorId: string
-    challengerId: string
+    challengerId: string | null
     title: string
     description: string
     status: number
@@ -9382,8 +9382,8 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     startDate?: boolean
+    challenger?: boolean | Arena$challengerArgs<ExtArgs>
     creator?: boolean | MemberDefaultArgs<ExtArgs>
-    challenger?: boolean | MemberDefaultArgs<ExtArgs>
     chattings?: boolean | Arena$chattingsArgs<ExtArgs>
     votes?: boolean | Arena$votesArgs<ExtArgs>
     _count?: boolean | ArenaCountOutputTypeDefaultArgs<ExtArgs>
@@ -9397,8 +9397,8 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     startDate?: boolean
+    challenger?: boolean | Arena$challengerArgs<ExtArgs>
     creator?: boolean | MemberDefaultArgs<ExtArgs>
-    challenger?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["arena"]>
 
   export type ArenaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9409,8 +9409,8 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     startDate?: boolean
+    challenger?: boolean | Arena$challengerArgs<ExtArgs>
     creator?: boolean | MemberDefaultArgs<ExtArgs>
-    challenger?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["arena"]>
 
   export type ArenaSelectScalar = {
@@ -9425,33 +9425,33 @@ export namespace Prisma {
 
   export type ArenaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "challengerId" | "title" | "description" | "status" | "startDate", ExtArgs["result"]["arena"]>
   export type ArenaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    challenger?: boolean | Arena$challengerArgs<ExtArgs>
     creator?: boolean | MemberDefaultArgs<ExtArgs>
-    challenger?: boolean | MemberDefaultArgs<ExtArgs>
     chattings?: boolean | Arena$chattingsArgs<ExtArgs>
     votes?: boolean | Arena$votesArgs<ExtArgs>
     _count?: boolean | ArenaCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ArenaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    challenger?: boolean | Arena$challengerArgs<ExtArgs>
     creator?: boolean | MemberDefaultArgs<ExtArgs>
-    challenger?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type ArenaIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    challenger?: boolean | Arena$challengerArgs<ExtArgs>
     creator?: boolean | MemberDefaultArgs<ExtArgs>
-    challenger?: boolean | MemberDefaultArgs<ExtArgs>
   }
 
   export type $ArenaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Arena"
     objects: {
+      challenger: Prisma.$MemberPayload<ExtArgs> | null
       creator: Prisma.$MemberPayload<ExtArgs>
-      challenger: Prisma.$MemberPayload<ExtArgs>
       chattings: Prisma.$ChattingPayload<ExtArgs>[]
       votes: Prisma.$VotePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       creatorId: string
-      challengerId: string
+      challengerId: string | null
       title: string
       description: string
       status: number
@@ -9850,8 +9850,8 @@ export namespace Prisma {
    */
   export interface Prisma__ArenaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    challenger<T extends Arena$challengerArgs<ExtArgs> = {}>(args?: Subset<T, Arena$challengerArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     creator<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    challenger<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     chattings<T extends Arena$chattingsArgs<ExtArgs> = {}>(args?: Subset<T, Arena$chattingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChattingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     votes<T extends Arena$votesArgs<ExtArgs> = {}>(args?: Subset<T, Arena$votesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -10286,6 +10286,25 @@ export namespace Prisma {
   }
 
   /**
+   * Arena.challenger
+   */
+  export type Arena$challengerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Member
+     */
+    select?: MemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Member
+     */
+    omit?: MemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberInclude<ExtArgs> | null
+    where?: MemberWhereInput
+  }
+
+  /**
    * Arena.chattings
    */
   export type Arena$chattingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10554,8 +10573,8 @@ export namespace Prisma {
     arenaId?: boolean
     content?: boolean
     createdAt?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chatting"]>
 
   export type ChattingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10564,8 +10583,8 @@ export namespace Prisma {
     arenaId?: boolean
     content?: boolean
     createdAt?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chatting"]>
 
   export type ChattingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10574,8 +10593,8 @@ export namespace Prisma {
     arenaId?: boolean
     content?: boolean
     createdAt?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chatting"]>
 
   export type ChattingSelectScalar = {
@@ -10588,23 +10607,23 @@ export namespace Prisma {
 
   export type ChattingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "arenaId" | "content" | "createdAt", ExtArgs["result"]["chatting"]>
   export type ChattingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type ChattingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type ChattingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
 
   export type $ChattingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Chatting"
     objects: {
-      member: Prisma.$MemberPayload<ExtArgs>
       arena: Prisma.$ArenaPayload<ExtArgs>
+      member: Prisma.$MemberPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -11006,8 +11025,8 @@ export namespace Prisma {
    */
   export interface Prisma__ChattingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     arena<T extends ArenaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ArenaDefaultArgs<ExtArgs>>): Prisma__ArenaClient<$Result.GetResult<Prisma.$ArenaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11650,8 +11669,8 @@ export namespace Prisma {
     memberId?: boolean
     arenaId?: boolean
     votedTo?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["vote"]>
 
   export type VoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11659,8 +11678,8 @@ export namespace Prisma {
     memberId?: boolean
     arenaId?: boolean
     votedTo?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["vote"]>
 
   export type VoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11668,8 +11687,8 @@ export namespace Prisma {
     memberId?: boolean
     arenaId?: boolean
     votedTo?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["vote"]>
 
   export type VoteSelectScalar = {
@@ -11681,23 +11700,23 @@ export namespace Prisma {
 
   export type VoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "arenaId" | "votedTo", ExtArgs["result"]["vote"]>
   export type VoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type VoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type VoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     arena?: boolean | ArenaDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
 
   export type $VotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Vote"
     objects: {
-      member: Prisma.$MemberPayload<ExtArgs>
       arena: Prisma.$ArenaPayload<ExtArgs>
+      member: Prisma.$MemberPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12098,8 +12117,8 @@ export namespace Prisma {
    */
   export interface Prisma__VoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     arena<T extends ArenaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ArenaDefaultArgs<ExtArgs>>): Prisma__ArenaClient<$Result.GetResult<Prisma.$ArenaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17102,8 +17121,8 @@ export namespace Prisma {
   export type PlatformSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    preferredPlatforms?: boolean | Platform$preferredPlatformsArgs<ExtArgs>
     gamePlatforms?: boolean | Platform$gamePlatformsArgs<ExtArgs>
+    preferredPlatforms?: boolean | Platform$preferredPlatformsArgs<ExtArgs>
     _count?: boolean | PlatformCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["platform"]>
 
@@ -17124,8 +17143,8 @@ export namespace Prisma {
 
   export type PlatformOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["platform"]>
   export type PlatformInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    preferredPlatforms?: boolean | Platform$preferredPlatformsArgs<ExtArgs>
     gamePlatforms?: boolean | Platform$gamePlatformsArgs<ExtArgs>
+    preferredPlatforms?: boolean | Platform$preferredPlatformsArgs<ExtArgs>
     _count?: boolean | PlatformCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PlatformIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -17134,8 +17153,8 @@ export namespace Prisma {
   export type $PlatformPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Platform"
     objects: {
-      preferredPlatforms: Prisma.$PreferredPlatformPayload<ExtArgs>[]
       gamePlatforms: Prisma.$GamePlatformPayload<ExtArgs>[]
+      preferredPlatforms: Prisma.$PreferredPlatformPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -17534,8 +17553,8 @@ export namespace Prisma {
    */
   export interface Prisma__PlatformClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    preferredPlatforms<T extends Platform$preferredPlatformsArgs<ExtArgs> = {}>(args?: Subset<T, Platform$preferredPlatformsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredPlatformPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gamePlatforms<T extends Platform$gamePlatformsArgs<ExtArgs> = {}>(args?: Subset<T, Platform$gamePlatformsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePlatformPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preferredPlatforms<T extends Platform$preferredPlatformsArgs<ExtArgs> = {}>(args?: Subset<T, Platform$preferredPlatformsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredPlatformPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17955,30 +17974,6 @@ export namespace Prisma {
   }
 
   /**
-   * Platform.preferredPlatforms
-   */
-  export type Platform$preferredPlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PreferredPlatform
-     */
-    select?: PreferredPlatformSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PreferredPlatform
-     */
-    omit?: PreferredPlatformOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PreferredPlatformInclude<ExtArgs> | null
-    where?: PreferredPlatformWhereInput
-    orderBy?: PreferredPlatformOrderByWithRelationInput | PreferredPlatformOrderByWithRelationInput[]
-    cursor?: PreferredPlatformWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PreferredPlatformScalarFieldEnum | PreferredPlatformScalarFieldEnum[]
-  }
-
-  /**
    * Platform.gamePlatforms
    */
   export type Platform$gamePlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18000,6 +17995,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: GamePlatformScalarFieldEnum | GamePlatformScalarFieldEnum[]
+  }
+
+  /**
+   * Platform.preferredPlatforms
+   */
+  export type Platform$preferredPlatformsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreferredPlatform
+     */
+    select?: PreferredPlatformSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreferredPlatform
+     */
+    omit?: PreferredPlatformOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferredPlatformInclude<ExtArgs> | null
+    where?: PreferredPlatformWhereInput
+    orderBy?: PreferredPlatformOrderByWithRelationInput | PreferredPlatformOrderByWithRelationInput[]
+    cursor?: PreferredPlatformWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreferredPlatformScalarFieldEnum | PreferredPlatformScalarFieldEnum[]
   }
 
   /**
@@ -18195,8 +18214,8 @@ export namespace Prisma {
   export type GenreSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    preferredGenres?: boolean | Genre$preferredGenresArgs<ExtArgs>
     gameGenres?: boolean | Genre$gameGenresArgs<ExtArgs>
+    preferredGenres?: boolean | Genre$preferredGenresArgs<ExtArgs>
     _count?: boolean | GenreCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["genre"]>
 
@@ -18217,8 +18236,8 @@ export namespace Prisma {
 
   export type GenreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["genre"]>
   export type GenreInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    preferredGenres?: boolean | Genre$preferredGenresArgs<ExtArgs>
     gameGenres?: boolean | Genre$gameGenresArgs<ExtArgs>
+    preferredGenres?: boolean | Genre$preferredGenresArgs<ExtArgs>
     _count?: boolean | GenreCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type GenreIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -18227,8 +18246,8 @@ export namespace Prisma {
   export type $GenrePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Genre"
     objects: {
-      preferredGenres: Prisma.$PreferredGenrePayload<ExtArgs>[]
       gameGenres: Prisma.$GameGenrePayload<ExtArgs>[]
+      preferredGenres: Prisma.$PreferredGenrePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -18627,8 +18646,8 @@ export namespace Prisma {
    */
   export interface Prisma__GenreClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    preferredGenres<T extends Genre$preferredGenresArgs<ExtArgs> = {}>(args?: Subset<T, Genre$preferredGenresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredGenrePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gameGenres<T extends Genre$gameGenresArgs<ExtArgs> = {}>(args?: Subset<T, Genre$gameGenresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameGenrePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preferredGenres<T extends Genre$preferredGenresArgs<ExtArgs> = {}>(args?: Subset<T, Genre$preferredGenresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredGenrePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19048,30 +19067,6 @@ export namespace Prisma {
   }
 
   /**
-   * Genre.preferredGenres
-   */
-  export type Genre$preferredGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PreferredGenre
-     */
-    select?: PreferredGenreSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PreferredGenre
-     */
-    omit?: PreferredGenreOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PreferredGenreInclude<ExtArgs> | null
-    where?: PreferredGenreWhereInput
-    orderBy?: PreferredGenreOrderByWithRelationInput | PreferredGenreOrderByWithRelationInput[]
-    cursor?: PreferredGenreWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PreferredGenreScalarFieldEnum | PreferredGenreScalarFieldEnum[]
-  }
-
-  /**
    * Genre.gameGenres
    */
   export type Genre$gameGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19093,6 +19088,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: GameGenreScalarFieldEnum | GameGenreScalarFieldEnum[]
+  }
+
+  /**
+   * Genre.preferredGenres
+   */
+  export type Genre$preferredGenresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreferredGenre
+     */
+    select?: PreferredGenreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreferredGenre
+     */
+    omit?: PreferredGenreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferredGenreInclude<ExtArgs> | null
+    where?: PreferredGenreWhereInput
+    orderBy?: PreferredGenreOrderByWithRelationInput | PreferredGenreOrderByWithRelationInput[]
+    cursor?: PreferredGenreWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreferredGenreScalarFieldEnum | PreferredGenreScalarFieldEnum[]
   }
 
   /**
@@ -19288,8 +19307,8 @@ export namespace Prisma {
   export type ThemeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    preferredThemes?: boolean | Theme$preferredThemesArgs<ExtArgs>
     gameThemes?: boolean | Theme$gameThemesArgs<ExtArgs>
+    preferredThemes?: boolean | Theme$preferredThemesArgs<ExtArgs>
     _count?: boolean | ThemeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["theme"]>
 
@@ -19310,8 +19329,8 @@ export namespace Prisma {
 
   export type ThemeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["theme"]>
   export type ThemeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    preferredThemes?: boolean | Theme$preferredThemesArgs<ExtArgs>
     gameThemes?: boolean | Theme$gameThemesArgs<ExtArgs>
+    preferredThemes?: boolean | Theme$preferredThemesArgs<ExtArgs>
     _count?: boolean | ThemeCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ThemeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -19320,8 +19339,8 @@ export namespace Prisma {
   export type $ThemePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Theme"
     objects: {
-      preferredThemes: Prisma.$PreferredThemePayload<ExtArgs>[]
       gameThemes: Prisma.$GameThemePayload<ExtArgs>[]
+      preferredThemes: Prisma.$PreferredThemePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -19720,8 +19739,8 @@ export namespace Prisma {
    */
   export interface Prisma__ThemeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    preferredThemes<T extends Theme$preferredThemesArgs<ExtArgs> = {}>(args?: Subset<T, Theme$preferredThemesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredThemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gameThemes<T extends Theme$gameThemesArgs<ExtArgs> = {}>(args?: Subset<T, Theme$gameThemesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameThemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preferredThemes<T extends Theme$preferredThemesArgs<ExtArgs> = {}>(args?: Subset<T, Theme$preferredThemesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferredThemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20141,30 +20160,6 @@ export namespace Prisma {
   }
 
   /**
-   * Theme.preferredThemes
-   */
-  export type Theme$preferredThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PreferredTheme
-     */
-    select?: PreferredThemeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PreferredTheme
-     */
-    omit?: PreferredThemeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PreferredThemeInclude<ExtArgs> | null
-    where?: PreferredThemeWhereInput
-    orderBy?: PreferredThemeOrderByWithRelationInput | PreferredThemeOrderByWithRelationInput[]
-    cursor?: PreferredThemeWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PreferredThemeScalarFieldEnum | PreferredThemeScalarFieldEnum[]
-  }
-
-  /**
    * Theme.gameThemes
    */
   export type Theme$gameThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20186,6 +20181,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: GameThemeScalarFieldEnum | GameThemeScalarFieldEnum[]
+  }
+
+  /**
+   * Theme.preferredThemes
+   */
+  export type Theme$preferredThemesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreferredTheme
+     */
+    select?: PreferredThemeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreferredTheme
+     */
+    omit?: PreferredThemeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferredThemeInclude<ExtArgs> | null
+    where?: PreferredThemeWhereInput
+    orderBy?: PreferredThemeOrderByWithRelationInput | PreferredThemeOrderByWithRelationInput[]
+    cursor?: PreferredThemeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreferredThemeScalarFieldEnum | PreferredThemeScalarFieldEnum[]
   }
 
   /**
@@ -21471,24 +21490,24 @@ export namespace Prisma {
     id?: boolean
     memberId?: boolean
     genreId?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     genre?: boolean | GenreDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["preferredGenre"]>
 
   export type PreferredGenreSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     memberId?: boolean
     genreId?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     genre?: boolean | GenreDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["preferredGenre"]>
 
   export type PreferredGenreSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     memberId?: boolean
     genreId?: boolean
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     genre?: boolean | GenreDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["preferredGenre"]>
 
   export type PreferredGenreSelectScalar = {
@@ -21499,23 +21518,23 @@ export namespace Prisma {
 
   export type PreferredGenreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "genreId", ExtArgs["result"]["preferredGenre"]>
   export type PreferredGenreInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     genre?: boolean | GenreDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type PreferredGenreIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     genre?: boolean | GenreDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
   export type PreferredGenreIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    member?: boolean | MemberDefaultArgs<ExtArgs>
     genre?: boolean | GenreDefaultArgs<ExtArgs>
+    member?: boolean | MemberDefaultArgs<ExtArgs>
   }
 
   export type $PreferredGenrePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PreferredGenre"
     objects: {
-      member: Prisma.$MemberPayload<ExtArgs>
       genre: Prisma.$GenrePayload<ExtArgs>
+      member: Prisma.$MemberPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -21915,8 +21934,8 @@ export namespace Prisma {
    */
   export interface Prisma__PreferredGenreClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     genre<T extends GenreDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GenreDefaultArgs<ExtArgs>>): Prisma__GenreClient<$Result.GetResult<Prisma.$GenrePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -27023,18 +27042,18 @@ export namespace Prisma {
     isAttended?: BoolFilter<"Member"> | boolean
     createdAt?: DateTimeFilter<"Member"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Member"> | Date | string | null
-    wishlists?: WishlistListRelationFilter
-    reviews?: ReviewListRelationFilter
-    reviewLikes?: ReviewLikeListRelationFilter
-    arenasAsCreator?: ArenaListRelationFilter
     arenasAsChallenger?: ArenaListRelationFilter
+    arenasAsCreator?: ArenaListRelationFilter
     chattings?: ChattingListRelationFilter
-    votes?: VoteListRelationFilter
     notificationRecords?: NotificationRecordListRelationFilter
-    scoreRecords?: ScoreRecordListRelationFilter
-    preferredPlatforms?: PreferredPlatformListRelationFilter
     preferredGenres?: PreferredGenreListRelationFilter
+    preferredPlatforms?: PreferredPlatformListRelationFilter
     preferredThemes?: PreferredThemeListRelationFilter
+    reviewLikes?: ReviewLikeListRelationFilter
+    reviews?: ReviewListRelationFilter
+    scoreRecords?: ScoreRecordListRelationFilter
+    votes?: VoteListRelationFilter
+    wishlists?: WishlistListRelationFilter
   }
 
   export type MemberOrderByWithRelationInput = {
@@ -27049,18 +27068,18 @@ export namespace Prisma {
     isAttended?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
-    wishlists?: WishlistOrderByRelationAggregateInput
-    reviews?: ReviewOrderByRelationAggregateInput
-    reviewLikes?: ReviewLikeOrderByRelationAggregateInput
-    arenasAsCreator?: ArenaOrderByRelationAggregateInput
     arenasAsChallenger?: ArenaOrderByRelationAggregateInput
+    arenasAsCreator?: ArenaOrderByRelationAggregateInput
     chattings?: ChattingOrderByRelationAggregateInput
-    votes?: VoteOrderByRelationAggregateInput
     notificationRecords?: NotificationRecordOrderByRelationAggregateInput
-    scoreRecords?: ScoreRecordOrderByRelationAggregateInput
-    preferredPlatforms?: PreferredPlatformOrderByRelationAggregateInput
     preferredGenres?: PreferredGenreOrderByRelationAggregateInput
+    preferredPlatforms?: PreferredPlatformOrderByRelationAggregateInput
     preferredThemes?: PreferredThemeOrderByRelationAggregateInput
+    reviewLikes?: ReviewLikeOrderByRelationAggregateInput
+    reviews?: ReviewOrderByRelationAggregateInput
+    scoreRecords?: ScoreRecordOrderByRelationAggregateInput
+    votes?: VoteOrderByRelationAggregateInput
+    wishlists?: WishlistOrderByRelationAggregateInput
   }
 
   export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -27078,18 +27097,18 @@ export namespace Prisma {
     isAttended?: BoolFilter<"Member"> | boolean
     createdAt?: DateTimeFilter<"Member"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Member"> | Date | string | null
-    wishlists?: WishlistListRelationFilter
-    reviews?: ReviewListRelationFilter
-    reviewLikes?: ReviewLikeListRelationFilter
-    arenasAsCreator?: ArenaListRelationFilter
     arenasAsChallenger?: ArenaListRelationFilter
+    arenasAsCreator?: ArenaListRelationFilter
     chattings?: ChattingListRelationFilter
-    votes?: VoteListRelationFilter
     notificationRecords?: NotificationRecordListRelationFilter
-    scoreRecords?: ScoreRecordListRelationFilter
-    preferredPlatforms?: PreferredPlatformListRelationFilter
     preferredGenres?: PreferredGenreListRelationFilter
+    preferredPlatforms?: PreferredPlatformListRelationFilter
     preferredThemes?: PreferredThemeListRelationFilter
+    reviewLikes?: ReviewLikeListRelationFilter
+    reviews?: ReviewListRelationFilter
+    scoreRecords?: ScoreRecordListRelationFilter
+    votes?: VoteListRelationFilter
+    wishlists?: WishlistListRelationFilter
   }, "id" | "email">
 
   export type MemberOrderByWithAggregationInput = {
@@ -27137,11 +27156,11 @@ export namespace Prisma {
     developer?: StringNullableFilter<"Game"> | string | null
     thumbnail?: StringNullableFilter<"Game"> | string | null
     releaseDate?: DateTimeFilter<"Game"> | Date | string
-    wishlists?: WishlistListRelationFilter
-    reviews?: ReviewListRelationFilter
-    gamePlatforms?: GamePlatformListRelationFilter
     gameGenres?: GameGenreListRelationFilter
+    gamePlatforms?: GamePlatformListRelationFilter
     gameThemes?: GameThemeListRelationFilter
+    reviews?: ReviewListRelationFilter
+    wishlists?: WishlistListRelationFilter
   }
 
   export type GameOrderByWithRelationInput = {
@@ -27150,11 +27169,11 @@ export namespace Prisma {
     developer?: SortOrderInput | SortOrder
     thumbnail?: SortOrderInput | SortOrder
     releaseDate?: SortOrder
-    wishlists?: WishlistOrderByRelationAggregateInput
-    reviews?: ReviewOrderByRelationAggregateInput
-    gamePlatforms?: GamePlatformOrderByRelationAggregateInput
     gameGenres?: GameGenreOrderByRelationAggregateInput
+    gamePlatforms?: GamePlatformOrderByRelationAggregateInput
     gameThemes?: GameThemeOrderByRelationAggregateInput
+    reviews?: ReviewOrderByRelationAggregateInput
+    wishlists?: WishlistOrderByRelationAggregateInput
   }
 
   export type GameWhereUniqueInput = Prisma.AtLeast<{
@@ -27166,11 +27185,11 @@ export namespace Prisma {
     developer?: StringNullableFilter<"Game"> | string | null
     thumbnail?: StringNullableFilter<"Game"> | string | null
     releaseDate?: DateTimeFilter<"Game"> | Date | string
-    wishlists?: WishlistListRelationFilter
-    reviews?: ReviewListRelationFilter
-    gamePlatforms?: GamePlatformListRelationFilter
     gameGenres?: GameGenreListRelationFilter
+    gamePlatforms?: GamePlatformListRelationFilter
     gameThemes?: GameThemeListRelationFilter
+    reviews?: ReviewListRelationFilter
+    wishlists?: WishlistListRelationFilter
   }, "id">
 
   export type GameOrderByWithAggregationInput = {
@@ -27204,16 +27223,16 @@ export namespace Prisma {
     id?: IntFilter<"Wishlist"> | number
     memberId?: StringFilter<"Wishlist"> | string
     gameId?: IntFilter<"Wishlist"> | number
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     game?: XOR<GameScalarRelationFilter, GameWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }
 
   export type WishlistOrderByWithRelationInput = {
     id?: SortOrder
     memberId?: SortOrder
     gameId?: SortOrder
-    member?: MemberOrderByWithRelationInput
     game?: GameOrderByWithRelationInput
+    member?: MemberOrderByWithRelationInput
   }
 
   export type WishlistWhereUniqueInput = Prisma.AtLeast<{
@@ -27223,8 +27242,8 @@ export namespace Prisma {
     NOT?: WishlistWhereInput | WishlistWhereInput[]
     memberId?: StringFilter<"Wishlist"> | string
     gameId?: IntFilter<"Wishlist"> | number
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     game?: XOR<GameScalarRelationFilter, GameWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }, "id">
 
   export type WishlistOrderByWithAggregationInput = {
@@ -27258,9 +27277,9 @@ export namespace Prisma {
     rating?: IntFilter<"Review"> | number
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
-    game?: XOR<GameScalarRelationFilter, GameWhereInput>
     reviewLikes?: ReviewLikeListRelationFilter
+    game?: XOR<GameScalarRelationFilter, GameWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }
 
   export type ReviewOrderByWithRelationInput = {
@@ -27271,9 +27290,9 @@ export namespace Prisma {
     rating?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrderInput | SortOrder
-    member?: MemberOrderByWithRelationInput
-    game?: GameOrderByWithRelationInput
     reviewLikes?: ReviewLikeOrderByRelationAggregateInput
+    game?: GameOrderByWithRelationInput
+    member?: MemberOrderByWithRelationInput
   }
 
   export type ReviewWhereUniqueInput = Prisma.AtLeast<{
@@ -27287,9 +27306,9 @@ export namespace Prisma {
     rating?: IntFilter<"Review"> | number
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
-    game?: XOR<GameScalarRelationFilter, GameWhereInput>
     reviewLikes?: ReviewLikeListRelationFilter
+    game?: XOR<GameScalarRelationFilter, GameWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }, "id">
 
   export type ReviewOrderByWithAggregationInput = {
@@ -27376,13 +27395,13 @@ export namespace Prisma {
     NOT?: ArenaWhereInput | ArenaWhereInput[]
     id?: IntFilter<"Arena"> | number
     creatorId?: StringFilter<"Arena"> | string
-    challengerId?: StringFilter<"Arena"> | string
+    challengerId?: StringNullableFilter<"Arena"> | string | null
     title?: StringFilter<"Arena"> | string
     description?: StringFilter<"Arena"> | string
     status?: IntFilter<"Arena"> | number
     startDate?: DateTimeFilter<"Arena"> | Date | string
+    challenger?: XOR<MemberNullableScalarRelationFilter, MemberWhereInput> | null
     creator?: XOR<MemberScalarRelationFilter, MemberWhereInput>
-    challenger?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     chattings?: ChattingListRelationFilter
     votes?: VoteListRelationFilter
   }
@@ -27390,13 +27409,13 @@ export namespace Prisma {
   export type ArenaOrderByWithRelationInput = {
     id?: SortOrder
     creatorId?: SortOrder
-    challengerId?: SortOrder
+    challengerId?: SortOrderInput | SortOrder
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
     startDate?: SortOrder
-    creator?: MemberOrderByWithRelationInput
     challenger?: MemberOrderByWithRelationInput
+    creator?: MemberOrderByWithRelationInput
     chattings?: ChattingOrderByRelationAggregateInput
     votes?: VoteOrderByRelationAggregateInput
   }
@@ -27407,13 +27426,13 @@ export namespace Prisma {
     OR?: ArenaWhereInput[]
     NOT?: ArenaWhereInput | ArenaWhereInput[]
     creatorId?: StringFilter<"Arena"> | string
-    challengerId?: StringFilter<"Arena"> | string
+    challengerId?: StringNullableFilter<"Arena"> | string | null
     title?: StringFilter<"Arena"> | string
     description?: StringFilter<"Arena"> | string
     status?: IntFilter<"Arena"> | number
     startDate?: DateTimeFilter<"Arena"> | Date | string
+    challenger?: XOR<MemberNullableScalarRelationFilter, MemberWhereInput> | null
     creator?: XOR<MemberScalarRelationFilter, MemberWhereInput>
-    challenger?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     chattings?: ChattingListRelationFilter
     votes?: VoteListRelationFilter
   }, "id">
@@ -27421,7 +27440,7 @@ export namespace Prisma {
   export type ArenaOrderByWithAggregationInput = {
     id?: SortOrder
     creatorId?: SortOrder
-    challengerId?: SortOrder
+    challengerId?: SortOrderInput | SortOrder
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
@@ -27439,7 +27458,7 @@ export namespace Prisma {
     NOT?: ArenaScalarWhereWithAggregatesInput | ArenaScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Arena"> | number
     creatorId?: StringWithAggregatesFilter<"Arena"> | string
-    challengerId?: StringWithAggregatesFilter<"Arena"> | string
+    challengerId?: StringNullableWithAggregatesFilter<"Arena"> | string | null
     title?: StringWithAggregatesFilter<"Arena"> | string
     description?: StringWithAggregatesFilter<"Arena"> | string
     status?: IntWithAggregatesFilter<"Arena"> | number
@@ -27455,8 +27474,8 @@ export namespace Prisma {
     arenaId?: IntFilter<"Chatting"> | number
     content?: StringFilter<"Chatting"> | string
     createdAt?: DateTimeFilter<"Chatting"> | Date | string
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     arena?: XOR<ArenaScalarRelationFilter, ArenaWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }
 
   export type ChattingOrderByWithRelationInput = {
@@ -27465,8 +27484,8 @@ export namespace Prisma {
     arenaId?: SortOrder
     content?: SortOrder
     createdAt?: SortOrder
-    member?: MemberOrderByWithRelationInput
     arena?: ArenaOrderByWithRelationInput
+    member?: MemberOrderByWithRelationInput
   }
 
   export type ChattingWhereUniqueInput = Prisma.AtLeast<{
@@ -27478,8 +27497,8 @@ export namespace Prisma {
     arenaId?: IntFilter<"Chatting"> | number
     content?: StringFilter<"Chatting"> | string
     createdAt?: DateTimeFilter<"Chatting"> | Date | string
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     arena?: XOR<ArenaScalarRelationFilter, ArenaWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }, "id">
 
   export type ChattingOrderByWithAggregationInput = {
@@ -27514,8 +27533,8 @@ export namespace Prisma {
     memberId?: StringFilter<"Vote"> | string
     arenaId?: IntFilter<"Vote"> | number
     votedTo?: StringFilter<"Vote"> | string
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     arena?: XOR<ArenaScalarRelationFilter, ArenaWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }
 
   export type VoteOrderByWithRelationInput = {
@@ -27523,8 +27542,8 @@ export namespace Prisma {
     memberId?: SortOrder
     arenaId?: SortOrder
     votedTo?: SortOrder
-    member?: MemberOrderByWithRelationInput
     arena?: ArenaOrderByWithRelationInput
+    member?: MemberOrderByWithRelationInput
   }
 
   export type VoteWhereUniqueInput = Prisma.AtLeast<{
@@ -27535,8 +27554,8 @@ export namespace Prisma {
     memberId?: StringFilter<"Vote"> | string
     arenaId?: IntFilter<"Vote"> | number
     votedTo?: StringFilter<"Vote"> | string
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     arena?: XOR<ArenaScalarRelationFilter, ArenaWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }, "id">
 
   export type VoteOrderByWithAggregationInput = {
@@ -27786,15 +27805,15 @@ export namespace Prisma {
     NOT?: PlatformWhereInput | PlatformWhereInput[]
     id?: IntFilter<"Platform"> | number
     name?: StringFilter<"Platform"> | string
-    preferredPlatforms?: PreferredPlatformListRelationFilter
     gamePlatforms?: GamePlatformListRelationFilter
+    preferredPlatforms?: PreferredPlatformListRelationFilter
   }
 
   export type PlatformOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    preferredPlatforms?: PreferredPlatformOrderByRelationAggregateInput
     gamePlatforms?: GamePlatformOrderByRelationAggregateInput
+    preferredPlatforms?: PreferredPlatformOrderByRelationAggregateInput
   }
 
   export type PlatformWhereUniqueInput = Prisma.AtLeast<{
@@ -27803,8 +27822,8 @@ export namespace Prisma {
     AND?: PlatformWhereInput | PlatformWhereInput[]
     OR?: PlatformWhereInput[]
     NOT?: PlatformWhereInput | PlatformWhereInput[]
-    preferredPlatforms?: PreferredPlatformListRelationFilter
     gamePlatforms?: GamePlatformListRelationFilter
+    preferredPlatforms?: PreferredPlatformListRelationFilter
   }, "id" | "name">
 
   export type PlatformOrderByWithAggregationInput = {
@@ -27831,15 +27850,15 @@ export namespace Prisma {
     NOT?: GenreWhereInput | GenreWhereInput[]
     id?: IntFilter<"Genre"> | number
     name?: StringFilter<"Genre"> | string
-    preferredGenres?: PreferredGenreListRelationFilter
     gameGenres?: GameGenreListRelationFilter
+    preferredGenres?: PreferredGenreListRelationFilter
   }
 
   export type GenreOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    preferredGenres?: PreferredGenreOrderByRelationAggregateInput
     gameGenres?: GameGenreOrderByRelationAggregateInput
+    preferredGenres?: PreferredGenreOrderByRelationAggregateInput
   }
 
   export type GenreWhereUniqueInput = Prisma.AtLeast<{
@@ -27848,8 +27867,8 @@ export namespace Prisma {
     AND?: GenreWhereInput | GenreWhereInput[]
     OR?: GenreWhereInput[]
     NOT?: GenreWhereInput | GenreWhereInput[]
-    preferredGenres?: PreferredGenreListRelationFilter
     gameGenres?: GameGenreListRelationFilter
+    preferredGenres?: PreferredGenreListRelationFilter
   }, "id" | "name">
 
   export type GenreOrderByWithAggregationInput = {
@@ -27876,15 +27895,15 @@ export namespace Prisma {
     NOT?: ThemeWhereInput | ThemeWhereInput[]
     id?: IntFilter<"Theme"> | number
     name?: StringFilter<"Theme"> | string
-    preferredThemes?: PreferredThemeListRelationFilter
     gameThemes?: GameThemeListRelationFilter
+    preferredThemes?: PreferredThemeListRelationFilter
   }
 
   export type ThemeOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    preferredThemes?: PreferredThemeOrderByRelationAggregateInput
     gameThemes?: GameThemeOrderByRelationAggregateInput
+    preferredThemes?: PreferredThemeOrderByRelationAggregateInput
   }
 
   export type ThemeWhereUniqueInput = Prisma.AtLeast<{
@@ -27893,8 +27912,8 @@ export namespace Prisma {
     AND?: ThemeWhereInput | ThemeWhereInput[]
     OR?: ThemeWhereInput[]
     NOT?: ThemeWhereInput | ThemeWhereInput[]
-    preferredThemes?: PreferredThemeListRelationFilter
     gameThemes?: GameThemeListRelationFilter
+    preferredThemes?: PreferredThemeListRelationFilter
   }, "id" | "name">
 
   export type ThemeOrderByWithAggregationInput = {
@@ -27972,16 +27991,16 @@ export namespace Prisma {
     id?: IntFilter<"PreferredGenre"> | number
     memberId?: StringFilter<"PreferredGenre"> | string
     genreId?: IntFilter<"PreferredGenre"> | number
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     genre?: XOR<GenreScalarRelationFilter, GenreWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }
 
   export type PreferredGenreOrderByWithRelationInput = {
     id?: SortOrder
     memberId?: SortOrder
     genreId?: SortOrder
-    member?: MemberOrderByWithRelationInput
     genre?: GenreOrderByWithRelationInput
+    member?: MemberOrderByWithRelationInput
   }
 
   export type PreferredGenreWhereUniqueInput = Prisma.AtLeast<{
@@ -27991,8 +28010,8 @@ export namespace Prisma {
     NOT?: PreferredGenreWhereInput | PreferredGenreWhereInput[]
     memberId?: StringFilter<"PreferredGenre"> | string
     genreId?: IntFilter<"PreferredGenre"> | number
-    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     genre?: XOR<GenreScalarRelationFilter, GenreWhereInput>
+    member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
   }, "id">
 
   export type PreferredGenreOrderByWithAggregationInput = {
@@ -28227,18 +28246,18 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateInput = {
@@ -28253,18 +28272,18 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUpdateInput = {
@@ -28279,18 +28298,18 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateInput = {
@@ -28305,18 +28324,18 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberCreateManyInput = {
@@ -28366,11 +28385,11 @@ export namespace Prisma {
     developer?: string | null
     thumbnail?: string | null
     releaseDate: Date | string
-    wishlists?: WishlistCreateNestedManyWithoutGameInput
-    reviews?: ReviewCreateNestedManyWithoutGameInput
-    gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
     gameGenres?: GameGenreCreateNestedManyWithoutGameInput
+    gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
     gameThemes?: GameThemeCreateNestedManyWithoutGameInput
+    reviews?: ReviewCreateNestedManyWithoutGameInput
+    wishlists?: WishlistCreateNestedManyWithoutGameInput
   }
 
   export type GameUncheckedCreateInput = {
@@ -28379,11 +28398,11 @@ export namespace Prisma {
     developer?: string | null
     thumbnail?: string | null
     releaseDate: Date | string
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
-    gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
     gameGenres?: GameGenreUncheckedCreateNestedManyWithoutGameInput
+    gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
     gameThemes?: GameThemeUncheckedCreateNestedManyWithoutGameInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
   }
 
   export type GameUpdateInput = {
@@ -28391,11 +28410,11 @@ export namespace Prisma {
     developer?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUpdateManyWithoutGameNestedInput
-    reviews?: ReviewUpdateManyWithoutGameNestedInput
-    gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
     gameGenres?: GameGenreUpdateManyWithoutGameNestedInput
+    gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
     gameThemes?: GameThemeUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUpdateManyWithoutGameNestedInput
   }
 
   export type GameUncheckedUpdateInput = {
@@ -28404,11 +28423,11 @@ export namespace Prisma {
     developer?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
-    gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
     gameGenres?: GameGenreUncheckedUpdateManyWithoutGameNestedInput
+    gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
     gameThemes?: GameThemeUncheckedUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
   }
 
   export type GameCreateManyInput = {
@@ -28435,8 +28454,8 @@ export namespace Prisma {
   }
 
   export type WishlistCreateInput = {
-    member: MemberCreateNestedOneWithoutWishlistsInput
     game: GameCreateNestedOneWithoutWishlistsInput
+    member: MemberCreateNestedOneWithoutWishlistsInput
   }
 
   export type WishlistUncheckedCreateInput = {
@@ -28446,8 +28465,8 @@ export namespace Prisma {
   }
 
   export type WishlistUpdateInput = {
-    member?: MemberUpdateOneRequiredWithoutWishlistsNestedInput
     game?: GameUpdateOneRequiredWithoutWishlistsNestedInput
+    member?: MemberUpdateOneRequiredWithoutWishlistsNestedInput
   }
 
   export type WishlistUncheckedUpdateInput = {
@@ -28477,9 +28496,9 @@ export namespace Prisma {
     rating: number
     createdAt?: Date | string
     updatedAt?: Date | string | null
-    member: MemberCreateNestedOneWithoutReviewsInput
-    game: GameCreateNestedOneWithoutReviewsInput
     reviewLikes?: ReviewLikeCreateNestedManyWithoutReviewInput
+    game: GameCreateNestedOneWithoutReviewsInput
+    member: MemberCreateNestedOneWithoutReviewsInput
   }
 
   export type ReviewUncheckedCreateInput = {
@@ -28498,9 +28517,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    member?: MemberUpdateOneRequiredWithoutReviewsNestedInput
-    game?: GameUpdateOneRequiredWithoutReviewsNestedInput
     reviewLikes?: ReviewLikeUpdateManyWithoutReviewNestedInput
+    game?: GameUpdateOneRequiredWithoutReviewsNestedInput
+    member?: MemberUpdateOneRequiredWithoutReviewsNestedInput
   }
 
   export type ReviewUncheckedUpdateInput = {
@@ -28584,8 +28603,8 @@ export namespace Prisma {
     description: string
     status: number
     startDate: Date | string
+    challenger?: MemberCreateNestedOneWithoutArenasAsChallengerInput
     creator: MemberCreateNestedOneWithoutArenasAsCreatorInput
-    challenger: MemberCreateNestedOneWithoutArenasAsChallengerInput
     chattings?: ChattingCreateNestedManyWithoutArenaInput
     votes?: VoteCreateNestedManyWithoutArenaInput
   }
@@ -28593,7 +28612,7 @@ export namespace Prisma {
   export type ArenaUncheckedCreateInput = {
     id?: number
     creatorId: string
-    challengerId: string
+    challengerId?: string | null
     title: string
     description: string
     status: number
@@ -28607,8 +28626,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     status?: IntFieldUpdateOperationsInput | number
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    challenger?: MemberUpdateOneWithoutArenasAsChallengerNestedInput
     creator?: MemberUpdateOneRequiredWithoutArenasAsCreatorNestedInput
-    challenger?: MemberUpdateOneRequiredWithoutArenasAsChallengerNestedInput
     chattings?: ChattingUpdateManyWithoutArenaNestedInput
     votes?: VoteUpdateManyWithoutArenaNestedInput
   }
@@ -28616,7 +28635,7 @@ export namespace Prisma {
   export type ArenaUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     creatorId?: StringFieldUpdateOperationsInput | string
-    challengerId?: StringFieldUpdateOperationsInput | string
+    challengerId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     status?: IntFieldUpdateOperationsInput | number
@@ -28628,7 +28647,7 @@ export namespace Prisma {
   export type ArenaCreateManyInput = {
     id?: number
     creatorId: string
-    challengerId: string
+    challengerId?: string | null
     title: string
     description: string
     status: number
@@ -28645,7 +28664,7 @@ export namespace Prisma {
   export type ArenaUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     creatorId?: StringFieldUpdateOperationsInput | string
-    challengerId?: StringFieldUpdateOperationsInput | string
+    challengerId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     status?: IntFieldUpdateOperationsInput | number
@@ -28655,8 +28674,8 @@ export namespace Prisma {
   export type ChattingCreateInput = {
     content: string
     createdAt?: Date | string
-    member: MemberCreateNestedOneWithoutChattingsInput
     arena: ArenaCreateNestedOneWithoutChattingsInput
+    member: MemberCreateNestedOneWithoutChattingsInput
   }
 
   export type ChattingUncheckedCreateInput = {
@@ -28670,8 +28689,8 @@ export namespace Prisma {
   export type ChattingUpdateInput = {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    member?: MemberUpdateOneRequiredWithoutChattingsNestedInput
     arena?: ArenaUpdateOneRequiredWithoutChattingsNestedInput
+    member?: MemberUpdateOneRequiredWithoutChattingsNestedInput
   }
 
   export type ChattingUncheckedUpdateInput = {
@@ -28705,8 +28724,8 @@ export namespace Prisma {
 
   export type VoteCreateInput = {
     votedTo: string
-    member: MemberCreateNestedOneWithoutVotesInput
     arena: ArenaCreateNestedOneWithoutVotesInput
+    member: MemberCreateNestedOneWithoutVotesInput
   }
 
   export type VoteUncheckedCreateInput = {
@@ -28718,8 +28737,8 @@ export namespace Prisma {
 
   export type VoteUpdateInput = {
     votedTo?: StringFieldUpdateOperationsInput | string
-    member?: MemberUpdateOneRequiredWithoutVotesNestedInput
     arena?: ArenaUpdateOneRequiredWithoutVotesNestedInput
+    member?: MemberUpdateOneRequiredWithoutVotesNestedInput
   }
 
   export type VoteUncheckedUpdateInput = {
@@ -28944,28 +28963,28 @@ export namespace Prisma {
 
   export type PlatformCreateInput = {
     name: string
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutPlatformInput
     gamePlatforms?: GamePlatformCreateNestedManyWithoutPlatformInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutPlatformInput
   }
 
   export type PlatformUncheckedCreateInput = {
     id?: number
     name: string
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutPlatformInput
     gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutPlatformInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutPlatformInput
   }
 
   export type PlatformUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutPlatformNestedInput
     gamePlatforms?: GamePlatformUpdateManyWithoutPlatformNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutPlatformNestedInput
   }
 
   export type PlatformUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutPlatformNestedInput
     gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutPlatformNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutPlatformNestedInput
   }
 
   export type PlatformCreateManyInput = {
@@ -28984,28 +29003,28 @@ export namespace Prisma {
 
   export type GenreCreateInput = {
     name: string
-    preferredGenres?: PreferredGenreCreateNestedManyWithoutGenreInput
     gameGenres?: GameGenreCreateNestedManyWithoutGenreInput
+    preferredGenres?: PreferredGenreCreateNestedManyWithoutGenreInput
   }
 
   export type GenreUncheckedCreateInput = {
     id?: number
     name: string
-    preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutGenreInput
     gameGenres?: GameGenreUncheckedCreateNestedManyWithoutGenreInput
+    preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutGenreInput
   }
 
   export type GenreUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    preferredGenres?: PreferredGenreUpdateManyWithoutGenreNestedInput
     gameGenres?: GameGenreUpdateManyWithoutGenreNestedInput
+    preferredGenres?: PreferredGenreUpdateManyWithoutGenreNestedInput
   }
 
   export type GenreUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutGenreNestedInput
     gameGenres?: GameGenreUncheckedUpdateManyWithoutGenreNestedInput
+    preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutGenreNestedInput
   }
 
   export type GenreCreateManyInput = {
@@ -29024,28 +29043,28 @@ export namespace Prisma {
 
   export type ThemeCreateInput = {
     name: string
-    preferredThemes?: PreferredThemeCreateNestedManyWithoutThemeInput
     gameThemes?: GameThemeCreateNestedManyWithoutThemeInput
+    preferredThemes?: PreferredThemeCreateNestedManyWithoutThemeInput
   }
 
   export type ThemeUncheckedCreateInput = {
     id?: number
     name: string
-    preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutThemeInput
     gameThemes?: GameThemeUncheckedCreateNestedManyWithoutThemeInput
+    preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutThemeInput
   }
 
   export type ThemeUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    preferredThemes?: PreferredThemeUpdateManyWithoutThemeNestedInput
     gameThemes?: GameThemeUpdateManyWithoutThemeNestedInput
+    preferredThemes?: PreferredThemeUpdateManyWithoutThemeNestedInput
   }
 
   export type ThemeUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutThemeNestedInput
     gameThemes?: GameThemeUncheckedUpdateManyWithoutThemeNestedInput
+    preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutThemeNestedInput
   }
 
   export type ThemeCreateManyInput = {
@@ -29101,8 +29120,8 @@ export namespace Prisma {
   }
 
   export type PreferredGenreCreateInput = {
-    member: MemberCreateNestedOneWithoutPreferredGenresInput
     genre: GenreCreateNestedOneWithoutPreferredGenresInput
+    member: MemberCreateNestedOneWithoutPreferredGenresInput
   }
 
   export type PreferredGenreUncheckedCreateInput = {
@@ -29112,8 +29131,8 @@ export namespace Prisma {
   }
 
   export type PreferredGenreUpdateInput = {
-    member?: MemberUpdateOneRequiredWithoutPreferredGenresNestedInput
     genre?: GenreUpdateOneRequiredWithoutPreferredGenresNestedInput
+    member?: MemberUpdateOneRequiredWithoutPreferredGenresNestedInput
   }
 
   export type PreferredGenreUncheckedUpdateInput = {
@@ -29343,24 +29362,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type WishlistListRelationFilter = {
-    every?: WishlistWhereInput
-    some?: WishlistWhereInput
-    none?: WishlistWhereInput
-  }
-
-  export type ReviewListRelationFilter = {
-    every?: ReviewWhereInput
-    some?: ReviewWhereInput
-    none?: ReviewWhereInput
-  }
-
-  export type ReviewLikeListRelationFilter = {
-    every?: ReviewLikeWhereInput
-    some?: ReviewLikeWhereInput
-    none?: ReviewLikeWhereInput
-  }
-
   export type ArenaListRelationFilter = {
     every?: ArenaWhereInput
     some?: ArenaWhereInput
@@ -29373,28 +29374,10 @@ export namespace Prisma {
     none?: ChattingWhereInput
   }
 
-  export type VoteListRelationFilter = {
-    every?: VoteWhereInput
-    some?: VoteWhereInput
-    none?: VoteWhereInput
-  }
-
   export type NotificationRecordListRelationFilter = {
     every?: NotificationRecordWhereInput
     some?: NotificationRecordWhereInput
     none?: NotificationRecordWhereInput
-  }
-
-  export type ScoreRecordListRelationFilter = {
-    every?: ScoreRecordWhereInput
-    some?: ScoreRecordWhereInput
-    none?: ScoreRecordWhereInput
-  }
-
-  export type PreferredPlatformListRelationFilter = {
-    every?: PreferredPlatformWhereInput
-    some?: PreferredPlatformWhereInput
-    none?: PreferredPlatformWhereInput
   }
 
   export type PreferredGenreListRelationFilter = {
@@ -29403,27 +29386,51 @@ export namespace Prisma {
     none?: PreferredGenreWhereInput
   }
 
+  export type PreferredPlatformListRelationFilter = {
+    every?: PreferredPlatformWhereInput
+    some?: PreferredPlatformWhereInput
+    none?: PreferredPlatformWhereInput
+  }
+
   export type PreferredThemeListRelationFilter = {
     every?: PreferredThemeWhereInput
     some?: PreferredThemeWhereInput
     none?: PreferredThemeWhereInput
   }
 
+  export type ReviewLikeListRelationFilter = {
+    every?: ReviewLikeWhereInput
+    some?: ReviewLikeWhereInput
+    none?: ReviewLikeWhereInput
+  }
+
+  export type ReviewListRelationFilter = {
+    every?: ReviewWhereInput
+    some?: ReviewWhereInput
+    none?: ReviewWhereInput
+  }
+
+  export type ScoreRecordListRelationFilter = {
+    every?: ScoreRecordWhereInput
+    some?: ScoreRecordWhereInput
+    none?: ScoreRecordWhereInput
+  }
+
+  export type VoteListRelationFilter = {
+    every?: VoteWhereInput
+    some?: VoteWhereInput
+    none?: VoteWhereInput
+  }
+
+  export type WishlistListRelationFilter = {
+    every?: WishlistWhereInput
+    some?: WishlistWhereInput
+    none?: WishlistWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
-  }
-
-  export type WishlistOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ReviewOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ReviewLikeOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type ArenaOrderByRelationAggregateInput = {
@@ -29434,19 +29441,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type VoteOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type NotificationRecordOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ScoreRecordOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PreferredPlatformOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29454,7 +29449,31 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type PreferredPlatformOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type PreferredThemeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ReviewLikeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ReviewOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ScoreRecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VoteOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WishlistOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29593,16 +29612,16 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type GamePlatformListRelationFilter = {
-    every?: GamePlatformWhereInput
-    some?: GamePlatformWhereInput
-    none?: GamePlatformWhereInput
-  }
-
   export type GameGenreListRelationFilter = {
     every?: GameGenreWhereInput
     some?: GameGenreWhereInput
     none?: GameGenreWhereInput
+  }
+
+  export type GamePlatformListRelationFilter = {
+    every?: GamePlatformWhereInput
+    some?: GamePlatformWhereInput
+    none?: GamePlatformWhereInput
   }
 
   export type GameThemeListRelationFilter = {
@@ -29611,11 +29630,11 @@ export namespace Prisma {
     none?: GameThemeWhereInput
   }
 
-  export type GamePlatformOrderByRelationAggregateInput = {
+  export type GameGenreOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type GameGenreOrderByRelationAggregateInput = {
+  export type GamePlatformOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29673,14 +29692,14 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type MemberScalarRelationFilter = {
-    is?: MemberWhereInput
-    isNot?: MemberWhereInput
-  }
-
   export type GameScalarRelationFilter = {
     is?: GameWhereInput
     isNot?: GameWhereInput
+  }
+
+  export type MemberScalarRelationFilter = {
+    is?: MemberWhereInput
+    isNot?: MemberWhereInput
   }
 
   export type WishlistCountOrderByAggregateInput = {
@@ -29784,6 +29803,11 @@ export namespace Prisma {
   export type ReviewLikeSumOrderByAggregateInput = {
     id?: SortOrder
     reviewId?: SortOrder
+  }
+
+  export type MemberNullableScalarRelationFilter = {
+    is?: MemberWhereInput | null
+    isNot?: MemberWhereInput | null
   }
 
   export type ArenaCountOrderByAggregateInput = {
@@ -30289,38 +30313,17 @@ export namespace Prisma {
     themeId?: SortOrder
   }
 
-  export type WishlistCreateNestedManyWithoutMemberInput = {
-    create?: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput> | WishlistCreateWithoutMemberInput[] | WishlistUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: WishlistCreateOrConnectWithoutMemberInput | WishlistCreateOrConnectWithoutMemberInput[]
-    createMany?: WishlistCreateManyMemberInputEnvelope
-    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-  }
-
-  export type ReviewCreateNestedManyWithoutMemberInput = {
-    create?: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput> | ReviewCreateWithoutMemberInput[] | ReviewUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutMemberInput | ReviewCreateOrConnectWithoutMemberInput[]
-    createMany?: ReviewCreateManyMemberInputEnvelope
-    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-  }
-
-  export type ReviewLikeCreateNestedManyWithoutMemberInput = {
-    create?: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput> | ReviewLikeCreateWithoutMemberInput[] | ReviewLikeUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ReviewLikeCreateOrConnectWithoutMemberInput | ReviewLikeCreateOrConnectWithoutMemberInput[]
-    createMany?: ReviewLikeCreateManyMemberInputEnvelope
-    connect?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
+  export type ArenaCreateNestedManyWithoutChallengerInput = {
+    create?: XOR<ArenaCreateWithoutChallengerInput, ArenaUncheckedCreateWithoutChallengerInput> | ArenaCreateWithoutChallengerInput[] | ArenaUncheckedCreateWithoutChallengerInput[]
+    connectOrCreate?: ArenaCreateOrConnectWithoutChallengerInput | ArenaCreateOrConnectWithoutChallengerInput[]
+    createMany?: ArenaCreateManyChallengerInputEnvelope
+    connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
   }
 
   export type ArenaCreateNestedManyWithoutCreatorInput = {
     create?: XOR<ArenaCreateWithoutCreatorInput, ArenaUncheckedCreateWithoutCreatorInput> | ArenaCreateWithoutCreatorInput[] | ArenaUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: ArenaCreateOrConnectWithoutCreatorInput | ArenaCreateOrConnectWithoutCreatorInput[]
     createMany?: ArenaCreateManyCreatorInputEnvelope
-    connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
-  }
-
-  export type ArenaCreateNestedManyWithoutChallengerInput = {
-    create?: XOR<ArenaCreateWithoutChallengerInput, ArenaUncheckedCreateWithoutChallengerInput> | ArenaCreateWithoutChallengerInput[] | ArenaUncheckedCreateWithoutChallengerInput[]
-    connectOrCreate?: ArenaCreateOrConnectWithoutChallengerInput | ArenaCreateOrConnectWithoutChallengerInput[]
-    createMany?: ArenaCreateManyChallengerInputEnvelope
     connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
   }
 
@@ -30331,32 +30334,11 @@ export namespace Prisma {
     connect?: ChattingWhereUniqueInput | ChattingWhereUniqueInput[]
   }
 
-  export type VoteCreateNestedManyWithoutMemberInput = {
-    create?: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput> | VoteCreateWithoutMemberInput[] | VoteUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: VoteCreateOrConnectWithoutMemberInput | VoteCreateOrConnectWithoutMemberInput[]
-    createMany?: VoteCreateManyMemberInputEnvelope
-    connect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-  }
-
   export type NotificationRecordCreateNestedManyWithoutMemberInput = {
     create?: XOR<NotificationRecordCreateWithoutMemberInput, NotificationRecordUncheckedCreateWithoutMemberInput> | NotificationRecordCreateWithoutMemberInput[] | NotificationRecordUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: NotificationRecordCreateOrConnectWithoutMemberInput | NotificationRecordCreateOrConnectWithoutMemberInput[]
     createMany?: NotificationRecordCreateManyMemberInputEnvelope
     connect?: NotificationRecordWhereUniqueInput | NotificationRecordWhereUniqueInput[]
-  }
-
-  export type ScoreRecordCreateNestedManyWithoutMemberInput = {
-    create?: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput> | ScoreRecordCreateWithoutMemberInput[] | ScoreRecordUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ScoreRecordCreateOrConnectWithoutMemberInput | ScoreRecordCreateOrConnectWithoutMemberInput[]
-    createMany?: ScoreRecordCreateManyMemberInputEnvelope
-    connect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-  }
-
-  export type PreferredPlatformCreateNestedManyWithoutMemberInput = {
-    create?: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput> | PreferredPlatformCreateWithoutMemberInput[] | PreferredPlatformUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutMemberInput | PreferredPlatformCreateOrConnectWithoutMemberInput[]
-    createMany?: PreferredPlatformCreateManyMemberInputEnvelope
-    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
   }
 
   export type PreferredGenreCreateNestedManyWithoutMemberInput = {
@@ -30366,6 +30348,13 @@ export namespace Prisma {
     connect?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
   }
 
+  export type PreferredPlatformCreateNestedManyWithoutMemberInput = {
+    create?: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput> | PreferredPlatformCreateWithoutMemberInput[] | PreferredPlatformUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutMemberInput | PreferredPlatformCreateOrConnectWithoutMemberInput[]
+    createMany?: PreferredPlatformCreateManyMemberInputEnvelope
+    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+  }
+
   export type PreferredThemeCreateNestedManyWithoutMemberInput = {
     create?: XOR<PreferredThemeCreateWithoutMemberInput, PreferredThemeUncheckedCreateWithoutMemberInput> | PreferredThemeCreateWithoutMemberInput[] | PreferredThemeUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: PreferredThemeCreateOrConnectWithoutMemberInput | PreferredThemeCreateOrConnectWithoutMemberInput[]
@@ -30373,38 +30362,52 @@ export namespace Prisma {
     connect?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
   }
 
-  export type WishlistUncheckedCreateNestedManyWithoutMemberInput = {
-    create?: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput> | WishlistCreateWithoutMemberInput[] | WishlistUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: WishlistCreateOrConnectWithoutMemberInput | WishlistCreateOrConnectWithoutMemberInput[]
-    createMany?: WishlistCreateManyMemberInputEnvelope
-    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-  }
-
-  export type ReviewUncheckedCreateNestedManyWithoutMemberInput = {
-    create?: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput> | ReviewCreateWithoutMemberInput[] | ReviewUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutMemberInput | ReviewCreateOrConnectWithoutMemberInput[]
-    createMany?: ReviewCreateManyMemberInputEnvelope
-    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-  }
-
-  export type ReviewLikeUncheckedCreateNestedManyWithoutMemberInput = {
+  export type ReviewLikeCreateNestedManyWithoutMemberInput = {
     create?: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput> | ReviewLikeCreateWithoutMemberInput[] | ReviewLikeUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: ReviewLikeCreateOrConnectWithoutMemberInput | ReviewLikeCreateOrConnectWithoutMemberInput[]
     createMany?: ReviewLikeCreateManyMemberInputEnvelope
     connect?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
   }
 
-  export type ArenaUncheckedCreateNestedManyWithoutCreatorInput = {
-    create?: XOR<ArenaCreateWithoutCreatorInput, ArenaUncheckedCreateWithoutCreatorInput> | ArenaCreateWithoutCreatorInput[] | ArenaUncheckedCreateWithoutCreatorInput[]
-    connectOrCreate?: ArenaCreateOrConnectWithoutCreatorInput | ArenaCreateOrConnectWithoutCreatorInput[]
-    createMany?: ArenaCreateManyCreatorInputEnvelope
-    connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+  export type ReviewCreateNestedManyWithoutMemberInput = {
+    create?: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput> | ReviewCreateWithoutMemberInput[] | ReviewUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutMemberInput | ReviewCreateOrConnectWithoutMemberInput[]
+    createMany?: ReviewCreateManyMemberInputEnvelope
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type ScoreRecordCreateNestedManyWithoutMemberInput = {
+    create?: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput> | ScoreRecordCreateWithoutMemberInput[] | ScoreRecordUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ScoreRecordCreateOrConnectWithoutMemberInput | ScoreRecordCreateOrConnectWithoutMemberInput[]
+    createMany?: ScoreRecordCreateManyMemberInputEnvelope
+    connect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+  }
+
+  export type VoteCreateNestedManyWithoutMemberInput = {
+    create?: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput> | VoteCreateWithoutMemberInput[] | VoteUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: VoteCreateOrConnectWithoutMemberInput | VoteCreateOrConnectWithoutMemberInput[]
+    createMany?: VoteCreateManyMemberInputEnvelope
+    connect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+  }
+
+  export type WishlistCreateNestedManyWithoutMemberInput = {
+    create?: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput> | WishlistCreateWithoutMemberInput[] | WishlistUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: WishlistCreateOrConnectWithoutMemberInput | WishlistCreateOrConnectWithoutMemberInput[]
+    createMany?: WishlistCreateManyMemberInputEnvelope
+    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
   }
 
   export type ArenaUncheckedCreateNestedManyWithoutChallengerInput = {
     create?: XOR<ArenaCreateWithoutChallengerInput, ArenaUncheckedCreateWithoutChallengerInput> | ArenaCreateWithoutChallengerInput[] | ArenaUncheckedCreateWithoutChallengerInput[]
     connectOrCreate?: ArenaCreateOrConnectWithoutChallengerInput | ArenaCreateOrConnectWithoutChallengerInput[]
     createMany?: ArenaCreateManyChallengerInputEnvelope
+    connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+  }
+
+  export type ArenaUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<ArenaCreateWithoutCreatorInput, ArenaUncheckedCreateWithoutCreatorInput> | ArenaCreateWithoutCreatorInput[] | ArenaUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: ArenaCreateOrConnectWithoutCreatorInput | ArenaCreateOrConnectWithoutCreatorInput[]
+    createMany?: ArenaCreateManyCreatorInputEnvelope
     connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
   }
 
@@ -30415,32 +30418,11 @@ export namespace Prisma {
     connect?: ChattingWhereUniqueInput | ChattingWhereUniqueInput[]
   }
 
-  export type VoteUncheckedCreateNestedManyWithoutMemberInput = {
-    create?: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput> | VoteCreateWithoutMemberInput[] | VoteUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: VoteCreateOrConnectWithoutMemberInput | VoteCreateOrConnectWithoutMemberInput[]
-    createMany?: VoteCreateManyMemberInputEnvelope
-    connect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-  }
-
   export type NotificationRecordUncheckedCreateNestedManyWithoutMemberInput = {
     create?: XOR<NotificationRecordCreateWithoutMemberInput, NotificationRecordUncheckedCreateWithoutMemberInput> | NotificationRecordCreateWithoutMemberInput[] | NotificationRecordUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: NotificationRecordCreateOrConnectWithoutMemberInput | NotificationRecordCreateOrConnectWithoutMemberInput[]
     createMany?: NotificationRecordCreateManyMemberInputEnvelope
     connect?: NotificationRecordWhereUniqueInput | NotificationRecordWhereUniqueInput[]
-  }
-
-  export type ScoreRecordUncheckedCreateNestedManyWithoutMemberInput = {
-    create?: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput> | ScoreRecordCreateWithoutMemberInput[] | ScoreRecordUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ScoreRecordCreateOrConnectWithoutMemberInput | ScoreRecordCreateOrConnectWithoutMemberInput[]
-    createMany?: ScoreRecordCreateManyMemberInputEnvelope
-    connect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-  }
-
-  export type PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput = {
-    create?: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput> | PreferredPlatformCreateWithoutMemberInput[] | PreferredPlatformUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutMemberInput | PreferredPlatformCreateOrConnectWithoutMemberInput[]
-    createMany?: PreferredPlatformCreateManyMemberInputEnvelope
-    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
   }
 
   export type PreferredGenreUncheckedCreateNestedManyWithoutMemberInput = {
@@ -30450,11 +30432,53 @@ export namespace Prisma {
     connect?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
   }
 
+  export type PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput> | PreferredPlatformCreateWithoutMemberInput[] | PreferredPlatformUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutMemberInput | PreferredPlatformCreateOrConnectWithoutMemberInput[]
+    createMany?: PreferredPlatformCreateManyMemberInputEnvelope
+    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+  }
+
   export type PreferredThemeUncheckedCreateNestedManyWithoutMemberInput = {
     create?: XOR<PreferredThemeCreateWithoutMemberInput, PreferredThemeUncheckedCreateWithoutMemberInput> | PreferredThemeCreateWithoutMemberInput[] | PreferredThemeUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: PreferredThemeCreateOrConnectWithoutMemberInput | PreferredThemeCreateOrConnectWithoutMemberInput[]
     createMany?: PreferredThemeCreateManyMemberInputEnvelope
     connect?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
+  }
+
+  export type ReviewLikeUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput> | ReviewLikeCreateWithoutMemberInput[] | ReviewLikeUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ReviewLikeCreateOrConnectWithoutMemberInput | ReviewLikeCreateOrConnectWithoutMemberInput[]
+    createMany?: ReviewLikeCreateManyMemberInputEnvelope
+    connect?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
+  }
+
+  export type ReviewUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput> | ReviewCreateWithoutMemberInput[] | ReviewUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutMemberInput | ReviewCreateOrConnectWithoutMemberInput[]
+    createMany?: ReviewCreateManyMemberInputEnvelope
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type ScoreRecordUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput> | ScoreRecordCreateWithoutMemberInput[] | ScoreRecordUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ScoreRecordCreateOrConnectWithoutMemberInput | ScoreRecordCreateOrConnectWithoutMemberInput[]
+    createMany?: ScoreRecordCreateManyMemberInputEnvelope
+    connect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+  }
+
+  export type VoteUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput> | VoteCreateWithoutMemberInput[] | VoteUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: VoteCreateOrConnectWithoutMemberInput | VoteCreateOrConnectWithoutMemberInput[]
+    createMany?: VoteCreateManyMemberInputEnvelope
+    connect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+  }
+
+  export type WishlistUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput> | WishlistCreateWithoutMemberInput[] | WishlistUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: WishlistCreateOrConnectWithoutMemberInput | WishlistCreateOrConnectWithoutMemberInput[]
+    createMany?: WishlistCreateManyMemberInputEnvelope
+    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -30481,46 +30505,18 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type WishlistUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput> | WishlistCreateWithoutMemberInput[] | WishlistUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: WishlistCreateOrConnectWithoutMemberInput | WishlistCreateOrConnectWithoutMemberInput[]
-    upsert?: WishlistUpsertWithWhereUniqueWithoutMemberInput | WishlistUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: WishlistCreateManyMemberInputEnvelope
-    set?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    disconnect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    delete?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    update?: WishlistUpdateWithWhereUniqueWithoutMemberInput | WishlistUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: WishlistUpdateManyWithWhereWithoutMemberInput | WishlistUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
-  }
-
-  export type ReviewUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput> | ReviewCreateWithoutMemberInput[] | ReviewUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutMemberInput | ReviewCreateOrConnectWithoutMemberInput[]
-    upsert?: ReviewUpsertWithWhereUniqueWithoutMemberInput | ReviewUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: ReviewCreateManyMemberInputEnvelope
-    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    update?: ReviewUpdateWithWhereUniqueWithoutMemberInput | ReviewUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: ReviewUpdateManyWithWhereWithoutMemberInput | ReviewUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
-  }
-
-  export type ReviewLikeUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput> | ReviewLikeCreateWithoutMemberInput[] | ReviewLikeUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ReviewLikeCreateOrConnectWithoutMemberInput | ReviewLikeCreateOrConnectWithoutMemberInput[]
-    upsert?: ReviewLikeUpsertWithWhereUniqueWithoutMemberInput | ReviewLikeUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: ReviewLikeCreateManyMemberInputEnvelope
-    set?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
-    disconnect?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
-    delete?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
-    connect?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
-    update?: ReviewLikeUpdateWithWhereUniqueWithoutMemberInput | ReviewLikeUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: ReviewLikeUpdateManyWithWhereWithoutMemberInput | ReviewLikeUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: ReviewLikeScalarWhereInput | ReviewLikeScalarWhereInput[]
+  export type ArenaUpdateManyWithoutChallengerNestedInput = {
+    create?: XOR<ArenaCreateWithoutChallengerInput, ArenaUncheckedCreateWithoutChallengerInput> | ArenaCreateWithoutChallengerInput[] | ArenaUncheckedCreateWithoutChallengerInput[]
+    connectOrCreate?: ArenaCreateOrConnectWithoutChallengerInput | ArenaCreateOrConnectWithoutChallengerInput[]
+    upsert?: ArenaUpsertWithWhereUniqueWithoutChallengerInput | ArenaUpsertWithWhereUniqueWithoutChallengerInput[]
+    createMany?: ArenaCreateManyChallengerInputEnvelope
+    set?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+    disconnect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+    delete?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+    connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+    update?: ArenaUpdateWithWhereUniqueWithoutChallengerInput | ArenaUpdateWithWhereUniqueWithoutChallengerInput[]
+    updateMany?: ArenaUpdateManyWithWhereWithoutChallengerInput | ArenaUpdateManyWithWhereWithoutChallengerInput[]
+    deleteMany?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
   }
 
   export type ArenaUpdateManyWithoutCreatorNestedInput = {
@@ -30534,20 +30530,6 @@ export namespace Prisma {
     connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
     update?: ArenaUpdateWithWhereUniqueWithoutCreatorInput | ArenaUpdateWithWhereUniqueWithoutCreatorInput[]
     updateMany?: ArenaUpdateManyWithWhereWithoutCreatorInput | ArenaUpdateManyWithWhereWithoutCreatorInput[]
-    deleteMany?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
-  }
-
-  export type ArenaUpdateManyWithoutChallengerNestedInput = {
-    create?: XOR<ArenaCreateWithoutChallengerInput, ArenaUncheckedCreateWithoutChallengerInput> | ArenaCreateWithoutChallengerInput[] | ArenaUncheckedCreateWithoutChallengerInput[]
-    connectOrCreate?: ArenaCreateOrConnectWithoutChallengerInput | ArenaCreateOrConnectWithoutChallengerInput[]
-    upsert?: ArenaUpsertWithWhereUniqueWithoutChallengerInput | ArenaUpsertWithWhereUniqueWithoutChallengerInput[]
-    createMany?: ArenaCreateManyChallengerInputEnvelope
-    set?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
-    disconnect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
-    delete?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
-    connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
-    update?: ArenaUpdateWithWhereUniqueWithoutChallengerInput | ArenaUpdateWithWhereUniqueWithoutChallengerInput[]
-    updateMany?: ArenaUpdateManyWithWhereWithoutChallengerInput | ArenaUpdateManyWithWhereWithoutChallengerInput[]
     deleteMany?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
   }
 
@@ -30565,20 +30547,6 @@ export namespace Prisma {
     deleteMany?: ChattingScalarWhereInput | ChattingScalarWhereInput[]
   }
 
-  export type VoteUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput> | VoteCreateWithoutMemberInput[] | VoteUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: VoteCreateOrConnectWithoutMemberInput | VoteCreateOrConnectWithoutMemberInput[]
-    upsert?: VoteUpsertWithWhereUniqueWithoutMemberInput | VoteUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: VoteCreateManyMemberInputEnvelope
-    set?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-    disconnect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-    delete?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-    connect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-    update?: VoteUpdateWithWhereUniqueWithoutMemberInput | VoteUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: VoteUpdateManyWithWhereWithoutMemberInput | VoteUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: VoteScalarWhereInput | VoteScalarWhereInput[]
-  }
-
   export type NotificationRecordUpdateManyWithoutMemberNestedInput = {
     create?: XOR<NotificationRecordCreateWithoutMemberInput, NotificationRecordUncheckedCreateWithoutMemberInput> | NotificationRecordCreateWithoutMemberInput[] | NotificationRecordUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: NotificationRecordCreateOrConnectWithoutMemberInput | NotificationRecordCreateOrConnectWithoutMemberInput[]
@@ -30591,34 +30559,6 @@ export namespace Prisma {
     update?: NotificationRecordUpdateWithWhereUniqueWithoutMemberInput | NotificationRecordUpdateWithWhereUniqueWithoutMemberInput[]
     updateMany?: NotificationRecordUpdateManyWithWhereWithoutMemberInput | NotificationRecordUpdateManyWithWhereWithoutMemberInput[]
     deleteMany?: NotificationRecordScalarWhereInput | NotificationRecordScalarWhereInput[]
-  }
-
-  export type ScoreRecordUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput> | ScoreRecordCreateWithoutMemberInput[] | ScoreRecordUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ScoreRecordCreateOrConnectWithoutMemberInput | ScoreRecordCreateOrConnectWithoutMemberInput[]
-    upsert?: ScoreRecordUpsertWithWhereUniqueWithoutMemberInput | ScoreRecordUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: ScoreRecordCreateManyMemberInputEnvelope
-    set?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-    disconnect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-    delete?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-    connect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-    update?: ScoreRecordUpdateWithWhereUniqueWithoutMemberInput | ScoreRecordUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: ScoreRecordUpdateManyWithWhereWithoutMemberInput | ScoreRecordUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: ScoreRecordScalarWhereInput | ScoreRecordScalarWhereInput[]
-  }
-
-  export type PreferredPlatformUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput> | PreferredPlatformCreateWithoutMemberInput[] | PreferredPlatformUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutMemberInput | PreferredPlatformCreateOrConnectWithoutMemberInput[]
-    upsert?: PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput | PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: PreferredPlatformCreateManyMemberInputEnvelope
-    set?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    disconnect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    delete?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    update?: PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput | PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: PreferredPlatformUpdateManyWithWhereWithoutMemberInput | PreferredPlatformUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
   }
 
   export type PreferredGenreUpdateManyWithoutMemberNestedInput = {
@@ -30635,6 +30575,20 @@ export namespace Prisma {
     deleteMany?: PreferredGenreScalarWhereInput | PreferredGenreScalarWhereInput[]
   }
 
+  export type PreferredPlatformUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput> | PreferredPlatformCreateWithoutMemberInput[] | PreferredPlatformUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutMemberInput | PreferredPlatformCreateOrConnectWithoutMemberInput[]
+    upsert?: PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput | PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: PreferredPlatformCreateManyMemberInputEnvelope
+    set?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    disconnect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    delete?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    update?: PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput | PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: PreferredPlatformUpdateManyWithWhereWithoutMemberInput | PreferredPlatformUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
+  }
+
   export type PreferredThemeUpdateManyWithoutMemberNestedInput = {
     create?: XOR<PreferredThemeCreateWithoutMemberInput, PreferredThemeUncheckedCreateWithoutMemberInput> | PreferredThemeCreateWithoutMemberInput[] | PreferredThemeUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: PreferredThemeCreateOrConnectWithoutMemberInput | PreferredThemeCreateOrConnectWithoutMemberInput[]
@@ -30649,35 +30603,7 @@ export namespace Prisma {
     deleteMany?: PreferredThemeScalarWhereInput | PreferredThemeScalarWhereInput[]
   }
 
-  export type WishlistUncheckedUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput> | WishlistCreateWithoutMemberInput[] | WishlistUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: WishlistCreateOrConnectWithoutMemberInput | WishlistCreateOrConnectWithoutMemberInput[]
-    upsert?: WishlistUpsertWithWhereUniqueWithoutMemberInput | WishlistUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: WishlistCreateManyMemberInputEnvelope
-    set?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    disconnect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    delete?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    update?: WishlistUpdateWithWhereUniqueWithoutMemberInput | WishlistUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: WishlistUpdateManyWithWhereWithoutMemberInput | WishlistUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
-  }
-
-  export type ReviewUncheckedUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput> | ReviewCreateWithoutMemberInput[] | ReviewUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutMemberInput | ReviewCreateOrConnectWithoutMemberInput[]
-    upsert?: ReviewUpsertWithWhereUniqueWithoutMemberInput | ReviewUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: ReviewCreateManyMemberInputEnvelope
-    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    update?: ReviewUpdateWithWhereUniqueWithoutMemberInput | ReviewUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: ReviewUpdateManyWithWhereWithoutMemberInput | ReviewUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
-  }
-
-  export type ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput = {
+  export type ReviewLikeUpdateManyWithoutMemberNestedInput = {
     create?: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput> | ReviewLikeCreateWithoutMemberInput[] | ReviewLikeUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: ReviewLikeCreateOrConnectWithoutMemberInput | ReviewLikeCreateOrConnectWithoutMemberInput[]
     upsert?: ReviewLikeUpsertWithWhereUniqueWithoutMemberInput | ReviewLikeUpsertWithWhereUniqueWithoutMemberInput[]
@@ -30691,18 +30617,60 @@ export namespace Prisma {
     deleteMany?: ReviewLikeScalarWhereInput | ReviewLikeScalarWhereInput[]
   }
 
-  export type ArenaUncheckedUpdateManyWithoutCreatorNestedInput = {
-    create?: XOR<ArenaCreateWithoutCreatorInput, ArenaUncheckedCreateWithoutCreatorInput> | ArenaCreateWithoutCreatorInput[] | ArenaUncheckedCreateWithoutCreatorInput[]
-    connectOrCreate?: ArenaCreateOrConnectWithoutCreatorInput | ArenaCreateOrConnectWithoutCreatorInput[]
-    upsert?: ArenaUpsertWithWhereUniqueWithoutCreatorInput | ArenaUpsertWithWhereUniqueWithoutCreatorInput[]
-    createMany?: ArenaCreateManyCreatorInputEnvelope
-    set?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
-    disconnect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
-    delete?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
-    connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
-    update?: ArenaUpdateWithWhereUniqueWithoutCreatorInput | ArenaUpdateWithWhereUniqueWithoutCreatorInput[]
-    updateMany?: ArenaUpdateManyWithWhereWithoutCreatorInput | ArenaUpdateManyWithWhereWithoutCreatorInput[]
-    deleteMany?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
+  export type ReviewUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput> | ReviewCreateWithoutMemberInput[] | ReviewUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutMemberInput | ReviewCreateOrConnectWithoutMemberInput[]
+    upsert?: ReviewUpsertWithWhereUniqueWithoutMemberInput | ReviewUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: ReviewCreateManyMemberInputEnvelope
+    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    update?: ReviewUpdateWithWhereUniqueWithoutMemberInput | ReviewUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: ReviewUpdateManyWithWhereWithoutMemberInput | ReviewUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type ScoreRecordUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput> | ScoreRecordCreateWithoutMemberInput[] | ScoreRecordUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ScoreRecordCreateOrConnectWithoutMemberInput | ScoreRecordCreateOrConnectWithoutMemberInput[]
+    upsert?: ScoreRecordUpsertWithWhereUniqueWithoutMemberInput | ScoreRecordUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: ScoreRecordCreateManyMemberInputEnvelope
+    set?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+    disconnect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+    delete?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+    connect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+    update?: ScoreRecordUpdateWithWhereUniqueWithoutMemberInput | ScoreRecordUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: ScoreRecordUpdateManyWithWhereWithoutMemberInput | ScoreRecordUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: ScoreRecordScalarWhereInput | ScoreRecordScalarWhereInput[]
+  }
+
+  export type VoteUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput> | VoteCreateWithoutMemberInput[] | VoteUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: VoteCreateOrConnectWithoutMemberInput | VoteCreateOrConnectWithoutMemberInput[]
+    upsert?: VoteUpsertWithWhereUniqueWithoutMemberInput | VoteUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: VoteCreateManyMemberInputEnvelope
+    set?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+    disconnect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+    delete?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+    connect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+    update?: VoteUpdateWithWhereUniqueWithoutMemberInput | VoteUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: VoteUpdateManyWithWhereWithoutMemberInput | VoteUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: VoteScalarWhereInput | VoteScalarWhereInput[]
+  }
+
+  export type WishlistUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput> | WishlistCreateWithoutMemberInput[] | WishlistUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: WishlistCreateOrConnectWithoutMemberInput | WishlistCreateOrConnectWithoutMemberInput[]
+    upsert?: WishlistUpsertWithWhereUniqueWithoutMemberInput | WishlistUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: WishlistCreateManyMemberInputEnvelope
+    set?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    disconnect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    delete?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    update?: WishlistUpdateWithWhereUniqueWithoutMemberInput | WishlistUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: WishlistUpdateManyWithWhereWithoutMemberInput | WishlistUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
   }
 
   export type ArenaUncheckedUpdateManyWithoutChallengerNestedInput = {
@@ -30716,6 +30684,20 @@ export namespace Prisma {
     connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
     update?: ArenaUpdateWithWhereUniqueWithoutChallengerInput | ArenaUpdateWithWhereUniqueWithoutChallengerInput[]
     updateMany?: ArenaUpdateManyWithWhereWithoutChallengerInput | ArenaUpdateManyWithWhereWithoutChallengerInput[]
+    deleteMany?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
+  }
+
+  export type ArenaUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<ArenaCreateWithoutCreatorInput, ArenaUncheckedCreateWithoutCreatorInput> | ArenaCreateWithoutCreatorInput[] | ArenaUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: ArenaCreateOrConnectWithoutCreatorInput | ArenaCreateOrConnectWithoutCreatorInput[]
+    upsert?: ArenaUpsertWithWhereUniqueWithoutCreatorInput | ArenaUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: ArenaCreateManyCreatorInputEnvelope
+    set?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+    disconnect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+    delete?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+    connect?: ArenaWhereUniqueInput | ArenaWhereUniqueInput[]
+    update?: ArenaUpdateWithWhereUniqueWithoutCreatorInput | ArenaUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: ArenaUpdateManyWithWhereWithoutCreatorInput | ArenaUpdateManyWithWhereWithoutCreatorInput[]
     deleteMany?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
   }
 
@@ -30733,20 +30715,6 @@ export namespace Prisma {
     deleteMany?: ChattingScalarWhereInput | ChattingScalarWhereInput[]
   }
 
-  export type VoteUncheckedUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput> | VoteCreateWithoutMemberInput[] | VoteUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: VoteCreateOrConnectWithoutMemberInput | VoteCreateOrConnectWithoutMemberInput[]
-    upsert?: VoteUpsertWithWhereUniqueWithoutMemberInput | VoteUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: VoteCreateManyMemberInputEnvelope
-    set?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-    disconnect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-    delete?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-    connect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
-    update?: VoteUpdateWithWhereUniqueWithoutMemberInput | VoteUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: VoteUpdateManyWithWhereWithoutMemberInput | VoteUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: VoteScalarWhereInput | VoteScalarWhereInput[]
-  }
-
   export type NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput = {
     create?: XOR<NotificationRecordCreateWithoutMemberInput, NotificationRecordUncheckedCreateWithoutMemberInput> | NotificationRecordCreateWithoutMemberInput[] | NotificationRecordUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: NotificationRecordCreateOrConnectWithoutMemberInput | NotificationRecordCreateOrConnectWithoutMemberInput[]
@@ -30759,34 +30727,6 @@ export namespace Prisma {
     update?: NotificationRecordUpdateWithWhereUniqueWithoutMemberInput | NotificationRecordUpdateWithWhereUniqueWithoutMemberInput[]
     updateMany?: NotificationRecordUpdateManyWithWhereWithoutMemberInput | NotificationRecordUpdateManyWithWhereWithoutMemberInput[]
     deleteMany?: NotificationRecordScalarWhereInput | NotificationRecordScalarWhereInput[]
-  }
-
-  export type ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput> | ScoreRecordCreateWithoutMemberInput[] | ScoreRecordUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: ScoreRecordCreateOrConnectWithoutMemberInput | ScoreRecordCreateOrConnectWithoutMemberInput[]
-    upsert?: ScoreRecordUpsertWithWhereUniqueWithoutMemberInput | ScoreRecordUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: ScoreRecordCreateManyMemberInputEnvelope
-    set?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-    disconnect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-    delete?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-    connect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
-    update?: ScoreRecordUpdateWithWhereUniqueWithoutMemberInput | ScoreRecordUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: ScoreRecordUpdateManyWithWhereWithoutMemberInput | ScoreRecordUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: ScoreRecordScalarWhereInput | ScoreRecordScalarWhereInput[]
-  }
-
-  export type PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput> | PreferredPlatformCreateWithoutMemberInput[] | PreferredPlatformUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutMemberInput | PreferredPlatformCreateOrConnectWithoutMemberInput[]
-    upsert?: PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput | PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: PreferredPlatformCreateManyMemberInputEnvelope
-    set?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    disconnect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    delete?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    update?: PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput | PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: PreferredPlatformUpdateManyWithWhereWithoutMemberInput | PreferredPlatformUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
   }
 
   export type PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput = {
@@ -30803,6 +30743,20 @@ export namespace Prisma {
     deleteMany?: PreferredGenreScalarWhereInput | PreferredGenreScalarWhereInput[]
   }
 
+  export type PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput> | PreferredPlatformCreateWithoutMemberInput[] | PreferredPlatformUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutMemberInput | PreferredPlatformCreateOrConnectWithoutMemberInput[]
+    upsert?: PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput | PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: PreferredPlatformCreateManyMemberInputEnvelope
+    set?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    disconnect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    delete?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    update?: PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput | PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: PreferredPlatformUpdateManyWithWhereWithoutMemberInput | PreferredPlatformUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
+  }
+
   export type PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput = {
     create?: XOR<PreferredThemeCreateWithoutMemberInput, PreferredThemeUncheckedCreateWithoutMemberInput> | PreferredThemeCreateWithoutMemberInput[] | PreferredThemeUncheckedCreateWithoutMemberInput[]
     connectOrCreate?: PreferredThemeCreateOrConnectWithoutMemberInput | PreferredThemeCreateOrConnectWithoutMemberInput[]
@@ -30817,25 +30771,74 @@ export namespace Prisma {
     deleteMany?: PreferredThemeScalarWhereInput | PreferredThemeScalarWhereInput[]
   }
 
-  export type WishlistCreateNestedManyWithoutGameInput = {
-    create?: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput> | WishlistCreateWithoutGameInput[] | WishlistUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: WishlistCreateOrConnectWithoutGameInput | WishlistCreateOrConnectWithoutGameInput[]
-    createMany?: WishlistCreateManyGameInputEnvelope
-    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+  export type ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput> | ReviewLikeCreateWithoutMemberInput[] | ReviewLikeUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ReviewLikeCreateOrConnectWithoutMemberInput | ReviewLikeCreateOrConnectWithoutMemberInput[]
+    upsert?: ReviewLikeUpsertWithWhereUniqueWithoutMemberInput | ReviewLikeUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: ReviewLikeCreateManyMemberInputEnvelope
+    set?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
+    disconnect?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
+    delete?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
+    connect?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
+    update?: ReviewLikeUpdateWithWhereUniqueWithoutMemberInput | ReviewLikeUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: ReviewLikeUpdateManyWithWhereWithoutMemberInput | ReviewLikeUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: ReviewLikeScalarWhereInput | ReviewLikeScalarWhereInput[]
   }
 
-  export type ReviewCreateNestedManyWithoutGameInput = {
-    create?: XOR<ReviewCreateWithoutGameInput, ReviewUncheckedCreateWithoutGameInput> | ReviewCreateWithoutGameInput[] | ReviewUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutGameInput | ReviewCreateOrConnectWithoutGameInput[]
-    createMany?: ReviewCreateManyGameInputEnvelope
+  export type ReviewUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput> | ReviewCreateWithoutMemberInput[] | ReviewUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutMemberInput | ReviewCreateOrConnectWithoutMemberInput[]
+    upsert?: ReviewUpsertWithWhereUniqueWithoutMemberInput | ReviewUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: ReviewCreateManyMemberInputEnvelope
+    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    update?: ReviewUpdateWithWhereUniqueWithoutMemberInput | ReviewUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: ReviewUpdateManyWithWhereWithoutMemberInput | ReviewUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
-  export type GamePlatformCreateNestedManyWithoutGameInput = {
-    create?: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput> | GamePlatformCreateWithoutGameInput[] | GamePlatformUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GamePlatformCreateOrConnectWithoutGameInput | GamePlatformCreateOrConnectWithoutGameInput[]
-    createMany?: GamePlatformCreateManyGameInputEnvelope
-    connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+  export type ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput> | ScoreRecordCreateWithoutMemberInput[] | ScoreRecordUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ScoreRecordCreateOrConnectWithoutMemberInput | ScoreRecordCreateOrConnectWithoutMemberInput[]
+    upsert?: ScoreRecordUpsertWithWhereUniqueWithoutMemberInput | ScoreRecordUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: ScoreRecordCreateManyMemberInputEnvelope
+    set?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+    disconnect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+    delete?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+    connect?: ScoreRecordWhereUniqueInput | ScoreRecordWhereUniqueInput[]
+    update?: ScoreRecordUpdateWithWhereUniqueWithoutMemberInput | ScoreRecordUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: ScoreRecordUpdateManyWithWhereWithoutMemberInput | ScoreRecordUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: ScoreRecordScalarWhereInput | ScoreRecordScalarWhereInput[]
+  }
+
+  export type VoteUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput> | VoteCreateWithoutMemberInput[] | VoteUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: VoteCreateOrConnectWithoutMemberInput | VoteCreateOrConnectWithoutMemberInput[]
+    upsert?: VoteUpsertWithWhereUniqueWithoutMemberInput | VoteUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: VoteCreateManyMemberInputEnvelope
+    set?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+    disconnect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+    delete?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+    connect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
+    update?: VoteUpdateWithWhereUniqueWithoutMemberInput | VoteUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: VoteUpdateManyWithWhereWithoutMemberInput | VoteUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: VoteScalarWhereInput | VoteScalarWhereInput[]
+  }
+
+  export type WishlistUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput> | WishlistCreateWithoutMemberInput[] | WishlistUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: WishlistCreateOrConnectWithoutMemberInput | WishlistCreateOrConnectWithoutMemberInput[]
+    upsert?: WishlistUpsertWithWhereUniqueWithoutMemberInput | WishlistUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: WishlistCreateManyMemberInputEnvelope
+    set?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    disconnect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    delete?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    update?: WishlistUpdateWithWhereUniqueWithoutMemberInput | WishlistUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: WishlistUpdateManyWithWhereWithoutMemberInput | WishlistUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
   }
 
   export type GameGenreCreateNestedManyWithoutGameInput = {
@@ -30845,6 +30848,13 @@ export namespace Prisma {
     connect?: GameGenreWhereUniqueInput | GameGenreWhereUniqueInput[]
   }
 
+  export type GamePlatformCreateNestedManyWithoutGameInput = {
+    create?: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput> | GamePlatformCreateWithoutGameInput[] | GamePlatformUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: GamePlatformCreateOrConnectWithoutGameInput | GamePlatformCreateOrConnectWithoutGameInput[]
+    createMany?: GamePlatformCreateManyGameInputEnvelope
+    connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+  }
+
   export type GameThemeCreateNestedManyWithoutGameInput = {
     create?: XOR<GameThemeCreateWithoutGameInput, GameThemeUncheckedCreateWithoutGameInput> | GameThemeCreateWithoutGameInput[] | GameThemeUncheckedCreateWithoutGameInput[]
     connectOrCreate?: GameThemeCreateOrConnectWithoutGameInput | GameThemeCreateOrConnectWithoutGameInput[]
@@ -30852,25 +30862,18 @@ export namespace Prisma {
     connect?: GameThemeWhereUniqueInput | GameThemeWhereUniqueInput[]
   }
 
-  export type WishlistUncheckedCreateNestedManyWithoutGameInput = {
-    create?: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput> | WishlistCreateWithoutGameInput[] | WishlistUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: WishlistCreateOrConnectWithoutGameInput | WishlistCreateOrConnectWithoutGameInput[]
-    createMany?: WishlistCreateManyGameInputEnvelope
-    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-  }
-
-  export type ReviewUncheckedCreateNestedManyWithoutGameInput = {
+  export type ReviewCreateNestedManyWithoutGameInput = {
     create?: XOR<ReviewCreateWithoutGameInput, ReviewUncheckedCreateWithoutGameInput> | ReviewCreateWithoutGameInput[] | ReviewUncheckedCreateWithoutGameInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutGameInput | ReviewCreateOrConnectWithoutGameInput[]
     createMany?: ReviewCreateManyGameInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
-  export type GamePlatformUncheckedCreateNestedManyWithoutGameInput = {
-    create?: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput> | GamePlatformCreateWithoutGameInput[] | GamePlatformUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GamePlatformCreateOrConnectWithoutGameInput | GamePlatformCreateOrConnectWithoutGameInput[]
-    createMany?: GamePlatformCreateManyGameInputEnvelope
-    connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+  export type WishlistCreateNestedManyWithoutGameInput = {
+    create?: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput> | WishlistCreateWithoutGameInput[] | WishlistUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: WishlistCreateOrConnectWithoutGameInput | WishlistCreateOrConnectWithoutGameInput[]
+    createMany?: WishlistCreateManyGameInputEnvelope
+    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
   }
 
   export type GameGenreUncheckedCreateNestedManyWithoutGameInput = {
@@ -30880,6 +30883,13 @@ export namespace Prisma {
     connect?: GameGenreWhereUniqueInput | GameGenreWhereUniqueInput[]
   }
 
+  export type GamePlatformUncheckedCreateNestedManyWithoutGameInput = {
+    create?: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput> | GamePlatformCreateWithoutGameInput[] | GamePlatformUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: GamePlatformCreateOrConnectWithoutGameInput | GamePlatformCreateOrConnectWithoutGameInput[]
+    createMany?: GamePlatformCreateManyGameInputEnvelope
+    connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+  }
+
   export type GameThemeUncheckedCreateNestedManyWithoutGameInput = {
     create?: XOR<GameThemeCreateWithoutGameInput, GameThemeUncheckedCreateWithoutGameInput> | GameThemeCreateWithoutGameInput[] | GameThemeUncheckedCreateWithoutGameInput[]
     connectOrCreate?: GameThemeCreateOrConnectWithoutGameInput | GameThemeCreateOrConnectWithoutGameInput[]
@@ -30887,50 +30897,22 @@ export namespace Prisma {
     connect?: GameThemeWhereUniqueInput | GameThemeWhereUniqueInput[]
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
-  export type WishlistUpdateManyWithoutGameNestedInput = {
-    create?: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput> | WishlistCreateWithoutGameInput[] | WishlistUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: WishlistCreateOrConnectWithoutGameInput | WishlistCreateOrConnectWithoutGameInput[]
-    upsert?: WishlistUpsertWithWhereUniqueWithoutGameInput | WishlistUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: WishlistCreateManyGameInputEnvelope
-    set?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    disconnect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    delete?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    update?: WishlistUpdateWithWhereUniqueWithoutGameInput | WishlistUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: WishlistUpdateManyWithWhereWithoutGameInput | WishlistUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
-  }
-
-  export type ReviewUpdateManyWithoutGameNestedInput = {
+  export type ReviewUncheckedCreateNestedManyWithoutGameInput = {
     create?: XOR<ReviewCreateWithoutGameInput, ReviewUncheckedCreateWithoutGameInput> | ReviewCreateWithoutGameInput[] | ReviewUncheckedCreateWithoutGameInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutGameInput | ReviewCreateOrConnectWithoutGameInput[]
-    upsert?: ReviewUpsertWithWhereUniqueWithoutGameInput | ReviewUpsertWithWhereUniqueWithoutGameInput[]
     createMany?: ReviewCreateManyGameInputEnvelope
-    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    update?: ReviewUpdateWithWhereUniqueWithoutGameInput | ReviewUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: ReviewUpdateManyWithWhereWithoutGameInput | ReviewUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
-  export type GamePlatformUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput> | GamePlatformCreateWithoutGameInput[] | GamePlatformUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GamePlatformCreateOrConnectWithoutGameInput | GamePlatformCreateOrConnectWithoutGameInput[]
-    upsert?: GamePlatformUpsertWithWhereUniqueWithoutGameInput | GamePlatformUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GamePlatformCreateManyGameInputEnvelope
-    set?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
-    disconnect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
-    delete?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
-    connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
-    update?: GamePlatformUpdateWithWhereUniqueWithoutGameInput | GamePlatformUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GamePlatformUpdateManyWithWhereWithoutGameInput | GamePlatformUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
+  export type WishlistUncheckedCreateNestedManyWithoutGameInput = {
+    create?: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput> | WishlistCreateWithoutGameInput[] | WishlistUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: WishlistCreateOrConnectWithoutGameInput | WishlistCreateOrConnectWithoutGameInput[]
+    createMany?: WishlistCreateManyGameInputEnvelope
+    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type GameGenreUpdateManyWithoutGameNestedInput = {
@@ -30947,6 +30929,20 @@ export namespace Prisma {
     deleteMany?: GameGenreScalarWhereInput | GameGenreScalarWhereInput[]
   }
 
+  export type GamePlatformUpdateManyWithoutGameNestedInput = {
+    create?: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput> | GamePlatformCreateWithoutGameInput[] | GamePlatformUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: GamePlatformCreateOrConnectWithoutGameInput | GamePlatformCreateOrConnectWithoutGameInput[]
+    upsert?: GamePlatformUpsertWithWhereUniqueWithoutGameInput | GamePlatformUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: GamePlatformCreateManyGameInputEnvelope
+    set?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+    disconnect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+    delete?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+    connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+    update?: GamePlatformUpdateWithWhereUniqueWithoutGameInput | GamePlatformUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: GamePlatformUpdateManyWithWhereWithoutGameInput | GamePlatformUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
+  }
+
   export type GameThemeUpdateManyWithoutGameNestedInput = {
     create?: XOR<GameThemeCreateWithoutGameInput, GameThemeUncheckedCreateWithoutGameInput> | GameThemeCreateWithoutGameInput[] | GameThemeUncheckedCreateWithoutGameInput[]
     connectOrCreate?: GameThemeCreateOrConnectWithoutGameInput | GameThemeCreateOrConnectWithoutGameInput[]
@@ -30961,21 +30957,7 @@ export namespace Prisma {
     deleteMany?: GameThemeScalarWhereInput | GameThemeScalarWhereInput[]
   }
 
-  export type WishlistUncheckedUpdateManyWithoutGameNestedInput = {
-    create?: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput> | WishlistCreateWithoutGameInput[] | WishlistUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: WishlistCreateOrConnectWithoutGameInput | WishlistCreateOrConnectWithoutGameInput[]
-    upsert?: WishlistUpsertWithWhereUniqueWithoutGameInput | WishlistUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: WishlistCreateManyGameInputEnvelope
-    set?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    disconnect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    delete?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
-    update?: WishlistUpdateWithWhereUniqueWithoutGameInput | WishlistUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: WishlistUpdateManyWithWhereWithoutGameInput | WishlistUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
-  }
-
-  export type ReviewUncheckedUpdateManyWithoutGameNestedInput = {
+  export type ReviewUpdateManyWithoutGameNestedInput = {
     create?: XOR<ReviewCreateWithoutGameInput, ReviewUncheckedCreateWithoutGameInput> | ReviewCreateWithoutGameInput[] | ReviewUncheckedCreateWithoutGameInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutGameInput | ReviewCreateOrConnectWithoutGameInput[]
     upsert?: ReviewUpsertWithWhereUniqueWithoutGameInput | ReviewUpsertWithWhereUniqueWithoutGameInput[]
@@ -30989,18 +30971,18 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
-  export type GamePlatformUncheckedUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput> | GamePlatformCreateWithoutGameInput[] | GamePlatformUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GamePlatformCreateOrConnectWithoutGameInput | GamePlatformCreateOrConnectWithoutGameInput[]
-    upsert?: GamePlatformUpsertWithWhereUniqueWithoutGameInput | GamePlatformUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GamePlatformCreateManyGameInputEnvelope
-    set?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
-    disconnect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
-    delete?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
-    connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
-    update?: GamePlatformUpdateWithWhereUniqueWithoutGameInput | GamePlatformUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GamePlatformUpdateManyWithWhereWithoutGameInput | GamePlatformUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
+  export type WishlistUpdateManyWithoutGameNestedInput = {
+    create?: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput> | WishlistCreateWithoutGameInput[] | WishlistUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: WishlistCreateOrConnectWithoutGameInput | WishlistCreateOrConnectWithoutGameInput[]
+    upsert?: WishlistUpsertWithWhereUniqueWithoutGameInput | WishlistUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: WishlistCreateManyGameInputEnvelope
+    set?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    disconnect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    delete?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    update?: WishlistUpdateWithWhereUniqueWithoutGameInput | WishlistUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: WishlistUpdateManyWithWhereWithoutGameInput | WishlistUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
   }
 
   export type GameGenreUncheckedUpdateManyWithoutGameNestedInput = {
@@ -31017,6 +30999,20 @@ export namespace Prisma {
     deleteMany?: GameGenreScalarWhereInput | GameGenreScalarWhereInput[]
   }
 
+  export type GamePlatformUncheckedUpdateManyWithoutGameNestedInput = {
+    create?: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput> | GamePlatformCreateWithoutGameInput[] | GamePlatformUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: GamePlatformCreateOrConnectWithoutGameInput | GamePlatformCreateOrConnectWithoutGameInput[]
+    upsert?: GamePlatformUpsertWithWhereUniqueWithoutGameInput | GamePlatformUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: GamePlatformCreateManyGameInputEnvelope
+    set?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+    disconnect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+    delete?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+    connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
+    update?: GamePlatformUpdateWithWhereUniqueWithoutGameInput | GamePlatformUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: GamePlatformUpdateManyWithWhereWithoutGameInput | GamePlatformUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
+  }
+
   export type GameThemeUncheckedUpdateManyWithoutGameNestedInput = {
     create?: XOR<GameThemeCreateWithoutGameInput, GameThemeUncheckedCreateWithoutGameInput> | GameThemeCreateWithoutGameInput[] | GameThemeUncheckedCreateWithoutGameInput[]
     connectOrCreate?: GameThemeCreateOrConnectWithoutGameInput | GameThemeCreateOrConnectWithoutGameInput[]
@@ -31031,10 +31027,32 @@ export namespace Prisma {
     deleteMany?: GameThemeScalarWhereInput | GameThemeScalarWhereInput[]
   }
 
-  export type MemberCreateNestedOneWithoutWishlistsInput = {
-    create?: XOR<MemberCreateWithoutWishlistsInput, MemberUncheckedCreateWithoutWishlistsInput>
-    connectOrCreate?: MemberCreateOrConnectWithoutWishlistsInput
-    connect?: MemberWhereUniqueInput
+  export type ReviewUncheckedUpdateManyWithoutGameNestedInput = {
+    create?: XOR<ReviewCreateWithoutGameInput, ReviewUncheckedCreateWithoutGameInput> | ReviewCreateWithoutGameInput[] | ReviewUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutGameInput | ReviewCreateOrConnectWithoutGameInput[]
+    upsert?: ReviewUpsertWithWhereUniqueWithoutGameInput | ReviewUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: ReviewCreateManyGameInputEnvelope
+    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    update?: ReviewUpdateWithWhereUniqueWithoutGameInput | ReviewUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: ReviewUpdateManyWithWhereWithoutGameInput | ReviewUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type WishlistUncheckedUpdateManyWithoutGameNestedInput = {
+    create?: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput> | WishlistCreateWithoutGameInput[] | WishlistUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: WishlistCreateOrConnectWithoutGameInput | WishlistCreateOrConnectWithoutGameInput[]
+    upsert?: WishlistUpsertWithWhereUniqueWithoutGameInput | WishlistUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: WishlistCreateManyGameInputEnvelope
+    set?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    disconnect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    delete?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+    update?: WishlistUpdateWithWhereUniqueWithoutGameInput | WishlistUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: WishlistUpdateManyWithWhereWithoutGameInput | WishlistUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
   }
 
   export type GameCreateNestedOneWithoutWishlistsInput = {
@@ -31043,12 +31061,10 @@ export namespace Prisma {
     connect?: GameWhereUniqueInput
   }
 
-  export type MemberUpdateOneRequiredWithoutWishlistsNestedInput = {
+  export type MemberCreateNestedOneWithoutWishlistsInput = {
     create?: XOR<MemberCreateWithoutWishlistsInput, MemberUncheckedCreateWithoutWishlistsInput>
     connectOrCreate?: MemberCreateOrConnectWithoutWishlistsInput
-    upsert?: MemberUpsertWithoutWishlistsInput
     connect?: MemberWhereUniqueInput
-    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutWishlistsInput, MemberUpdateWithoutWishlistsInput>, MemberUncheckedUpdateWithoutWishlistsInput>
   }
 
   export type GameUpdateOneRequiredWithoutWishlistsNestedInput = {
@@ -31059,16 +31075,12 @@ export namespace Prisma {
     update?: XOR<XOR<GameUpdateToOneWithWhereWithoutWishlistsInput, GameUpdateWithoutWishlistsInput>, GameUncheckedUpdateWithoutWishlistsInput>
   }
 
-  export type MemberCreateNestedOneWithoutReviewsInput = {
-    create?: XOR<MemberCreateWithoutReviewsInput, MemberUncheckedCreateWithoutReviewsInput>
-    connectOrCreate?: MemberCreateOrConnectWithoutReviewsInput
+  export type MemberUpdateOneRequiredWithoutWishlistsNestedInput = {
+    create?: XOR<MemberCreateWithoutWishlistsInput, MemberUncheckedCreateWithoutWishlistsInput>
+    connectOrCreate?: MemberCreateOrConnectWithoutWishlistsInput
+    upsert?: MemberUpsertWithoutWishlistsInput
     connect?: MemberWhereUniqueInput
-  }
-
-  export type GameCreateNestedOneWithoutReviewsInput = {
-    create?: XOR<GameCreateWithoutReviewsInput, GameUncheckedCreateWithoutReviewsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutReviewsInput
-    connect?: GameWhereUniqueInput
+    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutWishlistsInput, MemberUpdateWithoutWishlistsInput>, MemberUncheckedUpdateWithoutWishlistsInput>
   }
 
   export type ReviewLikeCreateNestedManyWithoutReviewInput = {
@@ -31078,27 +31090,23 @@ export namespace Prisma {
     connect?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
   }
 
+  export type GameCreateNestedOneWithoutReviewsInput = {
+    create?: XOR<GameCreateWithoutReviewsInput, GameUncheckedCreateWithoutReviewsInput>
+    connectOrCreate?: GameCreateOrConnectWithoutReviewsInput
+    connect?: GameWhereUniqueInput
+  }
+
+  export type MemberCreateNestedOneWithoutReviewsInput = {
+    create?: XOR<MemberCreateWithoutReviewsInput, MemberUncheckedCreateWithoutReviewsInput>
+    connectOrCreate?: MemberCreateOrConnectWithoutReviewsInput
+    connect?: MemberWhereUniqueInput
+  }
+
   export type ReviewLikeUncheckedCreateNestedManyWithoutReviewInput = {
     create?: XOR<ReviewLikeCreateWithoutReviewInput, ReviewLikeUncheckedCreateWithoutReviewInput> | ReviewLikeCreateWithoutReviewInput[] | ReviewLikeUncheckedCreateWithoutReviewInput[]
     connectOrCreate?: ReviewLikeCreateOrConnectWithoutReviewInput | ReviewLikeCreateOrConnectWithoutReviewInput[]
     createMany?: ReviewLikeCreateManyReviewInputEnvelope
     connect?: ReviewLikeWhereUniqueInput | ReviewLikeWhereUniqueInput[]
-  }
-
-  export type MemberUpdateOneRequiredWithoutReviewsNestedInput = {
-    create?: XOR<MemberCreateWithoutReviewsInput, MemberUncheckedCreateWithoutReviewsInput>
-    connectOrCreate?: MemberCreateOrConnectWithoutReviewsInput
-    upsert?: MemberUpsertWithoutReviewsInput
-    connect?: MemberWhereUniqueInput
-    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutReviewsInput, MemberUpdateWithoutReviewsInput>, MemberUncheckedUpdateWithoutReviewsInput>
-  }
-
-  export type GameUpdateOneRequiredWithoutReviewsNestedInput = {
-    create?: XOR<GameCreateWithoutReviewsInput, GameUncheckedCreateWithoutReviewsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutReviewsInput
-    upsert?: GameUpsertWithoutReviewsInput
-    connect?: GameWhereUniqueInput
-    update?: XOR<XOR<GameUpdateToOneWithWhereWithoutReviewsInput, GameUpdateWithoutReviewsInput>, GameUncheckedUpdateWithoutReviewsInput>
   }
 
   export type ReviewLikeUpdateManyWithoutReviewNestedInput = {
@@ -31113,6 +31121,22 @@ export namespace Prisma {
     update?: ReviewLikeUpdateWithWhereUniqueWithoutReviewInput | ReviewLikeUpdateWithWhereUniqueWithoutReviewInput[]
     updateMany?: ReviewLikeUpdateManyWithWhereWithoutReviewInput | ReviewLikeUpdateManyWithWhereWithoutReviewInput[]
     deleteMany?: ReviewLikeScalarWhereInput | ReviewLikeScalarWhereInput[]
+  }
+
+  export type GameUpdateOneRequiredWithoutReviewsNestedInput = {
+    create?: XOR<GameCreateWithoutReviewsInput, GameUncheckedCreateWithoutReviewsInput>
+    connectOrCreate?: GameCreateOrConnectWithoutReviewsInput
+    upsert?: GameUpsertWithoutReviewsInput
+    connect?: GameWhereUniqueInput
+    update?: XOR<XOR<GameUpdateToOneWithWhereWithoutReviewsInput, GameUpdateWithoutReviewsInput>, GameUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type MemberUpdateOneRequiredWithoutReviewsNestedInput = {
+    create?: XOR<MemberCreateWithoutReviewsInput, MemberUncheckedCreateWithoutReviewsInput>
+    connectOrCreate?: MemberCreateOrConnectWithoutReviewsInput
+    upsert?: MemberUpsertWithoutReviewsInput
+    connect?: MemberWhereUniqueInput
+    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutReviewsInput, MemberUpdateWithoutReviewsInput>, MemberUncheckedUpdateWithoutReviewsInput>
   }
 
   export type ReviewLikeUncheckedUpdateManyWithoutReviewNestedInput = {
@@ -31157,15 +31181,15 @@ export namespace Prisma {
     update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutReviewLikesInput, ReviewUpdateWithoutReviewLikesInput>, ReviewUncheckedUpdateWithoutReviewLikesInput>
   }
 
-  export type MemberCreateNestedOneWithoutArenasAsCreatorInput = {
-    create?: XOR<MemberCreateWithoutArenasAsCreatorInput, MemberUncheckedCreateWithoutArenasAsCreatorInput>
-    connectOrCreate?: MemberCreateOrConnectWithoutArenasAsCreatorInput
-    connect?: MemberWhereUniqueInput
-  }
-
   export type MemberCreateNestedOneWithoutArenasAsChallengerInput = {
     create?: XOR<MemberCreateWithoutArenasAsChallengerInput, MemberUncheckedCreateWithoutArenasAsChallengerInput>
     connectOrCreate?: MemberCreateOrConnectWithoutArenasAsChallengerInput
+    connect?: MemberWhereUniqueInput
+  }
+
+  export type MemberCreateNestedOneWithoutArenasAsCreatorInput = {
+    create?: XOR<MemberCreateWithoutArenasAsCreatorInput, MemberUncheckedCreateWithoutArenasAsCreatorInput>
+    connectOrCreate?: MemberCreateOrConnectWithoutArenasAsCreatorInput
     connect?: MemberWhereUniqueInput
   }
 
@@ -31197,20 +31221,22 @@ export namespace Prisma {
     connect?: VoteWhereUniqueInput | VoteWhereUniqueInput[]
   }
 
+  export type MemberUpdateOneWithoutArenasAsChallengerNestedInput = {
+    create?: XOR<MemberCreateWithoutArenasAsChallengerInput, MemberUncheckedCreateWithoutArenasAsChallengerInput>
+    connectOrCreate?: MemberCreateOrConnectWithoutArenasAsChallengerInput
+    upsert?: MemberUpsertWithoutArenasAsChallengerInput
+    disconnect?: MemberWhereInput | boolean
+    delete?: MemberWhereInput | boolean
+    connect?: MemberWhereUniqueInput
+    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutArenasAsChallengerInput, MemberUpdateWithoutArenasAsChallengerInput>, MemberUncheckedUpdateWithoutArenasAsChallengerInput>
+  }
+
   export type MemberUpdateOneRequiredWithoutArenasAsCreatorNestedInput = {
     create?: XOR<MemberCreateWithoutArenasAsCreatorInput, MemberUncheckedCreateWithoutArenasAsCreatorInput>
     connectOrCreate?: MemberCreateOrConnectWithoutArenasAsCreatorInput
     upsert?: MemberUpsertWithoutArenasAsCreatorInput
     connect?: MemberWhereUniqueInput
     update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutArenasAsCreatorInput, MemberUpdateWithoutArenasAsCreatorInput>, MemberUncheckedUpdateWithoutArenasAsCreatorInput>
-  }
-
-  export type MemberUpdateOneRequiredWithoutArenasAsChallengerNestedInput = {
-    create?: XOR<MemberCreateWithoutArenasAsChallengerInput, MemberUncheckedCreateWithoutArenasAsChallengerInput>
-    connectOrCreate?: MemberCreateOrConnectWithoutArenasAsChallengerInput
-    upsert?: MemberUpsertWithoutArenasAsChallengerInput
-    connect?: MemberWhereUniqueInput
-    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutArenasAsChallengerInput, MemberUpdateWithoutArenasAsChallengerInput>, MemberUncheckedUpdateWithoutArenasAsChallengerInput>
   }
 
   export type ChattingUpdateManyWithoutArenaNestedInput = {
@@ -31269,24 +31295,16 @@ export namespace Prisma {
     deleteMany?: VoteScalarWhereInput | VoteScalarWhereInput[]
   }
 
-  export type MemberCreateNestedOneWithoutChattingsInput = {
-    create?: XOR<MemberCreateWithoutChattingsInput, MemberUncheckedCreateWithoutChattingsInput>
-    connectOrCreate?: MemberCreateOrConnectWithoutChattingsInput
-    connect?: MemberWhereUniqueInput
-  }
-
   export type ArenaCreateNestedOneWithoutChattingsInput = {
     create?: XOR<ArenaCreateWithoutChattingsInput, ArenaUncheckedCreateWithoutChattingsInput>
     connectOrCreate?: ArenaCreateOrConnectWithoutChattingsInput
     connect?: ArenaWhereUniqueInput
   }
 
-  export type MemberUpdateOneRequiredWithoutChattingsNestedInput = {
+  export type MemberCreateNestedOneWithoutChattingsInput = {
     create?: XOR<MemberCreateWithoutChattingsInput, MemberUncheckedCreateWithoutChattingsInput>
     connectOrCreate?: MemberCreateOrConnectWithoutChattingsInput
-    upsert?: MemberUpsertWithoutChattingsInput
     connect?: MemberWhereUniqueInput
-    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutChattingsInput, MemberUpdateWithoutChattingsInput>, MemberUncheckedUpdateWithoutChattingsInput>
   }
 
   export type ArenaUpdateOneRequiredWithoutChattingsNestedInput = {
@@ -31297,10 +31315,12 @@ export namespace Prisma {
     update?: XOR<XOR<ArenaUpdateToOneWithWhereWithoutChattingsInput, ArenaUpdateWithoutChattingsInput>, ArenaUncheckedUpdateWithoutChattingsInput>
   }
 
-  export type MemberCreateNestedOneWithoutVotesInput = {
-    create?: XOR<MemberCreateWithoutVotesInput, MemberUncheckedCreateWithoutVotesInput>
-    connectOrCreate?: MemberCreateOrConnectWithoutVotesInput
+  export type MemberUpdateOneRequiredWithoutChattingsNestedInput = {
+    create?: XOR<MemberCreateWithoutChattingsInput, MemberUncheckedCreateWithoutChattingsInput>
+    connectOrCreate?: MemberCreateOrConnectWithoutChattingsInput
+    upsert?: MemberUpsertWithoutChattingsInput
     connect?: MemberWhereUniqueInput
+    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutChattingsInput, MemberUpdateWithoutChattingsInput>, MemberUncheckedUpdateWithoutChattingsInput>
   }
 
   export type ArenaCreateNestedOneWithoutVotesInput = {
@@ -31309,12 +31329,10 @@ export namespace Prisma {
     connect?: ArenaWhereUniqueInput
   }
 
-  export type MemberUpdateOneRequiredWithoutVotesNestedInput = {
+  export type MemberCreateNestedOneWithoutVotesInput = {
     create?: XOR<MemberCreateWithoutVotesInput, MemberUncheckedCreateWithoutVotesInput>
     connectOrCreate?: MemberCreateOrConnectWithoutVotesInput
-    upsert?: MemberUpsertWithoutVotesInput
     connect?: MemberWhereUniqueInput
-    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutVotesInput, MemberUpdateWithoutVotesInput>, MemberUncheckedUpdateWithoutVotesInput>
   }
 
   export type ArenaUpdateOneRequiredWithoutVotesNestedInput = {
@@ -31323,6 +31341,14 @@ export namespace Prisma {
     upsert?: ArenaUpsertWithoutVotesInput
     connect?: ArenaWhereUniqueInput
     update?: XOR<XOR<ArenaUpdateToOneWithWhereWithoutVotesInput, ArenaUpdateWithoutVotesInput>, ArenaUncheckedUpdateWithoutVotesInput>
+  }
+
+  export type MemberUpdateOneRequiredWithoutVotesNestedInput = {
+    create?: XOR<MemberCreateWithoutVotesInput, MemberUncheckedCreateWithoutVotesInput>
+    connectOrCreate?: MemberCreateOrConnectWithoutVotesInput
+    upsert?: MemberUpsertWithoutVotesInput
+    connect?: MemberWhereUniqueInput
+    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutVotesInput, MemberUpdateWithoutVotesInput>, MemberUncheckedUpdateWithoutVotesInput>
   }
 
   export type NotificationRecordCreateNestedManyWithoutTypeInput = {
@@ -31465,13 +31491,6 @@ export namespace Prisma {
     update?: XOR<XOR<ScorePolicyUpdateToOneWithWhereWithoutScoreRecordsInput, ScorePolicyUpdateWithoutScoreRecordsInput>, ScorePolicyUncheckedUpdateWithoutScoreRecordsInput>
   }
 
-  export type PreferredPlatformCreateNestedManyWithoutPlatformInput = {
-    create?: XOR<PreferredPlatformCreateWithoutPlatformInput, PreferredPlatformUncheckedCreateWithoutPlatformInput> | PreferredPlatformCreateWithoutPlatformInput[] | PreferredPlatformUncheckedCreateWithoutPlatformInput[]
-    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutPlatformInput | PreferredPlatformCreateOrConnectWithoutPlatformInput[]
-    createMany?: PreferredPlatformCreateManyPlatformInputEnvelope
-    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-  }
-
   export type GamePlatformCreateNestedManyWithoutPlatformInput = {
     create?: XOR<GamePlatformCreateWithoutPlatformInput, GamePlatformUncheckedCreateWithoutPlatformInput> | GamePlatformCreateWithoutPlatformInput[] | GamePlatformUncheckedCreateWithoutPlatformInput[]
     connectOrCreate?: GamePlatformCreateOrConnectWithoutPlatformInput | GamePlatformCreateOrConnectWithoutPlatformInput[]
@@ -31479,7 +31498,7 @@ export namespace Prisma {
     connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
   }
 
-  export type PreferredPlatformUncheckedCreateNestedManyWithoutPlatformInput = {
+  export type PreferredPlatformCreateNestedManyWithoutPlatformInput = {
     create?: XOR<PreferredPlatformCreateWithoutPlatformInput, PreferredPlatformUncheckedCreateWithoutPlatformInput> | PreferredPlatformCreateWithoutPlatformInput[] | PreferredPlatformUncheckedCreateWithoutPlatformInput[]
     connectOrCreate?: PreferredPlatformCreateOrConnectWithoutPlatformInput | PreferredPlatformCreateOrConnectWithoutPlatformInput[]
     createMany?: PreferredPlatformCreateManyPlatformInputEnvelope
@@ -31493,18 +31512,11 @@ export namespace Prisma {
     connect?: GamePlatformWhereUniqueInput | GamePlatformWhereUniqueInput[]
   }
 
-  export type PreferredPlatformUpdateManyWithoutPlatformNestedInput = {
+  export type PreferredPlatformUncheckedCreateNestedManyWithoutPlatformInput = {
     create?: XOR<PreferredPlatformCreateWithoutPlatformInput, PreferredPlatformUncheckedCreateWithoutPlatformInput> | PreferredPlatformCreateWithoutPlatformInput[] | PreferredPlatformUncheckedCreateWithoutPlatformInput[]
     connectOrCreate?: PreferredPlatformCreateOrConnectWithoutPlatformInput | PreferredPlatformCreateOrConnectWithoutPlatformInput[]
-    upsert?: PreferredPlatformUpsertWithWhereUniqueWithoutPlatformInput | PreferredPlatformUpsertWithWhereUniqueWithoutPlatformInput[]
     createMany?: PreferredPlatformCreateManyPlatformInputEnvelope
-    set?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    disconnect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    delete?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
     connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
-    update?: PreferredPlatformUpdateWithWhereUniqueWithoutPlatformInput | PreferredPlatformUpdateWithWhereUniqueWithoutPlatformInput[]
-    updateMany?: PreferredPlatformUpdateManyWithWhereWithoutPlatformInput | PreferredPlatformUpdateManyWithWhereWithoutPlatformInput[]
-    deleteMany?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
   }
 
   export type GamePlatformUpdateManyWithoutPlatformNestedInput = {
@@ -31521,7 +31533,7 @@ export namespace Prisma {
     deleteMany?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
   }
 
-  export type PreferredPlatformUncheckedUpdateManyWithoutPlatformNestedInput = {
+  export type PreferredPlatformUpdateManyWithoutPlatformNestedInput = {
     create?: XOR<PreferredPlatformCreateWithoutPlatformInput, PreferredPlatformUncheckedCreateWithoutPlatformInput> | PreferredPlatformCreateWithoutPlatformInput[] | PreferredPlatformUncheckedCreateWithoutPlatformInput[]
     connectOrCreate?: PreferredPlatformCreateOrConnectWithoutPlatformInput | PreferredPlatformCreateOrConnectWithoutPlatformInput[]
     upsert?: PreferredPlatformUpsertWithWhereUniqueWithoutPlatformInput | PreferredPlatformUpsertWithWhereUniqueWithoutPlatformInput[]
@@ -31549,11 +31561,18 @@ export namespace Prisma {
     deleteMany?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
   }
 
-  export type PreferredGenreCreateNestedManyWithoutGenreInput = {
-    create?: XOR<PreferredGenreCreateWithoutGenreInput, PreferredGenreUncheckedCreateWithoutGenreInput> | PreferredGenreCreateWithoutGenreInput[] | PreferredGenreUncheckedCreateWithoutGenreInput[]
-    connectOrCreate?: PreferredGenreCreateOrConnectWithoutGenreInput | PreferredGenreCreateOrConnectWithoutGenreInput[]
-    createMany?: PreferredGenreCreateManyGenreInputEnvelope
-    connect?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
+  export type PreferredPlatformUncheckedUpdateManyWithoutPlatformNestedInput = {
+    create?: XOR<PreferredPlatformCreateWithoutPlatformInput, PreferredPlatformUncheckedCreateWithoutPlatformInput> | PreferredPlatformCreateWithoutPlatformInput[] | PreferredPlatformUncheckedCreateWithoutPlatformInput[]
+    connectOrCreate?: PreferredPlatformCreateOrConnectWithoutPlatformInput | PreferredPlatformCreateOrConnectWithoutPlatformInput[]
+    upsert?: PreferredPlatformUpsertWithWhereUniqueWithoutPlatformInput | PreferredPlatformUpsertWithWhereUniqueWithoutPlatformInput[]
+    createMany?: PreferredPlatformCreateManyPlatformInputEnvelope
+    set?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    disconnect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    delete?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    connect?: PreferredPlatformWhereUniqueInput | PreferredPlatformWhereUniqueInput[]
+    update?: PreferredPlatformUpdateWithWhereUniqueWithoutPlatformInput | PreferredPlatformUpdateWithWhereUniqueWithoutPlatformInput[]
+    updateMany?: PreferredPlatformUpdateManyWithWhereWithoutPlatformInput | PreferredPlatformUpdateManyWithWhereWithoutPlatformInput[]
+    deleteMany?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
   }
 
   export type GameGenreCreateNestedManyWithoutGenreInput = {
@@ -31563,7 +31582,7 @@ export namespace Prisma {
     connect?: GameGenreWhereUniqueInput | GameGenreWhereUniqueInput[]
   }
 
-  export type PreferredGenreUncheckedCreateNestedManyWithoutGenreInput = {
+  export type PreferredGenreCreateNestedManyWithoutGenreInput = {
     create?: XOR<PreferredGenreCreateWithoutGenreInput, PreferredGenreUncheckedCreateWithoutGenreInput> | PreferredGenreCreateWithoutGenreInput[] | PreferredGenreUncheckedCreateWithoutGenreInput[]
     connectOrCreate?: PreferredGenreCreateOrConnectWithoutGenreInput | PreferredGenreCreateOrConnectWithoutGenreInput[]
     createMany?: PreferredGenreCreateManyGenreInputEnvelope
@@ -31577,18 +31596,11 @@ export namespace Prisma {
     connect?: GameGenreWhereUniqueInput | GameGenreWhereUniqueInput[]
   }
 
-  export type PreferredGenreUpdateManyWithoutGenreNestedInput = {
+  export type PreferredGenreUncheckedCreateNestedManyWithoutGenreInput = {
     create?: XOR<PreferredGenreCreateWithoutGenreInput, PreferredGenreUncheckedCreateWithoutGenreInput> | PreferredGenreCreateWithoutGenreInput[] | PreferredGenreUncheckedCreateWithoutGenreInput[]
     connectOrCreate?: PreferredGenreCreateOrConnectWithoutGenreInput | PreferredGenreCreateOrConnectWithoutGenreInput[]
-    upsert?: PreferredGenreUpsertWithWhereUniqueWithoutGenreInput | PreferredGenreUpsertWithWhereUniqueWithoutGenreInput[]
     createMany?: PreferredGenreCreateManyGenreInputEnvelope
-    set?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
-    disconnect?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
-    delete?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
     connect?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
-    update?: PreferredGenreUpdateWithWhereUniqueWithoutGenreInput | PreferredGenreUpdateWithWhereUniqueWithoutGenreInput[]
-    updateMany?: PreferredGenreUpdateManyWithWhereWithoutGenreInput | PreferredGenreUpdateManyWithWhereWithoutGenreInput[]
-    deleteMany?: PreferredGenreScalarWhereInput | PreferredGenreScalarWhereInput[]
   }
 
   export type GameGenreUpdateManyWithoutGenreNestedInput = {
@@ -31605,7 +31617,7 @@ export namespace Prisma {
     deleteMany?: GameGenreScalarWhereInput | GameGenreScalarWhereInput[]
   }
 
-  export type PreferredGenreUncheckedUpdateManyWithoutGenreNestedInput = {
+  export type PreferredGenreUpdateManyWithoutGenreNestedInput = {
     create?: XOR<PreferredGenreCreateWithoutGenreInput, PreferredGenreUncheckedCreateWithoutGenreInput> | PreferredGenreCreateWithoutGenreInput[] | PreferredGenreUncheckedCreateWithoutGenreInput[]
     connectOrCreate?: PreferredGenreCreateOrConnectWithoutGenreInput | PreferredGenreCreateOrConnectWithoutGenreInput[]
     upsert?: PreferredGenreUpsertWithWhereUniqueWithoutGenreInput | PreferredGenreUpsertWithWhereUniqueWithoutGenreInput[]
@@ -31633,11 +31645,18 @@ export namespace Prisma {
     deleteMany?: GameGenreScalarWhereInput | GameGenreScalarWhereInput[]
   }
 
-  export type PreferredThemeCreateNestedManyWithoutThemeInput = {
-    create?: XOR<PreferredThemeCreateWithoutThemeInput, PreferredThemeUncheckedCreateWithoutThemeInput> | PreferredThemeCreateWithoutThemeInput[] | PreferredThemeUncheckedCreateWithoutThemeInput[]
-    connectOrCreate?: PreferredThemeCreateOrConnectWithoutThemeInput | PreferredThemeCreateOrConnectWithoutThemeInput[]
-    createMany?: PreferredThemeCreateManyThemeInputEnvelope
-    connect?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
+  export type PreferredGenreUncheckedUpdateManyWithoutGenreNestedInput = {
+    create?: XOR<PreferredGenreCreateWithoutGenreInput, PreferredGenreUncheckedCreateWithoutGenreInput> | PreferredGenreCreateWithoutGenreInput[] | PreferredGenreUncheckedCreateWithoutGenreInput[]
+    connectOrCreate?: PreferredGenreCreateOrConnectWithoutGenreInput | PreferredGenreCreateOrConnectWithoutGenreInput[]
+    upsert?: PreferredGenreUpsertWithWhereUniqueWithoutGenreInput | PreferredGenreUpsertWithWhereUniqueWithoutGenreInput[]
+    createMany?: PreferredGenreCreateManyGenreInputEnvelope
+    set?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
+    disconnect?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
+    delete?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
+    connect?: PreferredGenreWhereUniqueInput | PreferredGenreWhereUniqueInput[]
+    update?: PreferredGenreUpdateWithWhereUniqueWithoutGenreInput | PreferredGenreUpdateWithWhereUniqueWithoutGenreInput[]
+    updateMany?: PreferredGenreUpdateManyWithWhereWithoutGenreInput | PreferredGenreUpdateManyWithWhereWithoutGenreInput[]
+    deleteMany?: PreferredGenreScalarWhereInput | PreferredGenreScalarWhereInput[]
   }
 
   export type GameThemeCreateNestedManyWithoutThemeInput = {
@@ -31647,7 +31666,7 @@ export namespace Prisma {
     connect?: GameThemeWhereUniqueInput | GameThemeWhereUniqueInput[]
   }
 
-  export type PreferredThemeUncheckedCreateNestedManyWithoutThemeInput = {
+  export type PreferredThemeCreateNestedManyWithoutThemeInput = {
     create?: XOR<PreferredThemeCreateWithoutThemeInput, PreferredThemeUncheckedCreateWithoutThemeInput> | PreferredThemeCreateWithoutThemeInput[] | PreferredThemeUncheckedCreateWithoutThemeInput[]
     connectOrCreate?: PreferredThemeCreateOrConnectWithoutThemeInput | PreferredThemeCreateOrConnectWithoutThemeInput[]
     createMany?: PreferredThemeCreateManyThemeInputEnvelope
@@ -31661,18 +31680,11 @@ export namespace Prisma {
     connect?: GameThemeWhereUniqueInput | GameThemeWhereUniqueInput[]
   }
 
-  export type PreferredThemeUpdateManyWithoutThemeNestedInput = {
+  export type PreferredThemeUncheckedCreateNestedManyWithoutThemeInput = {
     create?: XOR<PreferredThemeCreateWithoutThemeInput, PreferredThemeUncheckedCreateWithoutThemeInput> | PreferredThemeCreateWithoutThemeInput[] | PreferredThemeUncheckedCreateWithoutThemeInput[]
     connectOrCreate?: PreferredThemeCreateOrConnectWithoutThemeInput | PreferredThemeCreateOrConnectWithoutThemeInput[]
-    upsert?: PreferredThemeUpsertWithWhereUniqueWithoutThemeInput | PreferredThemeUpsertWithWhereUniqueWithoutThemeInput[]
     createMany?: PreferredThemeCreateManyThemeInputEnvelope
-    set?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
-    disconnect?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
-    delete?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
     connect?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
-    update?: PreferredThemeUpdateWithWhereUniqueWithoutThemeInput | PreferredThemeUpdateWithWhereUniqueWithoutThemeInput[]
-    updateMany?: PreferredThemeUpdateManyWithWhereWithoutThemeInput | PreferredThemeUpdateManyWithWhereWithoutThemeInput[]
-    deleteMany?: PreferredThemeScalarWhereInput | PreferredThemeScalarWhereInput[]
   }
 
   export type GameThemeUpdateManyWithoutThemeNestedInput = {
@@ -31689,7 +31701,7 @@ export namespace Prisma {
     deleteMany?: GameThemeScalarWhereInput | GameThemeScalarWhereInput[]
   }
 
-  export type PreferredThemeUncheckedUpdateManyWithoutThemeNestedInput = {
+  export type PreferredThemeUpdateManyWithoutThemeNestedInput = {
     create?: XOR<PreferredThemeCreateWithoutThemeInput, PreferredThemeUncheckedCreateWithoutThemeInput> | PreferredThemeCreateWithoutThemeInput[] | PreferredThemeUncheckedCreateWithoutThemeInput[]
     connectOrCreate?: PreferredThemeCreateOrConnectWithoutThemeInput | PreferredThemeCreateOrConnectWithoutThemeInput[]
     upsert?: PreferredThemeUpsertWithWhereUniqueWithoutThemeInput | PreferredThemeUpsertWithWhereUniqueWithoutThemeInput[]
@@ -31715,6 +31727,20 @@ export namespace Prisma {
     update?: GameThemeUpdateWithWhereUniqueWithoutThemeInput | GameThemeUpdateWithWhereUniqueWithoutThemeInput[]
     updateMany?: GameThemeUpdateManyWithWhereWithoutThemeInput | GameThemeUpdateManyWithWhereWithoutThemeInput[]
     deleteMany?: GameThemeScalarWhereInput | GameThemeScalarWhereInput[]
+  }
+
+  export type PreferredThemeUncheckedUpdateManyWithoutThemeNestedInput = {
+    create?: XOR<PreferredThemeCreateWithoutThemeInput, PreferredThemeUncheckedCreateWithoutThemeInput> | PreferredThemeCreateWithoutThemeInput[] | PreferredThemeUncheckedCreateWithoutThemeInput[]
+    connectOrCreate?: PreferredThemeCreateOrConnectWithoutThemeInput | PreferredThemeCreateOrConnectWithoutThemeInput[]
+    upsert?: PreferredThemeUpsertWithWhereUniqueWithoutThemeInput | PreferredThemeUpsertWithWhereUniqueWithoutThemeInput[]
+    createMany?: PreferredThemeCreateManyThemeInputEnvelope
+    set?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
+    disconnect?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
+    delete?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
+    connect?: PreferredThemeWhereUniqueInput | PreferredThemeWhereUniqueInput[]
+    update?: PreferredThemeUpdateWithWhereUniqueWithoutThemeInput | PreferredThemeUpdateWithWhereUniqueWithoutThemeInput[]
+    updateMany?: PreferredThemeUpdateManyWithWhereWithoutThemeInput | PreferredThemeUpdateManyWithWhereWithoutThemeInput[]
+    deleteMany?: PreferredThemeScalarWhereInput | PreferredThemeScalarWhereInput[]
   }
 
   export type MemberCreateNestedOneWithoutPreferredPlatformsInput = {
@@ -31745,24 +31771,16 @@ export namespace Prisma {
     update?: XOR<XOR<PlatformUpdateToOneWithWhereWithoutPreferredPlatformsInput, PlatformUpdateWithoutPreferredPlatformsInput>, PlatformUncheckedUpdateWithoutPreferredPlatformsInput>
   }
 
-  export type MemberCreateNestedOneWithoutPreferredGenresInput = {
-    create?: XOR<MemberCreateWithoutPreferredGenresInput, MemberUncheckedCreateWithoutPreferredGenresInput>
-    connectOrCreate?: MemberCreateOrConnectWithoutPreferredGenresInput
-    connect?: MemberWhereUniqueInput
-  }
-
   export type GenreCreateNestedOneWithoutPreferredGenresInput = {
     create?: XOR<GenreCreateWithoutPreferredGenresInput, GenreUncheckedCreateWithoutPreferredGenresInput>
     connectOrCreate?: GenreCreateOrConnectWithoutPreferredGenresInput
     connect?: GenreWhereUniqueInput
   }
 
-  export type MemberUpdateOneRequiredWithoutPreferredGenresNestedInput = {
+  export type MemberCreateNestedOneWithoutPreferredGenresInput = {
     create?: XOR<MemberCreateWithoutPreferredGenresInput, MemberUncheckedCreateWithoutPreferredGenresInput>
     connectOrCreate?: MemberCreateOrConnectWithoutPreferredGenresInput
-    upsert?: MemberUpsertWithoutPreferredGenresInput
     connect?: MemberWhereUniqueInput
-    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutPreferredGenresInput, MemberUpdateWithoutPreferredGenresInput>, MemberUncheckedUpdateWithoutPreferredGenresInput>
   }
 
   export type GenreUpdateOneRequiredWithoutPreferredGenresNestedInput = {
@@ -31771,6 +31789,14 @@ export namespace Prisma {
     upsert?: GenreUpsertWithoutPreferredGenresInput
     connect?: GenreWhereUniqueInput
     update?: XOR<XOR<GenreUpdateToOneWithWhereWithoutPreferredGenresInput, GenreUpdateWithoutPreferredGenresInput>, GenreUncheckedUpdateWithoutPreferredGenresInput>
+  }
+
+  export type MemberUpdateOneRequiredWithoutPreferredGenresNestedInput = {
+    create?: XOR<MemberCreateWithoutPreferredGenresInput, MemberUncheckedCreateWithoutPreferredGenresInput>
+    connectOrCreate?: MemberCreateOrConnectWithoutPreferredGenresInput
+    upsert?: MemberUpsertWithoutPreferredGenresInput
+    connect?: MemberWhereUniqueInput
+    update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutPreferredGenresInput, MemberUpdateWithoutPreferredGenresInput>, MemberUncheckedUpdateWithoutPreferredGenresInput>
   }
 
   export type MemberCreateNestedOneWithoutPreferredThemesInput = {
@@ -32059,104 +32085,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type WishlistCreateWithoutMemberInput = {
-    game: GameCreateNestedOneWithoutWishlistsInput
-  }
-
-  export type WishlistUncheckedCreateWithoutMemberInput = {
-    id?: number
-    gameId: number
-  }
-
-  export type WishlistCreateOrConnectWithoutMemberInput = {
-    where: WishlistWhereUniqueInput
-    create: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput>
-  }
-
-  export type WishlistCreateManyMemberInputEnvelope = {
-    data: WishlistCreateManyMemberInput | WishlistCreateManyMemberInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ReviewCreateWithoutMemberInput = {
-    content: string
-    rating: number
-    createdAt?: Date | string
-    updatedAt?: Date | string | null
-    game: GameCreateNestedOneWithoutReviewsInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutReviewInput
-  }
-
-  export type ReviewUncheckedCreateWithoutMemberInput = {
-    id?: number
-    gameId: number
-    content: string
-    rating: number
-    createdAt?: Date | string
-    updatedAt?: Date | string | null
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutReviewInput
-  }
-
-  export type ReviewCreateOrConnectWithoutMemberInput = {
-    where: ReviewWhereUniqueInput
-    create: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput>
-  }
-
-  export type ReviewCreateManyMemberInputEnvelope = {
-    data: ReviewCreateManyMemberInput | ReviewCreateManyMemberInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ReviewLikeCreateWithoutMemberInput = {
-    review: ReviewCreateNestedOneWithoutReviewLikesInput
-  }
-
-  export type ReviewLikeUncheckedCreateWithoutMemberInput = {
-    id?: number
-    reviewId: number
-  }
-
-  export type ReviewLikeCreateOrConnectWithoutMemberInput = {
-    where: ReviewLikeWhereUniqueInput
-    create: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput>
-  }
-
-  export type ReviewLikeCreateManyMemberInputEnvelope = {
-    data: ReviewLikeCreateManyMemberInput | ReviewLikeCreateManyMemberInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ArenaCreateWithoutCreatorInput = {
-    title: string
-    description: string
-    status: number
-    startDate: Date | string
-    challenger: MemberCreateNestedOneWithoutArenasAsChallengerInput
-    chattings?: ChattingCreateNestedManyWithoutArenaInput
-    votes?: VoteCreateNestedManyWithoutArenaInput
-  }
-
-  export type ArenaUncheckedCreateWithoutCreatorInput = {
-    id?: number
-    challengerId: string
-    title: string
-    description: string
-    status: number
-    startDate: Date | string
-    chattings?: ChattingUncheckedCreateNestedManyWithoutArenaInput
-    votes?: VoteUncheckedCreateNestedManyWithoutArenaInput
-  }
-
-  export type ArenaCreateOrConnectWithoutCreatorInput = {
-    where: ArenaWhereUniqueInput
-    create: XOR<ArenaCreateWithoutCreatorInput, ArenaUncheckedCreateWithoutCreatorInput>
-  }
-
-  export type ArenaCreateManyCreatorInputEnvelope = {
-    data: ArenaCreateManyCreatorInput | ArenaCreateManyCreatorInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ArenaCreateWithoutChallengerInput = {
     title: string
     description: string
@@ -32188,6 +32116,37 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ArenaCreateWithoutCreatorInput = {
+    title: string
+    description: string
+    status: number
+    startDate: Date | string
+    challenger?: MemberCreateNestedOneWithoutArenasAsChallengerInput
+    chattings?: ChattingCreateNestedManyWithoutArenaInput
+    votes?: VoteCreateNestedManyWithoutArenaInput
+  }
+
+  export type ArenaUncheckedCreateWithoutCreatorInput = {
+    id?: number
+    challengerId?: string | null
+    title: string
+    description: string
+    status: number
+    startDate: Date | string
+    chattings?: ChattingUncheckedCreateNestedManyWithoutArenaInput
+    votes?: VoteUncheckedCreateNestedManyWithoutArenaInput
+  }
+
+  export type ArenaCreateOrConnectWithoutCreatorInput = {
+    where: ArenaWhereUniqueInput
+    create: XOR<ArenaCreateWithoutCreatorInput, ArenaUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type ArenaCreateManyCreatorInputEnvelope = {
+    data: ArenaCreateManyCreatorInput | ArenaCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ChattingCreateWithoutMemberInput = {
     content: string
     createdAt?: Date | string
@@ -32208,27 +32167,6 @@ export namespace Prisma {
 
   export type ChattingCreateManyMemberInputEnvelope = {
     data: ChattingCreateManyMemberInput | ChattingCreateManyMemberInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type VoteCreateWithoutMemberInput = {
-    votedTo: string
-    arena: ArenaCreateNestedOneWithoutVotesInput
-  }
-
-  export type VoteUncheckedCreateWithoutMemberInput = {
-    id?: number
-    arenaId: number
-    votedTo: string
-  }
-
-  export type VoteCreateOrConnectWithoutMemberInput = {
-    where: VoteWhereUniqueInput
-    create: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput>
-  }
-
-  export type VoteCreateManyMemberInputEnvelope = {
-    data: VoteCreateManyMemberInput | VoteCreateManyMemberInput[]
     skipDuplicates?: boolean
   }
 
@@ -32255,24 +32193,22 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ScoreRecordCreateWithoutMemberInput = {
-    createdAt?: Date | string
-    policy: ScorePolicyCreateNestedOneWithoutScoreRecordsInput
+  export type PreferredGenreCreateWithoutMemberInput = {
+    genre: GenreCreateNestedOneWithoutPreferredGenresInput
   }
 
-  export type ScoreRecordUncheckedCreateWithoutMemberInput = {
+  export type PreferredGenreUncheckedCreateWithoutMemberInput = {
     id?: number
-    policyId: number
-    createdAt?: Date | string
+    genreId: number
   }
 
-  export type ScoreRecordCreateOrConnectWithoutMemberInput = {
-    where: ScoreRecordWhereUniqueInput
-    create: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput>
+  export type PreferredGenreCreateOrConnectWithoutMemberInput = {
+    where: PreferredGenreWhereUniqueInput
+    create: XOR<PreferredGenreCreateWithoutMemberInput, PreferredGenreUncheckedCreateWithoutMemberInput>
   }
 
-  export type ScoreRecordCreateManyMemberInputEnvelope = {
-    data: ScoreRecordCreateManyMemberInput | ScoreRecordCreateManyMemberInput[]
+  export type PreferredGenreCreateManyMemberInputEnvelope = {
+    data: PreferredGenreCreateManyMemberInput | PreferredGenreCreateManyMemberInput[]
     skipDuplicates?: boolean
   }
 
@@ -32295,25 +32231,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PreferredGenreCreateWithoutMemberInput = {
-    genre: GenreCreateNestedOneWithoutPreferredGenresInput
-  }
-
-  export type PreferredGenreUncheckedCreateWithoutMemberInput = {
-    id?: number
-    genreId: number
-  }
-
-  export type PreferredGenreCreateOrConnectWithoutMemberInput = {
-    where: PreferredGenreWhereUniqueInput
-    create: XOR<PreferredGenreCreateWithoutMemberInput, PreferredGenreUncheckedCreateWithoutMemberInput>
-  }
-
-  export type PreferredGenreCreateManyMemberInputEnvelope = {
-    data: PreferredGenreCreateManyMemberInput | PreferredGenreCreateManyMemberInput[]
-    skipDuplicates?: boolean
-  }
-
   export type PreferredThemeCreateWithoutMemberInput = {
     theme: ThemeCreateNestedOneWithoutPreferredThemesInput
   }
@@ -32333,29 +32250,312 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type WishlistUpsertWithWhereUniqueWithoutMemberInput = {
+  export type ReviewLikeCreateWithoutMemberInput = {
+    review: ReviewCreateNestedOneWithoutReviewLikesInput
+  }
+
+  export type ReviewLikeUncheckedCreateWithoutMemberInput = {
+    id?: number
+    reviewId: number
+  }
+
+  export type ReviewLikeCreateOrConnectWithoutMemberInput = {
+    where: ReviewLikeWhereUniqueInput
+    create: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput>
+  }
+
+  export type ReviewLikeCreateManyMemberInputEnvelope = {
+    data: ReviewLikeCreateManyMemberInput | ReviewLikeCreateManyMemberInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReviewCreateWithoutMemberInput = {
+    content: string
+    rating: number
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutReviewInput
+    game: GameCreateNestedOneWithoutReviewsInput
+  }
+
+  export type ReviewUncheckedCreateWithoutMemberInput = {
+    id?: number
+    gameId: number
+    content: string
+    rating: number
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutReviewInput
+  }
+
+  export type ReviewCreateOrConnectWithoutMemberInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutMemberInput, ReviewUncheckedCreateWithoutMemberInput>
+  }
+
+  export type ReviewCreateManyMemberInputEnvelope = {
+    data: ReviewCreateManyMemberInput | ReviewCreateManyMemberInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ScoreRecordCreateWithoutMemberInput = {
+    createdAt?: Date | string
+    policy: ScorePolicyCreateNestedOneWithoutScoreRecordsInput
+  }
+
+  export type ScoreRecordUncheckedCreateWithoutMemberInput = {
+    id?: number
+    policyId: number
+    createdAt?: Date | string
+  }
+
+  export type ScoreRecordCreateOrConnectWithoutMemberInput = {
+    where: ScoreRecordWhereUniqueInput
+    create: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput>
+  }
+
+  export type ScoreRecordCreateManyMemberInputEnvelope = {
+    data: ScoreRecordCreateManyMemberInput | ScoreRecordCreateManyMemberInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VoteCreateWithoutMemberInput = {
+    votedTo: string
+    arena: ArenaCreateNestedOneWithoutVotesInput
+  }
+
+  export type VoteUncheckedCreateWithoutMemberInput = {
+    id?: number
+    arenaId: number
+    votedTo: string
+  }
+
+  export type VoteCreateOrConnectWithoutMemberInput = {
+    where: VoteWhereUniqueInput
+    create: XOR<VoteCreateWithoutMemberInput, VoteUncheckedCreateWithoutMemberInput>
+  }
+
+  export type VoteCreateManyMemberInputEnvelope = {
+    data: VoteCreateManyMemberInput | VoteCreateManyMemberInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WishlistCreateWithoutMemberInput = {
+    game: GameCreateNestedOneWithoutWishlistsInput
+  }
+
+  export type WishlistUncheckedCreateWithoutMemberInput = {
+    id?: number
+    gameId: number
+  }
+
+  export type WishlistCreateOrConnectWithoutMemberInput = {
     where: WishlistWhereUniqueInput
-    update: XOR<WishlistUpdateWithoutMemberInput, WishlistUncheckedUpdateWithoutMemberInput>
     create: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput>
   }
 
-  export type WishlistUpdateWithWhereUniqueWithoutMemberInput = {
-    where: WishlistWhereUniqueInput
-    data: XOR<WishlistUpdateWithoutMemberInput, WishlistUncheckedUpdateWithoutMemberInput>
+  export type WishlistCreateManyMemberInputEnvelope = {
+    data: WishlistCreateManyMemberInput | WishlistCreateManyMemberInput[]
+    skipDuplicates?: boolean
   }
 
-  export type WishlistUpdateManyWithWhereWithoutMemberInput = {
-    where: WishlistScalarWhereInput
-    data: XOR<WishlistUpdateManyMutationInput, WishlistUncheckedUpdateManyWithoutMemberInput>
+  export type ArenaUpsertWithWhereUniqueWithoutChallengerInput = {
+    where: ArenaWhereUniqueInput
+    update: XOR<ArenaUpdateWithoutChallengerInput, ArenaUncheckedUpdateWithoutChallengerInput>
+    create: XOR<ArenaCreateWithoutChallengerInput, ArenaUncheckedCreateWithoutChallengerInput>
   }
 
-  export type WishlistScalarWhereInput = {
-    AND?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
-    OR?: WishlistScalarWhereInput[]
-    NOT?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
-    id?: IntFilter<"Wishlist"> | number
-    memberId?: StringFilter<"Wishlist"> | string
-    gameId?: IntFilter<"Wishlist"> | number
+  export type ArenaUpdateWithWhereUniqueWithoutChallengerInput = {
+    where: ArenaWhereUniqueInput
+    data: XOR<ArenaUpdateWithoutChallengerInput, ArenaUncheckedUpdateWithoutChallengerInput>
+  }
+
+  export type ArenaUpdateManyWithWhereWithoutChallengerInput = {
+    where: ArenaScalarWhereInput
+    data: XOR<ArenaUpdateManyMutationInput, ArenaUncheckedUpdateManyWithoutChallengerInput>
+  }
+
+  export type ArenaScalarWhereInput = {
+    AND?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
+    OR?: ArenaScalarWhereInput[]
+    NOT?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
+    id?: IntFilter<"Arena"> | number
+    creatorId?: StringFilter<"Arena"> | string
+    challengerId?: StringNullableFilter<"Arena"> | string | null
+    title?: StringFilter<"Arena"> | string
+    description?: StringFilter<"Arena"> | string
+    status?: IntFilter<"Arena"> | number
+    startDate?: DateTimeFilter<"Arena"> | Date | string
+  }
+
+  export type ArenaUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: ArenaWhereUniqueInput
+    update: XOR<ArenaUpdateWithoutCreatorInput, ArenaUncheckedUpdateWithoutCreatorInput>
+    create: XOR<ArenaCreateWithoutCreatorInput, ArenaUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type ArenaUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: ArenaWhereUniqueInput
+    data: XOR<ArenaUpdateWithoutCreatorInput, ArenaUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type ArenaUpdateManyWithWhereWithoutCreatorInput = {
+    where: ArenaScalarWhereInput
+    data: XOR<ArenaUpdateManyMutationInput, ArenaUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type ChattingUpsertWithWhereUniqueWithoutMemberInput = {
+    where: ChattingWhereUniqueInput
+    update: XOR<ChattingUpdateWithoutMemberInput, ChattingUncheckedUpdateWithoutMemberInput>
+    create: XOR<ChattingCreateWithoutMemberInput, ChattingUncheckedCreateWithoutMemberInput>
+  }
+
+  export type ChattingUpdateWithWhereUniqueWithoutMemberInput = {
+    where: ChattingWhereUniqueInput
+    data: XOR<ChattingUpdateWithoutMemberInput, ChattingUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type ChattingUpdateManyWithWhereWithoutMemberInput = {
+    where: ChattingScalarWhereInput
+    data: XOR<ChattingUpdateManyMutationInput, ChattingUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type ChattingScalarWhereInput = {
+    AND?: ChattingScalarWhereInput | ChattingScalarWhereInput[]
+    OR?: ChattingScalarWhereInput[]
+    NOT?: ChattingScalarWhereInput | ChattingScalarWhereInput[]
+    id?: IntFilter<"Chatting"> | number
+    memberId?: StringFilter<"Chatting"> | string
+    arenaId?: IntFilter<"Chatting"> | number
+    content?: StringFilter<"Chatting"> | string
+    createdAt?: DateTimeFilter<"Chatting"> | Date | string
+  }
+
+  export type NotificationRecordUpsertWithWhereUniqueWithoutMemberInput = {
+    where: NotificationRecordWhereUniqueInput
+    update: XOR<NotificationRecordUpdateWithoutMemberInput, NotificationRecordUncheckedUpdateWithoutMemberInput>
+    create: XOR<NotificationRecordCreateWithoutMemberInput, NotificationRecordUncheckedCreateWithoutMemberInput>
+  }
+
+  export type NotificationRecordUpdateWithWhereUniqueWithoutMemberInput = {
+    where: NotificationRecordWhereUniqueInput
+    data: XOR<NotificationRecordUpdateWithoutMemberInput, NotificationRecordUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type NotificationRecordUpdateManyWithWhereWithoutMemberInput = {
+    where: NotificationRecordScalarWhereInput
+    data: XOR<NotificationRecordUpdateManyMutationInput, NotificationRecordUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type NotificationRecordScalarWhereInput = {
+    AND?: NotificationRecordScalarWhereInput | NotificationRecordScalarWhereInput[]
+    OR?: NotificationRecordScalarWhereInput[]
+    NOT?: NotificationRecordScalarWhereInput | NotificationRecordScalarWhereInput[]
+    id?: IntFilter<"NotificationRecord"> | number
+    memberId?: StringFilter<"NotificationRecord"> | string
+    typeId?: IntFilter<"NotificationRecord"> | number
+    description?: StringFilter<"NotificationRecord"> | string
+    createdAt?: DateTimeFilter<"NotificationRecord"> | Date | string
+  }
+
+  export type PreferredGenreUpsertWithWhereUniqueWithoutMemberInput = {
+    where: PreferredGenreWhereUniqueInput
+    update: XOR<PreferredGenreUpdateWithoutMemberInput, PreferredGenreUncheckedUpdateWithoutMemberInput>
+    create: XOR<PreferredGenreCreateWithoutMemberInput, PreferredGenreUncheckedCreateWithoutMemberInput>
+  }
+
+  export type PreferredGenreUpdateWithWhereUniqueWithoutMemberInput = {
+    where: PreferredGenreWhereUniqueInput
+    data: XOR<PreferredGenreUpdateWithoutMemberInput, PreferredGenreUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type PreferredGenreUpdateManyWithWhereWithoutMemberInput = {
+    where: PreferredGenreScalarWhereInput
+    data: XOR<PreferredGenreUpdateManyMutationInput, PreferredGenreUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type PreferredGenreScalarWhereInput = {
+    AND?: PreferredGenreScalarWhereInput | PreferredGenreScalarWhereInput[]
+    OR?: PreferredGenreScalarWhereInput[]
+    NOT?: PreferredGenreScalarWhereInput | PreferredGenreScalarWhereInput[]
+    id?: IntFilter<"PreferredGenre"> | number
+    memberId?: StringFilter<"PreferredGenre"> | string
+    genreId?: IntFilter<"PreferredGenre"> | number
+  }
+
+  export type PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput = {
+    where: PreferredPlatformWhereUniqueInput
+    update: XOR<PreferredPlatformUpdateWithoutMemberInput, PreferredPlatformUncheckedUpdateWithoutMemberInput>
+    create: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput>
+  }
+
+  export type PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput = {
+    where: PreferredPlatformWhereUniqueInput
+    data: XOR<PreferredPlatformUpdateWithoutMemberInput, PreferredPlatformUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type PreferredPlatformUpdateManyWithWhereWithoutMemberInput = {
+    where: PreferredPlatformScalarWhereInput
+    data: XOR<PreferredPlatformUpdateManyMutationInput, PreferredPlatformUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type PreferredPlatformScalarWhereInput = {
+    AND?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
+    OR?: PreferredPlatformScalarWhereInput[]
+    NOT?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
+    id?: IntFilter<"PreferredPlatform"> | number
+    memberId?: StringFilter<"PreferredPlatform"> | string
+    platformId?: IntFilter<"PreferredPlatform"> | number
+  }
+
+  export type PreferredThemeUpsertWithWhereUniqueWithoutMemberInput = {
+    where: PreferredThemeWhereUniqueInput
+    update: XOR<PreferredThemeUpdateWithoutMemberInput, PreferredThemeUncheckedUpdateWithoutMemberInput>
+    create: XOR<PreferredThemeCreateWithoutMemberInput, PreferredThemeUncheckedCreateWithoutMemberInput>
+  }
+
+  export type PreferredThemeUpdateWithWhereUniqueWithoutMemberInput = {
+    where: PreferredThemeWhereUniqueInput
+    data: XOR<PreferredThemeUpdateWithoutMemberInput, PreferredThemeUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type PreferredThemeUpdateManyWithWhereWithoutMemberInput = {
+    where: PreferredThemeScalarWhereInput
+    data: XOR<PreferredThemeUpdateManyMutationInput, PreferredThemeUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type PreferredThemeScalarWhereInput = {
+    AND?: PreferredThemeScalarWhereInput | PreferredThemeScalarWhereInput[]
+    OR?: PreferredThemeScalarWhereInput[]
+    NOT?: PreferredThemeScalarWhereInput | PreferredThemeScalarWhereInput[]
+    id?: IntFilter<"PreferredTheme"> | number
+    memberId?: StringFilter<"PreferredTheme"> | string
+    themeId?: IntFilter<"PreferredTheme"> | number
+  }
+
+  export type ReviewLikeUpsertWithWhereUniqueWithoutMemberInput = {
+    where: ReviewLikeWhereUniqueInput
+    update: XOR<ReviewLikeUpdateWithoutMemberInput, ReviewLikeUncheckedUpdateWithoutMemberInput>
+    create: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput>
+  }
+
+  export type ReviewLikeUpdateWithWhereUniqueWithoutMemberInput = {
+    where: ReviewLikeWhereUniqueInput
+    data: XOR<ReviewLikeUpdateWithoutMemberInput, ReviewLikeUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type ReviewLikeUpdateManyWithWhereWithoutMemberInput = {
+    where: ReviewLikeScalarWhereInput
+    data: XOR<ReviewLikeUpdateManyMutationInput, ReviewLikeUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type ReviewLikeScalarWhereInput = {
+    AND?: ReviewLikeScalarWhereInput | ReviewLikeScalarWhereInput[]
+    OR?: ReviewLikeScalarWhereInput[]
+    NOT?: ReviewLikeScalarWhereInput | ReviewLikeScalarWhereInput[]
+    id?: IntFilter<"ReviewLike"> | number
+    memberId?: StringFilter<"ReviewLike"> | string
+    reviewId?: IntFilter<"ReviewLike"> | number
   }
 
   export type ReviewUpsertWithWhereUniqueWithoutMemberInput = {
@@ -32387,101 +32587,30 @@ export namespace Prisma {
     updatedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
   }
 
-  export type ReviewLikeUpsertWithWhereUniqueWithoutMemberInput = {
-    where: ReviewLikeWhereUniqueInput
-    update: XOR<ReviewLikeUpdateWithoutMemberInput, ReviewLikeUncheckedUpdateWithoutMemberInput>
-    create: XOR<ReviewLikeCreateWithoutMemberInput, ReviewLikeUncheckedCreateWithoutMemberInput>
+  export type ScoreRecordUpsertWithWhereUniqueWithoutMemberInput = {
+    where: ScoreRecordWhereUniqueInput
+    update: XOR<ScoreRecordUpdateWithoutMemberInput, ScoreRecordUncheckedUpdateWithoutMemberInput>
+    create: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput>
   }
 
-  export type ReviewLikeUpdateWithWhereUniqueWithoutMemberInput = {
-    where: ReviewLikeWhereUniqueInput
-    data: XOR<ReviewLikeUpdateWithoutMemberInput, ReviewLikeUncheckedUpdateWithoutMemberInput>
+  export type ScoreRecordUpdateWithWhereUniqueWithoutMemberInput = {
+    where: ScoreRecordWhereUniqueInput
+    data: XOR<ScoreRecordUpdateWithoutMemberInput, ScoreRecordUncheckedUpdateWithoutMemberInput>
   }
 
-  export type ReviewLikeUpdateManyWithWhereWithoutMemberInput = {
-    where: ReviewLikeScalarWhereInput
-    data: XOR<ReviewLikeUpdateManyMutationInput, ReviewLikeUncheckedUpdateManyWithoutMemberInput>
+  export type ScoreRecordUpdateManyWithWhereWithoutMemberInput = {
+    where: ScoreRecordScalarWhereInput
+    data: XOR<ScoreRecordUpdateManyMutationInput, ScoreRecordUncheckedUpdateManyWithoutMemberInput>
   }
 
-  export type ReviewLikeScalarWhereInput = {
-    AND?: ReviewLikeScalarWhereInput | ReviewLikeScalarWhereInput[]
-    OR?: ReviewLikeScalarWhereInput[]
-    NOT?: ReviewLikeScalarWhereInput | ReviewLikeScalarWhereInput[]
-    id?: IntFilter<"ReviewLike"> | number
-    memberId?: StringFilter<"ReviewLike"> | string
-    reviewId?: IntFilter<"ReviewLike"> | number
-  }
-
-  export type ArenaUpsertWithWhereUniqueWithoutCreatorInput = {
-    where: ArenaWhereUniqueInput
-    update: XOR<ArenaUpdateWithoutCreatorInput, ArenaUncheckedUpdateWithoutCreatorInput>
-    create: XOR<ArenaCreateWithoutCreatorInput, ArenaUncheckedCreateWithoutCreatorInput>
-  }
-
-  export type ArenaUpdateWithWhereUniqueWithoutCreatorInput = {
-    where: ArenaWhereUniqueInput
-    data: XOR<ArenaUpdateWithoutCreatorInput, ArenaUncheckedUpdateWithoutCreatorInput>
-  }
-
-  export type ArenaUpdateManyWithWhereWithoutCreatorInput = {
-    where: ArenaScalarWhereInput
-    data: XOR<ArenaUpdateManyMutationInput, ArenaUncheckedUpdateManyWithoutCreatorInput>
-  }
-
-  export type ArenaScalarWhereInput = {
-    AND?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
-    OR?: ArenaScalarWhereInput[]
-    NOT?: ArenaScalarWhereInput | ArenaScalarWhereInput[]
-    id?: IntFilter<"Arena"> | number
-    creatorId?: StringFilter<"Arena"> | string
-    challengerId?: StringFilter<"Arena"> | string
-    title?: StringFilter<"Arena"> | string
-    description?: StringFilter<"Arena"> | string
-    status?: IntFilter<"Arena"> | number
-    startDate?: DateTimeFilter<"Arena"> | Date | string
-  }
-
-  export type ArenaUpsertWithWhereUniqueWithoutChallengerInput = {
-    where: ArenaWhereUniqueInput
-    update: XOR<ArenaUpdateWithoutChallengerInput, ArenaUncheckedUpdateWithoutChallengerInput>
-    create: XOR<ArenaCreateWithoutChallengerInput, ArenaUncheckedCreateWithoutChallengerInput>
-  }
-
-  export type ArenaUpdateWithWhereUniqueWithoutChallengerInput = {
-    where: ArenaWhereUniqueInput
-    data: XOR<ArenaUpdateWithoutChallengerInput, ArenaUncheckedUpdateWithoutChallengerInput>
-  }
-
-  export type ArenaUpdateManyWithWhereWithoutChallengerInput = {
-    where: ArenaScalarWhereInput
-    data: XOR<ArenaUpdateManyMutationInput, ArenaUncheckedUpdateManyWithoutChallengerInput>
-  }
-
-  export type ChattingUpsertWithWhereUniqueWithoutMemberInput = {
-    where: ChattingWhereUniqueInput
-    update: XOR<ChattingUpdateWithoutMemberInput, ChattingUncheckedUpdateWithoutMemberInput>
-    create: XOR<ChattingCreateWithoutMemberInput, ChattingUncheckedCreateWithoutMemberInput>
-  }
-
-  export type ChattingUpdateWithWhereUniqueWithoutMemberInput = {
-    where: ChattingWhereUniqueInput
-    data: XOR<ChattingUpdateWithoutMemberInput, ChattingUncheckedUpdateWithoutMemberInput>
-  }
-
-  export type ChattingUpdateManyWithWhereWithoutMemberInput = {
-    where: ChattingScalarWhereInput
-    data: XOR<ChattingUpdateManyMutationInput, ChattingUncheckedUpdateManyWithoutMemberInput>
-  }
-
-  export type ChattingScalarWhereInput = {
-    AND?: ChattingScalarWhereInput | ChattingScalarWhereInput[]
-    OR?: ChattingScalarWhereInput[]
-    NOT?: ChattingScalarWhereInput | ChattingScalarWhereInput[]
-    id?: IntFilter<"Chatting"> | number
-    memberId?: StringFilter<"Chatting"> | string
-    arenaId?: IntFilter<"Chatting"> | number
-    content?: StringFilter<"Chatting"> | string
-    createdAt?: DateTimeFilter<"Chatting"> | Date | string
+  export type ScoreRecordScalarWhereInput = {
+    AND?: ScoreRecordScalarWhereInput | ScoreRecordScalarWhereInput[]
+    OR?: ScoreRecordScalarWhereInput[]
+    NOT?: ScoreRecordScalarWhereInput | ScoreRecordScalarWhereInput[]
+    id?: IntFilter<"ScoreRecord"> | number
+    memberId?: StringFilter<"ScoreRecord"> | string
+    policyId?: IntFilter<"ScoreRecord"> | number
+    createdAt?: DateTimeFilter<"ScoreRecord"> | Date | string
   }
 
   export type VoteUpsertWithWhereUniqueWithoutMemberInput = {
@@ -32510,179 +32639,47 @@ export namespace Prisma {
     votedTo?: StringFilter<"Vote"> | string
   }
 
-  export type NotificationRecordUpsertWithWhereUniqueWithoutMemberInput = {
-    where: NotificationRecordWhereUniqueInput
-    update: XOR<NotificationRecordUpdateWithoutMemberInput, NotificationRecordUncheckedUpdateWithoutMemberInput>
-    create: XOR<NotificationRecordCreateWithoutMemberInput, NotificationRecordUncheckedCreateWithoutMemberInput>
-  }
-
-  export type NotificationRecordUpdateWithWhereUniqueWithoutMemberInput = {
-    where: NotificationRecordWhereUniqueInput
-    data: XOR<NotificationRecordUpdateWithoutMemberInput, NotificationRecordUncheckedUpdateWithoutMemberInput>
-  }
-
-  export type NotificationRecordUpdateManyWithWhereWithoutMemberInput = {
-    where: NotificationRecordScalarWhereInput
-    data: XOR<NotificationRecordUpdateManyMutationInput, NotificationRecordUncheckedUpdateManyWithoutMemberInput>
-  }
-
-  export type NotificationRecordScalarWhereInput = {
-    AND?: NotificationRecordScalarWhereInput | NotificationRecordScalarWhereInput[]
-    OR?: NotificationRecordScalarWhereInput[]
-    NOT?: NotificationRecordScalarWhereInput | NotificationRecordScalarWhereInput[]
-    id?: IntFilter<"NotificationRecord"> | number
-    memberId?: StringFilter<"NotificationRecord"> | string
-    typeId?: IntFilter<"NotificationRecord"> | number
-    description?: StringFilter<"NotificationRecord"> | string
-    createdAt?: DateTimeFilter<"NotificationRecord"> | Date | string
-  }
-
-  export type ScoreRecordUpsertWithWhereUniqueWithoutMemberInput = {
-    where: ScoreRecordWhereUniqueInput
-    update: XOR<ScoreRecordUpdateWithoutMemberInput, ScoreRecordUncheckedUpdateWithoutMemberInput>
-    create: XOR<ScoreRecordCreateWithoutMemberInput, ScoreRecordUncheckedCreateWithoutMemberInput>
-  }
-
-  export type ScoreRecordUpdateWithWhereUniqueWithoutMemberInput = {
-    where: ScoreRecordWhereUniqueInput
-    data: XOR<ScoreRecordUpdateWithoutMemberInput, ScoreRecordUncheckedUpdateWithoutMemberInput>
-  }
-
-  export type ScoreRecordUpdateManyWithWhereWithoutMemberInput = {
-    where: ScoreRecordScalarWhereInput
-    data: XOR<ScoreRecordUpdateManyMutationInput, ScoreRecordUncheckedUpdateManyWithoutMemberInput>
-  }
-
-  export type ScoreRecordScalarWhereInput = {
-    AND?: ScoreRecordScalarWhereInput | ScoreRecordScalarWhereInput[]
-    OR?: ScoreRecordScalarWhereInput[]
-    NOT?: ScoreRecordScalarWhereInput | ScoreRecordScalarWhereInput[]
-    id?: IntFilter<"ScoreRecord"> | number
-    memberId?: StringFilter<"ScoreRecord"> | string
-    policyId?: IntFilter<"ScoreRecord"> | number
-    createdAt?: DateTimeFilter<"ScoreRecord"> | Date | string
-  }
-
-  export type PreferredPlatformUpsertWithWhereUniqueWithoutMemberInput = {
-    where: PreferredPlatformWhereUniqueInput
-    update: XOR<PreferredPlatformUpdateWithoutMemberInput, PreferredPlatformUncheckedUpdateWithoutMemberInput>
-    create: XOR<PreferredPlatformCreateWithoutMemberInput, PreferredPlatformUncheckedCreateWithoutMemberInput>
-  }
-
-  export type PreferredPlatformUpdateWithWhereUniqueWithoutMemberInput = {
-    where: PreferredPlatformWhereUniqueInput
-    data: XOR<PreferredPlatformUpdateWithoutMemberInput, PreferredPlatformUncheckedUpdateWithoutMemberInput>
-  }
-
-  export type PreferredPlatformUpdateManyWithWhereWithoutMemberInput = {
-    where: PreferredPlatformScalarWhereInput
-    data: XOR<PreferredPlatformUpdateManyMutationInput, PreferredPlatformUncheckedUpdateManyWithoutMemberInput>
-  }
-
-  export type PreferredPlatformScalarWhereInput = {
-    AND?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
-    OR?: PreferredPlatformScalarWhereInput[]
-    NOT?: PreferredPlatformScalarWhereInput | PreferredPlatformScalarWhereInput[]
-    id?: IntFilter<"PreferredPlatform"> | number
-    memberId?: StringFilter<"PreferredPlatform"> | string
-    platformId?: IntFilter<"PreferredPlatform"> | number
-  }
-
-  export type PreferredGenreUpsertWithWhereUniqueWithoutMemberInput = {
-    where: PreferredGenreWhereUniqueInput
-    update: XOR<PreferredGenreUpdateWithoutMemberInput, PreferredGenreUncheckedUpdateWithoutMemberInput>
-    create: XOR<PreferredGenreCreateWithoutMemberInput, PreferredGenreUncheckedCreateWithoutMemberInput>
-  }
-
-  export type PreferredGenreUpdateWithWhereUniqueWithoutMemberInput = {
-    where: PreferredGenreWhereUniqueInput
-    data: XOR<PreferredGenreUpdateWithoutMemberInput, PreferredGenreUncheckedUpdateWithoutMemberInput>
-  }
-
-  export type PreferredGenreUpdateManyWithWhereWithoutMemberInput = {
-    where: PreferredGenreScalarWhereInput
-    data: XOR<PreferredGenreUpdateManyMutationInput, PreferredGenreUncheckedUpdateManyWithoutMemberInput>
-  }
-
-  export type PreferredGenreScalarWhereInput = {
-    AND?: PreferredGenreScalarWhereInput | PreferredGenreScalarWhereInput[]
-    OR?: PreferredGenreScalarWhereInput[]
-    NOT?: PreferredGenreScalarWhereInput | PreferredGenreScalarWhereInput[]
-    id?: IntFilter<"PreferredGenre"> | number
-    memberId?: StringFilter<"PreferredGenre"> | string
-    genreId?: IntFilter<"PreferredGenre"> | number
-  }
-
-  export type PreferredThemeUpsertWithWhereUniqueWithoutMemberInput = {
-    where: PreferredThemeWhereUniqueInput
-    update: XOR<PreferredThemeUpdateWithoutMemberInput, PreferredThemeUncheckedUpdateWithoutMemberInput>
-    create: XOR<PreferredThemeCreateWithoutMemberInput, PreferredThemeUncheckedCreateWithoutMemberInput>
-  }
-
-  export type PreferredThemeUpdateWithWhereUniqueWithoutMemberInput = {
-    where: PreferredThemeWhereUniqueInput
-    data: XOR<PreferredThemeUpdateWithoutMemberInput, PreferredThemeUncheckedUpdateWithoutMemberInput>
-  }
-
-  export type PreferredThemeUpdateManyWithWhereWithoutMemberInput = {
-    where: PreferredThemeScalarWhereInput
-    data: XOR<PreferredThemeUpdateManyMutationInput, PreferredThemeUncheckedUpdateManyWithoutMemberInput>
-  }
-
-  export type PreferredThemeScalarWhereInput = {
-    AND?: PreferredThemeScalarWhereInput | PreferredThemeScalarWhereInput[]
-    OR?: PreferredThemeScalarWhereInput[]
-    NOT?: PreferredThemeScalarWhereInput | PreferredThemeScalarWhereInput[]
-    id?: IntFilter<"PreferredTheme"> | number
-    memberId?: StringFilter<"PreferredTheme"> | string
-    themeId?: IntFilter<"PreferredTheme"> | number
-  }
-
-  export type WishlistCreateWithoutGameInput = {
-    member: MemberCreateNestedOneWithoutWishlistsInput
-  }
-
-  export type WishlistUncheckedCreateWithoutGameInput = {
-    id?: number
-    memberId: string
-  }
-
-  export type WishlistCreateOrConnectWithoutGameInput = {
+  export type WishlistUpsertWithWhereUniqueWithoutMemberInput = {
     where: WishlistWhereUniqueInput
-    create: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput>
+    update: XOR<WishlistUpdateWithoutMemberInput, WishlistUncheckedUpdateWithoutMemberInput>
+    create: XOR<WishlistCreateWithoutMemberInput, WishlistUncheckedCreateWithoutMemberInput>
   }
 
-  export type WishlistCreateManyGameInputEnvelope = {
-    data: WishlistCreateManyGameInput | WishlistCreateManyGameInput[]
-    skipDuplicates?: boolean
+  export type WishlistUpdateWithWhereUniqueWithoutMemberInput = {
+    where: WishlistWhereUniqueInput
+    data: XOR<WishlistUpdateWithoutMemberInput, WishlistUncheckedUpdateWithoutMemberInput>
   }
 
-  export type ReviewCreateWithoutGameInput = {
-    content: string
-    rating: number
-    createdAt?: Date | string
-    updatedAt?: Date | string | null
-    member: MemberCreateNestedOneWithoutReviewsInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutReviewInput
+  export type WishlistUpdateManyWithWhereWithoutMemberInput = {
+    where: WishlistScalarWhereInput
+    data: XOR<WishlistUpdateManyMutationInput, WishlistUncheckedUpdateManyWithoutMemberInput>
   }
 
-  export type ReviewUncheckedCreateWithoutGameInput = {
+  export type WishlistScalarWhereInput = {
+    AND?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
+    OR?: WishlistScalarWhereInput[]
+    NOT?: WishlistScalarWhereInput | WishlistScalarWhereInput[]
+    id?: IntFilter<"Wishlist"> | number
+    memberId?: StringFilter<"Wishlist"> | string
+    gameId?: IntFilter<"Wishlist"> | number
+  }
+
+  export type GameGenreCreateWithoutGameInput = {
+    genre: GenreCreateNestedOneWithoutGameGenresInput
+  }
+
+  export type GameGenreUncheckedCreateWithoutGameInput = {
     id?: number
-    memberId: string
-    content: string
-    rating: number
-    createdAt?: Date | string
-    updatedAt?: Date | string | null
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutReviewInput
+    genreId: number
   }
 
-  export type ReviewCreateOrConnectWithoutGameInput = {
-    where: ReviewWhereUniqueInput
-    create: XOR<ReviewCreateWithoutGameInput, ReviewUncheckedCreateWithoutGameInput>
+  export type GameGenreCreateOrConnectWithoutGameInput = {
+    where: GameGenreWhereUniqueInput
+    create: XOR<GameGenreCreateWithoutGameInput, GameGenreUncheckedCreateWithoutGameInput>
   }
 
-  export type ReviewCreateManyGameInputEnvelope = {
-    data: ReviewCreateManyGameInput | ReviewCreateManyGameInput[]
+  export type GameGenreCreateManyGameInputEnvelope = {
+    data: GameGenreCreateManyGameInput | GameGenreCreateManyGameInput[]
     skipDuplicates?: boolean
   }
 
@@ -32705,25 +32702,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type GameGenreCreateWithoutGameInput = {
-    genre: GenreCreateNestedOneWithoutGameGenresInput
-  }
-
-  export type GameGenreUncheckedCreateWithoutGameInput = {
-    id?: number
-    genreId: number
-  }
-
-  export type GameGenreCreateOrConnectWithoutGameInput = {
-    where: GameGenreWhereUniqueInput
-    create: XOR<GameGenreCreateWithoutGameInput, GameGenreUncheckedCreateWithoutGameInput>
-  }
-
-  export type GameGenreCreateManyGameInputEnvelope = {
-    data: GameGenreCreateManyGameInput | GameGenreCreateManyGameInput[]
-    skipDuplicates?: boolean
-  }
-
   export type GameThemeCreateWithoutGameInput = {
     theme: ThemeCreateNestedOneWithoutGameThemesInput
   }
@@ -32743,61 +32721,52 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type WishlistUpsertWithWhereUniqueWithoutGameInput = {
-    where: WishlistWhereUniqueInput
-    update: XOR<WishlistUpdateWithoutGameInput, WishlistUncheckedUpdateWithoutGameInput>
-    create: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput>
+  export type ReviewCreateWithoutGameInput = {
+    content: string
+    rating: number
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutReviewInput
+    member: MemberCreateNestedOneWithoutReviewsInput
   }
 
-  export type WishlistUpdateWithWhereUniqueWithoutGameInput = {
-    where: WishlistWhereUniqueInput
-    data: XOR<WishlistUpdateWithoutGameInput, WishlistUncheckedUpdateWithoutGameInput>
+  export type ReviewUncheckedCreateWithoutGameInput = {
+    id?: number
+    memberId: string
+    content: string
+    rating: number
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutReviewInput
   }
 
-  export type WishlistUpdateManyWithWhereWithoutGameInput = {
-    where: WishlistScalarWhereInput
-    data: XOR<WishlistUpdateManyMutationInput, WishlistUncheckedUpdateManyWithoutGameInput>
-  }
-
-  export type ReviewUpsertWithWhereUniqueWithoutGameInput = {
+  export type ReviewCreateOrConnectWithoutGameInput = {
     where: ReviewWhereUniqueInput
-    update: XOR<ReviewUpdateWithoutGameInput, ReviewUncheckedUpdateWithoutGameInput>
     create: XOR<ReviewCreateWithoutGameInput, ReviewUncheckedCreateWithoutGameInput>
   }
 
-  export type ReviewUpdateWithWhereUniqueWithoutGameInput = {
-    where: ReviewWhereUniqueInput
-    data: XOR<ReviewUpdateWithoutGameInput, ReviewUncheckedUpdateWithoutGameInput>
+  export type ReviewCreateManyGameInputEnvelope = {
+    data: ReviewCreateManyGameInput | ReviewCreateManyGameInput[]
+    skipDuplicates?: boolean
   }
 
-  export type ReviewUpdateManyWithWhereWithoutGameInput = {
-    where: ReviewScalarWhereInput
-    data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutGameInput>
+  export type WishlistCreateWithoutGameInput = {
+    member: MemberCreateNestedOneWithoutWishlistsInput
   }
 
-  export type GamePlatformUpsertWithWhereUniqueWithoutGameInput = {
-    where: GamePlatformWhereUniqueInput
-    update: XOR<GamePlatformUpdateWithoutGameInput, GamePlatformUncheckedUpdateWithoutGameInput>
-    create: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput>
+  export type WishlistUncheckedCreateWithoutGameInput = {
+    id?: number
+    memberId: string
   }
 
-  export type GamePlatformUpdateWithWhereUniqueWithoutGameInput = {
-    where: GamePlatformWhereUniqueInput
-    data: XOR<GamePlatformUpdateWithoutGameInput, GamePlatformUncheckedUpdateWithoutGameInput>
+  export type WishlistCreateOrConnectWithoutGameInput = {
+    where: WishlistWhereUniqueInput
+    create: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput>
   }
 
-  export type GamePlatformUpdateManyWithWhereWithoutGameInput = {
-    where: GamePlatformScalarWhereInput
-    data: XOR<GamePlatformUpdateManyMutationInput, GamePlatformUncheckedUpdateManyWithoutGameInput>
-  }
-
-  export type GamePlatformScalarWhereInput = {
-    AND?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
-    OR?: GamePlatformScalarWhereInput[]
-    NOT?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
-    id?: IntFilter<"GamePlatform"> | number
-    gameId?: IntFilter<"GamePlatform"> | number
-    platformId?: IntFilter<"GamePlatform"> | number
+  export type WishlistCreateManyGameInputEnvelope = {
+    data: WishlistCreateManyGameInput | WishlistCreateManyGameInput[]
+    skipDuplicates?: boolean
   }
 
   export type GameGenreUpsertWithWhereUniqueWithoutGameInput = {
@@ -32825,6 +32794,31 @@ export namespace Prisma {
     genreId?: IntFilter<"GameGenre"> | number
   }
 
+  export type GamePlatformUpsertWithWhereUniqueWithoutGameInput = {
+    where: GamePlatformWhereUniqueInput
+    update: XOR<GamePlatformUpdateWithoutGameInput, GamePlatformUncheckedUpdateWithoutGameInput>
+    create: XOR<GamePlatformCreateWithoutGameInput, GamePlatformUncheckedCreateWithoutGameInput>
+  }
+
+  export type GamePlatformUpdateWithWhereUniqueWithoutGameInput = {
+    where: GamePlatformWhereUniqueInput
+    data: XOR<GamePlatformUpdateWithoutGameInput, GamePlatformUncheckedUpdateWithoutGameInput>
+  }
+
+  export type GamePlatformUpdateManyWithWhereWithoutGameInput = {
+    where: GamePlatformScalarWhereInput
+    data: XOR<GamePlatformUpdateManyMutationInput, GamePlatformUncheckedUpdateManyWithoutGameInput>
+  }
+
+  export type GamePlatformScalarWhereInput = {
+    AND?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
+    OR?: GamePlatformScalarWhereInput[]
+    NOT?: GamePlatformScalarWhereInput | GamePlatformScalarWhereInput[]
+    id?: IntFilter<"GamePlatform"> | number
+    gameId?: IntFilter<"GamePlatform"> | number
+    platformId?: IntFilter<"GamePlatform"> | number
+  }
+
   export type GameThemeUpsertWithWhereUniqueWithoutGameInput = {
     where: GameThemeWhereUniqueInput
     update: XOR<GameThemeUpdateWithoutGameInput, GameThemeUncheckedUpdateWithoutGameInput>
@@ -32850,6 +32844,66 @@ export namespace Prisma {
     themeId?: IntFilter<"GameTheme"> | number
   }
 
+  export type ReviewUpsertWithWhereUniqueWithoutGameInput = {
+    where: ReviewWhereUniqueInput
+    update: XOR<ReviewUpdateWithoutGameInput, ReviewUncheckedUpdateWithoutGameInput>
+    create: XOR<ReviewCreateWithoutGameInput, ReviewUncheckedCreateWithoutGameInput>
+  }
+
+  export type ReviewUpdateWithWhereUniqueWithoutGameInput = {
+    where: ReviewWhereUniqueInput
+    data: XOR<ReviewUpdateWithoutGameInput, ReviewUncheckedUpdateWithoutGameInput>
+  }
+
+  export type ReviewUpdateManyWithWhereWithoutGameInput = {
+    where: ReviewScalarWhereInput
+    data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutGameInput>
+  }
+
+  export type WishlistUpsertWithWhereUniqueWithoutGameInput = {
+    where: WishlistWhereUniqueInput
+    update: XOR<WishlistUpdateWithoutGameInput, WishlistUncheckedUpdateWithoutGameInput>
+    create: XOR<WishlistCreateWithoutGameInput, WishlistUncheckedCreateWithoutGameInput>
+  }
+
+  export type WishlistUpdateWithWhereUniqueWithoutGameInput = {
+    where: WishlistWhereUniqueInput
+    data: XOR<WishlistUpdateWithoutGameInput, WishlistUncheckedUpdateWithoutGameInput>
+  }
+
+  export type WishlistUpdateManyWithWhereWithoutGameInput = {
+    where: WishlistScalarWhereInput
+    data: XOR<WishlistUpdateManyMutationInput, WishlistUncheckedUpdateManyWithoutGameInput>
+  }
+
+  export type GameCreateWithoutWishlistsInput = {
+    title: string
+    developer?: string | null
+    thumbnail?: string | null
+    releaseDate: Date | string
+    gameGenres?: GameGenreCreateNestedManyWithoutGameInput
+    gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
+    gameThemes?: GameThemeCreateNestedManyWithoutGameInput
+    reviews?: ReviewCreateNestedManyWithoutGameInput
+  }
+
+  export type GameUncheckedCreateWithoutWishlistsInput = {
+    id?: number
+    title: string
+    developer?: string | null
+    thumbnail?: string | null
+    releaseDate: Date | string
+    gameGenres?: GameGenreUncheckedCreateNestedManyWithoutGameInput
+    gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
+    gameThemes?: GameThemeUncheckedCreateNestedManyWithoutGameInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
+  }
+
+  export type GameCreateOrConnectWithoutWishlistsInput = {
+    where: GameWhereUniqueInput
+    create: XOR<GameCreateWithoutWishlistsInput, GameUncheckedCreateWithoutWishlistsInput>
+  }
+
   export type MemberCreateWithoutWishlistsInput = {
     id?: string
     nickname: string
@@ -32862,17 +32916,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateWithoutWishlistsInput = {
@@ -32887,17 +32941,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberCreateOrConnectWithoutWishlistsInput = {
@@ -32905,32 +32959,38 @@ export namespace Prisma {
     create: XOR<MemberCreateWithoutWishlistsInput, MemberUncheckedCreateWithoutWishlistsInput>
   }
 
-  export type GameCreateWithoutWishlistsInput = {
-    title: string
-    developer?: string | null
-    thumbnail?: string | null
-    releaseDate: Date | string
-    reviews?: ReviewCreateNestedManyWithoutGameInput
-    gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
-    gameGenres?: GameGenreCreateNestedManyWithoutGameInput
-    gameThemes?: GameThemeCreateNestedManyWithoutGameInput
-  }
-
-  export type GameUncheckedCreateWithoutWishlistsInput = {
-    id?: number
-    title: string
-    developer?: string | null
-    thumbnail?: string | null
-    releaseDate: Date | string
-    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
-    gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
-    gameGenres?: GameGenreUncheckedCreateNestedManyWithoutGameInput
-    gameThemes?: GameThemeUncheckedCreateNestedManyWithoutGameInput
-  }
-
-  export type GameCreateOrConnectWithoutWishlistsInput = {
-    where: GameWhereUniqueInput
+  export type GameUpsertWithoutWishlistsInput = {
+    update: XOR<GameUpdateWithoutWishlistsInput, GameUncheckedUpdateWithoutWishlistsInput>
     create: XOR<GameCreateWithoutWishlistsInput, GameUncheckedCreateWithoutWishlistsInput>
+    where?: GameWhereInput
+  }
+
+  export type GameUpdateToOneWithWhereWithoutWishlistsInput = {
+    where?: GameWhereInput
+    data: XOR<GameUpdateWithoutWishlistsInput, GameUncheckedUpdateWithoutWishlistsInput>
+  }
+
+  export type GameUpdateWithoutWishlistsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameGenres?: GameGenreUpdateManyWithoutGameNestedInput
+    gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
+    gameThemes?: GameThemeUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUpdateManyWithoutGameNestedInput
+  }
+
+  export type GameUncheckedUpdateWithoutWishlistsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameGenres?: GameGenreUncheckedUpdateManyWithoutGameNestedInput
+    gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
+    gameThemes?: GameThemeUncheckedUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
   }
 
   export type MemberUpsertWithoutWishlistsInput = {
@@ -32956,17 +33016,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutWishlistsInput = {
@@ -32981,134 +33041,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
-  }
-
-  export type GameUpsertWithoutWishlistsInput = {
-    update: XOR<GameUpdateWithoutWishlistsInput, GameUncheckedUpdateWithoutWishlistsInput>
-    create: XOR<GameCreateWithoutWishlistsInput, GameUncheckedCreateWithoutWishlistsInput>
-    where?: GameWhereInput
-  }
-
-  export type GameUpdateToOneWithWhereWithoutWishlistsInput = {
-    where?: GameWhereInput
-    data: XOR<GameUpdateWithoutWishlistsInput, GameUncheckedUpdateWithoutWishlistsInput>
-  }
-
-  export type GameUpdateWithoutWishlistsInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    developer?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUpdateManyWithoutGameNestedInput
-    gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
-    gameGenres?: GameGenreUpdateManyWithoutGameNestedInput
-    gameThemes?: GameThemeUpdateManyWithoutGameNestedInput
-  }
-
-  export type GameUncheckedUpdateWithoutWishlistsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    developer?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
-    gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
-    gameGenres?: GameGenreUncheckedUpdateManyWithoutGameNestedInput
-    gameThemes?: GameThemeUncheckedUpdateManyWithoutGameNestedInput
-  }
-
-  export type MemberCreateWithoutReviewsInput = {
-    id?: string
-    nickname: string
-    email: string
-    password: string
-    imageUrl: string
-    birthDate: Date | string
-    isMale: boolean
-    score?: number
-    isAttended?: boolean
-    createdAt?: Date | string
-    deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
-    arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
-    chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
-    notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
-    preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
-    preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
-  }
-
-  export type MemberUncheckedCreateWithoutReviewsInput = {
-    id?: string
-    nickname: string
-    email: string
-    password: string
-    imageUrl: string
-    birthDate: Date | string
-    isMale: boolean
-    score?: number
-    isAttended?: boolean
-    createdAt?: Date | string
-    deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
-    arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
-    chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
-    notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
-    preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
-    preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
-  }
-
-  export type MemberCreateOrConnectWithoutReviewsInput = {
-    where: MemberWhereUniqueInput
-    create: XOR<MemberCreateWithoutReviewsInput, MemberUncheckedCreateWithoutReviewsInput>
-  }
-
-  export type GameCreateWithoutReviewsInput = {
-    title: string
-    developer?: string | null
-    thumbnail?: string | null
-    releaseDate: Date | string
-    wishlists?: WishlistCreateNestedManyWithoutGameInput
-    gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
-    gameGenres?: GameGenreCreateNestedManyWithoutGameInput
-    gameThemes?: GameThemeCreateNestedManyWithoutGameInput
-  }
-
-  export type GameUncheckedCreateWithoutReviewsInput = {
-    id?: number
-    title: string
-    developer?: string | null
-    thumbnail?: string | null
-    releaseDate: Date | string
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
-    gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
-    gameGenres?: GameGenreUncheckedCreateNestedManyWithoutGameInput
-    gameThemes?: GameThemeUncheckedCreateNestedManyWithoutGameInput
-  }
-
-  export type GameCreateOrConnectWithoutReviewsInput = {
-    where: GameWhereUniqueInput
-    create: XOR<GameCreateWithoutReviewsInput, GameUncheckedCreateWithoutReviewsInput>
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type ReviewLikeCreateWithoutReviewInput = {
@@ -33128,6 +33071,139 @@ export namespace Prisma {
   export type ReviewLikeCreateManyReviewInputEnvelope = {
     data: ReviewLikeCreateManyReviewInput | ReviewLikeCreateManyReviewInput[]
     skipDuplicates?: boolean
+  }
+
+  export type GameCreateWithoutReviewsInput = {
+    title: string
+    developer?: string | null
+    thumbnail?: string | null
+    releaseDate: Date | string
+    gameGenres?: GameGenreCreateNestedManyWithoutGameInput
+    gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
+    gameThemes?: GameThemeCreateNestedManyWithoutGameInput
+    wishlists?: WishlistCreateNestedManyWithoutGameInput
+  }
+
+  export type GameUncheckedCreateWithoutReviewsInput = {
+    id?: number
+    title: string
+    developer?: string | null
+    thumbnail?: string | null
+    releaseDate: Date | string
+    gameGenres?: GameGenreUncheckedCreateNestedManyWithoutGameInput
+    gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
+    gameThemes?: GameThemeUncheckedCreateNestedManyWithoutGameInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
+  }
+
+  export type GameCreateOrConnectWithoutReviewsInput = {
+    where: GameWhereUniqueInput
+    create: XOR<GameCreateWithoutReviewsInput, GameUncheckedCreateWithoutReviewsInput>
+  }
+
+  export type MemberCreateWithoutReviewsInput = {
+    id?: string
+    nickname: string
+    email: string
+    password: string
+    imageUrl: string
+    birthDate: Date | string
+    isMale: boolean
+    score?: number
+    isAttended?: boolean
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
+    chattings?: ChattingCreateNestedManyWithoutMemberInput
+    notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
+    preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
+    preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
+  }
+
+  export type MemberUncheckedCreateWithoutReviewsInput = {
+    id?: string
+    nickname: string
+    email: string
+    password: string
+    imageUrl: string
+    birthDate: Date | string
+    isMale: boolean
+    score?: number
+    isAttended?: boolean
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
+    chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
+    notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
+    preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
+    preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
+  }
+
+  export type MemberCreateOrConnectWithoutReviewsInput = {
+    where: MemberWhereUniqueInput
+    create: XOR<MemberCreateWithoutReviewsInput, MemberUncheckedCreateWithoutReviewsInput>
+  }
+
+  export type ReviewLikeUpsertWithWhereUniqueWithoutReviewInput = {
+    where: ReviewLikeWhereUniqueInput
+    update: XOR<ReviewLikeUpdateWithoutReviewInput, ReviewLikeUncheckedUpdateWithoutReviewInput>
+    create: XOR<ReviewLikeCreateWithoutReviewInput, ReviewLikeUncheckedCreateWithoutReviewInput>
+  }
+
+  export type ReviewLikeUpdateWithWhereUniqueWithoutReviewInput = {
+    where: ReviewLikeWhereUniqueInput
+    data: XOR<ReviewLikeUpdateWithoutReviewInput, ReviewLikeUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type ReviewLikeUpdateManyWithWhereWithoutReviewInput = {
+    where: ReviewLikeScalarWhereInput
+    data: XOR<ReviewLikeUpdateManyMutationInput, ReviewLikeUncheckedUpdateManyWithoutReviewInput>
+  }
+
+  export type GameUpsertWithoutReviewsInput = {
+    update: XOR<GameUpdateWithoutReviewsInput, GameUncheckedUpdateWithoutReviewsInput>
+    create: XOR<GameCreateWithoutReviewsInput, GameUncheckedCreateWithoutReviewsInput>
+    where?: GameWhereInput
+  }
+
+  export type GameUpdateToOneWithWhereWithoutReviewsInput = {
+    where?: GameWhereInput
+    data: XOR<GameUpdateWithoutReviewsInput, GameUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type GameUpdateWithoutReviewsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameGenres?: GameGenreUpdateManyWithoutGameNestedInput
+    gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
+    gameThemes?: GameThemeUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUpdateManyWithoutGameNestedInput
+  }
+
+  export type GameUncheckedUpdateWithoutReviewsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameGenres?: GameGenreUncheckedUpdateManyWithoutGameNestedInput
+    gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
+    gameThemes?: GameThemeUncheckedUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
   }
 
   export type MemberUpsertWithoutReviewsInput = {
@@ -33153,17 +33229,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutReviewsInput = {
@@ -33178,67 +33254,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
-  }
-
-  export type GameUpsertWithoutReviewsInput = {
-    update: XOR<GameUpdateWithoutReviewsInput, GameUncheckedUpdateWithoutReviewsInput>
-    create: XOR<GameCreateWithoutReviewsInput, GameUncheckedCreateWithoutReviewsInput>
-    where?: GameWhereInput
-  }
-
-  export type GameUpdateToOneWithWhereWithoutReviewsInput = {
-    where?: GameWhereInput
-    data: XOR<GameUpdateWithoutReviewsInput, GameUncheckedUpdateWithoutReviewsInput>
-  }
-
-  export type GameUpdateWithoutReviewsInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    developer?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUpdateManyWithoutGameNestedInput
-    gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
-    gameGenres?: GameGenreUpdateManyWithoutGameNestedInput
-    gameThemes?: GameThemeUpdateManyWithoutGameNestedInput
-  }
-
-  export type GameUncheckedUpdateWithoutReviewsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    developer?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
-    gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
-    gameGenres?: GameGenreUncheckedUpdateManyWithoutGameNestedInput
-    gameThemes?: GameThemeUncheckedUpdateManyWithoutGameNestedInput
-  }
-
-  export type ReviewLikeUpsertWithWhereUniqueWithoutReviewInput = {
-    where: ReviewLikeWhereUniqueInput
-    update: XOR<ReviewLikeUpdateWithoutReviewInput, ReviewLikeUncheckedUpdateWithoutReviewInput>
-    create: XOR<ReviewLikeCreateWithoutReviewInput, ReviewLikeUncheckedCreateWithoutReviewInput>
-  }
-
-  export type ReviewLikeUpdateWithWhereUniqueWithoutReviewInput = {
-    where: ReviewLikeWhereUniqueInput
-    data: XOR<ReviewLikeUpdateWithoutReviewInput, ReviewLikeUncheckedUpdateWithoutReviewInput>
-  }
-
-  export type ReviewLikeUpdateManyWithWhereWithoutReviewInput = {
-    where: ReviewLikeScalarWhereInput
-    data: XOR<ReviewLikeUpdateManyMutationInput, ReviewLikeUncheckedUpdateManyWithoutReviewInput>
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberCreateWithoutReviewLikesInput = {
@@ -33253,17 +33279,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateWithoutReviewLikesInput = {
@@ -33278,17 +33304,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberCreateOrConnectWithoutReviewLikesInput = {
@@ -33301,8 +33327,8 @@ export namespace Prisma {
     rating: number
     createdAt?: Date | string
     updatedAt?: Date | string | null
-    member: MemberCreateNestedOneWithoutReviewsInput
     game: GameCreateNestedOneWithoutReviewsInput
+    member: MemberCreateNestedOneWithoutReviewsInput
   }
 
   export type ReviewUncheckedCreateWithoutReviewLikesInput = {
@@ -33343,17 +33369,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutReviewLikesInput = {
@@ -33368,17 +33394,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type ReviewUpsertWithoutReviewLikesInput = {
@@ -33397,8 +33423,8 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    member?: MemberUpdateOneRequiredWithoutReviewsNestedInput
     game?: GameUpdateOneRequiredWithoutReviewsNestedInput
+    member?: MemberUpdateOneRequiredWithoutReviewsNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutReviewLikesInput = {
@@ -33409,61 +33435,6 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type MemberCreateWithoutArenasAsCreatorInput = {
-    id?: string
-    nickname: string
-    email: string
-    password: string
-    imageUrl: string
-    birthDate: Date | string
-    isMale: boolean
-    score?: number
-    isAttended?: boolean
-    createdAt?: Date | string
-    deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
-    chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
-    notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
-    preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
-    preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
-  }
-
-  export type MemberUncheckedCreateWithoutArenasAsCreatorInput = {
-    id?: string
-    nickname: string
-    email: string
-    password: string
-    imageUrl: string
-    birthDate: Date | string
-    isMale: boolean
-    score?: number
-    isAttended?: boolean
-    createdAt?: Date | string
-    deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
-    chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
-    notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
-    preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
-    preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
-  }
-
-  export type MemberCreateOrConnectWithoutArenasAsCreatorInput = {
-    where: MemberWhereUniqueInput
-    create: XOR<MemberCreateWithoutArenasAsCreatorInput, MemberUncheckedCreateWithoutArenasAsCreatorInput>
   }
 
   export type MemberCreateWithoutArenasAsChallengerInput = {
@@ -33478,17 +33449,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateWithoutArenasAsChallengerInput = {
@@ -33503,22 +33474,77 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberCreateOrConnectWithoutArenasAsChallengerInput = {
     where: MemberWhereUniqueInput
     create: XOR<MemberCreateWithoutArenasAsChallengerInput, MemberUncheckedCreateWithoutArenasAsChallengerInput>
+  }
+
+  export type MemberCreateWithoutArenasAsCreatorInput = {
+    id?: string
+    nickname: string
+    email: string
+    password: string
+    imageUrl: string
+    birthDate: Date | string
+    isMale: boolean
+    score?: number
+    isAttended?: boolean
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    chattings?: ChattingCreateNestedManyWithoutMemberInput
+    notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
+    preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
+    preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
+  }
+
+  export type MemberUncheckedCreateWithoutArenasAsCreatorInput = {
+    id?: string
+    nickname: string
+    email: string
+    password: string
+    imageUrl: string
+    birthDate: Date | string
+    isMale: boolean
+    score?: number
+    isAttended?: boolean
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
+    notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
+    preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
+    preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
+  }
+
+  export type MemberCreateOrConnectWithoutArenasAsCreatorInput = {
+    where: MemberWhereUniqueInput
+    create: XOR<MemberCreateWithoutArenasAsCreatorInput, MemberUncheckedCreateWithoutArenasAsCreatorInput>
   }
 
   export type ChattingCreateWithoutArenaInput = {
@@ -33565,67 +33591,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type MemberUpsertWithoutArenasAsCreatorInput = {
-    update: XOR<MemberUpdateWithoutArenasAsCreatorInput, MemberUncheckedUpdateWithoutArenasAsCreatorInput>
-    create: XOR<MemberCreateWithoutArenasAsCreatorInput, MemberUncheckedCreateWithoutArenasAsCreatorInput>
-    where?: MemberWhereInput
-  }
-
-  export type MemberUpdateToOneWithWhereWithoutArenasAsCreatorInput = {
-    where?: MemberWhereInput
-    data: XOR<MemberUpdateWithoutArenasAsCreatorInput, MemberUncheckedUpdateWithoutArenasAsCreatorInput>
-  }
-
-  export type MemberUpdateWithoutArenasAsCreatorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nickname?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    isMale?: BoolFieldUpdateOperationsInput | boolean
-    score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
-    chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
-    notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
-    preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
-    preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
-  }
-
-  export type MemberUncheckedUpdateWithoutArenasAsCreatorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nickname?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    isMale?: BoolFieldUpdateOperationsInput | boolean
-    score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
-    chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
-    notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
-    preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
-    preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
-  }
-
   export type MemberUpsertWithoutArenasAsChallengerInput = {
     update: XOR<MemberUpdateWithoutArenasAsChallengerInput, MemberUncheckedUpdateWithoutArenasAsChallengerInput>
     create: XOR<MemberCreateWithoutArenasAsChallengerInput, MemberUncheckedCreateWithoutArenasAsChallengerInput>
@@ -33649,17 +33614,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutArenasAsChallengerInput = {
@@ -33674,17 +33639,78 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
+  }
+
+  export type MemberUpsertWithoutArenasAsCreatorInput = {
+    update: XOR<MemberUpdateWithoutArenasAsCreatorInput, MemberUncheckedUpdateWithoutArenasAsCreatorInput>
+    create: XOR<MemberCreateWithoutArenasAsCreatorInput, MemberUncheckedCreateWithoutArenasAsCreatorInput>
+    where?: MemberWhereInput
+  }
+
+  export type MemberUpdateToOneWithWhereWithoutArenasAsCreatorInput = {
+    where?: MemberWhereInput
+    data: XOR<MemberUpdateWithoutArenasAsCreatorInput, MemberUncheckedUpdateWithoutArenasAsCreatorInput>
+  }
+
+  export type MemberUpdateWithoutArenasAsCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nickname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isMale?: BoolFieldUpdateOperationsInput | boolean
+    score?: IntFieldUpdateOperationsInput | number
+    isAttended?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    chattings?: ChattingUpdateManyWithoutMemberNestedInput
+    notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
+    preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
+    preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
+  }
+
+  export type MemberUncheckedUpdateWithoutArenasAsCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nickname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isMale?: BoolFieldUpdateOperationsInput | boolean
+    score?: IntFieldUpdateOperationsInput | number
+    isAttended?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
+    notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
+    preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
+    preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type ChattingUpsertWithWhereUniqueWithoutArenaInput = {
@@ -33719,6 +33745,32 @@ export namespace Prisma {
     data: XOR<VoteUpdateManyMutationInput, VoteUncheckedUpdateManyWithoutArenaInput>
   }
 
+  export type ArenaCreateWithoutChattingsInput = {
+    title: string
+    description: string
+    status: number
+    startDate: Date | string
+    challenger?: MemberCreateNestedOneWithoutArenasAsChallengerInput
+    creator: MemberCreateNestedOneWithoutArenasAsCreatorInput
+    votes?: VoteCreateNestedManyWithoutArenaInput
+  }
+
+  export type ArenaUncheckedCreateWithoutChattingsInput = {
+    id?: number
+    creatorId: string
+    challengerId?: string | null
+    title: string
+    description: string
+    status: number
+    startDate: Date | string
+    votes?: VoteUncheckedCreateNestedManyWithoutArenaInput
+  }
+
+  export type ArenaCreateOrConnectWithoutChattingsInput = {
+    where: ArenaWhereUniqueInput
+    create: XOR<ArenaCreateWithoutChattingsInput, ArenaUncheckedCreateWithoutChattingsInput>
+  }
+
   export type MemberCreateWithoutChattingsInput = {
     id?: string
     nickname: string
@@ -33731,17 +33783,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateWithoutChattingsInput = {
@@ -33756,17 +33808,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberCreateOrConnectWithoutChattingsInput = {
@@ -33774,30 +33826,36 @@ export namespace Prisma {
     create: XOR<MemberCreateWithoutChattingsInput, MemberUncheckedCreateWithoutChattingsInput>
   }
 
-  export type ArenaCreateWithoutChattingsInput = {
-    title: string
-    description: string
-    status: number
-    startDate: Date | string
-    creator: MemberCreateNestedOneWithoutArenasAsCreatorInput
-    challenger: MemberCreateNestedOneWithoutArenasAsChallengerInput
-    votes?: VoteCreateNestedManyWithoutArenaInput
-  }
-
-  export type ArenaUncheckedCreateWithoutChattingsInput = {
-    id?: number
-    creatorId: string
-    challengerId: string
-    title: string
-    description: string
-    status: number
-    startDate: Date | string
-    votes?: VoteUncheckedCreateNestedManyWithoutArenaInput
-  }
-
-  export type ArenaCreateOrConnectWithoutChattingsInput = {
-    where: ArenaWhereUniqueInput
+  export type ArenaUpsertWithoutChattingsInput = {
+    update: XOR<ArenaUpdateWithoutChattingsInput, ArenaUncheckedUpdateWithoutChattingsInput>
     create: XOR<ArenaCreateWithoutChattingsInput, ArenaUncheckedCreateWithoutChattingsInput>
+    where?: ArenaWhereInput
+  }
+
+  export type ArenaUpdateToOneWithWhereWithoutChattingsInput = {
+    where?: ArenaWhereInput
+    data: XOR<ArenaUpdateWithoutChattingsInput, ArenaUncheckedUpdateWithoutChattingsInput>
+  }
+
+  export type ArenaUpdateWithoutChattingsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    challenger?: MemberUpdateOneWithoutArenasAsChallengerNestedInput
+    creator?: MemberUpdateOneRequiredWithoutArenasAsCreatorNestedInput
+    votes?: VoteUpdateManyWithoutArenaNestedInput
+  }
+
+  export type ArenaUncheckedUpdateWithoutChattingsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    creatorId?: StringFieldUpdateOperationsInput | string
+    challengerId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    votes?: VoteUncheckedUpdateManyWithoutArenaNestedInput
   }
 
   export type MemberUpsertWithoutChattingsInput = {
@@ -33823,17 +33881,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutChattingsInput = {
@@ -33848,49 +33906,43 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
-  export type ArenaUpsertWithoutChattingsInput = {
-    update: XOR<ArenaUpdateWithoutChattingsInput, ArenaUncheckedUpdateWithoutChattingsInput>
-    create: XOR<ArenaCreateWithoutChattingsInput, ArenaUncheckedCreateWithoutChattingsInput>
-    where?: ArenaWhereInput
+  export type ArenaCreateWithoutVotesInput = {
+    title: string
+    description: string
+    status: number
+    startDate: Date | string
+    challenger?: MemberCreateNestedOneWithoutArenasAsChallengerInput
+    creator: MemberCreateNestedOneWithoutArenasAsCreatorInput
+    chattings?: ChattingCreateNestedManyWithoutArenaInput
   }
 
-  export type ArenaUpdateToOneWithWhereWithoutChattingsInput = {
-    where?: ArenaWhereInput
-    data: XOR<ArenaUpdateWithoutChattingsInput, ArenaUncheckedUpdateWithoutChattingsInput>
+  export type ArenaUncheckedCreateWithoutVotesInput = {
+    id?: number
+    creatorId: string
+    challengerId?: string | null
+    title: string
+    description: string
+    status: number
+    startDate: Date | string
+    chattings?: ChattingUncheckedCreateNestedManyWithoutArenaInput
   }
 
-  export type ArenaUpdateWithoutChattingsInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    status?: IntFieldUpdateOperationsInput | number
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    creator?: MemberUpdateOneRequiredWithoutArenasAsCreatorNestedInput
-    challenger?: MemberUpdateOneRequiredWithoutArenasAsChallengerNestedInput
-    votes?: VoteUpdateManyWithoutArenaNestedInput
-  }
-
-  export type ArenaUncheckedUpdateWithoutChattingsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    creatorId?: StringFieldUpdateOperationsInput | string
-    challengerId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    status?: IntFieldUpdateOperationsInput | number
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    votes?: VoteUncheckedUpdateManyWithoutArenaNestedInput
+  export type ArenaCreateOrConnectWithoutVotesInput = {
+    where: ArenaWhereUniqueInput
+    create: XOR<ArenaCreateWithoutVotesInput, ArenaUncheckedCreateWithoutVotesInput>
   }
 
   export type MemberCreateWithoutVotesInput = {
@@ -33905,17 +33957,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateWithoutVotesInput = {
@@ -33930,17 +33982,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberCreateOrConnectWithoutVotesInput = {
@@ -33948,30 +34000,36 @@ export namespace Prisma {
     create: XOR<MemberCreateWithoutVotesInput, MemberUncheckedCreateWithoutVotesInput>
   }
 
-  export type ArenaCreateWithoutVotesInput = {
-    title: string
-    description: string
-    status: number
-    startDate: Date | string
-    creator: MemberCreateNestedOneWithoutArenasAsCreatorInput
-    challenger: MemberCreateNestedOneWithoutArenasAsChallengerInput
-    chattings?: ChattingCreateNestedManyWithoutArenaInput
-  }
-
-  export type ArenaUncheckedCreateWithoutVotesInput = {
-    id?: number
-    creatorId: string
-    challengerId: string
-    title: string
-    description: string
-    status: number
-    startDate: Date | string
-    chattings?: ChattingUncheckedCreateNestedManyWithoutArenaInput
-  }
-
-  export type ArenaCreateOrConnectWithoutVotesInput = {
-    where: ArenaWhereUniqueInput
+  export type ArenaUpsertWithoutVotesInput = {
+    update: XOR<ArenaUpdateWithoutVotesInput, ArenaUncheckedUpdateWithoutVotesInput>
     create: XOR<ArenaCreateWithoutVotesInput, ArenaUncheckedCreateWithoutVotesInput>
+    where?: ArenaWhereInput
+  }
+
+  export type ArenaUpdateToOneWithWhereWithoutVotesInput = {
+    where?: ArenaWhereInput
+    data: XOR<ArenaUpdateWithoutVotesInput, ArenaUncheckedUpdateWithoutVotesInput>
+  }
+
+  export type ArenaUpdateWithoutVotesInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    challenger?: MemberUpdateOneWithoutArenasAsChallengerNestedInput
+    creator?: MemberUpdateOneRequiredWithoutArenasAsCreatorNestedInput
+    chattings?: ChattingUpdateManyWithoutArenaNestedInput
+  }
+
+  export type ArenaUncheckedUpdateWithoutVotesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    creatorId?: StringFieldUpdateOperationsInput | string
+    challengerId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chattings?: ChattingUncheckedUpdateManyWithoutArenaNestedInput
   }
 
   export type MemberUpsertWithoutVotesInput = {
@@ -33997,17 +34055,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutVotesInput = {
@@ -34022,49 +34080,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
-  }
-
-  export type ArenaUpsertWithoutVotesInput = {
-    update: XOR<ArenaUpdateWithoutVotesInput, ArenaUncheckedUpdateWithoutVotesInput>
-    create: XOR<ArenaCreateWithoutVotesInput, ArenaUncheckedCreateWithoutVotesInput>
-    where?: ArenaWhereInput
-  }
-
-  export type ArenaUpdateToOneWithWhereWithoutVotesInput = {
-    where?: ArenaWhereInput
-    data: XOR<ArenaUpdateWithoutVotesInput, ArenaUncheckedUpdateWithoutVotesInput>
-  }
-
-  export type ArenaUpdateWithoutVotesInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    status?: IntFieldUpdateOperationsInput | number
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    creator?: MemberUpdateOneRequiredWithoutArenasAsCreatorNestedInput
-    challenger?: MemberUpdateOneRequiredWithoutArenasAsChallengerNestedInput
-    chattings?: ChattingUpdateManyWithoutArenaNestedInput
-  }
-
-  export type ArenaUncheckedUpdateWithoutVotesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    creatorId?: StringFieldUpdateOperationsInput | string
-    challengerId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    status?: IntFieldUpdateOperationsInput | number
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    chattings?: ChattingUncheckedUpdateManyWithoutArenaNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type NotificationRecordCreateWithoutTypeInput = {
@@ -34118,17 +34144,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateWithoutNotificationRecordsInput = {
@@ -34143,17 +34169,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberCreateOrConnectWithoutNotificationRecordsInput = {
@@ -34200,17 +34226,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutNotificationRecordsInput = {
@@ -34225,17 +34251,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type NotificationTypeUpsertWithoutNotificationRecordsInput = {
@@ -34309,17 +34335,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateWithoutScoreRecordsInput = {
@@ -34334,17 +34360,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberCreateOrConnectWithoutScoreRecordsInput = {
@@ -34395,17 +34421,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutScoreRecordsInput = {
@@ -34420,17 +34446,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type ScorePolicyUpsertWithoutScoreRecordsInput = {
@@ -34459,25 +34485,6 @@ export namespace Prisma {
     imageUrl?: StringFieldUpdateOperationsInput | string
   }
 
-  export type PreferredPlatformCreateWithoutPlatformInput = {
-    member: MemberCreateNestedOneWithoutPreferredPlatformsInput
-  }
-
-  export type PreferredPlatformUncheckedCreateWithoutPlatformInput = {
-    id?: number
-    memberId: string
-  }
-
-  export type PreferredPlatformCreateOrConnectWithoutPlatformInput = {
-    where: PreferredPlatformWhereUniqueInput
-    create: XOR<PreferredPlatformCreateWithoutPlatformInput, PreferredPlatformUncheckedCreateWithoutPlatformInput>
-  }
-
-  export type PreferredPlatformCreateManyPlatformInputEnvelope = {
-    data: PreferredPlatformCreateManyPlatformInput | PreferredPlatformCreateManyPlatformInput[]
-    skipDuplicates?: boolean
-  }
-
   export type GamePlatformCreateWithoutPlatformInput = {
     game: GameCreateNestedOneWithoutGamePlatformsInput
   }
@@ -34497,20 +34504,23 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PreferredPlatformUpsertWithWhereUniqueWithoutPlatformInput = {
+  export type PreferredPlatformCreateWithoutPlatformInput = {
+    member: MemberCreateNestedOneWithoutPreferredPlatformsInput
+  }
+
+  export type PreferredPlatformUncheckedCreateWithoutPlatformInput = {
+    id?: number
+    memberId: string
+  }
+
+  export type PreferredPlatformCreateOrConnectWithoutPlatformInput = {
     where: PreferredPlatformWhereUniqueInput
-    update: XOR<PreferredPlatformUpdateWithoutPlatformInput, PreferredPlatformUncheckedUpdateWithoutPlatformInput>
     create: XOR<PreferredPlatformCreateWithoutPlatformInput, PreferredPlatformUncheckedCreateWithoutPlatformInput>
   }
 
-  export type PreferredPlatformUpdateWithWhereUniqueWithoutPlatformInput = {
-    where: PreferredPlatformWhereUniqueInput
-    data: XOR<PreferredPlatformUpdateWithoutPlatformInput, PreferredPlatformUncheckedUpdateWithoutPlatformInput>
-  }
-
-  export type PreferredPlatformUpdateManyWithWhereWithoutPlatformInput = {
-    where: PreferredPlatformScalarWhereInput
-    data: XOR<PreferredPlatformUpdateManyMutationInput, PreferredPlatformUncheckedUpdateManyWithoutPlatformInput>
+  export type PreferredPlatformCreateManyPlatformInputEnvelope = {
+    data: PreferredPlatformCreateManyPlatformInput | PreferredPlatformCreateManyPlatformInput[]
+    skipDuplicates?: boolean
   }
 
   export type GamePlatformUpsertWithWhereUniqueWithoutPlatformInput = {
@@ -34529,23 +34539,20 @@ export namespace Prisma {
     data: XOR<GamePlatformUpdateManyMutationInput, GamePlatformUncheckedUpdateManyWithoutPlatformInput>
   }
 
-  export type PreferredGenreCreateWithoutGenreInput = {
-    member: MemberCreateNestedOneWithoutPreferredGenresInput
+  export type PreferredPlatformUpsertWithWhereUniqueWithoutPlatformInput = {
+    where: PreferredPlatformWhereUniqueInput
+    update: XOR<PreferredPlatformUpdateWithoutPlatformInput, PreferredPlatformUncheckedUpdateWithoutPlatformInput>
+    create: XOR<PreferredPlatformCreateWithoutPlatformInput, PreferredPlatformUncheckedCreateWithoutPlatformInput>
   }
 
-  export type PreferredGenreUncheckedCreateWithoutGenreInput = {
-    id?: number
-    memberId: string
+  export type PreferredPlatformUpdateWithWhereUniqueWithoutPlatformInput = {
+    where: PreferredPlatformWhereUniqueInput
+    data: XOR<PreferredPlatformUpdateWithoutPlatformInput, PreferredPlatformUncheckedUpdateWithoutPlatformInput>
   }
 
-  export type PreferredGenreCreateOrConnectWithoutGenreInput = {
-    where: PreferredGenreWhereUniqueInput
-    create: XOR<PreferredGenreCreateWithoutGenreInput, PreferredGenreUncheckedCreateWithoutGenreInput>
-  }
-
-  export type PreferredGenreCreateManyGenreInputEnvelope = {
-    data: PreferredGenreCreateManyGenreInput | PreferredGenreCreateManyGenreInput[]
-    skipDuplicates?: boolean
+  export type PreferredPlatformUpdateManyWithWhereWithoutPlatformInput = {
+    where: PreferredPlatformScalarWhereInput
+    data: XOR<PreferredPlatformUpdateManyMutationInput, PreferredPlatformUncheckedUpdateManyWithoutPlatformInput>
   }
 
   export type GameGenreCreateWithoutGenreInput = {
@@ -34567,20 +34574,23 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PreferredGenreUpsertWithWhereUniqueWithoutGenreInput = {
+  export type PreferredGenreCreateWithoutGenreInput = {
+    member: MemberCreateNestedOneWithoutPreferredGenresInput
+  }
+
+  export type PreferredGenreUncheckedCreateWithoutGenreInput = {
+    id?: number
+    memberId: string
+  }
+
+  export type PreferredGenreCreateOrConnectWithoutGenreInput = {
     where: PreferredGenreWhereUniqueInput
-    update: XOR<PreferredGenreUpdateWithoutGenreInput, PreferredGenreUncheckedUpdateWithoutGenreInput>
     create: XOR<PreferredGenreCreateWithoutGenreInput, PreferredGenreUncheckedCreateWithoutGenreInput>
   }
 
-  export type PreferredGenreUpdateWithWhereUniqueWithoutGenreInput = {
-    where: PreferredGenreWhereUniqueInput
-    data: XOR<PreferredGenreUpdateWithoutGenreInput, PreferredGenreUncheckedUpdateWithoutGenreInput>
-  }
-
-  export type PreferredGenreUpdateManyWithWhereWithoutGenreInput = {
-    where: PreferredGenreScalarWhereInput
-    data: XOR<PreferredGenreUpdateManyMutationInput, PreferredGenreUncheckedUpdateManyWithoutGenreInput>
+  export type PreferredGenreCreateManyGenreInputEnvelope = {
+    data: PreferredGenreCreateManyGenreInput | PreferredGenreCreateManyGenreInput[]
+    skipDuplicates?: boolean
   }
 
   export type GameGenreUpsertWithWhereUniqueWithoutGenreInput = {
@@ -34599,23 +34609,20 @@ export namespace Prisma {
     data: XOR<GameGenreUpdateManyMutationInput, GameGenreUncheckedUpdateManyWithoutGenreInput>
   }
 
-  export type PreferredThemeCreateWithoutThemeInput = {
-    member: MemberCreateNestedOneWithoutPreferredThemesInput
+  export type PreferredGenreUpsertWithWhereUniqueWithoutGenreInput = {
+    where: PreferredGenreWhereUniqueInput
+    update: XOR<PreferredGenreUpdateWithoutGenreInput, PreferredGenreUncheckedUpdateWithoutGenreInput>
+    create: XOR<PreferredGenreCreateWithoutGenreInput, PreferredGenreUncheckedCreateWithoutGenreInput>
   }
 
-  export type PreferredThemeUncheckedCreateWithoutThemeInput = {
-    id?: number
-    memberId: string
+  export type PreferredGenreUpdateWithWhereUniqueWithoutGenreInput = {
+    where: PreferredGenreWhereUniqueInput
+    data: XOR<PreferredGenreUpdateWithoutGenreInput, PreferredGenreUncheckedUpdateWithoutGenreInput>
   }
 
-  export type PreferredThemeCreateOrConnectWithoutThemeInput = {
-    where: PreferredThemeWhereUniqueInput
-    create: XOR<PreferredThemeCreateWithoutThemeInput, PreferredThemeUncheckedCreateWithoutThemeInput>
-  }
-
-  export type PreferredThemeCreateManyThemeInputEnvelope = {
-    data: PreferredThemeCreateManyThemeInput | PreferredThemeCreateManyThemeInput[]
-    skipDuplicates?: boolean
+  export type PreferredGenreUpdateManyWithWhereWithoutGenreInput = {
+    where: PreferredGenreScalarWhereInput
+    data: XOR<PreferredGenreUpdateManyMutationInput, PreferredGenreUncheckedUpdateManyWithoutGenreInput>
   }
 
   export type GameThemeCreateWithoutThemeInput = {
@@ -34637,20 +34644,23 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PreferredThemeUpsertWithWhereUniqueWithoutThemeInput = {
+  export type PreferredThemeCreateWithoutThemeInput = {
+    member: MemberCreateNestedOneWithoutPreferredThemesInput
+  }
+
+  export type PreferredThemeUncheckedCreateWithoutThemeInput = {
+    id?: number
+    memberId: string
+  }
+
+  export type PreferredThemeCreateOrConnectWithoutThemeInput = {
     where: PreferredThemeWhereUniqueInput
-    update: XOR<PreferredThemeUpdateWithoutThemeInput, PreferredThemeUncheckedUpdateWithoutThemeInput>
     create: XOR<PreferredThemeCreateWithoutThemeInput, PreferredThemeUncheckedCreateWithoutThemeInput>
   }
 
-  export type PreferredThemeUpdateWithWhereUniqueWithoutThemeInput = {
-    where: PreferredThemeWhereUniqueInput
-    data: XOR<PreferredThemeUpdateWithoutThemeInput, PreferredThemeUncheckedUpdateWithoutThemeInput>
-  }
-
-  export type PreferredThemeUpdateManyWithWhereWithoutThemeInput = {
-    where: PreferredThemeScalarWhereInput
-    data: XOR<PreferredThemeUpdateManyMutationInput, PreferredThemeUncheckedUpdateManyWithoutThemeInput>
+  export type PreferredThemeCreateManyThemeInputEnvelope = {
+    data: PreferredThemeCreateManyThemeInput | PreferredThemeCreateManyThemeInput[]
+    skipDuplicates?: boolean
   }
 
   export type GameThemeUpsertWithWhereUniqueWithoutThemeInput = {
@@ -34669,6 +34679,22 @@ export namespace Prisma {
     data: XOR<GameThemeUpdateManyMutationInput, GameThemeUncheckedUpdateManyWithoutThemeInput>
   }
 
+  export type PreferredThemeUpsertWithWhereUniqueWithoutThemeInput = {
+    where: PreferredThemeWhereUniqueInput
+    update: XOR<PreferredThemeUpdateWithoutThemeInput, PreferredThemeUncheckedUpdateWithoutThemeInput>
+    create: XOR<PreferredThemeCreateWithoutThemeInput, PreferredThemeUncheckedCreateWithoutThemeInput>
+  }
+
+  export type PreferredThemeUpdateWithWhereUniqueWithoutThemeInput = {
+    where: PreferredThemeWhereUniqueInput
+    data: XOR<PreferredThemeUpdateWithoutThemeInput, PreferredThemeUncheckedUpdateWithoutThemeInput>
+  }
+
+  export type PreferredThemeUpdateManyWithWhereWithoutThemeInput = {
+    where: PreferredThemeScalarWhereInput
+    data: XOR<PreferredThemeUpdateManyMutationInput, PreferredThemeUncheckedUpdateManyWithoutThemeInput>
+  }
+
   export type MemberCreateWithoutPreferredPlatformsInput = {
     id?: string
     nickname: string
@@ -34681,17 +34707,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateWithoutPreferredPlatformsInput = {
@@ -34706,17 +34732,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
     preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberCreateOrConnectWithoutPreferredPlatformsInput = {
@@ -34763,17 +34789,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutPreferredPlatformsInput = {
@@ -34788,17 +34814,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type PlatformUpsertWithoutPreferredPlatformsInput = {
@@ -34823,61 +34849,6 @@ export namespace Prisma {
     gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutPlatformNestedInput
   }
 
-  export type MemberCreateWithoutPreferredGenresInput = {
-    id?: string
-    nickname: string
-    email: string
-    password: string
-    imageUrl: string
-    birthDate: Date | string
-    isMale: boolean
-    score?: number
-    isAttended?: boolean
-    createdAt?: Date | string
-    deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
-    arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
-    chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
-    notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
-    preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
-  }
-
-  export type MemberUncheckedCreateWithoutPreferredGenresInput = {
-    id?: string
-    nickname: string
-    email: string
-    password: string
-    imageUrl: string
-    birthDate: Date | string
-    isMale: boolean
-    score?: number
-    isAttended?: boolean
-    createdAt?: Date | string
-    deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
-    arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
-    chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
-    notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
-    preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
-  }
-
-  export type MemberCreateOrConnectWithoutPreferredGenresInput = {
-    where: MemberWhereUniqueInput
-    create: XOR<MemberCreateWithoutPreferredGenresInput, MemberUncheckedCreateWithoutPreferredGenresInput>
-  }
-
   export type GenreCreateWithoutPreferredGenresInput = {
     name: string
     gameGenres?: GameGenreCreateNestedManyWithoutGenreInput
@@ -34892,6 +34863,83 @@ export namespace Prisma {
   export type GenreCreateOrConnectWithoutPreferredGenresInput = {
     where: GenreWhereUniqueInput
     create: XOR<GenreCreateWithoutPreferredGenresInput, GenreUncheckedCreateWithoutPreferredGenresInput>
+  }
+
+  export type MemberCreateWithoutPreferredGenresInput = {
+    id?: string
+    nickname: string
+    email: string
+    password: string
+    imageUrl: string
+    birthDate: Date | string
+    isMale: boolean
+    score?: number
+    isAttended?: boolean
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
+    chattings?: ChattingCreateNestedManyWithoutMemberInput
+    notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
+    preferredThemes?: PreferredThemeCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
+  }
+
+  export type MemberUncheckedCreateWithoutPreferredGenresInput = {
+    id?: string
+    nickname: string
+    email: string
+    password: string
+    imageUrl: string
+    birthDate: Date | string
+    isMale: boolean
+    score?: number
+    isAttended?: boolean
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
+    chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
+    notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
+    preferredThemes?: PreferredThemeUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
+  }
+
+  export type MemberCreateOrConnectWithoutPreferredGenresInput = {
+    where: MemberWhereUniqueInput
+    create: XOR<MemberCreateWithoutPreferredGenresInput, MemberUncheckedCreateWithoutPreferredGenresInput>
+  }
+
+  export type GenreUpsertWithoutPreferredGenresInput = {
+    update: XOR<GenreUpdateWithoutPreferredGenresInput, GenreUncheckedUpdateWithoutPreferredGenresInput>
+    create: XOR<GenreCreateWithoutPreferredGenresInput, GenreUncheckedCreateWithoutPreferredGenresInput>
+    where?: GenreWhereInput
+  }
+
+  export type GenreUpdateToOneWithWhereWithoutPreferredGenresInput = {
+    where?: GenreWhereInput
+    data: XOR<GenreUpdateWithoutPreferredGenresInput, GenreUncheckedUpdateWithoutPreferredGenresInput>
+  }
+
+  export type GenreUpdateWithoutPreferredGenresInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    gameGenres?: GameGenreUpdateManyWithoutGenreNestedInput
+  }
+
+  export type GenreUncheckedUpdateWithoutPreferredGenresInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    gameGenres?: GameGenreUncheckedUpdateManyWithoutGenreNestedInput
   }
 
   export type MemberUpsertWithoutPreferredGenresInput = {
@@ -34917,17 +34965,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
     preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutPreferredGenresInput = {
@@ -34942,39 +34990,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
     preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutMemberNestedInput
-  }
-
-  export type GenreUpsertWithoutPreferredGenresInput = {
-    update: XOR<GenreUpdateWithoutPreferredGenresInput, GenreUncheckedUpdateWithoutPreferredGenresInput>
-    create: XOR<GenreCreateWithoutPreferredGenresInput, GenreUncheckedCreateWithoutPreferredGenresInput>
-    where?: GenreWhereInput
-  }
-
-  export type GenreUpdateToOneWithWhereWithoutPreferredGenresInput = {
-    where?: GenreWhereInput
-    data: XOR<GenreUpdateWithoutPreferredGenresInput, GenreUncheckedUpdateWithoutPreferredGenresInput>
-  }
-
-  export type GenreUpdateWithoutPreferredGenresInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    gameGenres?: GameGenreUpdateManyWithoutGenreNestedInput
-  }
-
-  export type GenreUncheckedUpdateWithoutPreferredGenresInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    gameGenres?: GameGenreUncheckedUpdateManyWithoutGenreNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberCreateWithoutPreferredThemesInput = {
@@ -34989,17 +35015,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistCreateNestedManyWithoutMemberInput
-    reviews?: ReviewCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
-    votes?: VoteCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeCreateNestedManyWithoutMemberInput
+    reviews?: ReviewCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordCreateNestedManyWithoutMemberInput
+    votes?: VoteCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistCreateNestedManyWithoutMemberInput
   }
 
   export type MemberUncheckedCreateWithoutPreferredThemesInput = {
@@ -35014,17 +35040,17 @@ export namespace Prisma {
     isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
-    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
-    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
+    arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
-    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
-    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
-    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
     preferredGenres?: PreferredGenreUncheckedCreateNestedManyWithoutMemberInput
+    preferredPlatforms?: PreferredPlatformUncheckedCreateNestedManyWithoutMemberInput
+    reviewLikes?: ReviewLikeUncheckedCreateNestedManyWithoutMemberInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMemberInput
+    scoreRecords?: ScoreRecordUncheckedCreateNestedManyWithoutMemberInput
+    votes?: VoteUncheckedCreateNestedManyWithoutMemberInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type MemberCreateOrConnectWithoutPreferredThemesInput = {
@@ -35071,17 +35097,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
-    votes?: VoteUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUpdateManyWithoutMemberNestedInput
+    votes?: VoteUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUpdateManyWithoutMemberNestedInput
   }
 
   export type MemberUncheckedUpdateWithoutPreferredThemesInput = {
@@ -35096,17 +35122,17 @@ export namespace Prisma {
     isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
-    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
+    arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
-    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
-    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
     preferredGenres?: PreferredGenreUncheckedUpdateManyWithoutMemberNestedInput
+    preferredPlatforms?: PreferredPlatformUncheckedUpdateManyWithoutMemberNestedInput
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutMemberNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutMemberNestedInput
+    scoreRecords?: ScoreRecordUncheckedUpdateManyWithoutMemberNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutMemberNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type ThemeUpsertWithoutPreferredThemesInput = {
@@ -35136,10 +35162,10 @@ export namespace Prisma {
     developer?: string | null
     thumbnail?: string | null
     releaseDate: Date | string
-    wishlists?: WishlistCreateNestedManyWithoutGameInput
-    reviews?: ReviewCreateNestedManyWithoutGameInput
     gameGenres?: GameGenreCreateNestedManyWithoutGameInput
     gameThemes?: GameThemeCreateNestedManyWithoutGameInput
+    reviews?: ReviewCreateNestedManyWithoutGameInput
+    wishlists?: WishlistCreateNestedManyWithoutGameInput
   }
 
   export type GameUncheckedCreateWithoutGamePlatformsInput = {
@@ -35148,10 +35174,10 @@ export namespace Prisma {
     developer?: string | null
     thumbnail?: string | null
     releaseDate: Date | string
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
     gameGenres?: GameGenreUncheckedCreateNestedManyWithoutGameInput
     gameThemes?: GameThemeUncheckedCreateNestedManyWithoutGameInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
   }
 
   export type GameCreateOrConnectWithoutGamePlatformsInput = {
@@ -35191,10 +35217,10 @@ export namespace Prisma {
     developer?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUpdateManyWithoutGameNestedInput
-    reviews?: ReviewUpdateManyWithoutGameNestedInput
     gameGenres?: GameGenreUpdateManyWithoutGameNestedInput
     gameThemes?: GameThemeUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUpdateManyWithoutGameNestedInput
   }
 
   export type GameUncheckedUpdateWithoutGamePlatformsInput = {
@@ -35203,10 +35229,10 @@ export namespace Prisma {
     developer?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
     gameGenres?: GameGenreUncheckedUpdateManyWithoutGameNestedInput
     gameThemes?: GameThemeUncheckedUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
   }
 
   export type PlatformUpsertWithoutGamePlatformsInput = {
@@ -35236,10 +35262,10 @@ export namespace Prisma {
     developer?: string | null
     thumbnail?: string | null
     releaseDate: Date | string
-    wishlists?: WishlistCreateNestedManyWithoutGameInput
-    reviews?: ReviewCreateNestedManyWithoutGameInput
     gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
     gameThemes?: GameThemeCreateNestedManyWithoutGameInput
+    reviews?: ReviewCreateNestedManyWithoutGameInput
+    wishlists?: WishlistCreateNestedManyWithoutGameInput
   }
 
   export type GameUncheckedCreateWithoutGameGenresInput = {
@@ -35248,10 +35274,10 @@ export namespace Prisma {
     developer?: string | null
     thumbnail?: string | null
     releaseDate: Date | string
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
     gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
     gameThemes?: GameThemeUncheckedCreateNestedManyWithoutGameInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
   }
 
   export type GameCreateOrConnectWithoutGameGenresInput = {
@@ -35291,10 +35317,10 @@ export namespace Prisma {
     developer?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUpdateManyWithoutGameNestedInput
-    reviews?: ReviewUpdateManyWithoutGameNestedInput
     gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
     gameThemes?: GameThemeUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUpdateManyWithoutGameNestedInput
   }
 
   export type GameUncheckedUpdateWithoutGameGenresInput = {
@@ -35303,10 +35329,10 @@ export namespace Prisma {
     developer?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
     gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
     gameThemes?: GameThemeUncheckedUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
   }
 
   export type GenreUpsertWithoutGameGenresInput = {
@@ -35336,10 +35362,10 @@ export namespace Prisma {
     developer?: string | null
     thumbnail?: string | null
     releaseDate: Date | string
-    wishlists?: WishlistCreateNestedManyWithoutGameInput
-    reviews?: ReviewCreateNestedManyWithoutGameInput
-    gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
     gameGenres?: GameGenreCreateNestedManyWithoutGameInput
+    gamePlatforms?: GamePlatformCreateNestedManyWithoutGameInput
+    reviews?: ReviewCreateNestedManyWithoutGameInput
+    wishlists?: WishlistCreateNestedManyWithoutGameInput
   }
 
   export type GameUncheckedCreateWithoutGameThemesInput = {
@@ -35348,10 +35374,10 @@ export namespace Prisma {
     developer?: string | null
     thumbnail?: string | null
     releaseDate: Date | string
-    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
-    gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
     gameGenres?: GameGenreUncheckedCreateNestedManyWithoutGameInput
+    gamePlatforms?: GamePlatformUncheckedCreateNestedManyWithoutGameInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutGameInput
+    wishlists?: WishlistUncheckedCreateNestedManyWithoutGameInput
   }
 
   export type GameCreateOrConnectWithoutGameThemesInput = {
@@ -35391,10 +35417,10 @@ export namespace Prisma {
     developer?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUpdateManyWithoutGameNestedInput
-    reviews?: ReviewUpdateManyWithoutGameNestedInput
-    gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
     gameGenres?: GameGenreUpdateManyWithoutGameNestedInput
+    gamePlatforms?: GamePlatformUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUpdateManyWithoutGameNestedInput
   }
 
   export type GameUncheckedUpdateWithoutGameThemesInput = {
@@ -35403,10 +35429,10 @@ export namespace Prisma {
     developer?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
-    gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
     gameGenres?: GameGenreUncheckedUpdateManyWithoutGameNestedInput
+    gamePlatforms?: GamePlatformUncheckedUpdateManyWithoutGameNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutGameNestedInput
+    wishlists?: WishlistUncheckedUpdateManyWithoutGameNestedInput
   }
 
   export type ThemeUpsertWithoutGameThemesInput = {
@@ -35431,37 +35457,18 @@ export namespace Prisma {
     preferredThemes?: PreferredThemeUncheckedUpdateManyWithoutThemeNestedInput
   }
 
-  export type WishlistCreateManyMemberInput = {
+  export type ArenaCreateManyChallengerInput = {
     id?: number
-    gameId: number
-  }
-
-  export type ReviewCreateManyMemberInput = {
-    id?: number
-    gameId: number
-    content: string
-    rating: number
-    createdAt?: Date | string
-    updatedAt?: Date | string | null
-  }
-
-  export type ReviewLikeCreateManyMemberInput = {
-    id?: number
-    reviewId: number
-  }
-
-  export type ArenaCreateManyCreatorInput = {
-    id?: number
-    challengerId: string
+    creatorId: string
     title: string
     description: string
     status: number
     startDate: Date | string
   }
 
-  export type ArenaCreateManyChallengerInput = {
+  export type ArenaCreateManyCreatorInput = {
     id?: number
-    creatorId: string
+    challengerId?: string | null
     title: string
     description: string
     status: number
@@ -35475,17 +35482,40 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type VoteCreateManyMemberInput = {
-    id?: number
-    arenaId: number
-    votedTo: string
-  }
-
   export type NotificationRecordCreateManyMemberInput = {
     id?: number
     typeId: number
     description: string
     createdAt?: Date | string
+  }
+
+  export type PreferredGenreCreateManyMemberInput = {
+    id?: number
+    genreId: number
+  }
+
+  export type PreferredPlatformCreateManyMemberInput = {
+    id?: number
+    platformId: number
+  }
+
+  export type PreferredThemeCreateManyMemberInput = {
+    id?: number
+    themeId: number
+  }
+
+  export type ReviewLikeCreateManyMemberInput = {
+    id?: number
+    reviewId: number
+  }
+
+  export type ReviewCreateManyMemberInput = {
+    id?: number
+    gameId: number
+    content: string
+    rating: number
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
   }
 
   export type ScoreRecordCreateManyMemberInput = {
@@ -35494,105 +35524,15 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type PreferredPlatformCreateManyMemberInput = {
+  export type VoteCreateManyMemberInput = {
     id?: number
-    platformId: number
+    arenaId: number
+    votedTo: string
   }
 
-  export type PreferredGenreCreateManyMemberInput = {
+  export type WishlistCreateManyMemberInput = {
     id?: number
-    genreId: number
-  }
-
-  export type PreferredThemeCreateManyMemberInput = {
-    id?: number
-    themeId: number
-  }
-
-  export type WishlistUpdateWithoutMemberInput = {
-    game?: GameUpdateOneRequiredWithoutWishlistsNestedInput
-  }
-
-  export type WishlistUncheckedUpdateWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type WishlistUncheckedUpdateManyWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type ReviewUpdateWithoutMemberInput = {
-    content?: StringFieldUpdateOperationsInput | string
-    rating?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    game?: GameUpdateOneRequiredWithoutReviewsNestedInput
-    reviewLikes?: ReviewLikeUpdateManyWithoutReviewNestedInput
-  }
-
-  export type ReviewUncheckedUpdateWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
-    content?: StringFieldUpdateOperationsInput | string
-    rating?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutReviewNestedInput
-  }
-
-  export type ReviewUncheckedUpdateManyWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
-    content?: StringFieldUpdateOperationsInput | string
-    rating?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ReviewLikeUpdateWithoutMemberInput = {
-    review?: ReviewUpdateOneRequiredWithoutReviewLikesNestedInput
-  }
-
-  export type ReviewLikeUncheckedUpdateWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    reviewId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type ReviewLikeUncheckedUpdateManyWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    reviewId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type ArenaUpdateWithoutCreatorInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    status?: IntFieldUpdateOperationsInput | number
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    challenger?: MemberUpdateOneRequiredWithoutArenasAsChallengerNestedInput
-    chattings?: ChattingUpdateManyWithoutArenaNestedInput
-    votes?: VoteUpdateManyWithoutArenaNestedInput
-  }
-
-  export type ArenaUncheckedUpdateWithoutCreatorInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    challengerId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    status?: IntFieldUpdateOperationsInput | number
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    chattings?: ChattingUncheckedUpdateManyWithoutArenaNestedInput
-    votes?: VoteUncheckedUpdateManyWithoutArenaNestedInput
-  }
-
-  export type ArenaUncheckedUpdateManyWithoutCreatorInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    challengerId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    status?: IntFieldUpdateOperationsInput | number
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameId: number
   }
 
   export type ArenaUpdateWithoutChallengerInput = {
@@ -35625,6 +35565,36 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ArenaUpdateWithoutCreatorInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    challenger?: MemberUpdateOneWithoutArenasAsChallengerNestedInput
+    chattings?: ChattingUpdateManyWithoutArenaNestedInput
+    votes?: VoteUpdateManyWithoutArenaNestedInput
+  }
+
+  export type ArenaUncheckedUpdateWithoutCreatorInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    challengerId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chattings?: ChattingUncheckedUpdateManyWithoutArenaNestedInput
+    votes?: VoteUncheckedUpdateManyWithoutArenaNestedInput
+  }
+
+  export type ArenaUncheckedUpdateManyWithoutCreatorInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    challengerId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChattingUpdateWithoutMemberInput = {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35643,23 +35613,6 @@ export namespace Prisma {
     arenaId?: IntFieldUpdateOperationsInput | number
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VoteUpdateWithoutMemberInput = {
-    votedTo?: StringFieldUpdateOperationsInput | string
-    arena?: ArenaUpdateOneRequiredWithoutVotesNestedInput
-  }
-
-  export type VoteUncheckedUpdateWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    arenaId?: IntFieldUpdateOperationsInput | number
-    votedTo?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type VoteUncheckedUpdateManyWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    arenaId?: IntFieldUpdateOperationsInput | number
-    votedTo?: StringFieldUpdateOperationsInput | string
   }
 
   export type NotificationRecordUpdateWithoutMemberInput = {
@@ -35682,6 +35635,90 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PreferredGenreUpdateWithoutMemberInput = {
+    genre?: GenreUpdateOneRequiredWithoutPreferredGenresNestedInput
+  }
+
+  export type PreferredGenreUncheckedUpdateWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    genreId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PreferredGenreUncheckedUpdateManyWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    genreId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PreferredPlatformUpdateWithoutMemberInput = {
+    platform?: PlatformUpdateOneRequiredWithoutPreferredPlatformsNestedInput
+  }
+
+  export type PreferredPlatformUncheckedUpdateWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    platformId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PreferredPlatformUncheckedUpdateManyWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    platformId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PreferredThemeUpdateWithoutMemberInput = {
+    theme?: ThemeUpdateOneRequiredWithoutPreferredThemesNestedInput
+  }
+
+  export type PreferredThemeUncheckedUpdateWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    themeId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PreferredThemeUncheckedUpdateManyWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    themeId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ReviewLikeUpdateWithoutMemberInput = {
+    review?: ReviewUpdateOneRequiredWithoutReviewLikesNestedInput
+  }
+
+  export type ReviewLikeUncheckedUpdateWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    reviewId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ReviewLikeUncheckedUpdateManyWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    reviewId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ReviewUpdateWithoutMemberInput = {
+    content?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewLikes?: ReviewLikeUpdateManyWithoutReviewNestedInput
+    game?: GameUpdateOneRequiredWithoutReviewsNestedInput
+  }
+
+  export type ReviewUncheckedUpdateWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    gameId?: IntFieldUpdateOperationsInput | number
+    content?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewLikes?: ReviewLikeUncheckedUpdateManyWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateManyWithoutMemberInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    gameId?: IntFieldUpdateOperationsInput | number
+    content?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type ScoreRecordUpdateWithoutMemberInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     policy?: ScorePolicyUpdateOneRequiredWithoutScoreRecordsNestedInput
@@ -35699,51 +35736,50 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PreferredPlatformUpdateWithoutMemberInput = {
-    platform?: PlatformUpdateOneRequiredWithoutPreferredPlatformsNestedInput
+  export type VoteUpdateWithoutMemberInput = {
+    votedTo?: StringFieldUpdateOperationsInput | string
+    arena?: ArenaUpdateOneRequiredWithoutVotesNestedInput
   }
 
-  export type PreferredPlatformUncheckedUpdateWithoutMemberInput = {
+  export type VoteUncheckedUpdateWithoutMemberInput = {
     id?: IntFieldUpdateOperationsInput | number
-    platformId?: IntFieldUpdateOperationsInput | number
+    arenaId?: IntFieldUpdateOperationsInput | number
+    votedTo?: StringFieldUpdateOperationsInput | string
   }
 
-  export type PreferredPlatformUncheckedUpdateManyWithoutMemberInput = {
+  export type VoteUncheckedUpdateManyWithoutMemberInput = {
     id?: IntFieldUpdateOperationsInput | number
-    platformId?: IntFieldUpdateOperationsInput | number
+    arenaId?: IntFieldUpdateOperationsInput | number
+    votedTo?: StringFieldUpdateOperationsInput | string
   }
 
-  export type PreferredGenreUpdateWithoutMemberInput = {
-    genre?: GenreUpdateOneRequiredWithoutPreferredGenresNestedInput
+  export type WishlistUpdateWithoutMemberInput = {
+    game?: GameUpdateOneRequiredWithoutWishlistsNestedInput
   }
 
-  export type PreferredGenreUncheckedUpdateWithoutMemberInput = {
+  export type WishlistUncheckedUpdateWithoutMemberInput = {
     id?: IntFieldUpdateOperationsInput | number
-    genreId?: IntFieldUpdateOperationsInput | number
+    gameId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type PreferredGenreUncheckedUpdateManyWithoutMemberInput = {
+  export type WishlistUncheckedUpdateManyWithoutMemberInput = {
     id?: IntFieldUpdateOperationsInput | number
-    genreId?: IntFieldUpdateOperationsInput | number
+    gameId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type PreferredThemeUpdateWithoutMemberInput = {
-    theme?: ThemeUpdateOneRequiredWithoutPreferredThemesNestedInput
-  }
-
-  export type PreferredThemeUncheckedUpdateWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    themeId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type PreferredThemeUncheckedUpdateManyWithoutMemberInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    themeId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type WishlistCreateManyGameInput = {
+  export type GameGenreCreateManyGameInput = {
     id?: number
-    memberId: string
+    genreId: number
+  }
+
+  export type GamePlatformCreateManyGameInput = {
+    id?: number
+    platformId: number
+  }
+
+  export type GameThemeCreateManyGameInput = {
+    id?: number
+    themeId: number
   }
 
   export type ReviewCreateManyGameInput = {
@@ -35755,33 +35791,51 @@ export namespace Prisma {
     updatedAt?: Date | string | null
   }
 
-  export type GamePlatformCreateManyGameInput = {
+  export type WishlistCreateManyGameInput = {
     id?: number
-    platformId: number
+    memberId: string
   }
 
-  export type GameGenreCreateManyGameInput = {
-    id?: number
-    genreId: number
+  export type GameGenreUpdateWithoutGameInput = {
+    genre?: GenreUpdateOneRequiredWithoutGameGenresNestedInput
   }
 
-  export type GameThemeCreateManyGameInput = {
-    id?: number
-    themeId: number
-  }
-
-  export type WishlistUpdateWithoutGameInput = {
-    member?: MemberUpdateOneRequiredWithoutWishlistsNestedInput
-  }
-
-  export type WishlistUncheckedUpdateWithoutGameInput = {
+  export type GameGenreUncheckedUpdateWithoutGameInput = {
     id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
+    genreId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type WishlistUncheckedUpdateManyWithoutGameInput = {
+  export type GameGenreUncheckedUpdateManyWithoutGameInput = {
     id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
+    genreId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type GamePlatformUpdateWithoutGameInput = {
+    platform?: PlatformUpdateOneRequiredWithoutGamePlatformsNestedInput
+  }
+
+  export type GamePlatformUncheckedUpdateWithoutGameInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    platformId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type GamePlatformUncheckedUpdateManyWithoutGameInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    platformId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type GameThemeUpdateWithoutGameInput = {
+    theme?: ThemeUpdateOneRequiredWithoutGameThemesNestedInput
+  }
+
+  export type GameThemeUncheckedUpdateWithoutGameInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    themeId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type GameThemeUncheckedUpdateManyWithoutGameInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    themeId?: IntFieldUpdateOperationsInput | number
   }
 
   export type ReviewUpdateWithoutGameInput = {
@@ -35789,8 +35843,8 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    member?: MemberUpdateOneRequiredWithoutReviewsNestedInput
     reviewLikes?: ReviewLikeUpdateManyWithoutReviewNestedInput
+    member?: MemberUpdateOneRequiredWithoutReviewsNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutGameInput = {
@@ -35812,46 +35866,18 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type GamePlatformUpdateWithoutGameInput = {
-    platform?: PlatformUpdateOneRequiredWithoutGamePlatformsNestedInput
+  export type WishlistUpdateWithoutGameInput = {
+    member?: MemberUpdateOneRequiredWithoutWishlistsNestedInput
   }
 
-  export type GamePlatformUncheckedUpdateWithoutGameInput = {
+  export type WishlistUncheckedUpdateWithoutGameInput = {
     id?: IntFieldUpdateOperationsInput | number
-    platformId?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type GamePlatformUncheckedUpdateManyWithoutGameInput = {
+  export type WishlistUncheckedUpdateManyWithoutGameInput = {
     id?: IntFieldUpdateOperationsInput | number
-    platformId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type GameGenreUpdateWithoutGameInput = {
-    genre?: GenreUpdateOneRequiredWithoutGameGenresNestedInput
-  }
-
-  export type GameGenreUncheckedUpdateWithoutGameInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    genreId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type GameGenreUncheckedUpdateManyWithoutGameInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    genreId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type GameThemeUpdateWithoutGameInput = {
-    theme?: ThemeUpdateOneRequiredWithoutGameThemesNestedInput
-  }
-
-  export type GameThemeUncheckedUpdateWithoutGameInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    themeId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type GameThemeUncheckedUpdateManyWithoutGameInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    themeId?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ReviewLikeCreateManyReviewInput = {
@@ -35973,28 +35999,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PreferredPlatformCreateManyPlatformInput = {
-    id?: number
-    memberId: string
-  }
-
   export type GamePlatformCreateManyPlatformInput = {
     id?: number
     gameId: number
   }
 
-  export type PreferredPlatformUpdateWithoutPlatformInput = {
-    member?: MemberUpdateOneRequiredWithoutPreferredPlatformsNestedInput
-  }
-
-  export type PreferredPlatformUncheckedUpdateWithoutPlatformInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type PreferredPlatformUncheckedUpdateManyWithoutPlatformInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
+  export type PreferredPlatformCreateManyPlatformInput = {
+    id?: number
+    memberId: string
   }
 
   export type GamePlatformUpdateWithoutPlatformInput = {
@@ -36011,9 +36023,18 @@ export namespace Prisma {
     gameId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type PreferredGenreCreateManyGenreInput = {
-    id?: number
-    memberId: string
+  export type PreferredPlatformUpdateWithoutPlatformInput = {
+    member?: MemberUpdateOneRequiredWithoutPreferredPlatformsNestedInput
+  }
+
+  export type PreferredPlatformUncheckedUpdateWithoutPlatformInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreferredPlatformUncheckedUpdateManyWithoutPlatformInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
   }
 
   export type GameGenreCreateManyGenreInput = {
@@ -36021,18 +36042,9 @@ export namespace Prisma {
     gameId: number
   }
 
-  export type PreferredGenreUpdateWithoutGenreInput = {
-    member?: MemberUpdateOneRequiredWithoutPreferredGenresNestedInput
-  }
-
-  export type PreferredGenreUncheckedUpdateWithoutGenreInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type PreferredGenreUncheckedUpdateManyWithoutGenreInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
+  export type PreferredGenreCreateManyGenreInput = {
+    id?: number
+    memberId: string
   }
 
   export type GameGenreUpdateWithoutGenreInput = {
@@ -36049,9 +36061,18 @@ export namespace Prisma {
     gameId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type PreferredThemeCreateManyThemeInput = {
-    id?: number
-    memberId: string
+  export type PreferredGenreUpdateWithoutGenreInput = {
+    member?: MemberUpdateOneRequiredWithoutPreferredGenresNestedInput
+  }
+
+  export type PreferredGenreUncheckedUpdateWithoutGenreInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreferredGenreUncheckedUpdateManyWithoutGenreInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
   }
 
   export type GameThemeCreateManyThemeInput = {
@@ -36059,18 +36080,9 @@ export namespace Prisma {
     gameId: number
   }
 
-  export type PreferredThemeUpdateWithoutThemeInput = {
-    member?: MemberUpdateOneRequiredWithoutPreferredThemesNestedInput
-  }
-
-  export type PreferredThemeUncheckedUpdateWithoutThemeInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type PreferredThemeUncheckedUpdateManyWithoutThemeInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    memberId?: StringFieldUpdateOperationsInput | string
+  export type PreferredThemeCreateManyThemeInput = {
+    id?: number
+    memberId: string
   }
 
   export type GameThemeUpdateWithoutThemeInput = {
@@ -36085,6 +36097,20 @@ export namespace Prisma {
   export type GameThemeUncheckedUpdateManyWithoutThemeInput = {
     id?: IntFieldUpdateOperationsInput | number
     gameId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PreferredThemeUpdateWithoutThemeInput = {
+    member?: MemberUpdateOneRequiredWithoutPreferredThemesNestedInput
+  }
+
+  export type PreferredThemeUncheckedUpdateWithoutThemeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreferredThemeUncheckedUpdateManyWithoutThemeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
   }
 
 
