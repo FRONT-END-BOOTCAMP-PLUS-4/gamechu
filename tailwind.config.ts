@@ -7,6 +7,7 @@ const config: Config = {
                 "fade-in-left": "fadeInLeft 0.8s ease-out forwards",
                 "fade-in-right": "fadeInRight 0.8s ease-out forwards",
                 "fade-in-up": "fadeInUp 0.8s ease-out forwards",
+                "slow-pan": "pan 60s linear infinite",
             },
             keyframes: {
                 fadeInLeft: {
@@ -20,6 +21,10 @@ const config: Config = {
                 fadeInUp: {
                     "0%": { opacity: "0", transform: "translateY(20px)" },
                     "100%": { opacity: "1", transform: "translateY(0)" },
+                },
+                pan: {
+                    "0%": { backgroundPosition: "0% 50%" },
+                    "100%": { backgroundPosition: "100% 50%" },
                 },
             },
             fontSize: {
