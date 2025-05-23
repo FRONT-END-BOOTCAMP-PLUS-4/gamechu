@@ -291,7 +291,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Park Joon Seon\\Desktop\\likelionNext\\gamechu\\prisma\\generated",
+      "value": "C:\\Users\\user\\Documents\\GitHub\\gamechu\\prisma\\generated",
       "fromEnvVar": null
     },
     "config": {
@@ -305,7 +305,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Park Joon Seon\\Desktop\\likelionNext\\gamechu\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\user\\Documents\\GitHub\\gamechu\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
