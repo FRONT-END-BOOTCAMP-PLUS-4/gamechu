@@ -13,12 +13,17 @@ type WaitingArenaCardProps = {
 
 export default function WaitingArenaCard(props: WaitingArenaCardProps) {
     return (
-        <div className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[440px]">
+        <div
+            className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[440px]
+                border border-transparent hover:border-purple-500
+                hover:shadow-lg hover:shadow-purple-500/30
+                hover:scale-[1.01] transform transition-all duration-200"
+        >
             <div className="flex items-center justify-between">
                 <div className="text-lg font-bold line-clamp-2">
                     {props.title}
                 </div>
-                <div className="bg-background-gray text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <div className="bg-background-200 text-white text-xs font-semibold px-3 py-1 rounded-full">
                     대기중
                 </div>
             </div>
