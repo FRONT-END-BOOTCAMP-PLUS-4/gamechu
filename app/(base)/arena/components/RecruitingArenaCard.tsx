@@ -1,10 +1,11 @@
 import Button from "@/app/components/Button";
+import TierBadge from "@/app/components/TierBadge";
 import Image from "next/image";
 
 type RecruitingArenaCardProps = {
     creatorNickname: string;
     creatorProfileImageUrl: string;
-    creatorTierImageUrl: string;
+    creatorScore: number;
     title: string;
     description: string;
     startDate: Date;
@@ -29,12 +30,7 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
                         className="rounded-full object-cover"
                     />
                     <span>{props.creatorNickname}</span>
-                    <Image
-                        src={props.creatorTierImageUrl}
-                        alt="작성자 티어"
-                        width={16}
-                        height={16}
-                    />
+                    <TierBadge score={props.creatorScore} size="sm" />
                 </div>
                 <div className="bg-background-200 text-white text-xs font-semibold px-3 py-1 rounded-full">
                     모집중
