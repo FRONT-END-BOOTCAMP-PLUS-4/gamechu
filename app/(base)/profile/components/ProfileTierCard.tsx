@@ -1,38 +1,104 @@
-//티어 컴포넌트
+// ✅ components/profile/ProfileTierCard.tsx
 "use client";
 
-// components/profile/ProfileTierCard.tsx
-export default function ProfileTierCard() {
-    const tiers = [
-        { label: "브론즈", range: "0 - 999" },
-        { label: "실버", range: "1,000 - 1,999" },
-        { label: "골드", range: "2,000 - 2,999", active: true },
-        { label: "플래티넘", range: "3,000 - 3,999" },
-        { label: "다이아몬드", range: "4,000+" },
-    ];
+import Image from "next/image";
+import TierBadge from "@/app/components/TierBadge";
+import { tiers, Tier } from "@/constants/tiers";
+import { getTier } from "@/utils/GetTiers";
+
+type Props = {
+    score: number;
+};
+
+export default function ProfileTierCard({ score }: Props) {
+    const currentTier: Tier = getTier(score);
+    const currentIndex = tiers.indexOf(currentTier);
+    const nextTier = tiers[Math.min(currentIndex + 1, tiers.length - 1)];
+    const progress =
+        currentTier.max === Infinity
+            ? 100
+            : ((score - currentTier.min) /
+                  (currentTier.max - currentTier.min)) *
+              100;
+    const pointsToNext =
+        currentTier.max === Infinity ? 0 : Math.max(0, nextTier.min - score);
 
     return (
         <div className="flex-1 bg-background-300 p-6 rounded-xl shadow">
-            <h2 className="font-semibold text-body mb-4">나의 티어</h2>
-            <p className="text-sm mb-2 text-font-200">포인트를 모아 다음 티어로 승급하세요!</p>
-            <div className="text-right text-caption text-font-200 mb-1">다음 티어까지: 100 포인트</div>
-            <div className="h-4 w-full bg-background-200 rounded-full overflow-hidden mb-6">
-                <div className="h-full bg-primary-purple-200 w-[80%]" />
+            {/* 제목 & 설명 */}
+            <div className="flex justify-between items-start mb-4">
+                <div>
+                    <h2 className="font-semibold text-body">나의 티어</h2>
+                    <p className="text-sm text-font-200">
+                        포인트를 모아 더 높은 티어로 승급하세요!
+                    </p>
+                </div>
+
+                {/* 우측 배지 */}
+                <TierBadge score={score} size="md"/>
             </div>
-            <div className="grid grid-cols-5 gap-2 text-center text-caption">
-                {tiers.map((tier) => (
-                    <div
-                        key={tier.label}
-                        className={`rounded-xl p-4 border ${
-                            tier.active
-                                ? "bg-primary-purple-200 border-primary-purple-200 text-white"
-                                : "border-line-200 bg-background-200"
-                        }`}
-                    >
-                        <div className="font-medium mb-1">{tier.label}</div>
-                        <div className="text-xs">{tier.range}</div>
-                    </div>
-                ))}
+
+            <p className="text-sm font-semibold">
+                현재 포인트: {score.toLocaleString()}
+            </p>
+
+            {/* 다음 티어까지 */}
+            <p className="text-right text-caption text-font-200 mb-1">
+                {currentTier.max === Infinity
+                    ? "최고 티어입니다!"
+                    : `다음 티어까지: ${pointsToNext.toLocaleString()} 포인트`}
+            </p>
+
+            {/* 프로그레스 바 */}
+            <div className="h-2 w-full bg-background-200 rounded-full overflow-hidden mb-6">
+                <div
+                    className="h-full transition-all duration-700 ease-out"
+                    style={{
+                        width: `${progress}%`,
+                        backgroundColor: currentTier.color,
+                    }}
+                />
+            </div>
+
+            {/* 티어 카드 리스트 */}
+            <div className="grid grid-cols-5 gap-3 text-center text-caption">
+                {tiers.map((tier) => {
+                    const isActive = tier.label === currentTier.label;
+                    return (
+                        <div
+                            key={tier.label}
+                            className={`rounded-xl px-4 py-6 border flex flex-col items-center transition-all duration-300 ${
+                                isActive
+                                    ? "text-white font-bold"
+                                    : "text-font-200"
+                            }`}
+                            style={{
+                                backgroundColor: isActive
+                                    ? `${tier.color}22`
+                                    : "#1e1e1e",
+                                border: isActive
+                                    ? `2px solid ${tier.color}`
+                                    : "1px solid #333",
+                            }}
+                        >
+                            <Image
+                                src={tier.icon}
+                                alt={tier.label}
+                                width={24}
+                                height={24}
+                                className={`mb-1 ${
+                                    isActive ? "brightness-[1.5]" : "opacity-70"
+                                }`}
+                            />
+                            <div className="text-sm">{tier.label}</div>
+                            <div className="text-xs">
+                                {tier.max === Infinity
+                                    ? `${tier.min.toLocaleString()}+`
+                                    : `${tier.min.toLocaleString()} - ${tier.max.toLocaleString()}`}
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

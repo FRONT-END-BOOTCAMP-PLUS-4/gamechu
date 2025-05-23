@@ -38,4 +38,8 @@ export class PrismaMemberRepository implements MemberRepository {
 
         return member;
     }
+
+    async findById(id: string) {
+        return this.prisma.member.findUnique({ where: { id } });
+    }
 }
