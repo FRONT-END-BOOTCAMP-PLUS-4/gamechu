@@ -3,7 +3,7 @@
 import useArenaStore from "@/stores/useArenaStore";
 
 export default function ArenaDetailHeader() {
-    const arenaData = useArenaStore((state) => state.arenaData);
+    const arenaDetail = useArenaStore((state) => state.arenaData);
     return (
         <div className="w-full max-w-[1000px] flex flex-col gap-4">
             {/* 상단: 제목 & 게시자 */}
@@ -16,7 +16,7 @@ export default function ArenaDetailHeader() {
                         className="w-10 h-10"
                     />
                     <h2 className="text-h2 font-bold text-font-100">
-                        {arenaData?.title ?? "투기장 제목"}
+                        {arenaDetail?.title ?? "투기장 제목"}
                     </h2>
                 </div>
                 {/* 게시자 */}
@@ -27,14 +27,14 @@ export default function ArenaDetailHeader() {
                         className="w-10 h-10"
                     />
                     <h2 className="text-h2 font-bold text-font-100">
-                        {arenaData?.creatorName ?? "게시자"}
+                        {arenaDetail?.creatorName ?? "게시자"}
                     </h2>
                 </div>
             </div>
 
             {/* 하단: 내용 */}
             <div className="h-32 bg-background-300 rounded-xl p-4 text-font-100 text-body animate-fade-in-up">
-                {arenaData?.description ?? "투기장 내용"}
+                {arenaDetail?.description ?? "투기장 내용"}
             </div>
         </div>
     );

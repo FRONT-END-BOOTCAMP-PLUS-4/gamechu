@@ -8,6 +8,13 @@ export class GetArenaDetailUsecase {
 
     async execute(arenaId: number): Promise<ArenaDetailDto> {
         const ArenaDetail = await this.arenaRepository.getArenaById(arenaId);
+        const startDateObj = dayjs(ArenaDetail.startDate);
+        const endChattingObj = startDateObj.add(30, "minute");
+        const endVoteObj = endChattingObj.add(24, "hour");
+
+        // 끝 시간도 같은 형식으로 문자열로 만들어
+        const endChatting = endChattingObj.format("YYYY-MM-DD HH:mm:ss");
+        const endVote = endVoteObj.format("YYYY-MM-DD HH:mm:ss");
 
         return new ArenaDetailDto(
             ArenaDetail.id,
@@ -18,6 +25,8 @@ export class GetArenaDetailUsecase {
             ArenaDetail.title,
             ArenaDetail.description,
             dayjs(ArenaDetail.startDate).format("YYYY-MM-DD HH:mm:ss"),
+            endChatting,
+            endVote,
             ArenaDetail.status
         );
     }

@@ -3,7 +3,7 @@
 import useArenaStore from "@/stores/useArenaStore";
 
 export default function ArenaDetailInfo() {
-    const arenaData = useArenaStore((state) => state.arenaData);
+    const arenaDetail = useArenaStore((state) => state.arenaData);
     return (
         <div className="rounded-xl overflow-hidden animate-fade-in-up">
             {/* 상단 제목 영역 */}
@@ -42,7 +42,7 @@ export default function ArenaDetailInfo() {
                             진행 일정
                         </h3>
                         <p className="text-caption text-font-100">
-                            {arenaData?.startDate ?? "25.05.14 20:00"} ~{" "}
+                            {arenaDetail?.startDate} ~{arenaDetail?.endChatting}
                         </p>
                     </div>
                 </div>
@@ -59,7 +59,7 @@ export default function ArenaDetailInfo() {
                             투표 시간
                         </h3>
                         <p className="text-caption text-font-100">
-                            25.05.14 20:00~25.05.15 20:00
+                            {arenaDetail?.endChatting} ~{arenaDetail?.endVote}
                         </p>
                     </div>
                 </div>

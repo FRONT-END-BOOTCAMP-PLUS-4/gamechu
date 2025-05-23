@@ -10,6 +10,8 @@ export class ArenaDetailDto {
         public title: string,
         public description: string,
         public startDate: string,
+        public endChatting: string,
+        public endVote: string,
         public status: ArenaStatus
     ) {}
 }
