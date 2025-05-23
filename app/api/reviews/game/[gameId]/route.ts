@@ -1,31 +1,30 @@
+// app/api/reviews/game/[gameId]/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { GetReviewsByGameIdUsecase } from "@/backend/review/application/usecase/GetReviewsByGameIdUsecase";
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
+import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
 
-const usecase = new GetReviewsByGameIdUsecase(new PrismaReviewRepository());
+const usecase = new GetReviewsByGameIdUsecase(
+    new PrismaReviewRepository(),
+    new PrismaReviewLikeRepository()
+);
 
 export async function GET(
     req: NextRequest,
-    context: { params: Record<string, string> }
+    { params }: { params: Record<string, string> }
 ) {
-    const params = await context.params;
-    const gameIdParam = params.gameId;
+    const gameId = params.gameId;
+    const viewerId = req.nextUrl.searchParams.get("viewerId") ?? "";
 
-    if (!gameIdParam) {
+    const parsedId = parseInt(gameId || "", 10);
+    if (isNaN(parsedId)) {
         return NextResponse.json(
-            { message: "Missing gameId" },
+            { message: "Invalid gameId" },
             { status: 400 }
         );
     }
 
-    const gameId = parseInt(gameIdParam, 10);
-    if (isNaN(gameId)) {
-        return NextResponse.json(
-            { message: "유효하지 않은 gameId입니다." },
-            { status: 400 }
-        );
-    }
-    const result = await usecase.execute(gameId);
-
+    const result = await usecase.execute(parsedId, viewerId);
     return NextResponse.json(result);
 }

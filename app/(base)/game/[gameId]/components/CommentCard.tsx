@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import Button from "@/app/components/Button";
 import Lottie from "lottie-react";
 import Like from "@/public/like.json";
 
-import Button from "@/app/components/Button";
-
 interface CommentCardProps {
+    id: number;
     profileImage: string;
     nickname: string;
     date: string;
@@ -15,9 +15,13 @@ interface CommentCardProps {
     rating: number;
     comment: string;
     likes: number;
+    isLiked: boolean;
+    viewerId?: string;
+    memberId: string;
 }
 
 export default function CommentCard({
+    id,
     profileImage,
     nickname,
     date,
@@ -25,13 +29,22 @@ export default function CommentCard({
     rating,
     comment,
     likes,
+    isLiked: initiallyLiked,
+    viewerId,
+    memberId,
 }: CommentCardProps) {
-    const [isLiked, setIsLiked] = useState(false);
+    const [isLiked, setIsLiked] = useState(initiallyLiked);
+    const [likeCount, setLikeCount] = useState(likes);
     const [showMenu, setShowMenu] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [animationKey, setAnimationKey] = useState(0);
+    const [animationDone, setAnimationDone] = useState(true);
     const menuRef = useRef<HTMLDivElement>(null);
 
-    const handleLike = () => setIsLiked((prev) => !prev);
-    const toggleMenu = () => setShowMenu((prev) => !prev);
+    useEffect(() => {
+        setIsLiked(initiallyLiked);
+        setLikeCount(likes);
+    }, [initiallyLiked, likes]);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -42,32 +55,66 @@ export default function CommentCard({
                 setShowMenu(false);
             }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
         return () =>
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    const toggleMenu = () => setShowMenu((prev) => !prev);
+
+    const handleLike = async () => {
+        if (!viewerId) return alert("로그인 후 좋아요를 누를 수 있습니다.");
+        if (viewerId === memberId) return alert("내가 작성한 댓글입니다.");
+        if (isLoading) return;
+
+        setIsLoading(true);
+
+        const newLikedState = !isLiked;
+        setIsLiked(newLikedState);
+        setLikeCount((prev) => prev + (newLikedState ? 1 : -1));
+
+        if (newLikedState) {
+            setAnimationKey((prev) => prev + 1);
+            setAnimationDone(false);
+        }
+
+        try {
+            const res = await fetch(`/api/reviews/${id}/like`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ memberId: viewerId }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setIsLiked(!newLikedState);
+                setLikeCount((prev) => prev + (newLikedState ? -1 : 1));
+                console.error("좋아요 실패", data);
+            }
+        } catch (err) {
+            setIsLiked(!newLikedState);
+            setLikeCount((prev) => prev + (newLikedState ? -1 : 1));
+            console.error("좋아요 요청 에러", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="relative w-[1000px] min-h-[100px] bg-background-200 rounded-[8px] p-4 pb-12 space-y-4 border border-line-100 border-opacity-50">
-            {/* 유저 정보 + 별점 + 메뉴 */}
+            {/* 유저 정보 */}
             <div className="flex justify-between items-start">
                 <div className="flex gap-2 items-start">
                     <Image
-                        src={profileImage}
+                        src={profileImage || "/placeholder.svg"}
                         alt="profile"
                         width={44}
                         height={44}
                         className="rounded-full border border-line-100 object-cover"
-                        style={{
-                            width: "44px",
-                            height: "44px",
-                            objectFit: "cover",
-                        }}
                         unoptimized
                     />
                     <div className="flex flex-col">
-                        {/* 닉네임 + 티어 */}
                         <div className="flex items-center gap-1">
                             <span className="text-h3 text-font-100 font-medium">
                                 {nickname}
@@ -79,17 +126,12 @@ export default function CommentCard({
                                 height={20}
                             />
                         </div>
-
-                        {/* 날짜 */}
                         <span className="text-caption text-font-200">
                             {date}
                         </span>
                     </div>
-
                     <div className="w-px h-[40px] bg-line-100 mx-2 opacity-50" />
-
-                    {/* 별점 */}
-                    <div className="flex items-center h-[44px] ">
+                    <div className="flex items-center h-[44px]">
                         <Image
                             src="/icons/empty-purple-star.svg"
                             alt="star"
@@ -97,7 +139,7 @@ export default function CommentCard({
                             height={20}
                             className="mr-1"
                         />
-                        <span className=" text-font-100">
+                        <span className="text-font-100">
                             {rating.toFixed(1)} / 5.0
                         </span>
                     </div>
@@ -126,24 +168,34 @@ export default function CommentCard({
                 </div>
             </div>
 
-            <hr className="w-full  bg-line-100  opacity-75" />
+            <hr className="w-full bg-line-100 opacity-75" />
 
-            {/* 댓글 내용 */}
+            {/* 댓글 */}
             <div className="text-body text-font-100 whitespace-pre-wrap">
                 {comment}
             </div>
 
-            {/* 좋아요 */}
+            {/* 좋아요 버튼 */}
             <div className="absolute bottom-1 left-1 flex items-center">
-                <button onClick={handleLike}>
+                <button onClick={handleLike} disabled={isLoading}>
                     <div className="w-[50px] h-[50px] flex items-center justify-center">
                         {isLiked ? (
-                            <Lottie
-                                key="liked"
-                                animationData={Like}
-                                loop={false}
-                                className="w-full h-full"
-                            />
+                            animationDone ? (
+                                <Image
+                                    src="/icons/red-wish.svg"
+                                    alt="liked"
+                                    width={20}
+                                    height={20}
+                                    className="object-contain"
+                                />
+                            ) : (
+                                <Lottie
+                                    key={`liked-${animationKey}`}
+                                    animationData={Like}
+                                    loop={false}
+                                    className="w-full h-full"
+                                />
+                            )
                         ) : (
                             <Image
                                 src="/icons/wish.svg"
@@ -155,9 +207,7 @@ export default function CommentCard({
                         )}
                     </div>
                 </button>
-                <span className="text-font-200">
-                    좋아요 ({likes + (isLiked ? 1 : 0)})
-                </span>
+                <span className="text-font-200">좋아요 ({likeCount})</span>
             </div>
         </div>
     );

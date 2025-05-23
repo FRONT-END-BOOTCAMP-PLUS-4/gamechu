@@ -16,6 +16,7 @@ export class PrismaReviewRepository implements ReviewRepository {
                     select: {
                         nickname: true,
                         imageUrl: true,
+                        score: true,
                     },
                 },
             },
@@ -97,6 +98,7 @@ export class PrismaReviewRepository implements ReviewRepository {
         member?: {
             nickname: string;
             imageUrl: string | null;
+            score: number;
         };
     }): ReviewDto {
         return {
@@ -108,9 +110,12 @@ export class PrismaReviewRepository implements ReviewRepository {
             createdAt: review.createdAt,
             updatedAt: review.updatedAt,
             nickname: review.member?.nickname ?? "유저",
+            score: review.member?.score ?? 0,
             imageUrl: review.member?.imageUrl?.startsWith("http")
                 ? review.member.imageUrl
                 : "/icons/arena.svg",
+            likeCount: 0, // Default value or fetch from database if available
+            isLiked: false, // Default value or calculate based on user context
         };
     }
 }

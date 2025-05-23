@@ -8,4 +8,7 @@ export interface ReviewDto {
     updatedAt: Date | null;
     nickname: string;
     imageUrl: string | null;
+    score: number;
+    likeCount: number;
+    isLiked: boolean;
 }
