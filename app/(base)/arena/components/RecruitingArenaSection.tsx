@@ -12,7 +12,7 @@ export default function RecruitingArenaSection() {
                 <RecruitingArenaCard
                     creatorNickname="겜잘알"
                     creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorTierImageUrl="/icons/platinum.svg"
+                    creatorScore={3500}
                     title="오픈월드 게임의 사이드 퀘스트는 메인 스토리만큼 중요하다."
                     description="사이드 퀘스트는 게임 세계를 풍부하게 만들어주고 플레이어들에게 더 깊은 몰입감을 제공합니다. 반대 의견 있으신가요?"
                     startDate={new Date()}
@@ -20,7 +20,7 @@ export default function RecruitingArenaSection() {
                 <RecruitingArenaCard
                     creatorNickname="겜잘알"
                     creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorTierImageUrl="/icons/platinum.svg"
+                    creatorScore={4500}
                     title="오픈월드 게임의 사이드 퀘스트는 메인 스토리만큼 중요하다."
                     description="사이드 퀘스트는 게임 세계를 풍부하게 만들어주고 플레이어들에게 더 깊은 몰입감을 제공합니다. 반대 의견 있으신가요?"
                     startDate={new Date()}

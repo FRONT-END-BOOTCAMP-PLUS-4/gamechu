@@ -13,10 +13,10 @@ export default function VotingArenaSection() {
                     title="싱글플레이어vs멀티플레이어 게임의 미래"
                     creatorNickname="겜잘알"
                     creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorTierImageUrl="/icons/platinum.svg"
+                    creatorScore={4500}
                     challengerNickname="분탕충"
                     challengerProfileImageUrl="/icons/arena2.svg"
-                    challengerTierImageUrl="/icons/bronze.svg"
+                    challengerScore={1500}
                     voteEndDate={new Date()}
                     voteCount={23}
                 />
@@ -24,10 +24,10 @@ export default function VotingArenaSection() {
                     title="콘솔 vs PC 게이밍 진영 논쟁"
                     creatorNickname="겜잘알"
                     creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorTierImageUrl="/icons/platinum.svg"
+                    creatorScore={3500}
                     challengerNickname="분탕충"
                     challengerProfileImageUrl="/icons/arena2.svg"
-                    challengerTierImageUrl="/icons/bronze.svg"
+                    challengerScore={1500}
                     voteEndDate={new Date()}
                     voteCount={45}
                 />
@@ -35,10 +35,10 @@ export default function VotingArenaSection() {
                     title="과금 게임이 공정할 수 있는가?"
                     creatorNickname="겜잘알"
                     creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorTierImageUrl="/icons/platinum.svg"
+                    creatorScore={3500}
                     challengerNickname="분탕충"
                     challengerProfileImageUrl="/icons/arena2.svg"
-                    challengerTierImageUrl="/icons/bronze.svg"
+                    challengerScore={1500}
                     voteEndDate={new Date()}
                     voteCount={67}
                 />
