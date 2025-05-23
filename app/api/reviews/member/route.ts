@@ -1,4 +1,4 @@
-// 로그인 유저의 리뷰 조회(app/api/reviews/member/[memberId]/route.ts)
+// 로그인 유저의 리뷰 조회(app/api/reviews/member/route.ts)
 
 import { NextResponse } from "next/server";
 import { GetReviewsByMemberIdUsecase } from "@/backend/review/application/usecase/GetReviewsByMemberIdUsecase";

@@ -1,58 +1,51 @@
+// components/profile/ProfileSummaryCard.tsx
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
-export default function ProfileSummaryCard() {
-    const [reviewCount, setReviewCount] = useState<number>(0);
-    const [loading, setLoading] = useState<boolean>(true);
+interface Props {
+    reviewCount: number;
+    wishlistCount: number;
+    nickname: string;
+    imageUrl: string;
+    score: number;
+    createdAt: string;
+}
 
-    useEffect(() => {
-        const fetchReviewCount = async () => {
-            try {
-                const res = await fetch("/api/reviews/member");
-                if (!res.ok) throw new Error("리뷰 조회 실패");
-
-                const data = await res.json();
-                setReviewCount(data.length); // ✅ 배열의 길이를 리뷰 수로 사용
-            } catch (error) {
-                console.error("리뷰 수 조회 오류:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchReviewCount();
-    }, []);
-
+export default function ProfileSummaryCard({
+    reviewCount,
+    wishlistCount,
+    nickname,
+    imageUrl,
+    score,
+    createdAt,
+}: Props) {
     return (
         <div className="bg-background-300 w-[250px] p-6 rounded-xl shadow">
             <div className="w-[120px] h-[120px] rounded-full overflow-hidden mx-auto mb-4">
                 <Image
-                    src="/images/default.png"
+                    src={imageUrl || "/images/default.png"}
                     alt="프로필 이미지"
                     width={120}
                     height={120}
                 />
             </div>
-            <h2 className="text-center font-semibold text-body">게임마스터94</h2>
+            <h2 className="text-center font-semibold text-body">{nickname}</h2>
             <p className="text-center text-caption text-font-200 mt-1">
-                가입일: 2024년 5월 15일
+                가입일: {createdAt}
             </p>
             <div className="mt-4 text-sm space-y-1">
                 <p className="flex justify-between">
                     <span>포인트</span>
-                    <span className="font-semibold">2500</span>
+                    <span className="font-semibold">{score}</span>
                 </p>
                 <p className="flex justify-between">
                     <span>리뷰</span>
-                    <span className="font-semibold">
-                        {loading ? "로딩 중..." : reviewCount}
-                    </span>
+                    <span className="font-semibold">{reviewCount}</span>
                 </p>
                 <p className="flex justify-between">
                     <span>위시리스트</span>
-                    <span className="font-semibold">12</span>
+                    <span className="font-semibold">{wishlistCount}</span>
                 </p>
             </div>
         </div>
