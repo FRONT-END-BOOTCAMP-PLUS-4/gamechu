@@ -8,7 +8,7 @@ type VotingArenaCardProps = {
     challengerNickname: string;
     challengerProfileImageUrl: string;
     challengerTierImageUrl: string;
-    voteEndTime: Date;
+    voteEndDate: Date;
     voteCount: number;
 };
 
@@ -73,7 +73,7 @@ export default function VotingArenaCard(props: VotingArenaCardProps) {
                         className="object-contain"
                     />
                     <span className="text-gray-400">
-                        투표 종료: {props.voteEndTime.toISOString()}
+                        투표 종료: {props.voteEndDate.toISOString()}
                     </span>
                 </div>
                 <div className="flex items-center gap-1">

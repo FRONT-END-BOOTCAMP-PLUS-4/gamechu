@@ -17,7 +17,7 @@ export default function VotingArenaSection() {
                     challengerNickname="분탕충"
                     challengerProfileImageUrl="/icons/arena2.svg"
                     challengerTierImageUrl="/icons/bronze.svg"
-                    voteEndTime={new Date()}
+                    voteEndDate={new Date()}
                     voteCount={23}
                 />
                 <VotingArenaCard
@@ -28,7 +28,7 @@ export default function VotingArenaSection() {
                     challengerNickname="분탕충"
                     challengerProfileImageUrl="/icons/arena2.svg"
                     challengerTierImageUrl="/icons/bronze.svg"
-                    voteEndTime={new Date()}
+                    voteEndDate={new Date()}
                     voteCount={45}
                 />
                 <VotingArenaCard
@@ -39,7 +39,7 @@ export default function VotingArenaSection() {
                     challengerNickname="분탕충"
                     challengerProfileImageUrl="/icons/arena2.svg"
                     challengerTierImageUrl="/icons/bronze.svg"
-                    voteEndTime={new Date()}
+                    voteEndDate={new Date()}
                     voteCount={67}
                 />
             </div>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-type CompleteArenaCardProps = {
+type DebatingArenaCardProps = {
     title: string;
     creatorNickname: string;
     creatorProfileImageUrl: string;
@@ -8,19 +8,18 @@ type CompleteArenaCardProps = {
     challengerNickname: string;
     challengerProfileImageUrl: string;
     challengerTierImageUrl: string;
-    startDate: Date;
-    voteCount: number;
+    debateEndDate: Date;
 };
 
-export default function CompleteArenaCard(props: CompleteArenaCardProps) {
+export default function DebatingArenaCard(props: DebatingArenaCardProps) {
     return (
         <div className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[440px]">
             <div className="flex items-center justify-between">
                 <div className="text-lg font-bold line-clamp-2">
                     {props.title}
                 </div>
-                <div className="bg-purple-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    투표중
+                <div className="bg-background-red text-white text-xs font-semibold px-3 py-1 rounded-full">
+                    토론중
                 </div>
             </div>
 
@@ -73,19 +72,7 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                         className="object-contain"
                     />
                     <span className="text-gray-400">
-                        토론 일시: {props.startDate.toISOString()}
-                    </span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <Image
-                        src="/icons/voteComplete.svg"
-                        alt="투표완료 아이콘"
-                        width={18}
-                        height={18}
-                        className="object-contain"
-                    />
-                    <span className="text-gray-400">
-                        {props.voteCount}명 투표
+                        토론 종료: {props.debateEndDate.toISOString()}
                     </span>
                 </div>
             </div>
