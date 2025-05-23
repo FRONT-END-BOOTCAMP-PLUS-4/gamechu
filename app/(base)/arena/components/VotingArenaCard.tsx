@@ -14,7 +14,12 @@ type VotingArenaCardProps = {
 
 export default function VotingArenaCard(props: VotingArenaCardProps) {
     return (
-        <div className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[440px]">
+        <div
+            className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[440px]
+                border border-transparent hover:border-purple-500
+                hover:shadow-lg hover:shadow-purple-500/30
+                hover:scale-[1.01] transform transition-all duration-200"
+        >
             <div className="flex items-center justify-between">
                 <div className="text-lg font-bold line-clamp-2">
                     {props.title}
