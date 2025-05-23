@@ -1,9 +1,30 @@
-// components/profile/ProfileSummaryCard.tsx
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function ProfileSummaryCard() {
+    const [reviewCount, setReviewCount] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const fetchReviewCount = async () => {
+            try {
+                const res = await fetch("/api/reviews/member");
+                if (!res.ok) throw new Error("리뷰 조회 실패");
+
+                const data = await res.json();
+                setReviewCount(data.length); // ✅ 배열의 길이를 리뷰 수로 사용
+            } catch (error) {
+                console.error("리뷰 수 조회 오류:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchReviewCount();
+    }, []);
+
     return (
         <div className="bg-background-300 w-[250px] p-6 rounded-xl shadow">
             <div className="w-[120px] h-[120px] rounded-full overflow-hidden mx-auto mb-4">
@@ -25,7 +46,9 @@ export default function ProfileSummaryCard() {
                 </p>
                 <p className="flex justify-between">
                     <span>리뷰</span>
-                    <span className="font-semibold">24</span>
+                    <span className="font-semibold">
+                        {loading ? "로딩 중..." : reviewCount}
+                    </span>
                 </p>
                 <p className="flex justify-between">
                     <span>위시리스트</span>
