@@ -43,6 +43,9 @@ export class PrismaArenaRepository implements ArenaRepository {
               })
             : null;
 
+        const startDateObj = dayjs(arena.startDate); // DB Date 객체를 dayjs 객체로 만듦
+        const endChattingObj = startDateObj.add(30, "minute"); // 30분 더함
+        const endVoteObj = endChattingObj.add(24, "hour");
         return {
             id: arena.id,
             creatorId: arena.creatorId,
@@ -52,6 +55,8 @@ export class PrismaArenaRepository implements ArenaRepository {
             title: arena.title,
             description: arena.description,
             startDate: dayjs(arena.startDate).format("YYYY-MM-DD HH:mm:ss"),
+            endChatting: endChattingObj.format("YYYY-MM-DD HH:mm:ss"),
+            endVote: endVoteObj.format("YYYY-MM-DD HH:mm:ss"),
             status: arena.status as ArenaStatus,
         };
     }
