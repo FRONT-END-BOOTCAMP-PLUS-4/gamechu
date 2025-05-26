@@ -8,7 +8,7 @@ const tabs = [
     { key: "wishlists", label: "위시리스트" },
     { key: "score-history", label: "포인트 히스토리" },
     { key: "arena", label: "투기장" },
-    { key: "profile", label: "프로필" },
+    { key: "profile", label: "계정" },
 ];
 
 export default function ProfileSidebar({

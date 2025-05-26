@@ -21,8 +21,8 @@ export default function ProfileInfoTab(props: Props) {
     const formattedBirthDate = props.birthDate.slice(0, 10).replace(/-/g, ".");
 
     return (
-        <div className="bg-background-300 rounded-xl shadow text-sm px-10 py-8 flex flex-col gap-8">
-            <h2 className="text-lg font-semibold text-body">프로필 정보</h2>
+        <div className="w-full bg-background-300 p-6 rounded-xl shadow flex flex-col gap-4">
+            <h2 className="text-lg font-semibold text-body mb-2">프로필 정보</h2>
 
             <div className="flex flex-col items-start gap-4">
                 <div className="flex items-center gap-6">
