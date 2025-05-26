@@ -1,4 +1,5 @@
 import { GetGameCardDto } from "../../application/usecase/dto/GetGameCardDto";
+import { GetGameDetailDto } from "../../application/usecase/dto/GetGameDetailDto";
 
 export interface GameRepository {
     findFilteredGames(
@@ -8,4 +9,5 @@ export interface GameRepository {
         keyword?: string
     ): Promise<GetGameCardDto[]>;
     findAllGames(): Promise<GetGameCardDto[]>;
+    findDetailById(id: number): Promise<GetGameDetailDto>;
 }

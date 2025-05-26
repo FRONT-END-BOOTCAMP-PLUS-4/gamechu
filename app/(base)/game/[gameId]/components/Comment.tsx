@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StarRating from "@/app/(base)/game/[gameId]/components/StarRating";
 import Button from "@/app/components/Button";
 import { cn } from "@/utils/tailwindUtil";
@@ -9,34 +9,55 @@ import Lottie from "lottie-react";
 
 interface CommentProps {
     gameId: string;
+    editingReviewId?: number;
+    defaultValue?: string;
     onSuccess: () => void;
 }
 
-export default function Comment({ gameId, onSuccess }: CommentProps) {
+export default function Comment({
+    gameId,
+    editingReviewId,
+    defaultValue = "",
+    onSuccess,
+}: CommentProps) {
     const [isFocused, setIsFocused] = useState(false);
-    const [text, setText] = useState("");
-    const [rating, setRating] = useState(0);
+    const [text, setText] = useState(defaultValue || "");
+    const [rating, setRating] = useState(0); // 수정 시 기존 rating도 넘겨받을 수 있게 개선 가능
+
+    useEffect(() => {
+        setText(defaultValue || "");
+    }, [defaultValue]);
 
     const handleSubmit = async () => {
         if (!text.trim() || rating <= 0) return;
 
-        try {
-            const res = await fetch("/api/reviews/", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    gameId: Number(gameId),
-                    content: text,
-                    rating,
-                }),
-            });
+        const isEditing = !!editingReviewId;
 
-            if (!res.ok) throw new Error("리뷰 등록 실패");
+        try {
+            const res = await fetch(
+                isEditing ? `/api/reviews/${editingReviewId}` : `/api/reviews`,
+                {
+                    method: isEditing ? "PATCH" : "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        gameId: Number(gameId),
+                        content: text,
+                        rating,
+                    }),
+                }
+            );
+
+            if (!res.ok)
+                throw new Error(
+                    isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패"
+                );
+
             setText("");
             setRating(0);
-            onSuccess(); // 등록 성공 시 댓글 목록 새로고침
+            onSuccess();
         } catch (err) {
-            console.error(err);
+            console.error("🔥 리뷰 저장 실패:", err);
+            alert("리뷰 저장에 실패했습니다.");
         }
     };
 
@@ -62,7 +83,10 @@ export default function Comment({ gameId, onSuccess }: CommentProps) {
                 </div>
             </div>
             <div className="absolute bottom-4 right-4">
-                <Button label="등록" onClick={handleSubmit} />
+                <Button
+                    label={editingReviewId ? "수정" : "등록"}
+                    onClick={handleSubmit}
+                />
             </div>
         </div>
     );

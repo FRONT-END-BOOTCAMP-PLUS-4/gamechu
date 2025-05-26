@@ -82,9 +82,18 @@ export class PrismaReviewRepository implements ReviewRepository {
         return review ? this.toDto(review) : null;
     }
     async delete(reviewId: number): Promise<void> {
-        await prisma.review.delete({
-            where: { id: reviewId },
-        });
+        try {
+            await prisma.reviewLike.deleteMany({
+                where: { reviewId },
+            });
+
+            await prisma.review.delete({
+                where: { id: reviewId },
+            });
+        } catch (err) {
+            console.error("🔥 삭제 중 오류 발생:", err);
+            throw err; // 이거 없으면 route.ts에서도 500 에러 못 잡음
+        }
     }
 
     private toDto(review: {

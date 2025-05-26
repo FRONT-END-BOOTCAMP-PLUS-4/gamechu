@@ -43,14 +43,15 @@ export async function PATCH(
 
 export async function DELETE(
     _: NextRequest,
-    { params }: { params: { reviewId: string } }
+    { params }: { params: Record<string, string> }
 ) {
+    const reviewId = parseInt(params.reviewId, 10);
     const userId = await getAuthUserId();
+
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const reviewId = parseInt(params.reviewId);
     const review = await reviewRepo.findById(reviewId);
 
     if (!review) {

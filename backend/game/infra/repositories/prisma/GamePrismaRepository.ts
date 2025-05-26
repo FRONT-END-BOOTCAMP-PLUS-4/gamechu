@@ -1,10 +1,34 @@
 import { PrismaClient } from "@/prisma/generated";
 import { GameRepository } from "@/backend/game/domain/repositories/GameRepository";
 import { GetGameCardDto } from "@/backend/game/application/usecase/dto/GetGameCardDto";
+import { GetGameDetailDto } from "@/backend/game/application/usecase/dto/GetGameDetailDto";
 
 const prisma = new PrismaClient();
 
 export class GamePrismaRepository implements GameRepository {
+    async findDetailById(id: number): Promise<GetGameDetailDto> {
+        const game = await prisma.game.findUnique({
+            where: { id },
+            include: {
+                gamePlatforms: { include: { platform: true } },
+                gameGenres: { include: { genre: true } },
+                gameThemes: { include: { theme: true } },
+            },
+        });
+
+        if (!game) throw new Error("게임을 찾을 수 없습니다");
+
+        return {
+            id: game.id,
+            title: game.title,
+            developer: game.developer ?? "알 수 없음",
+            thumbnail: game.thumbnail ?? "",
+            releaseDate: game.releaseDate.toISOString().split("T")[0],
+            platforms: game.gamePlatforms.map((gp) => gp.platform.name),
+            genres: game.gameGenres.map((gg) => gg.genre.name),
+            themes: game.gameThemes.map((gt) => gt.theme.name),
+        };
+    }
     async findFilteredGames(
         genreId?: number,
         themeId?: number,

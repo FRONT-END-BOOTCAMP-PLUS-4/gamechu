@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { ToggleReviewLikeUsecase } from "@/backend/review-like/application/usecase/ToggleReviewLikeUsecase";
 import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
 
@@ -6,14 +6,13 @@ const usecase = new ToggleReviewLikeUsecase(new PrismaReviewLikeRepository());
 
 export async function POST(
     req: NextRequest,
-    context: { params: { reviewId: string } }
+    { params }: { params: Promise<{ reviewId: string }> }
 ) {
-    const reviewId = parseInt(context.params.reviewId ?? "", 10);
+    const { reviewId } = await params;
+    const parsedReviewId = Number.parseInt(reviewId ?? "", 10);
     const { memberId } = await req.json();
-    console.log("✅ reviewId:", reviewId); // 디버깅 추가
-    console.log("✅ memberId:", memberId);
 
-    if (!memberId || isNaN(reviewId)) {
+    if (!memberId || isNaN(parsedReviewId)) {
         return NextResponse.json(
             { message: "Invalid reviewId or memberId" },
             { status: 400 }
@@ -21,7 +20,10 @@ export async function POST(
     }
 
     try {
-        const liked = await usecase.execute({ reviewId, memberId });
+        const liked = await usecase.execute({
+            reviewId: parsedReviewId,
+            memberId,
+        });
         return NextResponse.json({ liked });
     } catch (err) {
         console.error("리뷰 좋아요 처리 실패", err);

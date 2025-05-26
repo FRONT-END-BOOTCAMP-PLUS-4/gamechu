@@ -9,11 +9,19 @@ import { cn } from "@/utils/tailwindUtil";
 interface ReviewSelectorProps {
     selected: "expert" | "user";
     onSelect: (type: "expert" | "user") => void;
+    expertReviewCount: number;
+    expertAvgRating: number;
+    userReviewCount: number;
+    userAvgRating: number;
 }
 
 export default function ReviewSelector({
     selected,
     onSelect,
+    expertReviewCount,
+    expertAvgRating,
+    userReviewCount,
+    userAvgRating,
 }: ReviewSelectorProps) {
     const renderBox = (
         label: string,
@@ -29,18 +37,16 @@ export default function ReviewSelector({
                 className={cn(
                     "w-[300px] h-[200px] rounded-lg px-4 py-6 flex items-center justify-center gap-3 text-font-100 border border-line-200 transition-all",
                     isSelected
-                        ? "ring-2 ring-primary-purple-200"
+                        ? "border-2 border-primary-purple-200"
                         : "opacity-70 hover:opacity-100"
                 )}
             >
-                {/* 내부 왼쪽 애니메이션 */}
                 {isSelected && (
                     <div className="w-[120px] h-[120px]">
                         <Lottie animationData={Rio} loop autoplay />
                     </div>
                 )}
 
-                {/* 텍스트 정보 */}
                 <div className="flex flex-col items-start gap-2">
                     <h2 className="text-h2 font-semibold">{label}</h2>
 
@@ -64,7 +70,7 @@ export default function ReviewSelector({
                             height={20}
                         />
                         <span className="text-regular font-medium">
-                            {reviewCount.toLocaleString()} 리뷰
+                            {reviewCount.toLocaleString()}
                         </span>
                     </div>
                 </div>
@@ -74,8 +80,13 @@ export default function ReviewSelector({
 
     return (
         <div className="flex flex-col items-start gap-6">
-            {renderBox("겜잘알 리뷰", "expert", 4.5, 1234)}
-            {renderBox("일반 리뷰", "user", 4.3, 5678)}
+            {renderBox(
+                "겜잘알 리뷰",
+                "expert",
+                expertAvgRating,
+                expertReviewCount
+            )}
+            {renderBox("일반 리뷰", "user", userAvgRating, userReviewCount)}
         </div>
     );
 }
