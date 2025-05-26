@@ -8,6 +8,17 @@ import ProfileTierCard from "./components/ProfileTierCard";
 import ProfileSidebar from "./components/ProfileSidebar";
 import ProfileInfoTab from "./components/tabs/ProfileInfoTab";
 import ProfileReviewTab from "./components/tabs/ProfileReviewTab";
+import ProfileWishlistTab from "./components/tabs/ProfileWishlistTab"
+
+// ✅ 위시리스트 게임 카드용 타입
+type WishlistGame = {
+    id: number;
+    title: string;
+    developer: string;
+    thumbnail: string;
+    platform: string;
+    rating: number;
+};
 
 type Review = {
     id: number;
@@ -24,6 +35,7 @@ export default function ProfilePage() {
     const [activeTab, setActiveTab] = useState("reviews");
     const [reviewCount, setReviewCount] = useState<number>(0);
     const [wishlistCount, setWishlistCount] = useState<number>(0);
+    const [wishlistGames, setWishlistGames] = useState<WishlistGame[]>([]);
     const [nickname, setNickname] = useState<string>("");
     const [imageUrl, setImageUrl] = useState<string>("/icons/arena.svg");
     const [score, setScore] = useState<number>(0);
@@ -40,15 +52,19 @@ export default function ProfilePage() {
         if (!id) return;
 
         try {
-            const reviewRes = await fetch("/api/reviews/member");
+            const [reviewRes, profileRes, wishlistRes] = await Promise.all([
+                fetch("/api/reviews/member"),
+                fetch("/api/member/profile"),
+                fetch("/api/member/wishlists"),
+            ]);
+
             const reviews = await reviewRes.json();
+            const profile = await profileRes.json();
+            const wishlist = await wishlistRes.json();
+
             setReviews(reviews);
             setReviewCount(reviews.length);
 
-            const profileRes = await fetch("/api/member/profile",{
-                method: "GET",
-            });
-            const profile = await profileRes.json();
             setNickname(profile.nickname);
             setImageUrl(profile.imageUrl);
             setScore(profile.score);
@@ -57,6 +73,9 @@ export default function ProfilePage() {
             setPassword(profile.password);
             setBirthDate(profile.birthDate);
             setIsMale(profile.isMale);
+
+            setWishlistGames(wishlist);
+            setWishlistCount(wishlist.length);
         } catch (err) {
             console.error("프로필 데이터 로딩 실패:", err);
         } finally {
@@ -100,6 +119,9 @@ export default function ProfilePage() {
                             birthDate={birthDate}
                             isMale={isMale}
                         />
+                    )}
+                    {activeTab === "wishlists" && !loading && (
+                        <ProfileWishlistTab games={wishlistGames} />
                     )}
                 </div>
             </div>
