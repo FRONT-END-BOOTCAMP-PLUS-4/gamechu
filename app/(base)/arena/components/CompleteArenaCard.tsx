@@ -1,15 +1,17 @@
+import TierBadge from "@/app/components/TierBadge";
 import Image from "next/image";
+import VoteStatusBar from "./VoteStatusBar";
 
 type CompleteArenaCardProps = {
     creatorNickname: string;
     creatorProfileImageUrl: string;
-    creatorTierImageUrl: string;
+    creatorScore: number;
     challengerNickname: string;
     challengerProfileImageUrl: string;
-    challengerTierImageUrl: string;
+    challengerScore: number;
     title: string;
     description: string;
-    voteCount: number;
+    leftPercent: number;
 };
 
 export default function CompleteArenaCard(props: CompleteArenaCardProps) {
@@ -29,6 +31,8 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                 {/* 설명 */}
                 <div className="text-sm text-gray-300">{props.description}</div>
             </div>
+
+            <VoteStatusBar leftPercent={props.leftPercent} />
             <div className="flex items-center justify-between gap-4 text-sm text-gray-100 mt-4 m-4">
                 <div className="flex items-center gap-2">
                     <Image
@@ -39,18 +43,15 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                         className="rounded-full object-cover"
                     />
                     <span>{props.creatorNickname}</span>
-                    <Image
-                        src={props.creatorTierImageUrl}
-                        alt="작성자 티어"
-                        width={16}
-                        height={16}
-                    />
+                    <TierBadge score={props.creatorScore} size="sm" />
+                    <span>{props.leftPercent}%</span>
                 </div>
 
                 <span className="mx-2 text-gray-400">vs</span>
 
                 {/* 도전자 */}
                 <div className="flex items-center gap-2">
+                    <span>{100 - props.leftPercent}%</span>
                     <Image
                         src={props.challengerProfileImageUrl}
                         alt="도전자 프로필"
@@ -59,12 +60,7 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                         className="rounded-full object-cover"
                     />
                     <span>{props.challengerNickname}</span>
-                    <Image
-                        src={props.challengerTierImageUrl}
-                        alt="도전자 티어"
-                        width={16}
-                        height={16}
-                    />
+                    <TierBadge score={props.challengerScore} size="sm" />
                 </div>
             </div>
         </div>

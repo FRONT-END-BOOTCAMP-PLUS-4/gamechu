@@ -1,13 +1,14 @@
+import TierBadge from "@/app/components/TierBadge";
 import Image from "next/image";
 
 type DebatingArenaCardProps = {
     title: string;
     creatorNickname: string;
     creatorProfileImageUrl: string;
-    creatorTierImageUrl: string;
+    creatorScore: number;
     challengerNickname: string;
     challengerProfileImageUrl: string;
-    challengerTierImageUrl: string;
+    challengerScore: number;
     debateEndDate: Date;
 };
 
@@ -30,40 +31,16 @@ export default function DebatingArenaCard(props: DebatingArenaCardProps) {
 
             <div className="flex items-center justify-between gap-4 text-sm text-gray-100 mt-4 m-4">
                 <div className="flex items-center gap-2">
-                    <Image
-                        src={props.creatorProfileImageUrl}
-                        alt="작성자 프로필"
-                        width={24}
-                        height={24}
-                        className="rounded-full object-cover"
-                    />
                     <span>{props.creatorNickname}</span>
-                    <Image
-                        src={props.creatorTierImageUrl}
-                        alt="작성자 티어"
-                        width={16}
-                        height={16}
-                    />
+                    <TierBadge score={props.creatorScore} size="sm" />
                 </div>
 
                 <span className="mx-2 text-gray-400">vs</span>
 
                 {/* 도전자 */}
                 <div className="flex items-center gap-2">
-                    <Image
-                        src={props.challengerProfileImageUrl}
-                        alt="도전자 프로필"
-                        width={24}
-                        height={24}
-                        className="rounded-full object-cover"
-                    />
                     <span>{props.challengerNickname}</span>
-                    <Image
-                        src={props.challengerTierImageUrl}
-                        alt="도전자 티어"
-                        width={16}
-                        height={16}
-                    />
+                    <TierBadge score={props.challengerScore} size="sm" />
                 </div>
             </div>
 
