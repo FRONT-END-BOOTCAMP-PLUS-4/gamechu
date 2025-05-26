@@ -61,7 +61,7 @@ export default function GameCard({
                             className="mr-1"
                         />
                         <span className="text-regular text-font-100">
-                            {rating.toFixed(1)}
+                            {(rating ?? 0).toFixed(1)}
                         </span>
                     </div>
                 </div>
