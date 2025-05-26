@@ -18,6 +18,8 @@ interface CommentCardProps {
     isLiked: boolean;
     viewerId?: string;
     memberId: string;
+    onEdit?: (id: number) => void;
+    onDelete?: (id: number) => void;
 }
 
 export default function CommentCard({
@@ -32,6 +34,8 @@ export default function CommentCard({
     isLiked: initiallyLiked,
     viewerId,
     memberId,
+    onDelete,
+    onEdit,
 }: CommentCardProps) {
     const [isLiked, setIsLiked] = useState(initiallyLiked);
     const [likeCount, setLikeCount] = useState(likes);
@@ -56,8 +60,9 @@ export default function CommentCard({
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
-        return () =>
+        return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+        };
     }, []);
 
     const toggleMenu = () => setShowMenu((prev) => !prev);
@@ -68,7 +73,6 @@ export default function CommentCard({
         if (isLoading) return;
 
         setIsLoading(true);
-
         const newLikedState = !isLiked;
         setIsLiked(newLikedState);
         setLikeCount((prev) => prev + (newLikedState ? 1 : -1));
@@ -145,32 +149,47 @@ export default function CommentCard({
                     </div>
                 </div>
 
-                <div className="relative" ref={menuRef}>
-                    <button
-                        onClick={toggleMenu}
-                        className="p-1 rounded hover:bg-primary-purple-100 transition"
-                    >
-                        <Image
-                            src="/icons/hamburger.svg"
-                            alt="menu"
-                            width={24}
-                            height={24}
-                            className="cursor-pointer invert"
-                        />
-                    </button>
+                {viewerId === memberId && (
+                    <div className="relative" ref={menuRef}>
+                        <button
+                            onClick={toggleMenu}
+                            className="p-1 rounded hover:bg-primary-purple-100 transition"
+                        >
+                            <Image
+                                src="/icons/hamburger.svg"
+                                alt="menu"
+                                width={24}
+                                height={24}
+                                className="cursor-pointer invert"
+                            />
+                        </button>
 
-                    {showMenu && (
-                        <div className="absolute top-0 right-0 px-4 py-4 space-y-1 z-30">
-                            <Button type="black" size="small" label="수정" />
-                            <Button type="black" size="small" label="삭제" />
-                        </div>
-                    )}
-                </div>
+                        {showMenu && (
+                            <div className="absolute top-0 right-0 px-4 py-4 space-y-1 z-30 ">
+                                <Button
+                                    type="black"
+                                    size="small"
+                                    label="수정"
+                                    onClick={() => {
+                                        onEdit?.(id);
+                                        console.log("수정 클릭 확인", id);
+                                    }}
+                                />
+                                <Button
+                                    type="black"
+                                    size="small"
+                                    label="삭제"
+                                    onClick={() => onDelete?.(id)}
+                                />
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             <hr className="w-full bg-line-100 opacity-75" />
 
-            {/* 댓글 */}
+            {/* 댓글 내용 */}
             <div className="text-body text-font-100 whitespace-pre-wrap">
                 {comment}
             </div>

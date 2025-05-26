@@ -6,7 +6,7 @@ interface GameTitleCardProps {
     image: string;
     title: string;
     developer: string;
-    rating: number;
+    rating?: number;
     releaseDate: string;
 }
 
@@ -21,11 +21,16 @@ export default function GameTitleCard({
         <div className="flex w-full max-w-[960px] h-[330px]  overflow-hidden">
             {/* 왼쪽 게임 이미지 */}
             <div className="flex-none relative w-[480px] h-[330px] ">
-                <Image src={image} alt={title} fill className="object-cover" />
+                <Image
+                    src={image.startsWith("//") ? `https:${image}` : image}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                />
             </div>
 
             {/* 오른쪽 정보 영역 */}
-            <div className="fle-1 flex-col p-10">
+            <div className="flex-1 flex-col p-10">
                 <div className="mb-6 mt-4">
                     <h2 className="text-h2 font-semibold text-font-100 line-clamp-1">
                         {title}
@@ -43,9 +48,15 @@ export default function GameTitleCard({
                             height={36}
                         />
                         <div className="flex flex-col">
-                            <span className="text-regular font-semibold text-font-100">
-                                {rating.toFixed(1)} / 5.0
-                            </span>
+                            {typeof rating === "number" ? (
+                                <span className="text-regular font-semibold text-font-100">
+                                    {rating.toFixed(1)} / 5.0
+                                </span>
+                            ) : (
+                                <span className="text-regular text-font-200">
+                                    평점 없음
+                                </span>
+                            )}
                             <span className="text-caption text-font-200 ">
                                 겜잘알 평점
                             </span>

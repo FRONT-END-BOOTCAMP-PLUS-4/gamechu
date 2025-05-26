@@ -9,6 +9,7 @@ import CommentCard from "./components/CommentCard";
 import Pager from "@/app/components/Pager";
 import { useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/AuthStore";
+import { getSession } from "next-auth/react";
 
 interface Review {
     id: number;
@@ -20,7 +21,21 @@ interface Review {
     comment: string;
     likes: number;
     isLiked: boolean;
-    memberId: string; // ✅ 작성자 ID
+    memberId: string;
+}
+
+interface GameDetail {
+    id: number;
+    title: string;
+    developer: string;
+    thumbnail: string;
+    releaseDate: string;
+    platforms: string[];
+    genres: string[];
+    themes: string[];
+    wishCount: number;
+    reviewCount: number;
+    rating: number;
 }
 
 const isExpertTier = (tier: string) => {
@@ -34,9 +49,17 @@ export default function GameDetailPage() {
         ? params.gameId[0]
         : params.gameId;
 
-    const { user } = useAuthStore();
+    const { user, setUser } = useAuthStore();
     const viewerId = user?.id;
-    console.log("viewerId", viewerId);
+    const [game, setGame] = useState<GameDetail | null>(null);
+
+    useEffect(() => {
+        getSession().then((session) => {
+            if (session?.user) {
+                setUser(session.user);
+            }
+        });
+    }, [setUser]);
 
     const itemsPerPage = 4;
     const [currentPage, setCurrentPage] = useState(1);
@@ -44,15 +67,14 @@ export default function GameDetailPage() {
         "expert" | "user"
     >("expert");
     const [allComments, setAllComments] = useState<Review[]>([]);
+    const [editingId, setEditingId] = useState<number | null>(null);
 
     const fetchComments = React.useCallback(async () => {
         if (!gameId) return;
-
         try {
             const url = viewerId
-                ? `/api/reviews/game/${gameId}?viewerId=${viewerId}`
-                : `/api/reviews/game/${gameId}`;
-
+                ? `/api/games/${gameId}/reviews?viewerId=${viewerId}`
+                : `/api/games/${gameId}/reviews`;
             const res = await fetch(url);
             const data = await res.json();
 
@@ -89,6 +111,37 @@ export default function GameDetailPage() {
         fetchComments();
     }, [fetchComments]);
 
+    useEffect(() => {
+        if (!gameId) return;
+        const fetchGame = async () => {
+            try {
+                const res = await fetch(`/api/games/${gameId}`);
+                const data = await res.json();
+                setGame(data);
+            } catch (err) {
+                console.error("🔥 게임 정보 조회 실패", err);
+            }
+        };
+        fetchGame();
+    }, [gameId]);
+
+    const handleDelete = async (id: number) => {
+        const confirm = window.confirm("정말 삭제하시겠습니까?");
+        if (!confirm) return;
+
+        try {
+            const res = await fetch(`/api/reviews/${id}`, {
+                method: "DELETE",
+            });
+            if (!res.ok) throw new Error("댓글 삭제 실패");
+            await fetchComments();
+        } catch (err) {
+            console.error("🔥 댓글 삭제 실패", err);
+            alert("댓글 삭제 실패");
+        }
+    };
+
+    const myComment = allComments.find((c) => c.memberId === viewerId);
     const expertComments = allComments.filter((c) => isExpertTier(c.tier));
     const userComments = allComments.filter((c) => !isExpertTier(c.tier));
     const currentComments =
@@ -101,39 +154,103 @@ export default function GameDetailPage() {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
-    console.log("viewerId:", viewerId);
+
     return (
         <div className="min-h-screen bg-background-400 text-font-100 space-y-20 pb-10">
             <div className="flex w-[1400px] mx-auto justify-between gap-6 px-10 pt-20">
-                <GameTitleCard
-                    image="https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg"
-                    title="Zelda: Tears of the Kingdom"
-                    developer="Nintendo"
-                    rating={4.8}
-                    releaseDate="2024.12.12"
-                />
-                <GameInfoCard
-                    platform="PC, PS5, Switch"
-                    genre="RPG, 애잔, 어드버처"
-                    theme="공포, 판타지"
-                    wishCount={12456}
-                    reviewCount={1532}
-                />
+                {game && (
+                    <>
+                        <GameTitleCard
+                            image={game.thumbnail}
+                            title={game.title}
+                            developer={game.developer}
+                            rating={
+                                expertComments.length > 0
+                                    ? expertComments.reduce(
+                                          (a, b) => a + b.rating,
+                                          0
+                                      ) / expertComments.length
+                                    : 0
+                            }
+                            releaseDate={game.releaseDate}
+                        />
+                        <GameInfoCard
+                            platforms={game.platforms}
+                            genres={game.genres}
+                            themes={game.themes}
+                            wishCount={game.wishCount}
+                            reviewCount={game.reviewCount}
+                        />
+                    </>
+                )}
             </div>
-
             <div className="w-full bg-black-300">
                 <div className="flex w-full max-w-[1400px] mx-auto gap-6 px-10 items-start">
                     <ReviewSelector
                         selected={selectedReviewType}
-                        onSelect={setSelectedReviewType}
+                        onSelect={(type) => {
+                            setSelectedReviewType(type);
+                            fetchComments();
+                        }}
+                        expertReviewCount={expertComments.length}
+                        expertAvgRating={
+                            expertComments.length > 0
+                                ? expertComments.reduce(
+                                      (a, b) => a + b.rating,
+                                      0
+                                  ) / expertComments.length
+                                : 0
+                        }
+                        userReviewCount={userComments.length}
+                        userAvgRating={
+                            userComments.length > 0
+                                ? userComments.reduce(
+                                      (a, b) => a + b.rating,
+                                      0
+                                  ) / userComments.length
+                                : 0
+                        }
                     />
                     <div className="flex-1 space-y-10">
-                        {typeof gameId === "string" && gameId.length > 0 && (
-                            <Comment
-                                gameId={gameId}
-                                onSuccess={fetchComments}
-                            />
-                        )}
+                        {typeof gameId === "string" &&
+                            gameId.length > 0 &&
+                            (editingId !== null ? (
+                                <Comment
+                                    gameId={gameId}
+                                    editingReviewId={editingId}
+                                    defaultValue={myComment?.comment ?? ""}
+                                    onSuccess={() => {
+                                        fetchComments();
+                                        setEditingId(null);
+                                    }}
+                                />
+                            ) : myComment ? (
+                                <div className="bg-background-300 rounded-[8px] ">
+                                    <h3 className="text-h3 font-semibold">
+                                        내가 작성한 댓글
+                                    </h3>
+                                    <CommentCard
+                                        id={myComment.id}
+                                        profileImage={myComment.profileImage}
+                                        nickname={myComment.nickname}
+                                        date={myComment.date}
+                                        tier={myComment.tier}
+                                        rating={myComment.rating}
+                                        comment={myComment.comment}
+                                        likes={myComment.likes}
+                                        isLiked={myComment.isLiked}
+                                        viewerId={viewerId ?? ""}
+                                        memberId={myComment.memberId}
+                                        onEdit={(id) => setEditingId(id)}
+                                        onDelete={handleDelete}
+                                    />
+                                </div>
+                            ) : (
+                                <Comment
+                                    gameId={gameId}
+                                    onSuccess={fetchComments}
+                                />
+                            ))}
 
                         <div className="space-y-6">
                             {commentsForPage.map((c) => (
@@ -149,7 +266,9 @@ export default function GameDetailPage() {
                                     likes={c.likes}
                                     isLiked={c.isLiked}
                                     viewerId={viewerId ?? ""}
-                                    memberId={c.memberId} // ✅ 추가됨
+                                    memberId={c.memberId}
+                                    onDelete={handleDelete}
+                                    onEdit={(id) => setEditingId(id)}
                                 />
                             ))}
                         </div>
