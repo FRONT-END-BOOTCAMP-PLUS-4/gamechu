@@ -6,6 +6,7 @@ type Props = {
     arenaList: ArenaDetailDto[];
     onStatusUpdate?: (id: number, newStatus: ArenaStatus) => void;
 };
+type ExtraBody = Record<string, unknown>;
 
 export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
     const timers = useRef<Record<number, NodeJS.Timeout>>({}); // arenaId -> timeout
@@ -28,7 +29,7 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
             const schedule = (
                 target: string,
                 nextStatus: ArenaStatus,
-                extraBody?: any
+                extraBody?: ExtraBody
             ) => {
                 const delay = new Date(target).getTime() - now;
                 if (delay <= 0) {
@@ -69,7 +70,7 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
     const updateStatus = async (
         arenaId: number,
         newStatus: ArenaStatus,
-        extraBody?: any
+        extraBody?: ExtraBody
     ) => {
         try {
             const res = await fetch(`/api/arenas/${arenaId}`, {
