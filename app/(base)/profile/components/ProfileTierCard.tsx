@@ -24,7 +24,7 @@ export default function ProfileTierCard({ score }: Props) {
         currentTier.max === Infinity ? 0 : Math.max(0, nextTier.min - score);
 
     return (
-        <div className="flex-1 bg-background-300 p-6 rounded-xl shadow">
+        <div className="flex-1 bg-background-300 h-[320px] p-6 rounded-xl shadow">
             {/* 제목 & 설명 */}
             <div className="flex justify-between items-start mb-4">
                 <div>
@@ -39,14 +39,14 @@ export default function ProfileTierCard({ score }: Props) {
             </div>
 
             <p className="text-sm font-semibold">
-                현재 포인트: {score.toLocaleString()}
+                현재 포인트: {score.toString()}
             </p>
 
             {/* 다음 티어까지 */}
             <p className="text-right text-caption text-font-200 mb-1">
                 {currentTier.max === Infinity
                     ? "최고 티어입니다!"
-                    : `다음 티어까지: ${pointsToNext.toLocaleString()} 포인트`}
+                    : `다음 티어까지: ${pointsToNext.toString()} 포인트`}
             </p>
 
             {/* 프로그레스 바 */}
@@ -93,8 +93,8 @@ export default function ProfileTierCard({ score }: Props) {
                             <div className="text-sm">{tier.label}</div>
                             <div className="text-xs">
                                 {tier.max === Infinity
-                                    ? `${tier.min.toLocaleString()}+`
-                                    : `${tier.min.toLocaleString()} - ${tier.max.toLocaleString()}`}
+                                    ? `${tier.min.toString()}+`
+                                    : `${tier.min.toString()} - ${tier.max.toString()}`}
                             </div>
                         </div>
                     );

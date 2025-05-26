@@ -3,6 +3,7 @@ import { ReviewRepository } from "@/backend/review/domain/repositories/ReviewRep
 import { CreateReviewDto } from "@/backend/review/application/usecase/dto/CreateReviewDto";
 import { UpdateReviewDto } from "@/backend/review/application/usecase/dto/UpdateReviewDto";
 import { ReviewDto } from "@/backend/review/application/usecase/dto/ReviewDto";
+import { ReviewByMembersDto } from "@/backend/review/application/usecase/dto/ReviewByMembersDto";
 
 const prisma = new PrismaClient();
 
@@ -24,13 +25,32 @@ export class PrismaReviewRepository implements ReviewRepository {
         return reviews.map(this.toDto);
     }
 
-    async findByMemberId(memberId: string): Promise<ReviewDto[]> {
-        const reviews = await prisma.review.findMany({
-            where: { memberId },
-            orderBy: { createdAt: "desc" },
-        });
-        return reviews.map(this.toDto);
-    }
+    async findByMemberId(memberId: string): Promise<ReviewByMembersDto[]> {
+    const reviews = await prisma.review.findMany({
+        where: { memberId },
+        orderBy: { createdAt: "desc" },
+        include: {
+            game: {
+                select: {
+                    title: true,
+                    thumbnail: true,
+                },
+            },
+        },
+    });
+
+    return reviews.map((review) => ({
+        id: review.id,
+        gameId: review.gameId,
+        content: review.content,
+        rating: review.rating,
+        createdAt: review.createdAt,
+        updatedAt: review.updatedAt,
+        gameTitle: review.game.title,
+        imageUrl: review.game.thumbnail,
+    }));
+}
+
 
     async create(memberId: string, dto: CreateReviewDto): Promise<ReviewDto> {
         const review = await prisma.review.create({
