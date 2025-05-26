@@ -5,7 +5,7 @@ export class GetArenaDto {
             status: number;
             mine: boolean;
         },
-        public memberId: string,
+        public memberId: string | null,
         public pageSize: number,
         public sortField: string = "createdAt",
         public ascending: boolean = false
