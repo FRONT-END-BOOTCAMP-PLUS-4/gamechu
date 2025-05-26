@@ -1,9 +1,10 @@
 // infra/repositories/PrismaArenaRepository.ts
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
-import { PrismaClient } from "@/prisma/generated";
+import { Arena, Prisma, PrismaClient } from "@/prisma/generated";
 import { ArenaStatus } from "@/types/arena-status";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 import dayjs from "dayjs";
+import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilters";
 
 export class PrismaArenaRepository implements ArenaRepository {
     private prisma: PrismaClient;
@@ -11,6 +12,70 @@ export class PrismaArenaRepository implements ArenaRepository {
     constructor() {
         this.prisma = new PrismaClient();
     }
+
+    private getWhereClause(filter: ArenaFilter): Prisma.ArenaWhereInput {
+        const { status, memberId } = filter;
+
+        return {
+            ...(status && {
+                status,
+            }),
+            ...(memberId && {
+                memberId,
+            }),
+        };
+    }
+
+    async count(filter: ArenaFilter): Promise<number> {
+        const count = await this.prisma.arena.count({
+            where: this.getWhereClause(filter),
+        });
+
+        return count;
+    }
+    async findAll(filter: ArenaFilter): Promise<Arena[]> {
+        const { sortField, ascending, offset, limit } = filter;
+        const orderBy = sortField
+            ? {
+                  [sortField]: ascending ? "asc" : "desc",
+              }
+            : undefined;
+
+        const data = await this.prisma.arena.findMany({
+            where: this.getWhereClause(filter),
+            skip: offset,
+            take: limit,
+            orderBy,
+        });
+
+        return data;
+    }
+    async findById(id: number): Promise<Arena | null> {
+        const data = await this.prisma.arena.findUnique({
+            where: { id },
+        });
+
+        return data;
+    }
+    async save(arena: Arena): Promise<Arena> {
+        const data = await this.prisma.arena.create({
+            data: arena,
+        });
+
+        return data;
+    }
+    async update(arena: Arena): Promise<Arena> {
+        const newData = await this.prisma.arena.update({
+            where: { id: arena.id },
+            data: arena,
+        });
+
+        return newData;
+    }
+    async deleteById(id: number): Promise<void> {
+        await this.prisma.arena.delete({ where: { id } });
+    }
+
     async getArenaById(arenaId: number): Promise<ArenaDetailDto> {
         const arena = await this.prisma.arena.findUnique({
             where: { id: arenaId },
