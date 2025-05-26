@@ -35,7 +35,7 @@ export async function PATCH(
 
     const repo = new PrismaArenaRepository();
     const usecase = new UpdateArenaStatusUsecase(repo);
-    console.log("떠야됨: ", challengerId);
+
     try {
         await usecase.execute(arenaId, status, challengerId); // challengerId 없으면 undefined
         return NextResponse.json({ success: true });

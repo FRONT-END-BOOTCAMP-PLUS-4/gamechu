@@ -14,7 +14,6 @@ export function useArenaStartTimer({
 
         const handleStart = async () => {
             const newStatus = arenaDetail.challengerId ? 3 : 5;
-            console.log("여기서도 떠야됨: ", arenaDetail.challengerId);
             try {
                 const res = await fetch(`/api/arenas/${arenaDetail?.id}`, {
                     method: "PATCH",
@@ -36,12 +35,11 @@ export function useArenaStartTimer({
         const now = new Date();
         const startTime = new Date(arenaDetail.startDate);
         const msUntilStart = startTime.getTime() - now.getTime();
-
+        console.log("msUntilStart: ", msUntilStart);
         if (msUntilStart <= 0) {
             handleStart();
             return;
         }
-
         const timer = setTimeout(() => {
             handleStart();
         }, msUntilStart);

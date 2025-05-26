@@ -79,4 +79,42 @@ export class PrismaArenaRepository implements ArenaRepository {
             },
         });
     }
+    async getList(): Promise<ArenaDetailDto[]> {
+        const arenas = await this.prisma.arena.findMany({
+            select: {
+                id: true,
+                creatorId: true,
+                challengerId: true,
+                title: true,
+                description: true,
+                startDate: true,
+                status: true,
+                creator: { select: { nickname: true } }, // creator relation 이름에 맞게 바꿔야 함
+                challenger: { select: { nickname: true } }, // challenger relation 이름에 맞게 바꿔야 함
+            },
+        });
+        return arenas.map((arena) => {
+            const startDateObj = dayjs(arena.startDate);
+            const endChatting = startDateObj
+                .add(30, "minute")
+                .format("YYYY-MM-DD HH:mm:ss");
+            const endVote = startDateObj
+                .add(30, "minute")
+                .add(24, "hour")
+                .format("YYYY-MM-DD HH:mm:ss");
+            return {
+                id: arena.id,
+                creatorId: arena.creatorId,
+                creatorName: arena.creator?.nickname ?? "",
+                challengerId: arena.challengerId ?? null,
+                challengerName: arena.challenger?.nickname ?? null,
+                title: arena.title,
+                description: arena.description,
+                status: arena.status as ArenaStatus,
+                startDate: arena.startDate.toISOString(),
+                endChatting,
+                endVote,
+            };
+        });
+    }
 }
