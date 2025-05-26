@@ -69,7 +69,11 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                 </div>
 
                 {/* 게임 제목 */}
-                <h3 className="font-semibold text-body">{review.gameTitle}</h3>
+                <Link href={`/game/${review.gameId}`}>
+                    <h3 className="font-semibold text-body hover:underline cursor-pointer">
+                        {review.gameTitle}
+                    </h3>
+                </Link>
 
                 {/* 리뷰 내용 */}
                 <p

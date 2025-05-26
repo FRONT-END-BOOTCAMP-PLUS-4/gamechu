@@ -45,7 +45,9 @@ export default function ProfilePage() {
             setReviews(reviews);
             setReviewCount(reviews.length);
 
-            const profileRes = await fetch("/api/member/profile");
+            const profileRes = await fetch("/api/member/profile",{
+                method: "GET",
+            });
             const profile = await profileRes.json();
             setNickname(profile.nickname);
             setImageUrl(profile.imageUrl);
