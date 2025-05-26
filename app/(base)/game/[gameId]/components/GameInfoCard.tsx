@@ -42,12 +42,20 @@ export default function GameInfoCard({
             <InfoRow
                 icon="/icons/wish.svg"
                 label="위시"
-                value={wishCount.toLocaleString()}
+                value={
+                    typeof wishCount === "number"
+                        ? wishCount.toLocaleString()
+                        : "0"
+                }
             />
             <InfoRow
                 icon="/icons/review.svg"
                 label="리뷰"
-                value={reviewCount.toLocaleString()}
+                value={
+                    typeof reviewCount === "number"
+                        ? reviewCount.toLocaleString()
+                        : "0"
+                }
             />
         </div>
     );

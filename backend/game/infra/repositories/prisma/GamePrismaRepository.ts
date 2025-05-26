@@ -7,14 +7,22 @@ const prisma = new PrismaClient();
 
 export class GamePrismaRepository implements GameRepository {
     async findDetailById(id: number): Promise<GetGameDetailDto> {
-        const game = await prisma.game.findUnique({
-            where: { id },
-            include: {
-                gamePlatforms: { include: { platform: true } },
-                gameGenres: { include: { genre: true } },
-                gameThemes: { include: { theme: true } },
-            },
-        });
+        const [game, wishCount, reviewCount] = await Promise.all([
+            prisma.game.findUnique({
+                where: { id },
+                include: {
+                    gamePlatforms: { include: { platform: true } },
+                    gameGenres: { include: { genre: true } },
+                    gameThemes: { include: { theme: true } },
+                },
+            }),
+            prisma.wishlist.count({
+                where: { gameId: id },
+            }),
+            prisma.review.count({
+                where: { gameId: id },
+            }),
+        ]);
 
         if (!game) throw new Error("게임을 찾을 수 없습니다");
 
@@ -27,6 +35,8 @@ export class GamePrismaRepository implements GameRepository {
             platforms: game.gamePlatforms.map((gp) => gp.platform.name),
             genres: game.gameGenres.map((gg) => gg.genre.name),
             themes: game.gameThemes.map((gt) => gt.theme.name),
+            wishCount,
+            reviewCount,
         };
     }
     async findFilteredGames(

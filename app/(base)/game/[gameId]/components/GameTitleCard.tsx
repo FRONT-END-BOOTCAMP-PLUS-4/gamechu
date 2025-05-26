@@ -25,7 +25,7 @@ export default function GameTitleCard({
                     src={image.startsWith("//") ? `https:${image}` : image}
                     alt={title}
                     fill
-                    className="object-cover"
+                    className="object-fill"
                 />
             </div>
 
