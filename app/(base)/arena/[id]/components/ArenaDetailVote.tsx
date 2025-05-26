@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/app/components/Button";
+import VoteStatusBar from "../../components/VoteStatusBar";
 
 interface ArenaVoteProps {
     leftVotes: number;
@@ -70,26 +71,7 @@ export default function ArenaDetailVote({
 
             {/* 게이지 바 (투표 종료 시만 보임) */}
             {"closed" === "closed" && ( //todo: status가 5일때로 변경해야함
-                <div className="w-full mt-4 h-3 rounded-lg overflow-hidden flex">
-                    <div
-                        className="rounded-l-lg"
-                        style={{
-                            width: `${leftPercent}%`,
-                            background:
-                                "linear-gradient(90deg, #7c3aed, #c4b5fd)",
-                            transition: "width 0.5s ease",
-                        }}
-                    />
-                    <div
-                        className="rounded-r-lg"
-                        style={{
-                            width: `${rightPercent}%`,
-                            background:
-                                "linear-gradient(90deg, #93c5fd, #2563eb)",
-                            transition: "width 0.5s ease",
-                        }}
-                    />
-                </div>
+                <VoteStatusBar leftPercent={leftPercent} />
             )}
 
             {/* 하단 상태 메시지 */}

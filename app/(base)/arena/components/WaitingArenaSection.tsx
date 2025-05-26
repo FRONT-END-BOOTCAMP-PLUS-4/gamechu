@@ -13,30 +13,30 @@ export default function WaitingArenaSection() {
                     title="싱글플레이어vs멀티플레이어 게임의 미래"
                     creatorNickname="겜잘알"
                     creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorTierImageUrl="/icons/platinum.svg"
+                    creatorScore={3500}
                     challengerNickname="분탕충"
                     challengerProfileImageUrl="/icons/arena2.svg"
-                    challengerTierImageUrl="/icons/bronze.svg"
+                    challengerScore={1500}
                     startDate={new Date()}
                 />
                 <WaitingArenaCard
                     title="콘솔 vs PC 게이밍 진영 논쟁"
                     creatorNickname="겜잘알"
                     creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorTierImageUrl="/icons/platinum.svg"
+                    creatorScore={3500}
                     challengerNickname="분탕충"
                     challengerProfileImageUrl="/icons/arena2.svg"
-                    challengerTierImageUrl="/icons/bronze.svg"
+                    challengerScore={2200}
                     startDate={new Date()}
                 />
                 <WaitingArenaCard
                     title="과금 게임이 공정할 수 있는가?"
                     creatorNickname="겜잘알"
                     creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorTierImageUrl="/icons/platinum.svg"
+                    creatorScore={5200}
                     challengerNickname="분탕충"
                     challengerProfileImageUrl="/icons/arena2.svg"
-                    challengerTierImageUrl="/icons/bronze.svg"
+                    challengerScore={2200}
                     startDate={new Date()}
                 />
             </div>
