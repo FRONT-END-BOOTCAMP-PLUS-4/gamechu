@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 import useArenaStore from "@/stores/useArenaStore";
 import ArenaDetailContainer from "./components/ArenaDetailContainer";
+import { useArenaAutoStatusDetail } from "@/hooks/useArenaAutoStatusDetail";
 
 export default function ArenaDetailPage() {
     const setGlobalArenaData = useArenaStore((state) => state.setArenaData);
@@ -17,7 +18,12 @@ export default function ArenaDetailPage() {
     // 투표 수
     const leftVotes = 192;
     const rightVotes = 85;
-
+    useArenaAutoStatusDetail({
+        onStatusUpdate: (newStatus) => {
+            console.log("자동 상태 변경:", newStatus);
+            // 예: 상태가 바뀌면 UI 새로고침하거나 알림 띄우기
+        },
+    });
     useEffect(() => {
         const fetchArenaDetail = async () => {
             try {
