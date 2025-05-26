@@ -6,7 +6,7 @@ import ArenaDetailRecruiting from "./ArenaDetailRecruiting";
 import ArenaDetailWaiting from "./ArenaDetailWaiting";
 import ArenaDetailInputBox from "./ArenaDetailInputBox";
 import ArenaDetailChatList from "./ArenaDetailChatList";
-import { useArenaStartTimer } from "@/hooks/useArenaStartTimer";
+
 import useArenaStore from "@/stores/useArenaStore";
 import { useArenaChatManagement } from "@/hooks/useArenaChatManagement";
 
@@ -43,13 +43,26 @@ export default function ArenaDetailContainer() {
     }, [chats]);
 
     //todo: 토론 스타트 타이머 훅 아마 나중에 서버에서 자동으로 하거나 투기장 리스트 페이지 들어갔을 때로 바꿔야할듯?
-    useArenaStartTimer({
-        onStatusUpdate: (newStatus) => {
-            if (newStatus === 3 || newStatus === 5) {
-                location.reload();
-            }
-        },
-    });
+    // useArenaStartTimer({
+    //     onStatusUpdate: (newStatus) => {
+    //         if (newStatus === 3 || newStatus === 5) {
+    //             location.reload();
+    //         }
+    //     },
+    // });
+
+    // useVoteStartTimer({
+    //     onStatusUpdate: (newStatus) => {
+    //         console.log("투표 종료됨!", newStatus);
+    //     },
+    // });
+
+    // useCloseArenaTimer({
+    //     onStatusUpdate: (newStatus) => {
+    //         console.log("투표가 종료되어 상태가 바뀌었습니다:", newStatus);
+    //         // 예: 결과 화면 보여주기 등 추가 로직
+    //     },
+    // });
 
     if (arenaDetail?.status === 1) {
         return <ArenaDetailRecruiting />;

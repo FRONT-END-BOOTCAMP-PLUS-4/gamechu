@@ -10,4 +10,5 @@ export interface ArenaRepository {
         challengerId: string,
         status: ArenaStatus
     ): Promise<void>;
+    getList(): Promise<ArenaDetailDto[]>;
 }
