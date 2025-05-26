@@ -5,38 +5,56 @@ import { useEffect, useState, useCallback } from "react";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import ProfileSummaryCard from "./components/ProfileSummaryCard";
 import ProfileTierCard from "./components/ProfileTierCard";
+import ProfileSidebar from "./components/ProfileSidebar";
+import ProfileInfoTab from "./components/tabs/ProfileInfoTab";
+import ProfileReviewTab from "./components/tabs/ProfileReviewTab";
+
+type Review = {
+    id: number;
+    gameId: number;
+    content: string;
+    rating: number;
+    createdAt: string;
+    updatedAt: string | null;
+    gameTitle: string;
+    imageUrl: string | null;
+};
 
 export default function ProfilePage() {
-    const [userId, setUserId] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState("reviews");
     const [reviewCount, setReviewCount] = useState<number>(0);
     const [wishlistCount, setWishlistCount] = useState<number>(0);
     const [nickname, setNickname] = useState<string>("");
     const [imageUrl, setImageUrl] = useState<string>("/icons/arena.svg");
     const [score, setScore] = useState<number>(0);
     const [createdAt, setCreatedAt] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [birthDate, setBirthDate] = useState<string>("");
+    const [isMale, setIsMale] = useState<boolean>(true);
+    const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchProfileData = useCallback(async () => {
         const id = await getAuthUserId();
         if (!id) return;
-        setUserId(id);
 
         try {
             const reviewRes = await fetch("/api/reviews/member");
             const reviews = await reviewRes.json();
+            setReviews(reviews);
             setReviewCount(reviews.length);
-
-            //const wishlistRes = await fetch("/api/member/wishlists");
-            //const wishlists = await wishlistRes.json();
-            //setWishlistCount(wishlists.length);
 
             const profileRes = await fetch("/api/member/profile");
             const profile = await profileRes.json();
             setNickname(profile.nickname);
             setImageUrl(profile.imageUrl);
             setScore(profile.score);
-            setCreatedAt(profile.createdAt.slice(0, 10)); // yyyy-mm-dd
-
+            setCreatedAt(profile.createdAt.slice(0, 10));
+            setEmail(profile.email);
+            setPassword(profile.password);
+            setBirthDate(profile.birthDate);
+            setIsMale(profile.isMale);
         } catch (err) {
             console.error("프로필 데이터 로딩 실패:", err);
         } finally {
@@ -60,12 +78,29 @@ export default function ProfilePage() {
                     createdAt={createdAt}
                 />
                 <ProfileTierCard score={score} />
-
             </div>
 
-            {!loading && userId && (
-                <p className="text-sm text-font-200 mb-4">유저 ID: {userId}</p>
-            )}
+            <div className="flex space-x-10">
+                <div className="w-[250px]">
+                    <ProfileSidebar onSelect={setActiveTab} />
+                </div>
+
+                <div className="flex-1">
+                    {activeTab === "reviews" && !loading && (
+                        <ProfileReviewTab reviews={reviews} />
+                    )}
+                    {activeTab === "profile" && !loading && (
+                        <ProfileInfoTab
+                            nickname={nickname}
+                            email={email}
+                            password={password}
+                            imageUrl={imageUrl}
+                            birthDate={birthDate}
+                            isMale={isMale}
+                        />
+                    )}
+                </div>
+            </div>
         </main>
     );
 }
