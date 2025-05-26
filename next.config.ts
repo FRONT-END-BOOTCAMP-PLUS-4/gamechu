@@ -1,6 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+// next.config.js
+const nextConfig = {
     images: {
         domains: ["cdn.cloudflare.steamstatic.com"], // 정적 도메인은 여기 유지
         remotePatterns: [

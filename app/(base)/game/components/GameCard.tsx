@@ -31,8 +31,13 @@ export default function GameCard({
         >
             {/* 이미지 영역 */}
             <div
-                className="relative w-full h-[230px] bg-cover bg-center"
-                style={{ backgroundImage: `url(${thumbnail})` }} // ✅ 고친 부분
+                className="relative w-full h-[230px]"
+                style={{
+                    backgroundImage: `url(${thumbnail})`,
+                    backgroundSize: "100% 100%", // ✅ 이거!
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                }}
             >
                 {/* 플랫폼 태그 */}
                 <div className="absolute top-4 right-4 px-3 py-[2px] bg-background-100 text-caption text-font-100 rounded-[4px] border border-background-300">

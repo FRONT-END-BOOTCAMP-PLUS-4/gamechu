@@ -7,4 +7,6 @@ export interface GetGameDetailDto {
     platforms: string[];
     genres: string[];
     themes: string[];
+    wishCount: number;
+    reviewCount: number;
 }
