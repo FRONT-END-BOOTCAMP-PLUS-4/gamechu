@@ -26,31 +26,30 @@ export class PrismaReviewRepository implements ReviewRepository {
     }
 
     async findByMemberId(memberId: string): Promise<ReviewByMembersDto[]> {
-    const reviews = await prisma.review.findMany({
-        where: { memberId },
-        orderBy: { createdAt: "desc" },
-        include: {
-            game: {
-                select: {
-                    title: true,
-                    thumbnail: true,
+        const reviews = await prisma.review.findMany({
+            where: { memberId },
+            orderBy: { createdAt: "desc" },
+            include: {
+                game: {
+                    select: {
+                        title: true,
+                        thumbnail: true,
+                    },
                 },
             },
-        },
-    });
+        });
 
-    return reviews.map((review) => ({
-        id: review.id,
-        gameId: review.gameId,
-        content: review.content,
-        rating: review.rating,
-        createdAt: review.createdAt,
-        updatedAt: review.updatedAt,
-        gameTitle: review.game.title,
-        imageUrl: review.game.thumbnail,
-    }));
-}
-
+        return reviews.map((review) => ({
+            id: review.id,
+            gameId: review.gameId,
+            content: review.content,
+            rating: review.rating,
+            createdAt: review.createdAt,
+            updatedAt: review.updatedAt,
+            gameTitle: review.game.title,
+            imageUrl: review.game.thumbnail,
+        }));
+    }
 
     async create(memberId: string, dto: CreateReviewDto): Promise<ReviewDto> {
         const review = await prisma.review.create({
