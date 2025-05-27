@@ -129,9 +129,9 @@ exports.Prisma.MemberScalarFieldEnum = {
   birthDate: 'birthDate',
   isMale: 'isMale',
   score: 'score',
-  isAttended: 'isAttended',
   createdAt: 'createdAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  last_attended_date: 'last_attended_date'
 };
 
 exports.Prisma.GameScalarFieldEnum = {

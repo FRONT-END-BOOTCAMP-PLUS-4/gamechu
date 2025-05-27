@@ -3167,9 +3167,9 @@ export namespace Prisma {
     birthDate: Date | null
     isMale: boolean | null
     score: number | null
-    isAttended: boolean | null
     createdAt: Date | null
     deletedAt: Date | null
+    last_attended_date: Date | null
   }
 
   export type MemberMaxAggregateOutputType = {
@@ -3181,9 +3181,9 @@ export namespace Prisma {
     birthDate: Date | null
     isMale: boolean | null
     score: number | null
-    isAttended: boolean | null
     createdAt: Date | null
     deletedAt: Date | null
+    last_attended_date: Date | null
   }
 
   export type MemberCountAggregateOutputType = {
@@ -3195,9 +3195,9 @@ export namespace Prisma {
     birthDate: number
     isMale: number
     score: number
-    isAttended: number
     createdAt: number
     deletedAt: number
+    last_attended_date: number
     _all: number
   }
 
@@ -3219,9 +3219,9 @@ export namespace Prisma {
     birthDate?: true
     isMale?: true
     score?: true
-    isAttended?: true
     createdAt?: true
     deletedAt?: true
+    last_attended_date?: true
   }
 
   export type MemberMaxAggregateInputType = {
@@ -3233,9 +3233,9 @@ export namespace Prisma {
     birthDate?: true
     isMale?: true
     score?: true
-    isAttended?: true
     createdAt?: true
     deletedAt?: true
+    last_attended_date?: true
   }
 
   export type MemberCountAggregateInputType = {
@@ -3247,9 +3247,9 @@ export namespace Prisma {
     birthDate?: true
     isMale?: true
     score?: true
-    isAttended?: true
     createdAt?: true
     deletedAt?: true
+    last_attended_date?: true
     _all?: true
   }
 
@@ -3348,9 +3348,9 @@ export namespace Prisma {
     birthDate: Date
     isMale: boolean
     score: number
-    isAttended: boolean
     createdAt: Date
     deletedAt: Date | null
+    last_attended_date: Date
     _count: MemberCountAggregateOutputType | null
     _avg: MemberAvgAggregateOutputType | null
     _sum: MemberSumAggregateOutputType | null
@@ -3381,9 +3381,9 @@ export namespace Prisma {
     birthDate?: boolean
     isMale?: boolean
     score?: boolean
-    isAttended?: boolean
     createdAt?: boolean
     deletedAt?: boolean
+    last_attended_date?: boolean
     arenasAsChallenger?: boolean | Member$arenasAsChallengerArgs<ExtArgs>
     arenasAsCreator?: boolean | Member$arenasAsCreatorArgs<ExtArgs>
     chattings?: boolean | Member$chattingsArgs<ExtArgs>
@@ -3408,9 +3408,9 @@ export namespace Prisma {
     birthDate?: boolean
     isMale?: boolean
     score?: boolean
-    isAttended?: boolean
     createdAt?: boolean
     deletedAt?: boolean
+    last_attended_date?: boolean
   }, ExtArgs["result"]["member"]>
 
   export type MemberSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3422,9 +3422,9 @@ export namespace Prisma {
     birthDate?: boolean
     isMale?: boolean
     score?: boolean
-    isAttended?: boolean
     createdAt?: boolean
     deletedAt?: boolean
+    last_attended_date?: boolean
   }, ExtArgs["result"]["member"]>
 
   export type MemberSelectScalar = {
@@ -3436,12 +3436,12 @@ export namespace Prisma {
     birthDate?: boolean
     isMale?: boolean
     score?: boolean
-    isAttended?: boolean
     createdAt?: boolean
     deletedAt?: boolean
+    last_attended_date?: boolean
   }
 
-  export type MemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nickname" | "email" | "password" | "imageUrl" | "birthDate" | "isMale" | "score" | "isAttended" | "createdAt" | "deletedAt", ExtArgs["result"]["member"]>
+  export type MemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nickname" | "email" | "password" | "imageUrl" | "birthDate" | "isMale" | "score" | "createdAt" | "deletedAt" | "last_attended_date", ExtArgs["result"]["member"]>
   export type MemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     arenasAsChallenger?: boolean | Member$arenasAsChallengerArgs<ExtArgs>
     arenasAsCreator?: boolean | Member$arenasAsCreatorArgs<ExtArgs>
@@ -3485,9 +3485,9 @@ export namespace Prisma {
       birthDate: Date
       isMale: boolean
       score: number
-      isAttended: boolean
       createdAt: Date
       deletedAt: Date | null
+      last_attended_date: Date
     }, ExtArgs["result"]["member"]>
     composites: {}
   }
@@ -3931,9 +3931,9 @@ export namespace Prisma {
     readonly birthDate: FieldRef<"Member", 'DateTime'>
     readonly isMale: FieldRef<"Member", 'Boolean'>
     readonly score: FieldRef<"Member", 'Int'>
-    readonly isAttended: FieldRef<"Member", 'Boolean'>
     readonly createdAt: FieldRef<"Member", 'DateTime'>
     readonly deletedAt: FieldRef<"Member", 'DateTime'>
+    readonly last_attended_date: FieldRef<"Member", 'DateTime'>
   }
     
 
@@ -26729,9 +26729,9 @@ export namespace Prisma {
     birthDate: 'birthDate',
     isMale: 'isMale',
     score: 'score',
-    isAttended: 'isAttended',
     createdAt: 'createdAt',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    last_attended_date: 'last_attended_date'
   };
 
   export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -27039,9 +27039,9 @@ export namespace Prisma {
     birthDate?: DateTimeFilter<"Member"> | Date | string
     isMale?: BoolFilter<"Member"> | boolean
     score?: IntFilter<"Member"> | number
-    isAttended?: BoolFilter<"Member"> | boolean
     createdAt?: DateTimeFilter<"Member"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Member"> | Date | string | null
+    last_attended_date?: DateTimeFilter<"Member"> | Date | string
     arenasAsChallenger?: ArenaListRelationFilter
     arenasAsCreator?: ArenaListRelationFilter
     chattings?: ChattingListRelationFilter
@@ -27065,9 +27065,9 @@ export namespace Prisma {
     birthDate?: SortOrder
     isMale?: SortOrder
     score?: SortOrder
-    isAttended?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    last_attended_date?: SortOrder
     arenasAsChallenger?: ArenaOrderByRelationAggregateInput
     arenasAsCreator?: ArenaOrderByRelationAggregateInput
     chattings?: ChattingOrderByRelationAggregateInput
@@ -27094,9 +27094,9 @@ export namespace Prisma {
     birthDate?: DateTimeFilter<"Member"> | Date | string
     isMale?: BoolFilter<"Member"> | boolean
     score?: IntFilter<"Member"> | number
-    isAttended?: BoolFilter<"Member"> | boolean
     createdAt?: DateTimeFilter<"Member"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Member"> | Date | string | null
+    last_attended_date?: DateTimeFilter<"Member"> | Date | string
     arenasAsChallenger?: ArenaListRelationFilter
     arenasAsCreator?: ArenaListRelationFilter
     chattings?: ChattingListRelationFilter
@@ -27120,9 +27120,9 @@ export namespace Prisma {
     birthDate?: SortOrder
     isMale?: SortOrder
     score?: SortOrder
-    isAttended?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    last_attended_date?: SortOrder
     _count?: MemberCountOrderByAggregateInput
     _avg?: MemberAvgOrderByAggregateInput
     _max?: MemberMaxOrderByAggregateInput
@@ -27142,9 +27142,9 @@ export namespace Prisma {
     birthDate?: DateTimeWithAggregatesFilter<"Member"> | Date | string
     isMale?: BoolWithAggregatesFilter<"Member"> | boolean
     score?: IntWithAggregatesFilter<"Member"> | number
-    isAttended?: BoolWithAggregatesFilter<"Member"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Member"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Member"> | Date | string | null
+    last_attended_date?: DateTimeWithAggregatesFilter<"Member"> | Date | string
   }
 
   export type GameWhereInput = {
@@ -28243,9 +28243,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -28269,9 +28269,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -28295,9 +28295,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -28321,9 +28321,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
@@ -28347,9 +28347,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
   }
 
   export type MemberUpdateManyMutationInput = {
@@ -28361,9 +28361,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MemberUncheckedUpdateManyInput = {
@@ -28375,9 +28375,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GameCreateInput = {
@@ -29486,9 +29486,9 @@ export namespace Prisma {
     birthDate?: SortOrder
     isMale?: SortOrder
     score?: SortOrder
-    isAttended?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrder
+    last_attended_date?: SortOrder
   }
 
   export type MemberAvgOrderByAggregateInput = {
@@ -29504,9 +29504,9 @@ export namespace Prisma {
     birthDate?: SortOrder
     isMale?: SortOrder
     score?: SortOrder
-    isAttended?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrder
+    last_attended_date?: SortOrder
   }
 
   export type MemberMinOrderByAggregateInput = {
@@ -29518,9 +29518,9 @@ export namespace Prisma {
     birthDate?: SortOrder
     isMale?: SortOrder
     score?: SortOrder
-    isAttended?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrder
+    last_attended_date?: SortOrder
   }
 
   export type MemberSumOrderByAggregateInput = {
@@ -32913,9 +32913,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -32938,9 +32938,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -33013,9 +33013,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -33038,9 +33038,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
@@ -33110,9 +33110,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -33135,9 +33135,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -33226,9 +33226,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -33251,9 +33251,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
@@ -33276,9 +33276,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -33301,9 +33301,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -33366,9 +33366,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -33391,9 +33391,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
@@ -33446,9 +33446,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
@@ -33471,9 +33471,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
@@ -33501,9 +33501,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
@@ -33526,9 +33526,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
@@ -33611,9 +33611,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
@@ -33636,9 +33636,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
@@ -33672,9 +33672,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
@@ -33697,9 +33697,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
@@ -33780,9 +33780,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     notificationRecords?: NotificationRecordCreateNestedManyWithoutMemberInput
@@ -33805,9 +33805,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     notificationRecords?: NotificationRecordUncheckedCreateNestedManyWithoutMemberInput
@@ -33878,9 +33878,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     notificationRecords?: NotificationRecordUpdateManyWithoutMemberNestedInput
@@ -33903,9 +33903,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     notificationRecords?: NotificationRecordUncheckedUpdateManyWithoutMemberNestedInput
@@ -33954,9 +33954,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -33979,9 +33979,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -34052,9 +34052,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -34077,9 +34077,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
@@ -34141,9 +34141,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -34166,9 +34166,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -34223,9 +34223,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -34248,9 +34248,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
@@ -34332,9 +34332,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -34357,9 +34357,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -34418,9 +34418,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -34443,9 +34443,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
@@ -34704,9 +34704,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -34729,9 +34729,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -34786,9 +34786,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -34811,9 +34811,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
@@ -34874,9 +34874,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -34899,9 +34899,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -34962,9 +34962,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -34987,9 +34987,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
@@ -35012,9 +35012,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaCreateNestedManyWithoutCreatorInput
     chattings?: ChattingCreateNestedManyWithoutMemberInput
@@ -35037,9 +35037,9 @@ export namespace Prisma {
     birthDate: Date | string
     isMale: boolean
     score?: number
-    isAttended?: boolean
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    last_attended_date?: Date | string
     arenasAsChallenger?: ArenaUncheckedCreateNestedManyWithoutChallengerInput
     arenasAsCreator?: ArenaUncheckedCreateNestedManyWithoutCreatorInput
     chattings?: ChattingUncheckedCreateNestedManyWithoutMemberInput
@@ -35094,9 +35094,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUpdateManyWithoutMemberNestedInput
@@ -35119,9 +35119,9 @@ export namespace Prisma {
     birthDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isMale?: BoolFieldUpdateOperationsInput | boolean
     score?: IntFieldUpdateOperationsInput | number
-    isAttended?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    last_attended_date?: DateTimeFieldUpdateOperationsInput | Date | string
     arenasAsChallenger?: ArenaUncheckedUpdateManyWithoutChallengerNestedInput
     arenasAsCreator?: ArenaUncheckedUpdateManyWithoutCreatorNestedInput
     chattings?: ChattingUncheckedUpdateManyWithoutMemberNestedInput
