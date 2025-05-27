@@ -17,9 +17,9 @@ model Member {
   birthDate           DateTime             @map("birth_date")
   isMale              Boolean
   score               Int                  @default(500)
+  lastAttendedDate    DateTime             @default(now()) @map("last_attended_date")
   createdAt           DateTime             @default(now()) @map("created_at")
   deletedAt           DateTime?            @map("deleted_at")
-  last_attended_date  DateTime             @default(now())
   arenasAsChallenger  Arena[]              @relation("ArenaChallenger")
   arenasAsCreator     Arena[]              @relation("ArenaCreator")
   chattings           Chatting[]
