@@ -8,6 +8,11 @@ interface ArenaInputBoxProps {
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onSend: () => void;
     disabled: boolean;
+    maxLength: number; // 추가: 최대 글자 수
+    currentLength: number; // 추가: 현재 입력된 글자 수
+    remainingSends: number; // 추가: 남은 메시지 전송 횟수
+    totalSends: number; // 추가: 전체 허용 메시지 전송 횟수 (예: 5)
+    sendError: string | null; // 추가: 메시지 전송 관련 에러 메시지 (ex: 횟수 초과, 길이 초과 등)
 }
 
 export default function ArenaDetailInputBox({
@@ -15,16 +20,52 @@ export default function ArenaDetailInputBox({
     onChange,
     onSend,
     disabled,
+    maxLength,
+    currentLength,
+    remainingSends,
+    totalSends,
+    sendError,
 }: ArenaInputBoxProps) {
+    // 글자 수 초과 여부 판단
+    const isOverMaxLength = currentLength > maxLength;
+    // 내용이 비어있는지 판단 (공백 제외)
+    // 남은 횟수가 0인지 판단
+    const isSendCountZero = remainingSends <= 0;
+    // 최종 disabled 상태 결정:
+    // 부모에서 넘겨준 disabled가 true거나
+    // 내용이 비어있거나,
+    // 글자 수가 제한을 넘었거나,
+    // 남은 횟수가 0이면 비활성화
+    const finalDisabled = disabled || isOverMaxLength || isSendCountZero;
     return (
         <div className="flex items-end gap-2 mt-auto">
             <textarea
                 value={content}
                 onChange={onChange}
-                placeholder="의견을 작성하세요... (남은 메시지: 0/5)"
+                placeholder="의견을 작성하세요..."
+                maxLength={maxLength}
                 className="flex-1 resize-none rounded-lg bg-background-400 p-3 text-font-100 placeholder:text-font-300 h-[80px]"
-                disabled={disabled}
+                disabled={finalDisabled}
             />
+            {/* 현재 글자 수 및 남은 횟수 표시 영역 */}
+            <div className="flex justify-between text-sm px-1">
+                {/* 글자 수 표시: 초과 시 빨간색 */}
+                <span
+                    className={`${
+                        isOverMaxLength ? "text-red-500" : "text-font-300"
+                    }`}
+                >
+                    {currentLength}/{maxLength} 자
+                </span>
+                {/* 남은 횟수 표시: 0이면 빨간색 */}
+                <span
+                    className={`${
+                        isSendCountZero ? "text-red-500" : "text-font-300"
+                    }`}
+                >
+                    남은 기회: {remainingSends}/{totalSends}
+                </span>
+            </div>
             <Button
                 icon={
                     <img src="/icons/send.svg" alt="send" className="w-4 h-4" />
@@ -32,7 +73,7 @@ export default function ArenaDetailInputBox({
                 type="purple"
                 size="send"
                 onClick={onSend}
-                disabled={disabled}
+                disabled={finalDisabled}
             />
         </div>
     );
