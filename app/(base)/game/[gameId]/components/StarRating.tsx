@@ -26,11 +26,6 @@ export default function StarRating({
         return "empty";
     };
 
-    const handleClick = (newValue: number) => {
-        if (readOnly || !onChange) return;
-        onChange(newValue);
-    };
-
     const displayValue = hoverValue ?? value;
 
     return (
@@ -65,7 +60,16 @@ export default function StarRating({
                             setHoverValue(i + (isHalf ? 0.5 : 1));
                         }}
                         onMouseLeave={() => !readOnly && setHoverValue(null)}
-                        onClick={() => handleClick(displayValue)}
+                        onClick={(e) => {
+                            if (readOnly || !onChange) return;
+
+                            const rect =
+                                e.currentTarget.getBoundingClientRect();
+                            const isHalf =
+                                e.clientX - rect.left < rect.width / 2;
+                            const newValue = i + (isHalf ? 0.5 : 1);
+                            onChange(newValue);
+                        }}
                     >
                         {getStarType(i) === "full" && (
                             <Image

@@ -94,7 +94,7 @@ export default function GameDetailPage() {
                     nickname: r.nickname ?? "유저",
                     date: new Date(r.createdAt).toLocaleDateString("ko-KR"),
                     tier: getTierIcon(r.score),
-                    rating: r.rating,
+                    rating: r.rating / 2,
                     comment: r.content,
                     likes: r.likeCount ?? 0,
                     isLiked: r.isLiked ?? false,

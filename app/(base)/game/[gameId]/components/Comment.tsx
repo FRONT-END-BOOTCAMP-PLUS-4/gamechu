@@ -42,7 +42,7 @@ export default function Comment({
                     body: JSON.stringify({
                         gameId: Number(gameId),
                         content: text,
-                        rating,
+                        rating: Math.round(rating * 2),
                     }),
                 }
             );
