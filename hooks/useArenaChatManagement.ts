@@ -5,6 +5,7 @@ import { ArenaStatus } from "@/types/arena-status";
 import { useArenaSocket } from "./useArenaSocket";
 import { socket } from "@/socket";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
+import useArenaStore from "@/stores/useArenaStore";
 
 interface UseArenaChatManagementProps {
     arenaId: number | undefined;
@@ -31,7 +32,7 @@ export function useArenaChatManagement({
     const [loadingChats, setLoadingChats] = useState(false);
     const [errorChats, setErrorChats] = useState<string | null>(null);
     const [userId, setUserId] = useState<string | null>(null); // 메시지 보낼 때 필요한 유저 ID
-
+    const arenaDetail = useArenaStore((state) => state.arenaData);
     // 훅 마운트 시 유저 ID 가져오기
     useEffect(() => {
         const fetchUserId = async () => {
@@ -44,7 +45,10 @@ export function useArenaChatManagement({
     // 초기 채팅 목록 불러오기 로직
     const fetchChats = useCallback(async () => {
         // arenaId가 없거나 status가 3(진행 중)이 아니면 채팅 불러올 필요 없음
-        if (typeof arenaId !== "number" || status !== 3) {
+        if (
+            typeof arenaId !== "number" ||
+            ![3, 4, 5].includes(arenaDetail?.status || 0)
+        ) {
             setChats([]); // 상태에 맞지 않으면 채팅 비우기
             return;
         }
