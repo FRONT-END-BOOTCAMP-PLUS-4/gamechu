@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import StarRating from "@/app/(base)/game/[gameId]/components/StarRating";
+import StarRating from "@/app/(base)/games/[gameId]/components/StarRating";
 import Button from "@/app/components/Button";
 import { cn } from "@/utils/tailwindUtil";
 import Typing from "@/public/typing.json";
@@ -35,7 +35,9 @@ export default function Comment({
 
         try {
             const res = await fetch(
-                isEditing ? `/api/reviews/${editingReviewId}` : `/api/reviews`,
+                isEditing
+                    ? `/api/member/games/${gameId}/reviews/${editingReviewId}`
+                    : `/api/member/games/${gameId}/reviews/`,
                 {
                     method: isEditing ? "PATCH" : "POST",
                     headers: { "Content-Type": "application/json" },

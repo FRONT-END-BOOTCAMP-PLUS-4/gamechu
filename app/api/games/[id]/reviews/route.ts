@@ -16,7 +16,6 @@ export async function GET(
     const gameId = id;
 
     const viewerId = req.nextUrl.searchParams.get("viewerId") ?? "";
-
     const parsedId = Number.parseInt(gameId || "", 10);
     if (isNaN(parsedId)) {
         return NextResponse.json(

@@ -33,14 +33,14 @@ export default function GameFilter({
     setSelectedPlatformId,
     genres,
     themes,
-    platforms,
+    platforms = [],
 }: GameFilterProps) {
     const [isGenreExpanded, setIsGenreExpanded] = useState(false);
     const [isPlatformExpanded, setIsPlatformExpanded] = useState(false);
 
     const genreAndTheme: TagItem[] = [
-        ...genres.map((g) => ({ ...g, type: "genre" as const })),
-        ...themes.map((t) => ({ ...t, type: "theme" as const })),
+        ...(genres ?? []).map((g) => ({ ...g, type: "genre" as const })),
+        ...(themes ?? []).map((t) => ({ ...t, type: "theme" as const })),
     ];
 
     const displayedTags = isGenreExpanded

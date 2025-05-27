@@ -83,7 +83,7 @@ export default function CommentCard({
         }
 
         try {
-            const res = await fetch(`/api/reviews/${id}/like`, {
+            const res = await fetch(`/api/member/review-likes/${id}/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ memberId: viewerId }),

@@ -12,14 +12,14 @@ const deleteReviewUsecase = new DeleteReviewUsecase(reviewRepo);
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { reviewId: string } }
+    { params }: { params: Promise<{ reviewId: string }> }
 ) {
     const userId = await getAuthUserId();
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const reviewId = parseInt(params.reviewId);
+    const reviewId = parseInt((await params).reviewId);
     const review = await reviewRepo.findById(reviewId);
 
     if (!review) {

@@ -43,7 +43,7 @@ export default function GamePage() {
 
     useEffect(() => {
         const fetchFilters = async () => {
-            const res = await fetch("/api/games/filters");
+            const res = await fetch("/api/games?meta=true");
             const data = await res.json();
             setGenres(data.genres);
             setThemes(data.themes);
