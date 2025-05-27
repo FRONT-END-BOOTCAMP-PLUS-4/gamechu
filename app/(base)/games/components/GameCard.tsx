@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -6,7 +6,7 @@ interface GameCardProps {
     id: number;
     platform: string;
     title: string;
-    rating: number;
+    expertRating: number;
     developer: string;
     thumbnail: string;
 }
@@ -15,61 +15,63 @@ export default function GameCard({
     id,
     platform,
     title,
-    rating,
+    expertRating,
     developer,
     thumbnail,
 }: GameCardProps) {
     const router = useRouter();
     const handleClick = () => {
-        router.push(`/game/${id}`);
+        router.push(`/games/${id}`);
     };
 
     return (
         <div
             onClick={handleClick}
-            className="w-[330px] h-[330px] flex flex-col rounded-[8px] overflow-hidden transition-all duration-100 hover:border-2 hover:border-primary-purple-200 border-transparent"
+            className="cursor-pointer box-border w-[348px] h-[348px] overflow-hidden flex flex-col rounded-[6px] border border-[1px] border-line-200 border-opacity-50 hover:border-[2px] hover:border-primary-purple-200 transition-all duration-100"
         >
             {/* 이미지 영역 */}
             <div
-                className="relative w-full h-[230px]"
+                className="relative w-full h-[248px]"
                 style={{
                     backgroundImage: `url(${thumbnail})`,
-                    backgroundSize: "100% 100%", // ✅ 이거!
+                    backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                 }}
             >
                 {/* 플랫폼 태그 */}
-                <div className="absolute top-4 right-4 px-3 py-[2px] bg-background-100 text-caption text-font-100 rounded-[4px] border border-background-300">
+                <div className="absolute top-2 right-2 p-1 opacity-90  bg-background-100 text-caption text-font-100 rounded-[4px] border border-background-300">
                     {platform}
                 </div>
             </div>
 
             {/* 콘텐츠 영역 */}
-            <div className="w-full h-[100px] bg-background-100 px-4 py-3 flex flex-col justify-between">
-                {/* 제목 + 별점 */}
-                <div className="flex justify-between items-start">
-                    <h2 className="text-h2 font-semibold text-font-100 line-clamp-1">
-                        {title}
-                    </h2>
-                    <div className="flex items-center w-[50px] h-[25px]">
+            <div className="w-full h-[100px] bg-background-100 px-4 py-2 flex flex-col justify-between relative">
+                {/* 제목 */}
+
+                <h2 className="text-h3 font-semibold text-font-100 line-clamp-2">
+                    {title}
+                </h2>
+
+                <div className="flex justify-between items-center mt-auto">
+                    {/* 개발자 */}
+                    <span className="text-caption text-font-200 line-clamp-1">
+                        {developer}
+                    </span>
+
+                    {/* 별점 */}
+                    <div className="flex items-center  h-[25px]">
                         <Image
                             src="/icons/empty-purple-star.svg"
                             alt="star"
                             width={16}
                             height={16}
-                            className="mr-1"
                         />
-                        <span className="text-regular text-font-100">
-                            {(rating ?? 0).toFixed(1)}
+                        <span className="text-regular text-font-100 ml-1">
+                            {(expertRating ?? 0).toFixed(1)}
                         </span>
                     </div>
                 </div>
-
-                {/* 개발자 */}
-                <span className="text-caption text-font-200 line-clamp-1">
-                    {developer}
-                </span>
             </div>
         </div>
     );
