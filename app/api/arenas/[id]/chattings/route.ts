@@ -259,7 +259,6 @@ export async function GET(
         return NextResponse.json({
             chats: chatList, // 채팅 목록 배열
             remainingSends: remainingSends, // 현재 유저의 남은 전송 횟수
-            // userSentCount: userSentCount // 보낸 총 횟수도 혹시 모르니 같이? (remainingSends만 보내도 될 듯)
         });
     } catch (error) {
         console.error(
