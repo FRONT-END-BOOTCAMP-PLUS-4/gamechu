@@ -8,7 +8,7 @@ import ProfileTierCard from "./components/ProfileTierCard";
 import ProfileSidebar from "./components/ProfileSidebar";
 import ProfileInfoTab from "./components/tabs/ProfileInfoTab";
 import ProfileReviewTab from "./components/tabs/ProfileReviewTab";
-import ProfileWishlistTab from "./components/tabs/ProfileWishlistTab"
+import ProfileWishlistTab from "./components/tabs/ProfileWishlistTab";
 
 // ✅ 위시리스트 게임 카드용 타입
 type WishlistGame = {
@@ -55,7 +55,9 @@ export default function ProfilePage() {
             const [reviewRes, profileRes, wishlistRes] = await Promise.all([
                 fetch("/api/reviews/member"),
                 fetch("/api/member/profile"),
-                fetch("/api/member/wishlists"),
+                fetch("/api/member/wishlists", {
+                    method: "GET",
+                }),
             ]);
 
             const reviews = await reviewRes.json();

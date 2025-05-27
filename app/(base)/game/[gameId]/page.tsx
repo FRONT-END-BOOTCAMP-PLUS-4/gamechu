@@ -173,6 +173,7 @@ export default function GameDetailPage() {
                                     : 0
                             }
                             releaseDate={game.releaseDate}
+                            gameId={game.id}
                         />
                         <GameInfoCard
                             platforms={game.platforms}
