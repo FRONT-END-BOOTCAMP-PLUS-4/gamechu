@@ -64,7 +64,7 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                         height={16}
                     />
                     <span className="text-sm text-purple-500 font-semibold">
-                        {review.rating}.0
+                        {(review.rating / 2).toFixed(1)}
                     </span>
                 </div>
 
