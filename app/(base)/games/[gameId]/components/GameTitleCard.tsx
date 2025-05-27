@@ -91,7 +91,7 @@ export default function GameTitleCard({
             {/* 오른쪽 정보 영역 */}
             <div className="flex-1 flex-col p-10">
                 <div className="mb-6 mt-4">
-                    <h2 className="text-h2 font-semibold text-font-100 line-clamp-1">
+                    <h2 className="text-h2 font-semibold text-font-100 line-clamp-2">
                         {title}
                     </h2>
                     <p className="text-caption text-font-200">{developer}</p>

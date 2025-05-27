@@ -73,16 +73,30 @@ export class GamePrismaRepository implements GameRepository {
                     include: { platform: true },
                     take: 1,
                 },
+                reviews: {
+                    include: { member: true },
+                },
             },
         });
 
-        return games.map((game) => ({
-            id: game.id,
-            title: game.title,
-            thumbnail: game.thumbnail ?? "",
-            developer: game.developer ?? "알 수 없음",
-            platform: game.gamePlatforms[0]?.platform.name ?? "기타",
-        }));
+        return games.map((game) => {
+            const expertReviews = game.reviews.filter(
+                (r) => r.member.score >= 3000
+            );
+            const expertRating = expertReviews.length
+                ? expertReviews.reduce((acc, r) => acc + r.rating, 0) /
+                  expertReviews.length /
+                  2
+                : 0;
+            return {
+                id: game.id,
+                title: game.title,
+                thumbnail: game.thumbnail ?? "",
+                developer: game.developer ?? "알 수 없음",
+                platform: game.gamePlatforms[0]?.platform.name ?? "기타",
+                expertRating,
+            };
+        });
     }
 
     async findAllGames(): Promise<GetGameCardDto[]> {
@@ -101,6 +115,7 @@ export class GamePrismaRepository implements GameRepository {
             thumbnail: game.thumbnail ?? "",
             developer: game.developer ?? "알 수 없음",
             platform: game.gamePlatforms[0]?.platform.name ?? "기타",
+            expertRating: 0, // 기본값 설정, 필요시 수정 가능
         }));
     }
 }

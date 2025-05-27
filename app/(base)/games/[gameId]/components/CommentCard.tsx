@@ -5,6 +5,7 @@ import Image from "next/image";
 import Button from "@/app/components/Button";
 import Lottie from "lottie-react";
 import Like from "@/public/like.json";
+import TierBadge from "@/app/components/TierBadge";
 
 interface CommentCardProps {
     id: number;
@@ -13,6 +14,7 @@ interface CommentCardProps {
     date: string;
     tier: string;
     rating: number;
+    score: number;
     comment: string;
     likes: number;
     isLiked: boolean;
@@ -27,10 +29,11 @@ export default function CommentCard({
     profileImage,
     nickname,
     date,
-    tier,
+
     rating,
     comment,
     likes,
+    score,
     isLiked: initiallyLiked,
     viewerId,
     memberId,
@@ -123,12 +126,7 @@ export default function CommentCard({
                             <span className="text-h3 text-font-100 font-medium">
                                 {nickname}
                             </span>
-                            <Image
-                                src={tier}
-                                alt="tier"
-                                width={20}
-                                height={20}
-                            />
+                            <TierBadge score={score} size="sm" />
                         </div>
                         <span className="text-caption text-font-200">
                             {date}

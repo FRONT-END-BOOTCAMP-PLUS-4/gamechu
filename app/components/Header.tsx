@@ -49,9 +49,9 @@ export default function Header() {
 
                 <nav className="flex space-x-10 ml-[100px]">
                     <Link
-                        href="/game"
+                        href="/games"
                         className={`${
-                            pathname === "/game"
+                            pathname === "/games"
                                 ? "text-primary-purple-100"
                                 : "text-white"
                         } text-[24px] leading-[32px] font-semibold hover:opacity-80`}

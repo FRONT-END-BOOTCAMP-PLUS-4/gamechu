@@ -12,6 +12,7 @@ interface GameCard {
     thumbnail: string;
     developer: string;
     platform: string;
+    expertRating: number;
 }
 
 interface OptionItem {
@@ -88,7 +89,7 @@ export default function GamePage() {
                 <SearchBar keyword={keyword} setKeyword={setKeyword} />
             </div>
 
-            <div className="flex gap-10 items-start">
+            <div className="flex items-start gap-8">
                 <GameFilter
                     genres={genres}
                     themes={themes}
@@ -98,7 +99,7 @@ export default function GamePage() {
                     selectedPlatformId={selectedPlatformId}
                     setSelectedPlatformId={setSelectedPlatformId}
                 />
-                <div className="ml-auto w-[1020px] space-y-10">
+                <div className="w-[1068px] space-y-10">
                     <GameCardList games={gamesForPage} />
                     <Pager
                         currentPage={currentPage}

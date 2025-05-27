@@ -5,7 +5,7 @@ interface GameCardData {
     id: number;
     platform: string;
     title: string;
-    rating: number;
+    expertRating: number;
     developer: string;
     thumbnail: string;
 }
@@ -16,7 +16,7 @@ interface GameCardListProps {
 
 export default function GameCardList({ games }: GameCardListProps) {
     return (
-        <div className="grid grid-cols-3 gap-[15px] w-[1020px]">
+        <div className="grid grid-cols-3 gap-3 w-[1068px]">
             {games.slice(0, 12).map((game) => (
                 <GameCard key={game.id} {...game} />
             ))}

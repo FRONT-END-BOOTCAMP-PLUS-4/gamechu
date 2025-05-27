@@ -22,6 +22,7 @@ interface Review {
     likes: number;
     isLiked: boolean;
     memberId: string;
+    score: number;
 }
 
 interface GameDetail {
@@ -36,11 +37,11 @@ interface GameDetail {
     wishCount: number;
     reviewCount: number;
     rating: number;
+    score: number;
 }
 
-const isExpertTier = (tier: string) => {
-    const expertTiers = ["/icons/platinum.svg", "/icons/diamond.svg"];
-    return expertTiers.includes(tier);
+const isExpertTier = (score: number) => {
+    return score >= 3000;
 };
 
 export default function GameDetailPage() {
@@ -72,19 +73,8 @@ export default function GameDetailPage() {
     const fetchComments = React.useCallback(async () => {
         if (!gameId) return;
         try {
-            const url = viewerId
-                ? `/api/games/${gameId}/reviews?viewerId=${viewerId}`
-                : `/api/games/${gameId}/reviews`;
-            const res = await fetch(url);
+            const res = await fetch(`/api/games/${gameId}/reviews`);
             const data = await res.json();
-
-            const getTierIcon = (score: number): string => {
-                if (score <= 1000) return "/icons/bronze.svg";
-                if (score <= 2000) return "/icons/silver.svg";
-                if (score <= 3000) return "/icons/gold.svg";
-                if (score <= 4000) return "/icons/platinum.svg";
-                return "/icons/diamond.svg";
-            };
 
             const enriched = data.map(
                 (r: any): Review => ({
@@ -93,11 +83,12 @@ export default function GameDetailPage() {
                     profileImage: r.imageUrl ?? "/icons/profile.svg",
                     nickname: r.nickname ?? "유저",
                     date: new Date(r.createdAt).toLocaleDateString("ko-KR"),
-                    tier: getTierIcon(r.score),
+                    tier: r.score,
                     rating: r.rating / 2,
                     comment: r.content,
                     likes: r.likeCount ?? 0,
                     isLiked: r.isLiked ?? false,
+                    score: r.score ?? 0,
                 })
             );
 
@@ -105,7 +96,7 @@ export default function GameDetailPage() {
         } catch (err) {
             console.error("🔥 댓글 조회 실패", err);
         }
-    }, [gameId, viewerId]);
+    }, [gameId]);
 
     useEffect(() => {
         fetchComments();
@@ -145,8 +136,8 @@ export default function GameDetailPage() {
     };
 
     const myComment = allComments.find((c) => c.memberId === viewerId);
-    const expertComments = allComments.filter((c) => isExpertTier(c.tier));
-    const userComments = allComments.filter((c) => !isExpertTier(c.tier));
+    const expertComments = allComments.filter((c) => isExpertTier(c.score));
+    const userComments = allComments.filter((c) => !isExpertTier(c.score));
     const currentComments =
         selectedReviewType === "expert" ? expertComments : userComments;
 
@@ -239,6 +230,7 @@ export default function GameDetailPage() {
                                         nickname={myComment.nickname}
                                         date={myComment.date}
                                         tier={myComment.tier}
+                                        score={myComment.score}
                                         rating={myComment.rating}
                                         comment={myComment.comment}
                                         likes={myComment.likes}
@@ -266,6 +258,7 @@ export default function GameDetailPage() {
                                     date={c.date}
                                     tier={c.tier}
                                     rating={c.rating}
+                                    score={c.score}
                                     comment={c.comment}
                                     likes={c.likes}
                                     isLiked={c.isLiked}

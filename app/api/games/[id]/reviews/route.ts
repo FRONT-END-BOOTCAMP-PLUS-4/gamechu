@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { GetReviewsByGameIdUsecase } from "@/backend/review/application/usecase/GetReviewsByGameIdUsecase";
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
+import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 
 const usecase = new GetReviewsByGameIdUsecase(
     new PrismaReviewRepository(),
@@ -15,7 +16,7 @@ export async function GET(
     const { id } = await params; // 폴더 이름이 [id]일 경우
     const gameId = id;
 
-    const viewerId = req.nextUrl.searchParams.get("viewerId") ?? "";
+    const viewerId = await getAuthUserId();
     const parsedId = Number.parseInt(gameId || "", 10);
     if (isNaN(parsedId)) {
         return NextResponse.json(
@@ -24,6 +25,6 @@ export async function GET(
         );
     }
 
-    const result = await usecase.execute(parsedId, viewerId);
+    const result = await usecase.execute(parsedId, viewerId || "");
     return NextResponse.json(result);
 }
