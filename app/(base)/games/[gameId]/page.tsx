@@ -10,6 +10,7 @@ import Pager from "@/app/components/Pager";
 import { useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/AuthStore";
 import { getSession } from "next-auth/react";
+import { useRef } from "react";
 
 interface Review {
     id: number;
@@ -49,7 +50,7 @@ export default function GameDetailPage() {
     const gameId = Array.isArray(params.gameId)
         ? params.gameId[0]
         : params.gameId;
-
+    const commentRef = useRef<HTMLDivElement>(null);
     const { user, setUser } = useAuthStore();
     const viewerId = user?.id;
     const [game, setGame] = useState<GameDetail | null>(null);
@@ -210,15 +211,17 @@ export default function GameDetailPage() {
                         {typeof gameId === "string" &&
                             gameId.length > 0 &&
                             (editingId !== null ? (
-                                <Comment
-                                    gameId={gameId}
-                                    editingReviewId={editingId}
-                                    defaultValue={myComment?.comment ?? ""}
-                                    onSuccess={() => {
-                                        fetchComments();
-                                        setEditingId(null);
-                                    }}
-                                />
+                                <div ref={commentRef}>
+                                    <Comment
+                                        gameId={gameId}
+                                        editingReviewId={editingId}
+                                        defaultValue={myComment?.comment ?? ""}
+                                        onSuccess={() => {
+                                            fetchComments();
+                                            setEditingId(null);
+                                        }}
+                                    />
+                                </div>
                             ) : myComment ? (
                                 <div className="bg-background-300 rounded-[8px] ">
                                     <h3 className="text-h3 font-semibold">
@@ -237,7 +240,17 @@ export default function GameDetailPage() {
                                         isLiked={myComment.isLiked}
                                         viewerId={viewerId ?? ""}
                                         memberId={myComment.memberId}
-                                        onEdit={(id) => setEditingId(id)}
+                                        onEdit={(id) => {
+                                            setEditingId(id);
+                                            setTimeout(() => {
+                                                commentRef.current?.scrollIntoView(
+                                                    {
+                                                        behavior: "smooth",
+                                                        block: "center",
+                                                    }
+                                                );
+                                            }, 100);
+                                        }}
                                         onDelete={handleDelete}
                                     />
                                 </div>

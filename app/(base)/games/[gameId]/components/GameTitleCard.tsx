@@ -84,6 +84,7 @@ export default function GameTitleCard({
                     src={image.startsWith("//") ? `https:${image}` : image}
                     alt={title}
                     fill
+                    sizes="(max-width: 480px) 100vw, 480px"
                     className="object-fill"
                 />
             </div>

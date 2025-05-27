@@ -43,16 +43,33 @@ export async function PATCH(
 
 export async function DELETE(
     _: NextRequest,
-    { params }: { params: Record<string, string> }
+    { params }: { params: Promise<{ gameId: string; reviewId: string }> }
 ) {
-    const reviewId = parseInt(params.reviewId, 10);
+    const { reviewId } = await params;
+
+    if (!reviewId) {
+        return NextResponse.json(
+            { message: "리뷰 ID가 필요합니다" },
+            { status: 400 }
+        );
+    }
+
+    const reviewIdNum = Number.parseInt(reviewId, 10);
+
+    if (isNaN(reviewIdNum) || reviewIdNum <= 0) {
+        return NextResponse.json(
+            { message: "유효하지 않은 리뷰 ID입니다" },
+            { status: 400 }
+        );
+    }
+
     const userId = await getAuthUserId();
 
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const review = await reviewRepo.findById(reviewId);
+    const review = await reviewRepo.findById(reviewIdNum);
 
     if (!review) {
         return NextResponse.json(
@@ -68,6 +85,6 @@ export async function DELETE(
         );
     }
 
-    await deleteReviewUsecase.execute(reviewId);
+    await deleteReviewUsecase.execute(reviewIdNum);
     return NextResponse.json({ message: "리뷰 삭제 완료" });
 }
