@@ -125,14 +125,17 @@ export default function GameDetailPage() {
         fetchGame();
     }, [gameId]);
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (reviewId: number) => {
         const confirm = window.confirm("정말 삭제하시겠습니까?");
         if (!confirm) return;
 
         try {
-            const res = await fetch(`/api/reviews/${id}`, {
-                method: "DELETE",
-            });
+            const res = await fetch(
+                `/api/member/games/${gameId}/reviews/${reviewId}`,
+                {
+                    method: "DELETE",
+                }
+            );
             if (!res.ok) throw new Error("댓글 삭제 실패");
             await fetchComments();
         } catch (err) {
