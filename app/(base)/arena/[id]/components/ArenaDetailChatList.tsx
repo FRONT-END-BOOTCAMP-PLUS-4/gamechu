@@ -13,7 +13,7 @@ function ArenaDetailChatListComponent(
     const arenaDetail = useArenaStore((state) => state.arenaData);
 
     return (
-        <div className="flex-1 overflow-y-auto space-y-3 pr-2 mb-4 max-h-[500px] custom-scroll">
+        <div className="flex-1 overflow-y-auto space-y-3 pr-2 mb-4 max-h-[550px] custom-scroll">
             {chats.length === 0 ? (
                 <p className="text-font-300 text-center mt-4">
                     아직 채팅이 없습니다.

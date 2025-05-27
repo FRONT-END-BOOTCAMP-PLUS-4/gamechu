@@ -48,14 +48,14 @@ export default function ArenaDetailInputBox({
                 disabled={finalDisabled}
             />
             {/* 현재 글자 수 및 남은 횟수 표시 영역 */}
-            <div className="flex justify-between text-sm px-1">
+            <div className="flex justify-between text-sm px-1 gap-4">
                 {/* 글자 수 표시: 초과 시 빨간색 */}
                 <span
                     className={`${
                         isOverMaxLength ? "text-red-500" : "text-font-300"
                     }`}
                 >
-                    {currentLength}/{maxLength} 자
+                    {currentLength}/{maxLength}자
                 </span>
                 {/* 남은 횟수 표시: 0이면 빨간색 */}
                 <span
@@ -63,7 +63,7 @@ export default function ArenaDetailInputBox({
                         isSendCountZero ? "text-red-500" : "text-font-300"
                     }`}
                 >
-                    남은 기회: {remainingSends}/{totalSends}
+                    {remainingSends}/{totalSends}회
                 </span>
             </div>
             <Button

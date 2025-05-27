@@ -9,7 +9,7 @@ export default function ArenaDetailHeader() {
             {/* 상단: 제목 & 게시자 */}
             <div className="flex justify-between items-center">
                 {/* 제목 */}
-                <div className="flex items-center gap-2 animate-fade-in-left">
+                <div className="flex items-center animate-fade-in-left">
                     <img
                         src="/icons/arena2.svg"
                         alt="투기장 아이콘"
