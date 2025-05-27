@@ -33,4 +33,23 @@ export class PrismaWishListRepository implements WishListRepository {
       );
     });
   }
+
+  async isWished(memberId: string, gameId: number): Promise<boolean> {
+    const existing = await prisma.wishlist.findFirst({
+      where: { memberId, gameId },
+    });
+    return !!existing;
+  }
+
+  async addToWishlist(memberId: string, gameId: number): Promise<void> {
+    await prisma.wishlist.create({
+      data: { memberId, gameId },
+    });
+  }
+
+  async removeFromWishlist(memberId: string, gameId: number): Promise<void> {
+    await prisma.wishlist.deleteMany({
+      where: { memberId, gameId },
+    });
+  }
 }

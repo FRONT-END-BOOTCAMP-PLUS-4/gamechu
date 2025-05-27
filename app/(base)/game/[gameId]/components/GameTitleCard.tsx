@@ -1,6 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/app/components/Button";
+import { useAuthStore } from "@/stores/AuthStore";
 
 interface GameTitleCardProps {
     image: string;
@@ -8,6 +11,7 @@ interface GameTitleCardProps {
     developer: string;
     rating?: number;
     releaseDate: string;
+    gameId: number;
 }
 
 export default function GameTitleCard({
@@ -16,11 +20,57 @@ export default function GameTitleCard({
     developer,
     rating,
     releaseDate,
+    gameId,
 }: GameTitleCardProps) {
+    const { user } = useAuthStore();
+    const [isWished, setIsWished] = useState<boolean | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    // 위시리스트 상태 확인
+    useEffect(() => {
+        if (!user?.id || !gameId) return;
+
+        const fetchWishlistStatus = async () => {
+            try {
+                const res = await fetch("/api/member/wishlists");
+                if (!res.ok) throw new Error("위시리스트 조회 실패");
+                const list = await res.json();
+                const exists = list.some((game: any) => game.id === gameId);
+                setIsWished(exists);
+            } catch (err) {
+                console.error("🔥 위시리스트 상태 확인 실패", err);
+            }
+        };
+
+        fetchWishlistStatus();
+    }, [user?.id, gameId]);
+
+    const handleWishlistToggle = async () => {
+        if (!user?.id || isWished === null) return;
+
+        setLoading(true);
+        try {
+            const res = await fetch("/api/member/wishlists", {
+                method: isWished ? "DELETE" : "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ gameId }),
+            });
+
+            if (!res.ok) throw new Error("위시리스트 변경 실패");
+
+            setIsWished((prev) => !prev);
+        } catch (err) {
+            console.error("🔥 위시리스트 토글 실패", err);
+            alert("처리에 실패했습니다.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
-        <div className="flex w-full max-w-[960px] h-[330px]  overflow-hidden">
+        <div className="flex w-full max-w-[960px] h-[330px] overflow-hidden">
             {/* 왼쪽 게임 이미지 */}
-            <div className="flex-none relative w-[480px] h-[330px] ">
+            <div className="flex-none relative w-[480px] h-[330px]">
                 <Image
                     src={image.startsWith("//") ? `https:${image}` : image}
                     alt={title}
@@ -57,7 +107,7 @@ export default function GameTitleCard({
                                     평점 없음
                                 </span>
                             )}
-                            <span className="text-caption text-font-200 ">
+                            <span className="text-caption text-font-200">
                                 겜잘알 평점
                             </span>
                         </div>
@@ -82,7 +132,19 @@ export default function GameTitleCard({
                 </div>
 
                 <div>
-                    <Button label="위시리스트" />
+                    {isWished !== null && (
+                        <Button
+                            label={
+                                loading
+                                    ? "처리 중..."
+                                    : isWished
+                                    ? "위시리스트 삭제"
+                                    : "위시리스트"
+                            }
+                            onClick={handleWishlistToggle}
+                            disabled={loading}
+                        />
+                    )}
                 </div>
             </div>
         </div>
