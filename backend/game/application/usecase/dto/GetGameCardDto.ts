@@ -4,4 +4,5 @@ export interface GetGameCardDto {
     thumbnail: string;
     developer: string;
     platform: string;
+    expertRating: number;
 }
