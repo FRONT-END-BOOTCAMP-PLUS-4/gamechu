@@ -14,6 +14,14 @@ interface GameTitleCardProps {
     gameId: number;
 }
 
+interface WishlistGame {
+    id: number;
+    title: string;
+    developer: string;
+    thumbnail: string;
+    platform: string;
+}
+
 export default function GameTitleCard({
     image,
     title,
@@ -34,8 +42,9 @@ export default function GameTitleCard({
             try {
                 const res = await fetch("/api/member/wishlists");
                 if (!res.ok) throw new Error("위시리스트 조회 실패");
-                const list = await res.json();
-                const exists = list.some((game: any) => game.id === gameId);
+
+                const list: WishlistGame[] = await res.json(); // ✅ 명확한 타입 지정
+                const exists = list.some((game) => game.id === gameId);
                 setIsWished(exists);
             } catch (err) {
                 console.error("🔥 위시리스트 상태 확인 실패", err);
@@ -139,10 +148,12 @@ export default function GameTitleCard({
                                     ? "처리 중..."
                                     : isWished
                                     ? "위시리스트 삭제"
-                                    : "위시리스트"
+                                    : "위시리스트 등록"
                             }
                             onClick={handleWishlistToggle}
                             disabled={loading}
+                            type={isWished ? "black" : "purple"}
+                            size="medium"
                         />
                     )}
                 </div>
