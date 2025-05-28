@@ -16,13 +16,15 @@ export class UpdateArenaStatusUsecase {
             throw new Error("투기장이 존재하지 않습니다.");
         }
 
-        if (arena.status !== 1 || arena.challengerId) {
-            throw new Error("이미 다른 유저가 참가했습니다.");
-        }
         if (status === 2) {
+            if (arena.status !== 1 || arena.challengerId) {
+                throw new Error("이미 다른 유저가 참가했습니다.");
+            }
+
             if (!challengerId) {
                 throw new Error("challengerId is required for status 2");
             }
+
             await this.arenaRepository.updateChallengerAndStatus(
                 arenaId,
                 challengerId,
