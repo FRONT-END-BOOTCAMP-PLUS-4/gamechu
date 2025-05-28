@@ -429,36 +429,54 @@ async function main() {
     // --- ScorePollicies -----------------
     const newScorePolicies = await prisma.scorePolicy.createMany({
         data: [
-            // {
-            //     name: "출석",
-            //     description: "하루 1회 로그인 시 받는 점수입니다.",
-            //     score: 5,
-            //     imageUrl: "@/public/icons/Attend.ico",
-            // },
-            // {
-            //     name: "리뷰 등록",
-            //     description: "게임 리뷰를 등록하면 받는 점수입니다.",
-            //     score: 10,
-            //     imageUrl: "@/public/icons/ReviewPost.ico",
-            // },
-            // {
-            //     name: "리뷰 좋아요 받음",
-            //     description: "하루 1회 로그인 시 받는 점수입니다.",
-            //     score: 5,
-            //     imageUrl: "@/public/icons/ReviewLiked.ico",
-            // },
-            // {
-            //     name: "막고라 참여",
-            //     description: "막고라에 참여하여 차감된 점수입니다.",
-            //     score: -100,
-            //     imageUrl: "@/pubic/icons/ArenaJoin.ico",
-            // },
-            // {
-            //     name: "막고라 승리",
-            //     description: "막고라에 승리하셔서 얻은 점수입니다.",
-            //     score: 190,
-            //     imageUrl: "@/public/icons/ArenaWin.ico",
-            // },
+             {
+                 name: "출석 완료",
+                 description: "일퀘는 생명. 일퀘를 했으면 리워드를 받아야죠. 5포인트가 적립됩니다.",
+                 score: 5,
+                 imageUrl: "icons/policy-attend.svg",
+             },
+            {
+                name: "리뷰 삭제",
+                description: "마따끄 리뷰를 삭제했으면 퍼니시먼트를 받아야겠지. 리뷰에 달린 좋아요 갯수만큼의 포인트가 차감됩니다.",
+                score: 0,
+                imageUrl: "icons/policy-review.svg",
+            },
+            {
+                name: "리뷰 좋아요 획득",
+                description: "당신은 따봉겜추의 축복을 받으셨습니다! 5포인트가 적립됩니다.",
+                score: 5,
+                imageUrl: "icons/policy-likes.svg",
+            },
+            {
+                 name: "리뷰 좋아요 삭제",
+                 description: "줬다 뺐는건 좀 아닌데. 5포인트가 지불됩니다.",
+                 score: -5,
+                 imageUrl: "icons/policy-likes.svg",
+             },
+            {
+                 name: "투기장 참여",
+                 description: "영웅 호걸들의 시간! 투기장 참가비 100포인트 지불합니다",
+                 score: -100,
+                 imageUrl: "icons/arena.svg",
+             },
+            {
+                 name: "투기장 승리",
+                 description: "겜안분 척결 다섯 글자의 환호성! 투기장에서 승리하셨습니다!! 190포인트가 적립됩니다.",
+                 score: 190,
+                 imageUrl: "icons/arena.svg",
+            },
+            {
+                 name: "투기장 무승부",
+                 description: "무승부로 하지 않을래....? 참가비 100포인트를 회수합니다.",
+                 score: 100,
+                 imageUrl: "icons/arena.svg",
+            },
+            {
+                 name: "투기장 미성립",
+                 description: "놀랍게도 그 누구도 관심을 주지 않았다. 참가비 100포인트를 회수합니다.",
+                 score: 100,
+                 imageUrl: "icons/arena.svg",
+            },
         ],
     });
     console.log({ newScorePolicies });
