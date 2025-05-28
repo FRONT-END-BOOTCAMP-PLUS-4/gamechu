@@ -37,7 +37,7 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
     return (
         <li className="bg-background-200 p-4 rounded-lg shadow relative flex gap-4">
             {/* 게임 이미지 → 상세 페이지 링크 */}
-            <Link href={`/game/${review.gameId}`}>
+            <Link href={`/games/${review.gameId}`}>
                 <div className="w-[80px] h-[80px] flex-shrink-0 rounded overflow-hidden cursor-pointer">
                     <Image
                         src={
@@ -69,7 +69,7 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                 </div>
 
                 {/* 게임 제목 */}
-                <Link href={`/game/${review.gameId}`}>
+                <Link href={`/games/${review.gameId}`}>
                     <h3 className="font-semibold text-body hover:underline cursor-pointer">
                         {review.gameTitle}
                     </h3>
