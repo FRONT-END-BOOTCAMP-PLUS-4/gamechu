@@ -15,6 +15,13 @@ export default function ArenaDetailRecruiting() {
         try {
             const memberId = await getAuthUserId(); // 🔐 로그인된 유저 ID 가져오기
             if (!memberId) throw new Error("로그인이 필요합니다.");
+            if (memberId === arenaDetail?.creatorId) {
+                throw new Error("본인이 만든 투기장에는 참가할 수 없습니다.");
+            }
+            // 👇 이미 다른 도전자가 있을 경우
+            if (arenaDetail?.challengerId) {
+                throw new Error("이미 다른 유저가 참가 중입니다.");
+            }
 
             const res = await fetch(`/api/arenas/${arenaDetail?.id}`, {
                 method: "PATCH",
@@ -33,6 +40,7 @@ export default function ArenaDetailRecruiting() {
             }
 
             alert("참가 요청이 접수되었습니다!");
+            window.location.reload();
         } catch (err: unknown) {
             let errorMessage = "알 수 없는 오류가 발생했습니다.";
             if (err instanceof Error) {

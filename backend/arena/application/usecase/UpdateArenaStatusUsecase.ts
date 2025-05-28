@@ -11,6 +11,14 @@ export class UpdateArenaStatusUsecase {
         status: ArenaStatus,
         challengerId?: string
     ): Promise<void> {
+        const arena = await this.arenaRepository.findById(arenaId);
+        if (!arena) {
+            throw new Error("투기장이 존재하지 않습니다.");
+        }
+
+        if (arena.status !== 1 || arena.challengerId) {
+            throw new Error("이미 다른 유저가 참가했습니다.");
+        }
         if (status === 2) {
             if (!challengerId) {
                 throw new Error("challengerId is required for status 2");
