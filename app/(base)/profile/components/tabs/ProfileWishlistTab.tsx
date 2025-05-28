@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import GameCard from "@/app/(base)/game/components/GameCard";
+import GameCard from "@/app/(base)/games/components/GameCard";
 import Pager from "@/app/components/Pager";
 
 interface Game {
