@@ -1,4 +1,6 @@
+import { CreateArenaUsecase } from "@/backend/arena/application/usecase/CreateArenaUsecase";
 import { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
+import { CreateArenaDto } from "@/backend/arena/application/usecase/dto/CreateArenaDto";
 import { GetArenaDto } from "@/backend/arena/application/usecase/dto/GetArenaDto";
 import { GetArenaUsecase } from "@/backend/arena/application/usecase/GetArenaUsecase";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
@@ -7,6 +9,7 @@ import { MemberRepository } from "@/backend/member/domain/repositories/MemberRep
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
+import { ErrorHandling } from "@/utils/ErrorHandling";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextResponse } from "next/server";
 
@@ -63,14 +66,42 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     try {
-        const memberId = await getAuthUserId();
+        // body validation
+        const body = await request.json();
+        if (!body.title) {
+            return NextResponse.json(
+                { error: "투기장 제목을 찾을 수 없습니다." },
+                { status: 400 }
+            );
+        }
 
+        if (!body.description) {
+            return NextResponse.json(
+                { error: "투기장 내용을 찾을 수 없습니다." },
+                { status: 400 }
+            );
+        }
+
+        // member validation
+        const memberId = await getAuthUserId();
         if (!memberId) {
             return NextResponse.json(
                 { error: "투기장 작성 권한이 없습니다." },
                 { status: 401 }
             );
         }
+
+        // execute usecase
+        const createArenaDto = new CreateArenaDto(
+            memberId!,
+            body.title,
+            body.description,
+            new Date()
+        );
+        const arenaRepository: ArenaRepository = new PrismaArenaRepository();
+        const createArenaUsecase = new CreateArenaUsecase(arenaRepository);
+        const newArena = await createArenaUsecase.execute(createArenaDto);
+        return NextResponse.json(newArena, { status: 201 });
     } catch (error) {
         console.error(`Error fetching arenas: ${error}`);
         return NextResponse.json(
