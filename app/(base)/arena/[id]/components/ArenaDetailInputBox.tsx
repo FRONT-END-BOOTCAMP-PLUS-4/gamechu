@@ -28,7 +28,7 @@ export default function ArenaDetailInputBox({
 }: ArenaInputBoxProps) {
     // 글자 수 초과 여부 판단
     const isOverMaxLength = currentLength > maxLength;
-    // 내용이 비어있는지 판단 (공백 제외)
+
     // 남은 횟수가 0인지 판단
     const isSendCountZero = remainingSends <= 0;
     // 최종 disabled 상태 결정:

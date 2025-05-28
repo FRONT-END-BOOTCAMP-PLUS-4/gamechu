@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { socket } from "@/socket";
 import { ChattingDto } from "@/backend/chatting/application/usecase/dto/ChattingDto";
 import { ArenaStatus } from "@/types/arena-status";
-
 interface ArenaSocketProps {
     arenaId: number | undefined;
     status: ArenaStatus | undefined;
@@ -64,16 +63,11 @@ export function useArenaSocket({
             memberId: string;
             nickname: string;
             text: string;
-            // 만약 백엔드에서 arenaId도 같이 보내준다면 여기에 추가
-            // arenaId?: number;
-            // 만약 백엔드에서 createdAt도 같이 보내준다면 여기에 추가 (가장 좋음!)
-            // createdAt?: string | Date;
-            // 만약 백엔드에서 id도 같이 보내준다면 여기에 추가 (가장 좋음!)
-            // id?: number;
+            id?: number;
         }) => {
             const newChat: ChattingDto = {
                 // 서버에서 받은 메시지를 기반으로 새로운 채팅 객체 생성
-                id: -1, // auto increment이므로 -1로 설정
+                id: msg.id,
                 memberId: msg.memberId,
                 arenaId: arenaId as number,
                 content: msg.text,

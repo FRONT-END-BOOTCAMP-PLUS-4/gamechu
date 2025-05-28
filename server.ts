@@ -27,6 +27,7 @@ app.prepare().then(() => {
         socket.on(
             "chat message", // 클라이언트가 메세지 보내면 이 코드가 잡아서 메세지 내용을 받음
             (msg: {
+                id: number;
                 roomId: string;
                 memberId: string;
                 nickname: string;
@@ -34,7 +35,7 @@ app.prepare().then(() => {
             }) => {
                 io.to(msg.roomId).emit("chat message", msg); // 나 포함 접속한 모두에게 뿌림
                 console.log(
-                    `${msg.roomId}, ${msg.memberId}, ${msg.nickname}, ${msg.text}`
+                    `${msg.id}, ${msg.roomId}, ${msg.memberId}, ${msg.nickname}, ${msg.text}`
                 );
             }
         );
