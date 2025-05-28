@@ -5,6 +5,7 @@ import GameCardList from "./components/GameCardList";
 import GameFilter from "./components/GameFilter";
 import SearchBar from "./components/SearchBar";
 import Pager from "@/app/components/Pager";
+import { useDebounce } from "@/utils/UseDebounce";
 
 interface GameCard {
     id: number;
@@ -35,6 +36,8 @@ export default function GamePage() {
     const [platforms, setPlatforms] = useState<OptionItem[]>([]);
     const [keyword, setKeyword] = useState("");
 
+    const debounceKeyword = useDebounce(keyword, 300);
+
     const totalItems = games.length;
     const endPage = Math.ceil(totalItems / itemsPerPage);
     const pages = Array.from({ length: endPage }, (_, i) => i + 1);
@@ -42,6 +45,7 @@ export default function GamePage() {
         .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
         .map((game) => ({ ...game, rating: 0 }));
 
+    // 필터 옵션 불러오기
     useEffect(() => {
         const fetchFilters = async () => {
             const res = await fetch("/api/games?meta=true");
@@ -53,14 +57,17 @@ export default function GamePage() {
         fetchFilters();
     }, []);
 
+    // 게임 불러오기
     useEffect(() => {
         const fetchGames = async () => {
+            const trimmedKeyword = debounceKeyword.trim();
+
             const params = new URLSearchParams();
             if (selectedTag)
                 params.append(selectedTag.type, selectedTag.id.toString());
             if (selectedPlatformId)
                 params.append("platform", selectedPlatformId.toString());
-            if (keyword) params.append("keyword", keyword);
+            if (trimmedKeyword) params.append("keyword", trimmedKeyword);
 
             const res = await fetch(`/api/games?${params.toString()}`);
             const data = await res.json();
@@ -75,7 +82,7 @@ export default function GamePage() {
         };
 
         fetchGames();
-    }, [selectedTag, selectedPlatformId, keyword]);
+    }, [selectedTag, selectedPlatformId, debounceKeyword]);
 
     return (
         <div className="min-h-screen bg-background-400 text-font-100 py-12 space-y-10">

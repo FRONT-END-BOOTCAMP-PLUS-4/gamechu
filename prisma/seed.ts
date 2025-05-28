@@ -49,18 +49,21 @@ async function main() {
         const accessToken = await getTwitchAccessToken();
 
         // --- Game ---------------------------
+        const offset = Number(process.argv[2]) || 0;
+        const limit = 500;
         const gameResponse = await fetch("https://api.igdb.com/v4/games", {
             method: "POST",
             headers: {
                 "client-id": clientId,
                 Authorization: `Bearer ${accessToken}`,
             },
+            //10000
             body: `
                 fields id, cover.url, genres, involved_companies.company.name, involved_companies.developer, name, platforms, release_dates.date, themes;
                 where platforms = (6, 34, 39, 48, 130, 163, 169, 390, 508);
                 sort id asc;
-                limit 0;
-                offset 0;
+                limit ${limit};
+                offset ${offset};
             `,
         });
         if (!gameResponse.ok) {
@@ -75,12 +78,15 @@ async function main() {
 
         const newGames = await prisma.game.createMany({
             data: games.map((g: any) => {
-                g.cover.url = g.cover.url.replace("t_thumb", "t_cover_big");
+                const thumbnail = g.cover?.url
+                    ? g.cover.url.replace("t_thumb", "t_cover_big")
+                    : null;
+
                 return {
                     id: g.id,
                     title: g.name,
                     developer: g.developer,
-                    thumbnail: g.cover.url,
+                    thumbnail,
                     releaseDate: g.releaseDate,
                 };
             }),
