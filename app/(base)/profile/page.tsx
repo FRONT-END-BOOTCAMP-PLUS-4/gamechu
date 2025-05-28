@@ -17,7 +17,7 @@ type WishlistGame = {
     developer: string;
     thumbnail: string;
     platform: string;
-    rating: number;
+    expertRating: number;
 };
 
 type Review = {

@@ -10,11 +10,11 @@ interface Game {
     developer: string;
     thumbnail: string;
     platform: string;
-    rating: number;
+    expertRating: number;
 }
 
 export default function ProfileWishlistTab({ games }: { games: Game[] }) {
-    const itemsPerPage = 6;
+    const itemsPerPage = 4;
     const [currentPage, setCurrentPage] = useState(1);
 
     const totalItems = games.length;
@@ -32,28 +32,26 @@ export default function ProfileWishlistTab({ games }: { games: Game[] }) {
                 위시리스트 목록
             </h2>
 
-            {/* 3 x 2 그리드 */}
             {games.length === 0 ? (
-                <p className="text-font-200 text-sm">
-                    위시리스트에 등록된 게임이 없습니다.
-                </p>
-            ) : (
-                <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mx-auto max-w-[1000px] place-items-center">
-                        {currentGames.map((game) => (
-                            <GameCard key={game.id} {...game} />
-                        ))}
-                    </div>
+                    <p className="text-font-200 text-sm">
+                        위시리스트에 등록된 게임이 없습니다.
+                    </p>
+                ) : (
+                    <>
+                        <div className="grid grid-cols-2 gap-6">
+                            {currentGames.map((game) => (
+                                <GameCard key={game.id} {...game} />
+                            ))}
+                        </div>
 
-                    {/* 페이지네이션 */}
-                    <Pager
-                        currentPage={currentPage}
-                        pages={pages}
-                        endPage={endPage}
-                        onPageChange={setCurrentPage}
-                    />
-                </>
-            )}
+                        <Pager
+                            currentPage={currentPage}
+                            pages={pages}
+                            endPage={endPage}
+                            onPageChange={setCurrentPage}
+                        />
+                    </>
+                )}
         </div>
     );
 }
