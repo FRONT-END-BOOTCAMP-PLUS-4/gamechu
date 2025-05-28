@@ -19,10 +19,7 @@ export default function ArenaDetailPage() {
     const leftVotes = 192;
     const rightVotes = 85;
     useArenaAutoStatusDetail({
-        onStatusUpdate: (newStatus) => {
-            console.log("자동 상태 변경:", newStatus);
-            // 예: 상태가 바뀌면 UI 새로고침하거나 알림 띄우기
-        },
+        onStatusUpdate: () => {},
     });
     useEffect(() => {
         const fetchArenaDetail = async () => {

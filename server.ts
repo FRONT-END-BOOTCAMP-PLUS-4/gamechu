@@ -45,11 +45,19 @@ app.prepare().then(() => {
             console.log("user disconnected");
         });
         // 추가: 에러 핸들링 (클라이언트 소켓에서 발생한 에러 등)
-        socket.on("error", (error: any) => {
-            console.error(
-                `Socket-Server: Error on socket ${socket.id}:`,
-                error
-            );
+        socket.on("error", (error: unknown) => {
+            if (error instanceof Error) {
+                console.error(
+                    `Socket-Server: Error on socket ${socket.id}:`,
+                    error.message,
+                    error.stack
+                );
+            } else {
+                console.error(
+                    `Socket-Server: Unknown error on socket ${socket.id}:`,
+                    error
+                );
+            }
         });
     });
 

@@ -41,11 +41,13 @@ export async function PATCH(
     const { status, challengerId } = await req.json();
     const arenaId = Number((await context.params).id);
 
-    const repo = new PrismaArenaRepository();
-    const usecase = new UpdateArenaStatusUsecase(repo);
+    const ArenaRepository = new PrismaArenaRepository();
+    const updateArenaStatusUsecase = new UpdateArenaStatusUsecase(
+        ArenaRepository
+    );
 
     try {
-        await usecase.execute(arenaId, status, challengerId); // challengerId 없으면 undefined
+        await updateArenaStatusUsecase.execute(arenaId, status, challengerId); // challengerId 없으면 undefined
         return NextResponse.json({ success: true });
     } catch (err: unknown) {
         let errorMessage = "에러 발생";
