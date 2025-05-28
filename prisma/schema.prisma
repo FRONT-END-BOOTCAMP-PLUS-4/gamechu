@@ -37,11 +37,11 @@ model Member {
 }
 
 model Game {
-  id            Int            @id @default(autoincrement())
+  id            Int            @id
   title         String
   developer     String?
   thumbnail     String?
-  releaseDate   DateTime       @map("release_date")
+  releaseDate   DateTime?       @map("release_date")
   gameGenres    GameGenre[]
   gamePlatforms GamePlatform[]
   gameThemes    GameTheme[]
