@@ -16,7 +16,7 @@ type PagerProps = {
     onPageChange: (newPage: number) => void;
 };
 
-export default function EnhancedPager({
+export default function Pager({
     currentPage,
     pages,
     endPage,
