@@ -232,15 +232,15 @@ export function useArenaChatManagement({
                 }
                 const resJson = await res.json(); // 전체 응답
                 const newChat: ChattingDto = resJson.newChat; // 여기서 content 접근 가능
-                setChats((prev) => [...prev, newChat]); // 이거 없으면 안보임
+                setRemainingSends(resJson.remainingSends);
+                // setChats((prev) => [...prev, newChat]); // 이거 없으면 안보임
                 socket.emit("chat message", {
+                    id: newChat.id, // 백엔드에서 생성된 ID 사용
                     roomId: arenaId.toString(),
                     memberId: userId,
                     nickname: userId, // FIXME: 실제 닉네임 필요하면 따로 관리
                     text: newChat.content, // 이제 정상
                 });
-
-                console.log("✅ 메시지 전송 성공:", newChat);
             } catch (err) {
                 let errorMessage =
                     "채팅 전송 중 알 수 없는 오류가 발생했습니다.";
