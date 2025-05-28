@@ -428,7 +428,9 @@ async function main() {
 
     // --- ScorePollicies -----------------
     const newScorePolicies = await prisma.scorePolicy.createMany({
+        
         data: [
+            /*
              {
                  name: "출석 완료",
                  description: "일퀘는 생명. 일퀘를 했으면 리워드를 받아야죠. 5포인트가 적립됩니다.",
@@ -477,7 +479,9 @@ async function main() {
                  score: 100,
                  imageUrl: "icons/arena.svg",
             },
+            */
         ],
+        
     });
     console.log({ newScorePolicies });
 
