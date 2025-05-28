@@ -60,7 +60,7 @@ async function main() {
                 where platforms = (6, 34, 39, 48, 130, 163, 169, 390, 508);
                 sort id asc;
                 limit 50;
-                offset 0;
+                offset 100;
             `,
         });
         if (!gameResponse.ok) {
