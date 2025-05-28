@@ -59,8 +59,8 @@ async function main() {
                 fields id, cover.url, genres, involved_companies.company.name, involved_companies.developer, name, platforms, release_dates.date, themes;
                 where platforms = (6, 34, 39, 48, 130, 163, 169, 390, 508);
                 sort id asc;
-                limit 50;
-                offset 100;
+                limit 0;
+                offset 0;
             `,
         });
         if (!gameResponse.ok) {
@@ -75,6 +75,7 @@ async function main() {
 
         const newGames = await prisma.game.createMany({
             data: games.map((g: any) => {
+                g.cover.url = g.cover.url.replace("t_thumb", "t_cover_big");
                 return {
                     id: g.id,
                     title: g.name,
@@ -428,7 +429,6 @@ async function main() {
 
     // --- ScorePollicies -----------------
     const newScorePolicies = await prisma.scorePolicy.createMany({
-        
         data: [
             /*
              {
@@ -481,7 +481,6 @@ async function main() {
             },
             */
         ],
-        
     });
     console.log({ newScorePolicies });
 
