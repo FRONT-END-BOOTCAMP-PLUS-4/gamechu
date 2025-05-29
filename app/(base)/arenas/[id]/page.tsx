@@ -4,7 +4,6 @@ import ArenaVote from "./components/ArenaDetailVote";
 import ArenaHeader from "./components/ArenaDetailHeader";
 import React, { useEffect } from "react";
 import ArenaInfo from "./components/ArenaDetailInfo";
-import { useParams } from "next/navigation";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 import useArenaStore from "@/stores/useArenaStore";
 import ArenaDetailContainer from "./components/ArenaDetailContainer";
@@ -13,18 +12,15 @@ import { useArenaAutoStatusDetail } from "@/hooks/useArenaAutoStatusDetail";
 export default function ArenaDetailPage() {
     const setGlobalArenaData = useArenaStore((state) => state.setArenaData);
     const clearGlobalArenaData = useArenaStore((state) => state.clearArenaData);
-    const idParams = useParams().id;
-    const arenaId = Number(idParams);
-    // 투표 수
-    const leftVotes = 192;
-    const rightVotes = 85;
+    const arenaDetail = useArenaStore((state) => state.arenaData);
+
     useArenaAutoStatusDetail({
         onStatusUpdate: () => {},
     });
     useEffect(() => {
         const fetchArenaDetail = async () => {
             try {
-                const res = await fetch(`/api/arenas/${arenaId}`, {
+                const res = await fetch(`/api/arenas/${arenaDetail?.id}`, {
                     method: "GET",
                     cache: "no-store",
                 });
@@ -44,22 +40,15 @@ export default function ArenaDetailPage() {
         return () => {
             clearGlobalArenaData();
         };
-    }, [arenaId, setGlobalArenaData, clearGlobalArenaData]);
+    }, [arenaDetail?.id, setGlobalArenaData, clearGlobalArenaData]);
     return (
         <div>
-            {/* <div className="flex gap-4">
-                <button onClick={() => setStatus("recruiting")}>모집중</button>
-                <button onClick={() => setStatus("waiting")}>대기중</button>
-                <button onClick={() => setStatus("active")}>진행중</button>
-                <button onClick={() => setStatus("voting")}>투표중</button>
-                <button onClick={() => setStatus("closed")}>종료</button>
-            </div> */}
             <div className="flex px-16 py-16 gap-8">
                 {/* 왼쪽: 채팅, 투표 등 */}
                 <div className="flex flex-col flex-[3]">
                     <ArenaHeader />
                     <ArenaDetailContainer />
-                    <ArenaVote leftVotes={leftVotes} rightVotes={rightVotes} />
+                    <ArenaVote />
                 </div>
 
                 {/* 오른쪽: 정보 패널 */}

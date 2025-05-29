@@ -30,8 +30,12 @@ export function useVote(): UseVoteResult {
             }
 
             // 성공 후 처리 (필요하다면 콜백 등 추가 가능)
-        } catch (err: any) {
-            setError(err.message || "알 수 없는 오류가 발생했습니다.");
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("알 수 없는 오류가 발생했습니다.");
+            }
         } finally {
             setLoading(false);
         }

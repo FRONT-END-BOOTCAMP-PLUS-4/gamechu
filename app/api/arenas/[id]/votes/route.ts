@@ -34,11 +34,14 @@ export async function POST(req: NextRequest) {
         const result = await usecase.execute(dto);
 
         return NextResponse.json(result, { status: 200 });
-    } catch (error: any) {
-        return NextResponse.json(
-            { message: error.message ?? "서버 오류" },
-            { status: 500 }
-        );
+    } catch (error: unknown) {
+        let errorMessage = "서버 오류";
+
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+
+        return NextResponse.json({ message: errorMessage }, { status: 500 });
     }
 }
 // /api/arenas/[id]/votes/route.ts

@@ -34,10 +34,13 @@ export async function GET(
             { votedTo: existingVote ? existingVote.votedTo : null },
             { status: 200 }
         );
-    } catch (error: any) {
-        return NextResponse.json(
-            { message: error.message ?? "서버 오류" },
-            { status: 500 }
-        );
+    } catch (error: unknown) {
+        let errorMessage = "서버 오류";
+
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+
+        return NextResponse.json({ message: errorMessage }, { status: 500 });
     }
 }
