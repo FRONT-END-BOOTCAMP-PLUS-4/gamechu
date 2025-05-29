@@ -1,7 +1,7 @@
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { Vote, Prisma, PrismaClient } from "@/prisma/generated";
 import { VoteFilter } from "@/backend/vote/domain/repositories/filters/VoteFilter";
-
+type VoteWithoutId = Omit<Vote, "id">;
 export class PrismaVoteRepository implements VoteRepository {
     private prisma: PrismaClient;
 
@@ -10,11 +10,15 @@ export class PrismaVoteRepository implements VoteRepository {
     }
 
     private getWhereClause(filter: VoteFilter): Prisma.VoteWhereInput {
-        const { arenaId, votedTo } = filter;
+        const { arenaId, memberId, votedTo } = filter;
 
         return {
             ...(arenaId && {
                 arenaId,
+            }),
+
+            ...(memberId && {
+                memberId,
             }),
             ...(votedTo && {
                 votedTo,
@@ -43,7 +47,7 @@ export class PrismaVoteRepository implements VoteRepository {
 
         return data;
     }
-    async save(vote: Vote): Promise<Vote> {
+    async save(vote: VoteWithoutId): Promise<Vote> {
         const data = await this.prisma.vote.create({
             data: vote,
         });

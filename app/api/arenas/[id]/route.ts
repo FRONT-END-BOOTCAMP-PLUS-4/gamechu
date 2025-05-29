@@ -21,10 +21,12 @@ export async function GET(
         return NextResponse.json({ error: "Invalid arenaId" }, { status: 400 });
     }
 
-    const usecase = new GetArenaDetailUsecase(new PrismaArenaRepository());
+    const getArenaDetailusecase = new GetArenaDetailUsecase(
+        new PrismaArenaRepository()
+    );
 
     try {
-        const result = await usecase.execute(arenaId);
+        const result = await getArenaDetailusecase.execute(arenaId);
         return NextResponse.json(result);
     } catch (error) {
         return NextResponse.json(

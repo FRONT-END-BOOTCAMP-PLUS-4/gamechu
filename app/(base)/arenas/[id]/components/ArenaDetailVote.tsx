@@ -4,27 +4,39 @@ import Button from "@/app/components/Button";
 import VoteStatusBar from "../../components/VoteStatusBar";
 import useArenaStore from "@/stores/useArenaStore";
 import { useEffect, useState } from "react";
+import { useVote } from "@/hooks/useVote";
+import { useVoteCheck } from "@/hooks/useVoteCheck";
+import { useVoteCount } from "@/hooks/useVoteCount";
 
-interface ArenaVoteProps {
-    leftVotes: number;
-    rightVotes: number;
-}
-
-export default function ArenaDetailVote({
-    leftVotes,
-    rightVotes,
-}: ArenaVoteProps) {
+export default function ArenaDetailVote() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
+    const { voteData } = useVoteCount(arenaDetail?.id || 0);
+
+    const { existingVote, refetch: refetchVoteCheck } = useVoteCheck(
+        arenaDetail?.id
+    );
+
+    // 투표 버튼은 항상 활성화 상태, 단 내가 투표한 쪽에는 "내가 투표한 항목" 표시
+    const isVotedToLeft = existingVote === arenaDetail?.creatorId;
+    const isVotedToRight = existingVote === arenaDetail?.challengerId;
+
     const [remainingTime, setRemainingTime] = useState<string>("");
+    const { submitVote, loading, error } = useVote();
 
-    // 투표 합계
-    const totalVotes = leftVotes + rightVotes;
-
-    // 퍼센트 계산 (투표가 없으면 0으로 처리)
+    const totalVotes = voteData?.total || 0;
+    const leftVotes = voteData?.leftVotes || 0;
+    const rightVotes = voteData?.rightVotes || 0;
     const leftPercent = totalVotes ? (leftVotes / totalVotes) * 100 : 0;
     const rightPercent = totalVotes ? (rightVotes / totalVotes) * 100 : 0;
 
-    // 남은 시간 계산 함수
+    console.log(
+        "Vote Data:",
+        totalVotes,
+        leftVotes,
+        rightVotes,
+        leftPercent,
+        rightPercent
+    );
     const calculateRemainingTime = () => {
         if (!arenaDetail?.endVote) return "";
 
@@ -42,19 +54,23 @@ export default function ArenaDetailVote({
         return `${diffHours}h ${diffMinutes}m`;
     };
 
-    // 남은 시간 실시간 업데이트 (1분마다)
     useEffect(() => {
         setRemainingTime(calculateRemainingTime());
 
         const interval = setInterval(() => {
             setRemainingTime(calculateRemainingTime());
-        }, 60 * 1000); // 1분마다 업데이트
+        }, 60 * 1000);
 
         return () => clearInterval(interval);
     }, [arenaDetail?.endVote]);
 
-    // 투표 상태가 아닌 경우 렌더링 안 함
     if (arenaDetail?.status !== 4 && arenaDetail?.status !== 5) return null;
+
+    const handleVote = async (votedTo: string | null) => {
+        if (!arenaDetail?.id || !votedTo) return;
+        await submitVote(arenaDetail.id, votedTo);
+        refetchVoteCheck();
+    };
 
     return (
         <div className="w-full max-w-[1000px] mt-6 bg-background-300 rounded-xl px-6 py-4 flex flex-col items-center justify-center gap-4 min-h-[200px] animate-fade-in-up">
@@ -63,7 +79,12 @@ export default function ArenaDetailVote({
                 {/* A 유저 */}
                 <div className="flex items-center gap-2 text-center">
                     {arenaDetail?.status === 4 ? (
-                        <Button label="투표" type="purple" />
+                        <Button
+                            label={isVotedToLeft ? "✔" : "투표"}
+                            type="purple"
+                            onClick={() => handleVote(arenaDetail.creatorId)}
+                            disabled={loading}
+                        />
                     ) : (
                         <div className="w-24 text-font-100 font-bold">
                             {Math.round(leftPercent)}%
@@ -86,7 +107,12 @@ export default function ArenaDetailVote({
                 {/* B 유저 */}
                 <div className="flex items-center gap-2 flex-row-reverse">
                     {arenaDetail?.status === 4 ? (
-                        <Button label="투표" type="blue" />
+                        <Button
+                            label={isVotedToRight ? "✔" : "투표"}
+                            type="blue"
+                            onClick={() => handleVote(arenaDetail.challengerId)}
+                            disabled={loading}
+                        />
                     ) : (
                         <div className="w-24 text-font-100 font-bold text-center">
                             {Math.round(rightPercent)}%
@@ -119,6 +145,9 @@ export default function ArenaDetailVote({
                     <>투표가 종료되었습니다.</>
                 )}
             </div>
+
+            {/* 에러 메시지 */}
+            {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
         </div>
     );
 }
