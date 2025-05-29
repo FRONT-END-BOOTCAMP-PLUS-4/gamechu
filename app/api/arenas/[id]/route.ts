@@ -49,13 +49,16 @@ export async function PATCH(
     try {
         await updateArenaStatusUsecase.execute(arenaId, status, challengerId); // challengerId 없으면 undefined
         return NextResponse.json({ success: true });
-    } catch (err: unknown) {
-        let errorMessage = "에러 발생";
-        if (err instanceof Error) {
-            errorMessage = err.message;
+    } catch (error: unknown) {
+        console.error("Error updating arenas:", error);
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { message: error.message || "투기장 수정 실패" },
+                { status: 400 }
+            );
         }
         return NextResponse.json(
-            { success: false, error: errorMessage },
+            { message: "알 수 없는 오류 발생" },
             { status: 500 }
         );
     }
@@ -77,6 +80,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
             { status: 200 }
         );
     } catch (error: unknown) {
+        console.error("Error deleting arenas:", error);
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "투기장 삭제 실패" },

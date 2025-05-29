@@ -5,29 +5,17 @@ import { NotificationRecordRepository } from "@/backend/notification-record/doma
 import { PrismaNotificationRecordRepository } from "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository";
 import { NotificationTypeRepository } from "@/backend/notification-type/domain/repositories/NotificationTypeRepository";
 import { PrismaNotificationTypeRepository } from "@/backend/notification-type/infra/repositories/prisma/PrismaNotificationTypeRepository";
-import { getMemberIdFromToken } from "@/utils/auth";
+import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     try {
-        const authHeader = request.headers.get("Authorization");
-        if (!authHeader) {
-            return NextResponse.json(
-                {
-                    error: "인증 정보가 없습니다.",
-                },
-                { status: 401 }
-            );
-        }
-        const memberId = await getMemberIdFromToken(authHeader);
-        console.log(memberId);
-
+        // member validation
+        const memberId: string | null = await getAuthUserId();
         if (!memberId) {
             return NextResponse.json(
-                {
-                    error: "멤버 아이디를 찾을 수 없습니다.",
-                },
-                { status: 400 }
+                { error: "알림 조회 권한이 없습니다." },
+                { status: 401 }
             );
         }
 
@@ -59,10 +47,16 @@ export async function GET(request: Request) {
             );
 
         return NextResponse.json(notificationRecordListDto);
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Error fetching notification records:", error);
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { message: error.message || "알림 조회 실패" },
+                { status: 400 }
+            );
+        }
         return NextResponse.json(
-            { error: "Failed to fetch notification records" },
+            { message: "알 수 없는 오류 발생" },
             { status: 500 }
         );
     }
