@@ -83,7 +83,7 @@ export default function GamePage() {
                     setGames([]);
                 }
             } catch (error) {
-                if ((error as any).name === "AbortError") {
+                if (error instanceof Error && error.name === "AbortError") {
                     console.log("이전 요청 취소됨");
                 } else {
                     console.error("게임 데이터 요청 실패:", error);

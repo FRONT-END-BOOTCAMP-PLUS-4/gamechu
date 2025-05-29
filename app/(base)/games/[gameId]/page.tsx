@@ -78,13 +78,25 @@ export default function GameDetailPage() {
             const data = await res.json();
 
             const enriched = data.map(
-                (r: any): Review => ({
+                (r: {
+                    id: number;
+                    tier: string;
+                    memberId: string;
+                    imageUrl?: string;
+                    nickname?: string;
+                    createdAt: string;
+                    score: number;
+                    rating: number;
+                    content: string;
+                    likeCount?: number;
+                    isLiked?: boolean;
+                }): Review => ({
                     id: r.id,
                     memberId: r.memberId,
                     profileImage: r.imageUrl ?? "/icons/profile.svg",
                     nickname: r.nickname ?? "유저",
                     date: new Date(r.createdAt).toLocaleDateString("ko-KR"),
-                    tier: r.score,
+                    tier: String(r.score),
                     rating: r.rating / 2,
                     comment: r.content,
                     likes: r.likeCount ?? 0,
