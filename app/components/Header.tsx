@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "./Button";
+import useModalStore from "@/stores/modalStore";
 
 export default function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -74,7 +75,14 @@ export default function Header() {
             <div className="flex items-center space-x-4 mr-[75px]">
                 {isLoggedIn ? (
                     <>
-                        <button className="text-primary-purple-100 hover:opacity-80">
+                        <button
+                            className="text-primary-purple-100 hover:opacity-80"
+                            onClick={() =>
+                                useModalStore
+                                    .getState()
+                                    .openModal("notification", null)
+                            }
+                        >
                             <Image
                                 src="/icons/bell.svg"
                                 alt="알림"
