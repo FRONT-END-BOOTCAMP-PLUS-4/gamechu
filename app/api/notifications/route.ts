@@ -3,6 +3,7 @@ import { CreateNotificationRecordDto } from "@/backend/notification-record/appli
 import { NotificationRecordRepository } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
 import { PrismaNotificationRecordRepository } from "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository";
 import { CreateNotificationRecordUsecase } from "@/backend/notification-record/application/usecase/CreateNotificationRecordUsecase";
+import { NotificationRecord } from "@/prisma/generated";
 
 export async function POST(request: Request) {
     try {
@@ -32,23 +33,25 @@ export async function POST(request: Request) {
             );
         }
 
-        const createNotificationRecordDto = new CreateNotificationRecordDto(
-            body.memberId,
-            body.typeId,
-            body.description
-        );
+        const createNotificationRecordDto: CreateNotificationRecordDto =
+            new CreateNotificationRecordDto(
+                body.memberId,
+                body.typeId,
+                body.description
+            );
 
         const notificationRecordRepository: NotificationRecordRepository =
             new PrismaNotificationRecordRepository();
         const createNotificationRecordUsecase: CreateNotificationRecordUsecase =
             new CreateNotificationRecordUsecase(notificationRecordRepository);
 
-        const newRecord = await createNotificationRecordUsecase.execute(
-            createNotificationRecordDto
-        );
+        const newRecord: NotificationRecord =
+            await createNotificationRecordUsecase.execute(
+                createNotificationRecordDto
+            );
 
         return NextResponse.json(newRecord, { status: 201 });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Error creating notification records:", error);
         if (error instanceof Error) {
             return NextResponse.json(
