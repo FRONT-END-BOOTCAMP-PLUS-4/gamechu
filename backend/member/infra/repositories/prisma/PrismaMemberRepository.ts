@@ -52,7 +52,7 @@ export class PrismaMemberRepository implements MemberRepository {
         }
 
         const year = parseInt(rawBirth.slice(0, 4), 10);
-        const month = parseInt(rawBirth.slice(4, 6), 10)-1;
+        const month = parseInt(rawBirth.slice(4, 6), 10) - 1;
         const day = parseInt(rawBirth.slice(6, 8), 10);
 
         const parsedDate = new Date(Date.UTC(year, month, day)); // ✅ UTC 기준 날짜 생성
@@ -67,6 +67,14 @@ export class PrismaMemberRepository implements MemberRepository {
                 isMale: rest.isMale,
                 birthDate: parsedDate, // ✅ 이곳에서만 파싱
                 imageUrl: rest.imageUrl,
+            },
+        });
+    }
+    async incrementScore(memberId: string, delta: number): Promise<void> {
+        await this.prisma.member.update({
+            where: { id: memberId },
+            data: {
+                score: { increment: delta },
             },
         });
     }

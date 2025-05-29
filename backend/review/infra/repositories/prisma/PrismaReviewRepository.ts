@@ -75,6 +75,7 @@ export class PrismaReviewRepository implements ReviewRepository {
 
         return this.toDto(review);
     }
+
     async findById(reviewId: number): Promise<ReviewDto | null> {
         const review = await prisma.review.findUnique({
             where: { id: reviewId },

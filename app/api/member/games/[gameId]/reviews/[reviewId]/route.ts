@@ -1,14 +1,35 @@
-// 리뷰 수정, 삭제
-
 import { NextRequest, NextResponse } from "next/server";
-import { UpdateReviewUsecase } from "@/backend/review/application/usecase/UpdateReviewUsecase";
-import { DeleteReviewUsecase } from "@/backend/review/application/usecase/DeleteReviewUsecase";
-import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 
+// 💡 필요한 의존성 직접 생성
+import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
+import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
+import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
+import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
+import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
+
+import { UpdateReviewUsecase } from "@/backend/review/application/usecase/UpdateReviewUsecase";
+import { DeleteReviewUsecase } from "@/backend/review/application/usecase/DeleteReviewUsecase";
+import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
+
+// 의존성 주입
 const reviewRepo = new PrismaReviewRepository();
+const likeRepo = new PrismaReviewLikeRepository();
+const memberRepo = new PrismaMemberRepository();
+const scoreRecordRepo = new PrismaScoreRecordRepository();
+const scorePolicy = new ScorePolicy();
+const applyReviewScoreUsecase = new ApplyReviewScoreUsecase(
+    scorePolicy,
+    memberRepo,
+    scoreRecordRepo
+);
+
 const updateReviewUsecase = new UpdateReviewUsecase(reviewRepo);
-const deleteReviewUsecase = new DeleteReviewUsecase(reviewRepo);
+const deleteReviewUsecase = new DeleteReviewUsecase(
+    reviewRepo,
+    likeRepo,
+    applyReviewScoreUsecase
+);
 
 export async function PATCH(
     req: NextRequest,
@@ -46,17 +67,9 @@ export async function DELETE(
     { params }: { params: Promise<{ gameId: string; reviewId: string }> }
 ) {
     const { reviewId } = await params;
+    const reviewIdNum = parseInt(reviewId, 10);
 
-    if (!reviewId) {
-        return NextResponse.json(
-            { message: "리뷰 ID가 필요합니다" },
-            { status: 400 }
-        );
-    }
-
-    const reviewIdNum = Number.parseInt(reviewId, 10);
-
-    if (isNaN(reviewIdNum) || reviewIdNum <= 0) {
+    if (!reviewIdNum || isNaN(reviewIdNum)) {
         return NextResponse.json(
             { message: "유효하지 않은 리뷰 ID입니다" },
             { status: 400 }
@@ -64,13 +77,11 @@ export async function DELETE(
     }
 
     const userId = await getAuthUserId();
-
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const review = await reviewRepo.findById(reviewIdNum);
-
     if (!review) {
         return NextResponse.json(
             { message: "리뷰를 찾을 수 없습니다" },
