@@ -16,6 +16,10 @@ export class ApplyArenaScoreUsecase {
         const policyId = this.scorePolicy.getPolicyIdByArenaResult(result);
 
         await this.memberRepository.incrementScore(memberId, delta);
-        await this.scoreRecordRepository.createRecord({ memberId, policyId });
+        await this.scoreRecordRepository.createRecord({
+            memberId,
+            policyId,
+            actualScore: delta,
+        });
     }
 }

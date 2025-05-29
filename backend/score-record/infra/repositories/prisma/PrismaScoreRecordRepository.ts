@@ -27,7 +27,8 @@ export class PrismaScoreRecordRepository implements ScoreRecordRepository {
                 policy.description,
                 policy.score,
                 policy.imageUrl,
-                record.createdAt
+                record.createdAt,
+                record.actualScore
             );
         });
     }
@@ -37,6 +38,7 @@ export class PrismaScoreRecordRepository implements ScoreRecordRepository {
             data: {
                 memberId: data.memberId,
                 policyId: data.policyId,
+                actualScore: data.actualScore,
             },
         });
     }

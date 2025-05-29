@@ -5,6 +5,7 @@ export class ScoreRecordDto {
         public readonly description: string,
         public readonly score: number,
         public readonly imageUrl: string,
-        public readonly createdAt: Date
+        public readonly createdAt: Date,
+        public readonly actualScore: number
     ) {}
 }

@@ -31,7 +31,9 @@ export class GamePrismaRepository implements GameRepository {
             title: game.title,
             developer: game.developer ?? "알 수 없음",
             thumbnail: game.thumbnail ?? "",
-            releaseDate: game.releaseDate.toISOString().split("T")[0],
+            releaseDate: game.releaseDate
+                ? game.releaseDate.toISOString().split("T")[0]
+                : "알 수 없음",
             platforms: game.gamePlatforms.map((gp) => gp.platform.name),
             genres: game.gameGenres.map((gg) => gg.genre.name),
             themes: game.gameThemes.map((gt) => gt.theme.name),

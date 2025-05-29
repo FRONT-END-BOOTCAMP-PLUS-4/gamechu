@@ -23,6 +23,10 @@ export class ApplyReviewScoreUsecase {
         const policyId = this.scorePolicy.getPolicyIdByReviewAction(action);
 
         await this.memberRepository.incrementScore(memberId, delta);
-        await this.scoreRecordRepository.createRecord({ memberId, policyId });
+        await this.scoreRecordRepository.createRecord({
+            memberId,
+            policyId,
+            actualScore: delta,
+        });
     }
 }

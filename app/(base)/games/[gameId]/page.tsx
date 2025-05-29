@@ -244,7 +244,6 @@ export default function GameDetailPage() {
                                         profileImage={myComment.profileImage}
                                         nickname={myComment.nickname}
                                         date={myComment.date}
-                                        tier={myComment.tier}
                                         score={myComment.score}
                                         rating={myComment.rating}
                                         comment={myComment.comment}
@@ -281,7 +280,6 @@ export default function GameDetailPage() {
                                     profileImage={c.profileImage}
                                     nickname={c.nickname}
                                     date={c.date}
-                                    tier={c.tier}
                                     rating={c.rating}
                                     score={c.score}
                                     comment={c.comment}

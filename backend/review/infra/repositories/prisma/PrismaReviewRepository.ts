@@ -121,6 +121,7 @@ export class PrismaReviewRepository implements ReviewRepository {
             updatedAt: review.updatedAt,
             nickname: review.member?.nickname ?? "유저",
             score: review.member?.score ?? 0,
+
             imageUrl: review.member?.imageUrl?.startsWith("http")
                 ? review.member.imageUrl
                 : "/icons/arena.svg",
