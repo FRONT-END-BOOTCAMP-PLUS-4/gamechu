@@ -5,6 +5,7 @@ import PointHistoryCard from "../PointHistoryCard";
 import Pager from "@/app/components/Pager";
 
 interface ScoreRecord {
+    actualScore: number;
     id: number;
     policyName: string;
     description: string;
@@ -56,7 +57,7 @@ export default function ProfilePointHistoryTab() {
                                 key={r.id}
                                 policyName={r.policyName}
                                 description={r.description}
-                                score={r.score}
+                                score={r.actualScore}
                                 imageUrl={r.imageUrl}
                                 createdAt={r.createdAt}
                             />
