@@ -14,7 +14,7 @@ export async function GET(
         console.log("Arena ID:", arenaId);
         console.log("Member ID:", memberId);
 
-        if (!arenaId || !memberId) {
+        if (!arenaId) {
             return NextResponse.json(
                 { message: "잘못된 쿼리입니다." },
                 { status: 400 }
