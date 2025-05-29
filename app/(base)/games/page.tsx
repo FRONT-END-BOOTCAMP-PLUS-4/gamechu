@@ -36,7 +36,7 @@ export default function GamePage() {
     const [platforms, setPlatforms] = useState<OptionItem[]>([]);
     const [keyword, setKeyword] = useState("");
 
-    const debounceKeyword = useDebounce(keyword, 300);
+    const debounceKeyword = useDebounce(keyword, 250);
 
     const totalItems = games.length;
     const endPage = Math.ceil(totalItems / itemsPerPage);
@@ -57,31 +57,45 @@ export default function GamePage() {
         fetchFilters();
     }, []);
 
-    // 게임 불러오기
     useEffect(() => {
-        const fetchGames = async () => {
-            const trimmedKeyword = debounceKeyword.trim();
+        const controller = new AbortController();
 
+        const fetchGames = async () => {
             const params = new URLSearchParams();
             if (selectedTag)
                 params.append(selectedTag.type, selectedTag.id.toString());
             if (selectedPlatformId)
                 params.append("platform", selectedPlatformId.toString());
-            if (trimmedKeyword) params.append("keyword", trimmedKeyword);
+            if (debounceKeyword) params.append("keyword", debounceKeyword);
 
-            const res = await fetch(`/api/games?${params.toString()}`);
-            const data = await res.json();
+            try {
+                const res = await fetch(`/api/games?${params.toString()}`, {
+                    signal: controller.signal,
+                });
 
-            if (Array.isArray(data)) {
-                setGames(data);
-                setCurrentPage(1);
-            } else {
-                console.error("게임 데이터 응답이 배열이 아님:", data);
-                setGames([]);
+                const data = await res.json();
+
+                if (Array.isArray(data)) {
+                    setGames(data);
+                    setCurrentPage(1);
+                } else {
+                    console.error("게임 데이터 응답이 배열이 아님:", data);
+                    setGames([]);
+                }
+            } catch (error) {
+                if ((error as any).name === "AbortError") {
+                    console.log("이전 요청 취소됨");
+                } else {
+                    console.error("게임 데이터 요청 실패:", error);
+                }
             }
         };
 
         fetchGames();
+
+        return () => {
+            controller.abort();
+        };
     }, [selectedTag, selectedPlatformId, debounceKeyword]);
 
     return (
