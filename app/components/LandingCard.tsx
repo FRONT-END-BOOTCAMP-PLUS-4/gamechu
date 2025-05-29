@@ -1,7 +1,5 @@
-"use client";
-
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Button from "./Button";
 
 interface LandingCardProps {
@@ -23,14 +21,10 @@ export default function LandingCard({
     animationDelay = "0s",
     buttonLabel = "시작하기",
 }: LandingCardProps) {
-    const router = useRouter();
-
-    const handleClick = () => {
-        router.push(href);
-    };
 
     return (
-        <div
+        <Link
+            href={href}
             className="bg-background-300 hover:bg-primary-purple-100/10 p-8 rounded-xl text-center 
              transition-all duration-300 ease-out transform 
              hover:scale-[1.05] hover:-translate-y-1 hover:shadow-xl 
@@ -56,9 +50,8 @@ export default function LandingCard({
                     label={buttonLabel}
                     size="medium"
                     type="purple"
-                    onClick={handleClick}
                 />
             </div>
-        </div>
+        </Link>
     );
 }

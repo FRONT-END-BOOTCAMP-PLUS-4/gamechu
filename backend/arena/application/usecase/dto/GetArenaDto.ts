@@ -7,7 +7,7 @@ export class GetArenaDto {
         },
         public memberId: string | null,
         public pageSize: number,
-        public sortField: string = "createdAt",
+        public sortField: string = "startDate",
         public ascending: boolean = false
     ) {}
 }
