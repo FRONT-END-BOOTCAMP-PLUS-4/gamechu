@@ -60,4 +60,12 @@ export class ScorePolicy {
                 throw new Error("Invalid review score action");
         }
     }
+
+    getAttendanceDelta(): number {
+        return 5; // 출석 점수 고정
+    }
+
+    getAttendancePolicyId(): number {
+        return 1; // 출석 완료 정책 ID
+    }
 }

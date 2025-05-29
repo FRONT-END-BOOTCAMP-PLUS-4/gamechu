@@ -17,6 +17,7 @@ export default function PointHistoryCard({
     createdAt,
 }: PointHistoryCardProps) {
     const formattedDate = new Date(createdAt).toLocaleDateString("ko-KR", {
+        timeZone: "Asia/Seoul", // ✅ 한국 시간 적용
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
