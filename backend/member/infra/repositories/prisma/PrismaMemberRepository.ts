@@ -78,4 +78,20 @@ export class PrismaMemberRepository implements MemberRepository {
             },
         });
     }
+
+    async getLastAttendedDate(memberId: string): Promise<Date | null> {
+        const member = await this.prisma.member.findUnique({
+            where: { id: memberId },
+            select: { lastAttendedDate: true },
+        });
+
+        return member?.lastAttendedDate ?? null;
+    }
+
+    async updateLastAttendedDate(memberId: string, date: Date): Promise<void> {
+        await this.prisma.member.update({
+            where: { id: memberId },
+            data: { lastAttendedDate: date },
+        });
+    }
 }
