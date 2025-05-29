@@ -59,9 +59,9 @@ export default function Header() {
                         게임
                     </Link>
                     <Link
-                        href="/arena"
+                        href="/arenas"
                         className={`${
-                            pathname === "/arena"
+                            pathname === "/arenas"
                                 ? "text-primary-purple-100"
                                 : "text-white"
                         } text-[24px] leading-[32px] font-semibold hover:opacity-80`}

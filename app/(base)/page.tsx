@@ -29,7 +29,7 @@ export default function Home() {
                         animationDelay="0.2s"
                     />
                     <LandingCard
-                        href="/arena"
+                        href="/arenas"
                         iconSrc="/icons/arena.svg"
                         iconAlt="투기장"
                         title="투기장"
