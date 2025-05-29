@@ -39,9 +39,7 @@ export default function LoginPage() {
         if (res?.ok) {
             const session = await getSession();
             if (session?.user) {
-                useAuthStore
-                    .getState()
-                    .setUser(session.user as Session["user"]);
+                useAuthStore.getState().setUser(session.user as Session["user"]);
             }
             router.push(callbackUrl);
         } else {
@@ -65,7 +63,10 @@ export default function LoginPage() {
 
             {/* 로그인 콘텐츠 */}
             <div className="relative z-10 flex items-center justify-center min-h-screen">
-                <div className="bg-background-300 bg-opacity-90 p-10 rounded-xl w-full max-w-[400px] shadow-lg">
+                <div
+                    className="bg-background-300 bg-opacity-90 p-10 rounded-xl w-full max-w-[400px] shadow-lg"
+                    style={{ minHeight: "400px" }} // ✅ 높이 고정
+                >
                     <div className="flex justify-center mb-8">
                         <Link href="/">
                             <Image
@@ -73,6 +74,7 @@ export default function LoginPage() {
                                 alt="GAMECHU 로고"
                                 width={160}
                                 height={160}
+                                priority // ✅ LCP 요소 우선 로드
                                 className="cursor-pointer"
                             />
                         </Link>
