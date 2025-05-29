@@ -144,11 +144,6 @@ export async function GET(
     }
 
     const memberId = await getAuthUserId();
-    if (!memberId) {
-        console.warn(
-            `GET /chattings(${arenaId}): User not authenticated. Cannot fetch sent count.`
-        );
-    }
     const prismaChattingRepository = new PrismaChattingRepository();
     const findChattingUsecase = new FindChattingUsecase(
         prismaChattingRepository
