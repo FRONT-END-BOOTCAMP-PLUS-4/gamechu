@@ -164,6 +164,7 @@ model ScoreRecord {
   createdAt DateTime    @default(now()) @map("created_at")
   member    Member      @relation(fields: [memberId], references: [id])
   policy    ScorePolicy @relation(fields: [policyId], references: [id])
+  actualScore  Int      @default(0)
 
   @@map("score_records")
 }

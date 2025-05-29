@@ -12,7 +12,7 @@ interface CommentCardProps {
     profileImage: string;
     nickname: string;
     date: string;
-    tier: string;
+
     rating: number;
     score: number;
     comment: string;
