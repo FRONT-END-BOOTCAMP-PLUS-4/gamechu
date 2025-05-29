@@ -63,12 +63,15 @@ export default function ProfilePointHistoryTab() {
                         ))}
                     </div>
 
-                    <Pager
-                        currentPage={currentPage}
-                        pages={pages}
-                        endPage={endPage}
-                        onPageChange={setCurrentPage}
-                    />
+                    {/* 총 페이지 수가 1보다 많을 때만 Pager 출력 */}
+                    {endPage > 1 && (
+                        <Pager
+                            currentPage={currentPage}
+                            pages={pages}
+                            endPage={endPage}
+                            onPageChange={setCurrentPage}
+                        />
+                    )}
                 </>
             )}
         </div>

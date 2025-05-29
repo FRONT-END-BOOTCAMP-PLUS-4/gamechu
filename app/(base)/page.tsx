@@ -1,5 +1,7 @@
 import LandingCard from "../components/LandingCard";
 
+export const dynamic = "force-static"; // ✅ SSG 선언
+
 export default function Home() {
     return (
         <div className="min-h-[calc(100vh-80px)] px-8 pb-20 sm:px-20 font-sans bg-background-400 text-font-100 flex items-center justify-center">

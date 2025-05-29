@@ -33,25 +33,28 @@ export default function ProfileWishlistTab({ games }: { games: Game[] }) {
             </h2>
 
             {games.length === 0 ? (
-                    <p className="text-font-200 text-sm">
-                        위시리스트에 등록된 게임이 없습니다.
-                    </p>
-                ) : (
-                    <>
-                        <div className="grid grid-cols-2 gap-6">
-                            {currentGames.map((game) => (
-                                <GameCard key={game.id} {...game} />
-                            ))}
-                        </div>
+                <p className="text-font-200 text-sm">
+                    위시리스트에 등록된 게임이 없습니다.
+                </p>
+            ) : (
+                <>
+                    <div className="grid grid-cols-2 gap-6">
+                        {currentGames.map((game) => (
+                            <GameCard key={game.id} {...game} />
+                        ))}
+                    </div>
 
+                    {/* 페이지 수가 1보다 많을 때만 Pager 렌더링 */}
+                    {endPage > 1 && (
                         <Pager
                             currentPage={currentPage}
                             pages={pages}
                             endPage={endPage}
                             onPageChange={setCurrentPage}
                         />
-                    </>
-                )}
+                    )}
+                </>
+            )}
         </div>
     );
 }

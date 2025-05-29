@@ -29,10 +29,14 @@ export default function ProfileReviewTab({
 
     return (
         <div className="w-full bg-background-300 p-6 rounded-xl shadow flex flex-col gap-6">
-            <h2 className="text-lg font-semibold text-body mb-2">작성한 리뷰</h2>
+            <h2 className="text-lg font-semibold text-body mb-2">
+                작성한 리뷰
+            </h2>
 
             {reviews.length === 0 ? (
-                <p className="text-font-200 text-sm">아직 작성한 리뷰가 없습니다.</p>
+                <p className="text-font-200 text-sm">
+                    아직 작성한 리뷰가 없습니다.
+                </p>
             ) : (
                 <>
                     <ul className="space-y-4">
@@ -40,12 +44,15 @@ export default function ProfileReviewTab({
                             <MemberReviewItem key={review.id} {...review} />
                         ))}
                     </ul>
-                    <Pager
-                        currentPage={currentPage}
-                        pages={pages}
-                        endPage={totalPages}
-                        onPageChange={(newPage) => setCurrentPage(newPage)}
-                    />
+
+                    {totalPages > 1 && (
+                        <Pager
+                            currentPage={currentPage}
+                            pages={pages}
+                            endPage={totalPages}
+                            onPageChange={(newPage) => setCurrentPage(newPage)}
+                        />
+                    )}
                 </>
             )}
         </div>

@@ -26,7 +26,7 @@ export default function PointHistoryCard({
     const scoreColor = score >= 0 ? "text-primary-purple-200" : "text-red-500";
 
     return (
-        <div className="relative bg-background-400 rounded-md p-5 border border-line-100 shadow flex justify-between items-start">
+        <div className="relative bg-background-200 rounded-md p-5 shadow flex justify-between items-start">
             {/* 왼쪽: 아이콘 + 텍스트 */}
             <div className="flex items-start gap-4">
                 <Image
