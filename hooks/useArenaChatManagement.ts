@@ -51,8 +51,7 @@ export function useArenaChatManagement({
     const fetchChats = useCallback(async () => {
         if (
             typeof arenaId !== "number" ||
-            ![3, 4, 5].includes(arenaDetail?.status || 0) ||
-            !userId
+            ![3, 4, 5].includes(arenaDetail?.status || 0)
         ) {
             setChats([]);
             setRemainingSends(MAX_SEND_COUNT);
@@ -66,9 +65,7 @@ export function useArenaChatManagement({
 
         try {
             // -- 백엔드 GET API 호출 --
-            const res = await fetch(
-                `/api/arenas/${arenaId}/chattings?userId=${userId}`
-            ); // userId 파라미터 예시
+            const res = await fetch(`/api/arenas/${arenaId}/chattings`);
 
             if (!res.ok) {
                 const data = await res.json();
@@ -111,7 +108,10 @@ export function useArenaChatManagement({
         status: status,
         onReceive: useCallback((newChat) => {
             // 새 메시지 수신 시 chats 상태에 추가
-            setChats((prev) => [...prev, newChat]);
+            setChats((prev) => {
+                if (prev.some((chat) => chat.id === newChat.id)) return prev; // 중복 제거
+                return [...prev, newChat];
+            });
         }, []),
     });
 
@@ -200,7 +200,7 @@ export function useArenaChatManagement({
                     await res.json();
                 const newChat = data.newChat;
                 setRemainingSends(data.remainingSends);
-                // setChats((prev) => [...prev, newChat]); // 이거 없으면 안보임
+                setChats((prev) => [...prev, newChat]); // 이거 없으면 안보임
                 socket.emit("chat message", {
                     id: newChat.id, // 백엔드에서 생성된 ID 사용
                     roomId: arenaId.toString(),
