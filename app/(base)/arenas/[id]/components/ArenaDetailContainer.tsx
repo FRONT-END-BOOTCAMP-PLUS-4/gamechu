@@ -13,17 +13,11 @@ const MAX_MESSAGE_LENGTH = 200;
 const MAX_SEND_COUNT = 5;
 export default function ArenaDetailContainer() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
-    const {
-        chats,
-        sendMessage,
-        loadingChats,
-        errorChats,
-        remainingSends,
-        sendError,
-    } = useArenaChatManagement({
-        arenaId: arenaDetail?.id,
-        status: arenaDetail?.status,
-    });
+    const { chats, sendMessage, remainingSends, sendError } =
+        useArenaChatManagement({
+            arenaId: arenaDetail?.id,
+            status: arenaDetail?.status,
+        });
 
     // 채팅 입력창 상태 관리
     const [content, setContent] = useState("");
@@ -50,7 +44,6 @@ export default function ArenaDetailContainer() {
         }
     }, [chats]);
 
-    // -- InputBox disabled 상태 결정 로직 --
     // 사용자가 creator 또는 challenger인지 확인
     const isParticipant =
         userId &&
@@ -60,35 +53,27 @@ export default function ArenaDetailContainer() {
 
     // InputBox를 비활성화할지 최종 결정
     const isInputBoxDisabled =
-        !isParticipant || // 참가자가 아니거나
-        arenaDetail?.status !== 3 || // 토론 진행 상태(status: 3)가 아니거나
-        remainingSends === undefined || // 아직 남은 횟수 정보가 없거나 (로딩 중 등)
-        remainingSends <= 0; // 남은 횟수가 0 이하일 때
-    // -- 글자 수 변경 핸들러 (200자 제한 적용) --
+        !isParticipant ||
+        arenaDetail?.status !== 3 ||
+        remainingSends === undefined ||
+        remainingSends <= 0;
+    // 글자 수 변경 핸들러 (200자 제한 적용)
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value;
         // 입력된 값의 길이가 최대 글자 수를 넘지 않으면 상태 업데이트
         if (value.length <= MAX_MESSAGE_LENGTH) {
             setContent(value);
         } else {
-            // 200자를 넘으면 200자까지만 잘라서 상태에 저장
             setContent(value.slice(0, MAX_MESSAGE_LENGTH));
-            // 사용자에게 글자 수 초과 경고를 보여주고 싶다면 여기에 추가 로직 (예: alert, 별도 상태 관리)
-            // ArenaDetailInputBox에서 isOverMaxLength를 체크해서 UI 표시해주므로 여기서 굳이 안 해도 됨.
         }
     };
 
-    // -- 메시지 전송 핸들러 --
+    // 메시지 전송 핸들러
     const handleSendMessage = () => {
-        // 전송 전에 다시 한번 유효성 체크 (InputBox disabled와 동일한 조건 + 내용 비어있지 않은지)
         if (content.trim() && !isInputBoxDisabled) {
-            sendMessage(content); // useArenaChatManagement 훅의 sendMessage 호출
-            // sendMessage 호출 성공 여부와 관계없이 (낙관적으로) 입력창 비우기
+            sendMessage(content);
             setContent("");
-            // 에러 메시지 상태 초기화 (새로운 전송 시도이므로)
-            // setErrorChats(null); // useArenaChatManagement 훅에서 관리하므로 여기서 할 필요 없음
         }
-        // else: disabled 상태여서 전송 안 된 경우 (InputBox에서 이미 막혔을 것)
     };
     if (arenaDetail?.status === 1) {
         return <ArenaDetailRecruiting />;
