@@ -79,7 +79,9 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
                 body: JSON.stringify({ status: newStatus, ...extraBody }),
             });
             if (!res.ok) throw new Error("상태 업데이트 실패");
-
+            if (newStatus === 5) {
+                await fetch(`/api/arenas/${arenaId}/end`, { method: "POST" });
+            }
             onStatusUpdate?.(arenaId, newStatus);
         } catch (err) {
             console.error(`아레나 ${arenaId} 상태 업데이트 실패:`, err);

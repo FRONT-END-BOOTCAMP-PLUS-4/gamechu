@@ -13,7 +13,7 @@ export class ScorePolicy {
             case "JOIN":
                 return -100;
             default:
-                return 0;
+                return 0;   
         }
     }
 

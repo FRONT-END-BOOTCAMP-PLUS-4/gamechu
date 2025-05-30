@@ -1,10 +1,14 @@
 // backend/arena/application/usecase/UpdateArenaStatusUsecase.ts
 
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
+import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
 import { ArenaStatus } from "@/types/arena-status";
 
 export class UpdateArenaStatusUsecase {
-    constructor(private readonly arenaRepository: ArenaRepository) {}
+    constructor(
+        private readonly arenaRepository: ArenaRepository,
+        private readonly applyArenaScoreUsecase: ApplyArenaScoreUsecase
+    ) {}
 
     async execute(
         arenaId: number,
@@ -30,6 +34,10 @@ export class UpdateArenaStatusUsecase {
                 challengerId,
                 status
             );
+            await this.applyArenaScoreUsecase.execute({
+                memberId: challengerId,
+                result: "JOIN",
+            });
         } else {
             await this.arenaRepository.updateStatus(arenaId, status);
         }
