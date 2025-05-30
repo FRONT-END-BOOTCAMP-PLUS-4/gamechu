@@ -3,6 +3,10 @@ import { GetArenaDetailUsecase } from "@/backend/arena/application/usecase/GetAr
 import { UpdateArenaStatusUsecase } from "@/backend/arena/application/usecase/UpdateArenaStatusUsecase";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
+import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
+import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
+import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
+import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
 import { NextRequest, NextResponse } from "next/server";
 
 type RequestParams = {
@@ -42,10 +46,18 @@ export async function PATCH(
 ) {
     const { status, challengerId } = await req.json();
     const arenaId = Number((await context.params).id);
-
-    const ArenaRepository = new PrismaArenaRepository();
+    const scorePolicy = new ScorePolicy();
+    const memberRepository = new PrismaMemberRepository();
+    const scoreRecordRepository = new PrismaScoreRecordRepository();
+    const applyArenaScoreUsecase = new ApplyArenaScoreUsecase(
+        scorePolicy,
+        memberRepository,
+        scoreRecordRepository
+    );
+    const arenaRepository = new PrismaArenaRepository();
     const updateArenaStatusUsecase = new UpdateArenaStatusUsecase(
-        ArenaRepository
+        arenaRepository,
+        applyArenaScoreUsecase
     );
 
     try {
