@@ -28,7 +28,7 @@ export class GetArenaUsecase {
             const pageSize: number = getArenaDto.pageSize;
             const currentPage: number =
                 getArenaDto.queryString.currentPage || 1;
-            const memberId: string = getArenaDto.memberId;
+            const memberId: string = getArenaDto.memberId || "";
             const offset: number = (currentPage - 1) * pageSize;
             const limit: number = pageSize;
 
