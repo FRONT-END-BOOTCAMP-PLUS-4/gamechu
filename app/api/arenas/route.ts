@@ -20,8 +20,12 @@ export async function GET(request: Request) {
             url.searchParams.get("currentPage") || 1
         );
         const status: number = Number(url.searchParams.get("status"));
-        const mine: boolean = Boolean(url.searchParams.get("mine"));
-        const pageSize: number = Number(request.headers.get("pageSize")!);
+        const mine: boolean = Boolean(url.searchParams.get("mine") === "true");
+        const pageSize: number = Number(url.searchParams.get("pageSize")!);
+
+        console.log(
+            `DEBUG: currentPage=${currentPage}, status=${status}, mine=${mine}, pageSize=${pageSize}`
+        );
 
         if (!memberId && mine) {
             return NextResponse.json(
