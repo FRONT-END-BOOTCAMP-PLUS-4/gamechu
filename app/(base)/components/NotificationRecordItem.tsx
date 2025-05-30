@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { useAuthStore } from "@/stores/AuthStore";
 
 import { NotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordDto";
 
@@ -13,9 +12,6 @@ type NotificationRecordItemProps = {
 export default function NotificationRecordItem(
     props: NotificationRecordItemProps
 ) {
-    const { user } = useAuthStore();
-    const memberId: string = user?.id || "";
-
     const notificationRecordDto: NotificationRecordDto =
         props.notificationRecordDto;
     const createdAt = new Date(notificationRecordDto.createdAt);
@@ -27,7 +23,7 @@ export default function NotificationRecordItem(
     )}:${pad(String(createdAt.getMinutes()))}`;
 
     const handleDelete = async (id: number) => {
-        await fetch(`api/members/notifications/${id}`, {
+        await fetch(`api/member/notifications/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -65,7 +61,17 @@ export default function NotificationRecordItem(
                 {/* 오른쪽: 날짜 + 삭제 버튼 (중앙 정렬) */}
                 <div className="flex flex-col items-end justify-center text-font-200 text-caption gap-2 min-w-max">
                     <span>{formattedDate}</span>
-                    <button className="hover:text-white">삭제</button>
+                    <button
+                        className="hover:text-white"
+                        onClick={() => handleDelete(notificationRecordDto.id)}
+                    >
+                        <Image
+                            src="/icons/delete.svg"
+                            alt="삭제"
+                            width={24}
+                            height={24}
+                        />
+                    </button>
                 </div>
             </div>
         </div>
