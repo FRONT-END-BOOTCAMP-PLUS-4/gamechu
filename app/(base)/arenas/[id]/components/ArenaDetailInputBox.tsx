@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/app/components/Button";
+import Image from "next/image";
 import React from "react";
 
 interface ArenaInputBoxProps {
@@ -24,7 +25,6 @@ export default function ArenaDetailInputBox({
     currentLength,
     remainingSends,
     totalSends,
-    sendError,
 }: ArenaInputBoxProps) {
     // 글자 수 초과 여부 판단
     const isOverMaxLength = currentLength > maxLength;
@@ -68,7 +68,12 @@ export default function ArenaDetailInputBox({
             </div>
             <Button
                 icon={
-                    <img src="/icons/send.svg" alt="send" className="w-4 h-4" />
+                    <Image
+                        src="/icons/send.svg"
+                        alt="send"
+                        width={16}
+                        height={16}
+                    />
                 }
                 type="purple"
                 size="send"

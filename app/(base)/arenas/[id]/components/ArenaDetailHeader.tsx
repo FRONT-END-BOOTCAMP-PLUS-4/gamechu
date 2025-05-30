@@ -1,6 +1,7 @@
 "use client";
 
 import useArenaStore from "@/stores/useArenaStore";
+import Image from "next/image";
 
 export default function ArenaDetailHeader() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
@@ -10,10 +11,11 @@ export default function ArenaDetailHeader() {
             <div className="flex justify-between items-center">
                 {/* 제목 */}
                 <div className="flex items-center animate-fade-in-left">
-                    <img
+                    <Image
                         src="/icons/arena2.svg"
                         alt="투기장 아이콘"
-                        className="w-10 h-10"
+                        width={40}
+                        height={40}
                     />
                     <h2 className="text-h2 font-bold text-font-100">
                         {arenaDetail?.title ?? "투기장 제목"}
@@ -21,10 +23,11 @@ export default function ArenaDetailHeader() {
                 </div>
                 {/* 게시자 */}
                 <div className="flex items-center gap-2 animate-fade-in-right">
-                    <img
+                    <Image
                         src="/icons/teamA.svg"
                         alt="게시자 아이콘"
-                        className="w-10 h-10"
+                        width={40}
+                        height={40}
                     />
                     <h2 className="text-h2 font-bold text-font-100">
                         {arenaDetail?.creatorName ?? "게시자"}

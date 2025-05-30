@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import { useVote } from "@/hooks/useVote";
 import { useVoteCheck } from "@/hooks/useVoteCheck";
 import { useVoteCount } from "@/hooks/useVoteCount";
+import Image from "next/image";
+import TierBadge from "@/app/components/TierBadge";
 
 export default function ArenaDetailVote() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
+
     const { voteData } = useVoteCount(arenaDetail?.id || 0);
 
     const { existingVote, refetch: refetchVoteCheck } = useVoteCheck(
@@ -29,14 +32,6 @@ export default function ArenaDetailVote() {
     const leftPercent = totalVotes ? (leftVotes / totalVotes) * 100 : 0;
     const rightPercent = totalVotes ? (rightVotes / totalVotes) * 100 : 0;
 
-    console.log(
-        "Vote Data:",
-        totalVotes,
-        leftVotes,
-        rightVotes,
-        leftPercent,
-        rightPercent
-    );
     const calculateRemainingTime = () => {
         if (!arenaDetail?.endVote) return "";
 
@@ -91,12 +86,17 @@ export default function ArenaDetailVote() {
                         </div>
                     )}
                     <div className="flex items-center gap-2 text-font-100 text-body">
-                        <img
+                        <Image
                             src="/icons/teamA.svg"
                             alt="게시자 아이콘"
-                            className="w-10 h-10"
+                            width={40}
+                            height={40}
                         />
-                        {arenaDetail?.creatorName}(티어)
+                        {arenaDetail?.creatorName}
+                        <TierBadge
+                            score={arenaDetail.creatorScore || 0}
+                            size="sm"
+                        />
                     </div>
                 </div>
 
@@ -119,11 +119,16 @@ export default function ArenaDetailVote() {
                         </div>
                     )}
                     <div className="flex items-center gap-2 text-font-100 text-body">
-                        {arenaDetail?.challengerName}(티어)
-                        <img
+                        <TierBadge
+                            score={arenaDetail.challengerScore || 0}
+                            size="sm"
+                        />
+                        {arenaDetail?.challengerName}
+                        <Image
                             src="/icons/teamB.svg"
                             alt="게시자 아이콘"
-                            className="w-10 h-10"
+                            width={40}
+                            height={40}
                         />
                     </div>
                 </div>
