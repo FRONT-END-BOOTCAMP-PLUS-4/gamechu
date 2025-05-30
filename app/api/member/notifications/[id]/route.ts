@@ -6,9 +6,9 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextResponse } from "next/server";
 
 type RequestParams = {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 };
 
 export async function DELETE(request: Request, { params }: RequestParams) {
@@ -22,8 +22,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
             );
         }
 
-        const { id } = params;
-        console.log(id);
+        const { id }: { id: string } = await params;
 
         const notificationRecordRepository: NotificationRecordRepository =
             new PrismaNotificationRecordRepository();

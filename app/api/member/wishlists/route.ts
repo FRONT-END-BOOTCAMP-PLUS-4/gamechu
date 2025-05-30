@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
 }
 
 // ✅ DELETE: 위시리스트에서 게임 삭제
+// TODO: wishlists/[id]/route.ts로 이주시키기
 export async function DELETE(req: NextRequest) {
     const memberId = await getAuthUserId();
     if (!memberId)
