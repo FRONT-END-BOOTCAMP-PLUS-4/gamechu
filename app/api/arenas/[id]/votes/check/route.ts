@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { GetVoteUsecase } from "@/backend/vote/application/usecase/GetVoteUsecase";
 
 // GET /api/arenas/[id]/votes/check?
 export async function GET(
     req: NextRequest,
-    context: { params: Promise<{ id: string }> }
+    context: { params: { id: string } }
 ) {
     try {
-        const arenaId = Number((await context.params).id);
+        const arenaId = Number(context.params.id);
         const memberId = await getAuthUserId();
-
         console.log("Arena ID:", arenaId);
         console.log("Member ID:", memberId);
 
@@ -22,18 +22,10 @@ export async function GET(
         }
 
         const voteRepository = new PrismaVoteRepository();
-        const votes = await voteRepository.findAll({
-            arenaId,
-            memberId,
-            votedTo: null, // votedTo는 null로 설정하여 모든 투표를 조회
-        });
+        const getVoteUsecase = new GetVoteUsecase(voteRepository);
+        const result = await getVoteUsecase.execute(arenaId, memberId);
 
-        const existingVote = votes.length > 0 ? votes[0] : null;
-
-        return NextResponse.json(
-            { votedTo: existingVote ? existingVote.votedTo : null },
-            { status: 200 }
-        );
+        return NextResponse.json({ result }, { status: 200 });
     } catch (error: unknown) {
         let errorMessage = "서버 오류";
 
