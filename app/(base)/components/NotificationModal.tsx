@@ -35,22 +35,26 @@ export default function NotificationModal() {
         <ModalWrapper isOpen={isOpen} onClose={closeModal}>
             <div className="w-[480px] max-h-[80vh] flex flex-col gap-4">
                 {notificationRecordListDto && (
-                    <>
+                    <div>
                         <NotificationRecordList
                             notificationRecords={
                                 notificationRecordListDto.records
                             }
                         />
-                        <Pager
-                            currentPage={notificationRecordListDto.currentPage}
-                            pages={notificationRecordListDto.pages}
-                            endPage={notificationRecordListDto.endPage}
-                            onPageChange={(newPage: number) =>
-                                (notificationRecordListDto.currentPage =
-                                    newPage)
-                            }
-                        />
-                    </>
+                        {notificationRecordListDto.records.length > 0 && (
+                            <Pager
+                                currentPage={
+                                    notificationRecordListDto.currentPage
+                                }
+                                pages={notificationRecordListDto.pages}
+                                endPage={notificationRecordListDto.endPage}
+                                onPageChange={(newPage: number) =>
+                                    (notificationRecordListDto.currentPage =
+                                        newPage)
+                                }
+                            />
+                        )}
+                    </div>
                 )}
             </div>
         </ModalWrapper>

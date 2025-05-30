@@ -17,7 +17,7 @@ export default function NotificationRecordList(
                 {props.notificationRecords.length === 0 ? (
                     <li className="w-full flex flex-col justify-center items-center text-center gap-4 text-font-200 text-body font-regular">
                         <Image
-                            src="/images/NotificationEmpty.png"
+                            src="/images/empty.png"
                             alt="새 알림 없음 이미지"
                             width={200}
                             height={200}

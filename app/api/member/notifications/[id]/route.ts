@@ -22,7 +22,8 @@ export async function DELETE(request: Request, { params }: RequestParams) {
             );
         }
 
-        const { id } = await params;
+        const { id } = params;
+        console.log(id);
 
         const notificationRecordRepository: NotificationRecordRepository =
             new PrismaNotificationRecordRepository();
