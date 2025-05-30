@@ -22,7 +22,10 @@ export class PrismaArenaRepository implements ArenaRepository {
                 status,
             }),
             ...(memberId && {
-                memberId,
+                creatorId: memberId,
+            }),
+            ...(memberId && {
+                challengerId: memberId,
             }),
         };
     }

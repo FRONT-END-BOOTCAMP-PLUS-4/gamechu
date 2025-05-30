@@ -7,12 +7,13 @@ import { PrismaMemberRepository } from "@/backend/member/infra/repositories/pris
 import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
+import { Arena } from "@/prisma/generated";
 import { NextRequest, NextResponse } from "next/server";
 
 type RequestParams = {
-    params: {
+    params: Promise<{
         id: number;
-    };
+    }>;
 };
 
 export async function GET(
@@ -42,6 +43,7 @@ export async function GET(
     }
 }
 
+// TODO: 리팩토링 하면서 api/member/arena/[id]/route.ts로 옮기기
 export async function PATCH(
     req: NextRequest,
     context: { params: Promise<{ id: string }> }
@@ -89,8 +91,18 @@ export async function DELETE(request: Request, { params }: RequestParams) {
             arenaRepository
         );
 
-        await deleteArenaUsecase.execute(Number(id));
+        // validation of arena
+        const arena: Arena | null = await arenaRepository.findById(Number(id));
 
+        if (!arena) {
+            return NextResponse.json(
+                { error: "투기장이 존재하지 않습니다." },
+                { status: 404 }
+            );
+        }
+
+        // execute usecase
+        await deleteArenaUsecase.execute(Number(id));
         return NextResponse.json(
             { message: "투기장 삭제 성공" },
             { status: 200 }
