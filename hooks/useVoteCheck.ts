@@ -17,7 +17,7 @@ export function useVoteCheck(arenaId: number | undefined) {
                 return res.json();
             })
             .then((data) => {
-                setExistingVote(data?.votedTo ?? null);
+                setExistingVote(data?.result ?? null);
             })
             .catch((e) => setError(e.message))
             .finally(() => setLoading(false));
