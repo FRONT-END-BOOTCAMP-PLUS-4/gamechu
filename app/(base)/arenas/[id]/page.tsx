@@ -8,19 +8,20 @@ import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDet
 import useArenaStore from "@/stores/useArenaStore";
 import ArenaDetailContainer from "./components/ArenaDetailContainer";
 import { useArenaAutoStatusDetail } from "@/hooks/useArenaAutoStatusDetail";
+import { useParams } from "next/navigation";
 
 export default function ArenaDetailPage() {
     const setGlobalArenaData = useArenaStore((state) => state.setArenaData);
     const clearGlobalArenaData = useArenaStore((state) => state.clearArenaData);
-    const arenaDetail = useArenaStore((state) => state.arenaData);
-
+    const idParams = useParams().id;
+    const arenaId = Number(idParams);
     useArenaAutoStatusDetail({
         onStatusUpdate: () => {},
     });
     useEffect(() => {
         const fetchArenaDetail = async () => {
             try {
-                const res = await fetch(`/api/arenas/${arenaDetail?.id}`, {
+                const res = await fetch(`/api/arenas/${arenaId}`, {
                     method: "GET",
                     cache: "no-store",
                 });
@@ -40,7 +41,7 @@ export default function ArenaDetailPage() {
         return () => {
             clearGlobalArenaData();
         };
-    }, [arenaDetail?.id, setGlobalArenaData, clearGlobalArenaData]);
+    }, [arenaId, setGlobalArenaData, clearGlobalArenaData]);
     return (
         <div>
             <div className="flex px-16 py-16 gap-8">

@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import { ChattingDto } from "@/backend/chatting/application/usecase/dto/ChattingDto";
 import useArenaStore from "@/stores/useArenaStore";
+import Image from "next/image";
 
 interface ArenaChatListProps {
     chats: ChattingDto[];
@@ -50,10 +51,12 @@ function ArenaDetailChatListComponent(
                                 >
                                     {isCreator && (
                                         <div className="flex flex-column items-center gap-4">
-                                            <img
+                                            <Image
                                                 src="/icons/teamA.svg"
                                                 alt="Team A"
-                                                className="w-8 h-8 mr-auto"
+                                                width={32}
+                                                height={32}
+                                                className="mr-auto"
                                             />
                                             <span className="text-xs text-font-300">
                                                 {arenaDetail?.creatorName}
@@ -65,10 +68,12 @@ function ArenaDetailChatListComponent(
                                             <span className="text-xs text-font-300">
                                                 {arenaDetail?.challengerName}
                                             </span>
-                                            <img
+                                            <Image
                                                 src="/icons/teamB.svg"
                                                 alt="Team B"
-                                                className="w-8 h-8 ml-auto"
+                                                width={32}
+                                                height={32}
+                                                className="ml-auto"
                                             />
                                         </div>
                                     )}

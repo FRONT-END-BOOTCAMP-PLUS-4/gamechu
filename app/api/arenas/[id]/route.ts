@@ -24,9 +24,11 @@ export async function GET(
     if (isNaN(arenaId)) {
         return NextResponse.json({ error: "Invalid arenaId" }, { status: 400 });
     }
-
+    const arenaRepository = new PrismaArenaRepository();
+    const memberRepository = new PrismaMemberRepository();
     const getArenaDetailusecase = new GetArenaDetailUsecase(
-        new PrismaArenaRepository()
+        arenaRepository,
+        memberRepository
     );
 
     try {

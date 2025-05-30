@@ -2,6 +2,7 @@
 import Button from "@/app/components/Button";
 import useArenaStore from "@/stores/useArenaStore";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function ArenaDetailRecruiting() {
@@ -63,10 +64,11 @@ export default function ArenaDetailRecruiting() {
             </h2>
             <p className="text-md mb-2 animate-pulse">도전해보세요!</p>
             <div className="animate-bounce w-fit mx-auto my-4">
-                <img
+                <Image
                     src="/icons/arrowDown.svg"
                     alt="아래 화살표"
-                    className="w-6 h-6"
+                    width={24}
+                    height={24}
                 />
             </div>
             <Button
