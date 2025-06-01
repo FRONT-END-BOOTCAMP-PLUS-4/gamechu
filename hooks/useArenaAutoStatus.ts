@@ -1,9 +1,9 @@
-import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
+import { ArenaDto } from "@/backend/arena/application/usecase/dto/ArenaDto";
 import { ArenaStatus } from "@/types/arena-status";
 import { useEffect, useRef } from "react";
 
 type Props = {
-    arenaList: ArenaDetailDto[];
+    arenaList: ArenaDto[];
     onStatusUpdate?: (id: number, newStatus: ArenaStatus) => void;
 };
 type ExtraBody = Record<string, unknown>;
@@ -19,15 +19,15 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
                 id,
                 status,
                 startDate,
-                endChatting,
-                endVote,
+                debateEndDate,
+                voteEndDate,
                 challengerId,
             } = arena;
 
             if (timers.current[id]) return; // 중복 타이머 방지
 
             const schedule = (
-                target: string,
+                target: Date,
                 nextStatus: ArenaStatus,
                 extraBody?: ExtraBody
             ) => {
@@ -49,13 +49,13 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
                     }
                     break;
                 case 3:
-                    if (endChatting) {
-                        schedule(endChatting, 4);
+                    if (debateEndDate) {
+                        schedule(debateEndDate, 4);
                     }
                     break;
                 case 4:
-                    if (endVote) {
-                        schedule(endVote, 5);
+                    if (voteEndDate) {
+                        schedule(voteEndDate, 5);
                     }
                     break;
             }

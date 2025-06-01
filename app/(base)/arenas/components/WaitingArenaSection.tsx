@@ -1,6 +1,7 @@
 import useArenas from "@/hooks/useArenas";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import WaitingArenaCard from "./WaitingArenaCard";
+import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 
 export default function WaitingArenaSection() {
     const { arenaListDto, loading, error } = useArenas({
@@ -10,6 +11,16 @@ export default function WaitingArenaSection() {
         pageSize: 3,
     });
 
+    useArenaAutoStatus({
+        arenaList: arenaListDto?.arenas || [],
+        onStatusUpdate: (arenaId, newStatus) => {
+            // 선택사항: 콘솔 로깅 또는 새로고침 로직 삽입 가능
+            console.log(
+                `Arena ${arenaId}가 상태 ${newStatus}로 전이되었습니다.`
+            );
+            // 필요 시 리패칭 로직 넣을 수 있음
+        },
+    });
     // TODO: use Loading Page
     if (loading) {
         return (
@@ -27,7 +38,6 @@ export default function WaitingArenaSection() {
             </div>
         );
     }
-
     return (
         <div>
             <ArenaSectionHeader title="대기중인 투기장" status={2} />

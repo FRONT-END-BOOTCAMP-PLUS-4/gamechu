@@ -1,5 +1,4 @@
 // domain/repositories/ArenaRepository.ts
-import { ArenaDetailDto } from "../../application/usecase/dto/ArenaDetailDto";
 import { ArenaStatus } from "@/types/arena-status";
 import { ArenaFilter } from "./filters/ArenaFilters";
 import { Arena } from "@/prisma/generated";
@@ -13,12 +12,12 @@ export interface ArenaRepository {
     update(arena: Arena): Promise<Arena>;
     deleteById(id: number): Promise<void>;
 
-    getArenaById(arenaId: number): Promise<ArenaDetailDto>;
+    getArenaById(arenaId: number): Promise<Arena>;
     updateStatus(arenaId: number, status: ArenaStatus): Promise<void>;
     updateChallengerAndStatus(
         arenaId: number,
         challengerId: string,
         status: ArenaStatus
     ): Promise<void>;
-    getList(): Promise<ArenaDetailDto[]>;
+    getList(): Promise<Arena[]>;
 }

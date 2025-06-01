@@ -3,6 +3,7 @@ import ArenaSectionHeader from "./ArenaSectionHeader";
 import VotingArenaCard from "./VotingArenaCard";
 import useArenas from "@/hooks/useArenas";
 import { useEffect, useRef, useState } from "react";
+import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 
 export default function VotingArenaSection() {
     const {
@@ -16,6 +17,16 @@ export default function VotingArenaSection() {
         pageSize: 3,
     });
 
+    useArenaAutoStatus({
+        arenaList: arenaListDto?.arenas || [],
+        onStatusUpdate: (arenaId, newStatus) => {
+            // 선택사항: 콘솔 로깅 또는 새로고침 로직 삽입 가능
+            console.log(
+                `Arena ${arenaId}가 상태 ${newStatus}로 전이되었습니다.`
+            );
+            // 필요 시 리패칭 로직 넣을 수 있음
+        },
+    });
     const [arenaIdsToFetch, setArenaIdsToFetch] = useState<number[]>([]);
     const fetchedIdsRef = useRef<string>(""); // API 중복 호출 방지용
 
