@@ -1,8 +1,10 @@
 import TierBadge from "@/app/components/TierBadge";
 import Image from "next/image";
 import VoteStatusBar from "./VoteStatusBar";
+import { useRouter } from "next/navigation";
 
 type CompleteArenaCardProps = {
+    id: number;
     creatorNickname: string;
     creatorProfileImageUrl: string;
     creatorScore: number;
@@ -15,12 +17,18 @@ type CompleteArenaCardProps = {
 };
 
 export default function CompleteArenaCard(props: CompleteArenaCardProps) {
+    const router = useRouter();
+    const onClickHandler = () => {
+        router.push(`/arenas/${props.id}`);
+    };
+
     return (
         <div
             className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[670px]
                 border border-transparent hover:border-purple-500
                 hover:shadow-lg hover:shadow-purple-500/30
                 hover:scale-[1.01] transform transition-all duration-200"
+            onClick={onClickHandler}
         >
             <div className="rounded-2xl bg-background-200 p-4">
                 {/* 제목 */}

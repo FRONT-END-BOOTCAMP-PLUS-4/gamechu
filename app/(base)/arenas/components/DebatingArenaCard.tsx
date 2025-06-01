@@ -1,7 +1,9 @@
 import TierBadge from "@/app/components/TierBadge";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type DebatingArenaCardProps = {
+    id: number;
     title: string;
     creatorNickname: string;
     creatorScore: number;
@@ -11,12 +13,18 @@ type DebatingArenaCardProps = {
 };
 
 export default function DebatingArenaCard(props: DebatingArenaCardProps) {
+    const router = useRouter();
+    const onClickHandler = () => {
+        router.push(`/arenas/${props.id}`);
+    };
+
     return (
         <div
             className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[440px]
                 border border-transparent hover:border-purple-500
                 hover:shadow-lg hover:shadow-purple-500/30
                 hover:scale-[1.01] transform transition-all duration-200"
+            onClick={onClickHandler}
         >
             <div className="flex items-center justify-between">
                 <div className="text-lg font-bold line-clamp-2">
