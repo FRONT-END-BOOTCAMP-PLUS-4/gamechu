@@ -1,8 +1,10 @@
 import Button from "@/app/components/Button";
 import TierBadge from "@/app/components/TierBadge";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type RecruitingArenaCardProps = {
+    id: number;
     creatorNickname: string;
     creatorProfileImageUrl: string;
     creatorScore: number;
@@ -12,12 +14,18 @@ type RecruitingArenaCardProps = {
 };
 
 export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
+    const router = useRouter();
+    const onClickHandler = () => {
+        router.push(`/arenas/${props.id}`);
+    };
+
     return (
         <div
             className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[670px]
                 border border-transparent hover:border-purple-500
                 hover:shadow-lg hover:shadow-purple-500/30
                 hover:scale-[1.01] transform transition-all duration-200"
+            onClick={onClickHandler}
         >
             <div className="flex items-center justify-between pb-2">
                 {/* 작성자 정보 */}
