@@ -30,10 +30,7 @@ export default function RecruitingArenaSection() {
 
     return (
         <div>
-            <ArenaSectionHeader
-                title="도전자를 찾는중인 투기장"
-                href="/arena?status=1"
-            />
+            <ArenaSectionHeader title="도전자를 찾는중인 투기장" status={1} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4 px-6">
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">

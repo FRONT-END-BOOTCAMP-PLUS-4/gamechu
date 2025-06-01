@@ -30,7 +30,7 @@ export default function CompleteArenaSection() {
 
     return (
         <div>
-            <ArenaSectionHeader title="종료된 투기장" href="/arena?status=5" />
+            <ArenaSectionHeader title="종료된 투기장" status={5} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4 px-6">
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">

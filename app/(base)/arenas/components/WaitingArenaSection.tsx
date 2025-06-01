@@ -30,10 +30,7 @@ export default function WaitingArenaSection() {
 
     return (
         <div>
-            <ArenaSectionHeader
-                title="대기중인 투기장"
-                href="/arena?status=2"
-            />
+            <ArenaSectionHeader title="대기중인 투기장" status={2} />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 px-6">
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">
