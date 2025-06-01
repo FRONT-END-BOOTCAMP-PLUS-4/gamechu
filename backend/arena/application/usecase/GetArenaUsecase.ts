@@ -6,6 +6,7 @@ import { ArenaListDto } from "./dto/ArenaListDto";
 import { ArenaFilter } from "../../domain/repositories/filters/ArenaFilters";
 import { Arena, Member } from "@/prisma/generated";
 import { ArenaDto } from "./dto/ArenaDto";
+import { GetArenaDates } from "@/utils/GetArenaDates";
 
 export class GetArenaUsecase {
     private arenaRepository: ArenaRepository;
@@ -51,6 +52,11 @@ export class GetArenaUsecase {
                         await this.memberRepository.findById(
                             arena.challengerId || ""
                         );
+                    const {
+                        debateEndDate,
+                        voteEndDate,
+                    }: { debateEndDate: Date; voteEndDate: Date } =
+                        GetArenaDates(arena.startDate);
                     const voteTotalCount: number =
                         await this.voteRepository.count({
                             arenaId: arena.id,
@@ -72,6 +78,9 @@ export class GetArenaUsecase {
                         description: arena.description,
                         status: arena.status,
                         startDate: arena.startDate,
+
+                        debateEndDate,
+                        voteEndDate,
 
                         creatorNickname: creator ? creator.nickname : "",
                         creatorProfileImageUrl: creator
@@ -105,7 +114,6 @@ export class GetArenaUsecase {
                 pages,
                 endPage,
             };
-
             return arenaListDto;
         } catch (error) {
             console.error("Error retrieving arenas", error);

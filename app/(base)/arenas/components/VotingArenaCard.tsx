@@ -4,11 +4,9 @@ import Image from "next/image";
 type VotingArenaCardProps = {
     title: string;
     creatorNickname: string;
-    creatorProfileImageUrl: string;
     creatorScore: number;
-    challengerNickname: string;
-    challengerProfileImageUrl: string;
-    challengerScore: number;
+    challengerNickname: string | null;
+    challengerScore: number | null;
     voteEndDate: Date;
     voteCount: number;
 };
@@ -41,7 +39,7 @@ export default function VotingArenaCard(props: VotingArenaCardProps) {
                 {/* 도전자 */}
                 <div className="flex items-center gap-2">
                     <span>{props.challengerNickname}</span>
-                    <TierBadge score={props.challengerScore} size="sm" />
+                    <TierBadge score={props.challengerScore || 0} size="sm" />
                 </div>
             </div>
 

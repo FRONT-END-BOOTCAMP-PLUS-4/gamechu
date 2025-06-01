@@ -6,9 +6,9 @@ type CompleteArenaCardProps = {
     creatorNickname: string;
     creatorProfileImageUrl: string;
     creatorScore: number;
-    challengerNickname: string;
-    challengerProfileImageUrl: string;
-    challengerScore: number;
+    challengerNickname: string | null;
+    challengerProfileImageUrl: string | null;
+    challengerScore: number | null;
     title: string;
     description: string;
     leftPercent: number;
@@ -53,14 +53,17 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                 <div className="flex items-center gap-2">
                     <span>{100 - props.leftPercent}%</span>
                     <Image
-                        src={props.challengerProfileImageUrl}
+                        src={
+                            props.challengerProfileImageUrl ||
+                            "/icons/arena2.svg"
+                        }
                         alt="도전자 프로필"
                         width={24}
                         height={24}
                         className="rounded-full object-cover"
                     />
                     <span>{props.challengerNickname}</span>
-                    <TierBadge score={props.challengerScore} size="sm" />
+                    <TierBadge score={props.challengerScore || 0} size="sm" />
                 </div>
             </div>
         </div>

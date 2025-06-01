@@ -23,10 +23,6 @@ export async function GET(request: Request) {
         const mine: boolean = Boolean(url.searchParams.get("mine") === "true");
         const pageSize: number = Number(url.searchParams.get("pageSize")!);
 
-        console.log(
-            `DEBUG: currentPage=${currentPage}, status=${status}, mine=${mine}, pageSize=${pageSize}`
-        );
-
         if (!memberId && mine) {
             return NextResponse.json(
                 { error: "투기장 조회 권한이 없습니다." },

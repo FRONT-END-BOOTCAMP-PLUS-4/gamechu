@@ -1,7 +1,33 @@
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import RecruitingArenaCard from "./RecruitingArenaCard";
+import useArenas from "@/hooks/useArenas";
 
 export default function RecruitingArenaSection() {
+    const { arenaListDto, loading, error } = useArenas({
+        status: 1,
+        currentPage: 1,
+        mine: false,
+        pageSize: 3,
+    });
+
+    // TODO: use Loading Page
+    if (loading) {
+        return (
+            <div className="col-span-3 text-center text-gray-400">
+                로딩중...
+            </div>
+        );
+    }
+    // TODO: use Error Page
+    if (error) {
+        return (
+            <div className="col-span-3 text-center text-red-500">
+                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시
+                시도해주세요.
+            </div>
+        );
+    }
+
     return (
         <div>
             <ArenaSectionHeader
@@ -9,22 +35,19 @@ export default function RecruitingArenaSection() {
                 href="/arena?status=1"
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4 px-6">
-                <RecruitingArenaCard
-                    creatorNickname="겜잘알"
-                    creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorScore={3500}
-                    title="오픈월드 게임의 사이드 퀘스트는 메인 스토리만큼 중요하다."
-                    description="사이드 퀘스트는 게임 세계를 풍부하게 만들어주고 플레이어들에게 더 깊은 몰입감을 제공합니다. 반대 의견 있으신가요?"
-                    startDate={new Date()}
-                />
-                <RecruitingArenaCard
-                    creatorNickname="겜잘알"
-                    creatorProfileImageUrl="/icons/arena2.svg"
-                    creatorScore={4500}
-                    title="오픈월드 게임의 사이드 퀘스트는 메인 스토리만큼 중요하다."
-                    description="사이드 퀘스트는 게임 세계를 풍부하게 만들어주고 플레이어들에게 더 깊은 몰입감을 제공합니다. 반대 의견 있으신가요?"
-                    startDate={new Date()}
-                />
+                {arenaListDto?.arenas.length === 0 ? (
+                    <div className="col-span-3 text-center text-gray-500">
+                        현재 도전자를 모집중인 투기장이 없습니다.
+                    </div>
+                ) : (
+                    arenaListDto!.arenas.map((arena) => (
+                        <RecruitingArenaCard
+                            key={arena.id}
+                            {...arena}
+                            startDate={new Date(arena.startDate)}
+                        />
+                    ))
+                )}
             </div>
         </div>
     );
