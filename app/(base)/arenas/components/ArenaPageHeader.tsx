@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
 import Button from "@/app/components/Button";
+import useModalStore from "@/stores/modalStore";
 
-export default function ArenaIntroCard() {
+export default function ArenaPageHeader() {
     return (
         <div className="px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="space-y-1">
@@ -36,6 +37,9 @@ export default function ArenaIntroCard() {
                         height={16}
                         className="object-contain"
                     />
+                }
+                onClick={() =>
+                    useModalStore.getState().openModal("createArena", null)
                 }
             />
         </div>

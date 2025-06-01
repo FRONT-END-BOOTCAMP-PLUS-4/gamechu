@@ -77,7 +77,8 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
                         })}
                     </span>
                 </div>
-                {/* 참여 버튼 TODO: onClick 작성*/}
+                {/* 참여 버튼
+                TODO: onClick 작성*/}
                 <Button label="토론 참여" size="small" />
             </div>
         </div>
