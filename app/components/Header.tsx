@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Button from "./Button";
 import useModalStore from "@/stores/modalStore";
+import Cookies from "js-cookie"; // 👈 꼭 상단에 추가
 
 export default function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -23,6 +24,12 @@ export default function Header() {
     }, []);
 
     const handleLogout = async () => {
+        const memberId = await getAuthUserId(); // ✅ 쿠키 제거를 위해 ID 확보
+        if (memberId) {
+            const cookieKey = `attendance_${memberId}`;
+            Cookies.remove(cookieKey, { path: "/" }); // ✅ 출석 쿠키 제거
+        }
+
         await signOut({ redirect: false });
         setIsLoggedIn(false);
         router.refresh();
