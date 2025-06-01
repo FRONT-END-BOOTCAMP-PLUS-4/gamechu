@@ -2,18 +2,19 @@
 
 import useModalStore from "@/stores/modalStore";
 import NotificationModal from "@/app/(base)/components/NotificationModal";
+import CreateArenaModal from "../(base)/arenas/components/CreateArenaModal";
 
 export default function Modals() {
-    const { modalType, isOpen, modalProps } = useModalStore();
+    const { modalType, isOpen } = useModalStore();
 
     if (!isOpen) return null;
 
     switch (modalType) {
         case "notification":
-            return <NotificationModal {...modalProps} />;
+            return <NotificationModal />;
 
         case "createArena":
-        // return <CreateArenaModal {...modalProps} />;
+            return <CreateArenaModal />;
 
         default:
             return null;

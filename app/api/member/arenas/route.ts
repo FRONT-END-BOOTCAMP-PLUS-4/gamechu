@@ -24,6 +24,13 @@ export async function POST(request: Request) {
             );
         }
 
+        if (!body.startDate) {
+            return NextResponse.json(
+                { error: "투기장 시작 날짜를 찾을 수 없습니다." },
+                { status: 400 }
+            );
+        }
+
         // member validation
         const memberId: string | null = await getAuthUserId();
         if (!memberId) {
@@ -38,7 +45,7 @@ export async function POST(request: Request) {
             memberId!,
             body.title,
             body.description,
-            new Date()
+            body.startDate
         );
         const arenaRepository: ArenaRepository = new PrismaArenaRepository();
         const createArenaUsecase: CreateArenaUsecase = new CreateArenaUsecase(
@@ -47,6 +54,9 @@ export async function POST(request: Request) {
         const newArena: Arena = await createArenaUsecase.execute(
             createArenaDto
         );
+
+        // TODO: score record 생성 로직 추가 - 투기장 생성
+
         return NextResponse.json(newArena, { status: 201 });
     } catch (error: unknown) {
         console.error("Error creating arenas:", error);

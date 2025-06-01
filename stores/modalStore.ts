@@ -7,8 +7,7 @@ interface ModalStore {
     modalType: ModalType;
     modalPosition: ModalPosition;
     isOpen: boolean;
-    modalProps: any;
-    openModal: (type: ModalType, position: ModalPosition, props?: any) => void;
+    openModal: (type: ModalType, position: ModalPosition) => void;
     closeModal: () => void;
 }
 
@@ -17,17 +16,15 @@ const useModalStore = create<ModalStore>((set) => ({
     modalPosition: null,
     isOpen: false,
     modalProps: null,
-    openModal: (type: ModalType, position: ModalPosition, props: any = null) =>
+    openModal: (type: ModalType, position: ModalPosition) =>
         set({
             modalType: type,
-            modalProps: props,
             modalPosition: position,
             isOpen: true,
         }),
     closeModal: () =>
         set({
             modalType: null,
-            modalProps: null,
             modalPosition: null,
             isOpen: false,
         }),

@@ -1,13 +1,14 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import ArenaIntroCard from "./components/ArenaIntroCard";
+import ArenaPageHeader from "./components/ArenaPageHeader";
 import CompleteArenaSection from "./components/CompleteArenaSection";
 import DebatingArenaSection from "./components/DebatingArenaSection";
 import RecruitingArenaSection from "./components/RecruitingArenaSection";
 import VotingArenaSection from "./components/VotingArenaSection";
 import WaitingArenaSection from "./components/WaitingArenaSection";
 import SelectedArenaSection from "./components/SelectedArenaSection";
+import Modals from "@/app/components/Modals";
 
 export default function ArenaPage() {
     const searchParams = useSearchParams();
@@ -16,7 +17,8 @@ export default function ArenaPage() {
 
     return (
         <div className="min-h-screen bg-background-400 text-font-100 py-12 space-y-10">
-            <ArenaIntroCard />
+            <ArenaPageHeader />
+            <Modals />
             {(() => {
                 switch (status) {
                     case 1:
