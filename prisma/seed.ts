@@ -71,25 +71,42 @@ async function main() {
         }
 
         const games = await gameResponse.json();
-        games.forEach((game: any) => {
-            game.releaseDate = getEarliestReleaseDate(game);
-            game.developer = getDeveloperName(game);
-        });
+        games.forEach(
+            (game: {
+                involved_companies: {
+                    developer: boolean;
+                    company: { name: string } | null;
+                }[];
+                releaseDate: Date | null;
+                developer: string | null;
+            }) => {
+                game.releaseDate = getEarliestReleaseDate(game);
+                game.developer = getDeveloperName(game);
+            }
+        );
 
         const newGames = await prisma.game.createMany({
-            data: games.map((g: any) => {
-                const thumbnail = g.cover?.url
-                    ? g.cover.url.replace("t_thumb", "t_cover_big")
-                    : null;
+            data: games.map(
+                (g: {
+                    cover: { url: string };
+                    id: number;
+                    name: string;
+                    developer: string | null;
+                    releaseDate: string | null;
+                }) => {
+                    const thumbnail = g.cover?.url
+                        ? g.cover.url.replace("t_thumb", "t_cover_big")
+                        : null;
 
-                return {
-                    id: g.id,
-                    title: g.name,
-                    developer: g.developer,
-                    thumbnail,
-                    releaseDate: g.releaseDate,
-                };
-            }),
+                    return {
+                        id: g.id,
+                        title: g.name,
+                        developer: g.developer,
+                        thumbnail,
+                        releaseDate: g.releaseDate,
+                    };
+                }
+            ),
         });
         console.log({ newGames });
 

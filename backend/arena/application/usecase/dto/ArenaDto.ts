@@ -8,6 +8,9 @@ export class ArenaDto {
         public status: number,
         public startDate: Date,
 
+        public debateEndDate: Date,
+        public voteEndDate: Date,
+
         public creatorNickname: string,
         public creatorProfileImageUrl: string,
         public creatorScore: number,

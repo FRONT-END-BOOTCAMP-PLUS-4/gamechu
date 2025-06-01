@@ -1,8 +1,16 @@
-export function getDeveloperName(game: any): string | null {
+export function getDeveloperName(game: {
+    involved_companies: {
+        developer: boolean;
+        company: { name: string } | null;
+    }[];
+    releaseDate: Date | null;
+    developer: string | null;
+}): string | null {
     if (!game.involved_companies?.length) return null;
 
     const dev = game.involved_companies.find(
-        (c: any) => c.developer === true && c.company?.name
+        (c: { developer: boolean; company: { name: string } | null }) =>
+            c.developer === true && c.company?.name
     );
 
     return dev?.company?.name || null;

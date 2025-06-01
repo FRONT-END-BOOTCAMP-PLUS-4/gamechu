@@ -1,31 +1,32 @@
-import { useEffect, useState } from "react";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import VotingArenaCard from "./VotingArenaCard";
-import { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
+import useArenas from "@/hooks/useArenas";
 
 export default function VotingArenaSection() {
-    const [arenaListDto, setArenaListDto] = useState<ArenaListDto>();
+    const { arenaListDto, loading, error } = useArenas({
+        status: 4,
+        currentPage: 1,
+        mine: false,
+        pageSize: 3,
+    });
 
-    useEffect(() => {
-        const fetchArenas = async () => {
-            try {
-                const res = await fetch(
-                    `/api/arenas?currentPage=1&status=4&mine=false&pageSize=3`,
-                    {
-                        method: "GET",
-                    }
-                );
-                const data = await res.json();
-                setArenaListDto(data);
-            } catch (error: unknown) {
-                console.error("Failed to fetch arenas", error);
-            }
-        };
-
-        fetchArenas();
-    }, []);
-
-    console.log(arenaListDto);
+    // TODO: use Loading Page
+    if (loading) {
+        return (
+            <div className="col-span-3 text-center text-gray-400">
+                로딩중...
+            </div>
+        );
+    }
+    // TODO: use Error Page
+    if (error) {
+        return (
+            <div className="col-span-3 text-center text-red-500">
+                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시
+                시도해주세요.
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -40,7 +41,11 @@ export default function VotingArenaSection() {
                     </div>
                 ) : (
                     arenaListDto!.arenas.map((arena) => (
-                        <VotingArenaCard key={arena.id} {...arena} />
+                        <VotingArenaCard
+                            key={arena.id}
+                            {...arena}
+                            voteEndDate={new Date(arena.voteEndDate)}
+                        />
                     ))
                 )}
             </div>
