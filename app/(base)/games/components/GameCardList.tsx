@@ -17,7 +17,7 @@ interface GameCardListProps {
 export default function GameCardList({ games }: GameCardListProps) {
     return (
         <div className="grid grid-cols-3 gap-3 w-[1068px]">
-            {games.slice(0, 12).map((game) => (
+            {games.slice(0, 6).map((game) => (
                 <GameCard key={game.id} {...game} />
             ))}
         </div>

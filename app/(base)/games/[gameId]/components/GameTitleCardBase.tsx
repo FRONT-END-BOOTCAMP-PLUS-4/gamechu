@@ -4,11 +4,11 @@ import WishlistButtonClient from "./WishlistButtonClient";
 interface Props {
     image: string;
     title: string;
-    developer: string;
-    rating?: number;
-    releaseDate: string;
+    developer: string | null;
+    rating?: number | null;
+    releaseDate: string | null;
     gameId: number;
-    viewerId?: string;
+    viewerId: string;
 }
 
 export default function GameTitleCardBase({
@@ -81,9 +81,10 @@ export default function GameTitleCardBase({
                     </div>
                 </div>
 
-                {viewerId && (
-                    <WishlistButtonClient gameId={gameId} viewerId={viewerId} />
-                )}
+                <WishlistButtonClient
+                    gameId={gameId}
+                    viewerId={viewerId || ""}
+                />
             </div>
         </div>
     );

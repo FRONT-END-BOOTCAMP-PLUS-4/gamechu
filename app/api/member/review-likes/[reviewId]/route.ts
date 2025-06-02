@@ -27,14 +27,14 @@ const usecase = new ToggleReviewLikeUsecase(
 
 export async function POST(
     req: NextRequest,
-    { params }: { params: { reviewId: string } }
+    { params }: { params: Promise<{ reviewId: string }> }
 ) {
     const userId = await getAuthUserId();
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const parsedReviewId = Number.parseInt(params.reviewId ?? "", 10);
+    const parsedReviewId = Number.parseInt((await params).reviewId ?? "", 10);
     if (isNaN(parsedReviewId)) {
         return NextResponse.json(
             { message: "Invalid reviewId" },

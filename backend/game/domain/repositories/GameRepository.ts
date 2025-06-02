@@ -10,4 +10,5 @@ export interface GameRepository {
     ): Promise<GetGameCardDto[]>;
     findAllGames(): Promise<GetGameCardDto[]>;
     findDetailById(id: number): Promise<GetGameDetailDto>;
+    getAverageRatingByExpert(gameId: number): Promise<number | null>;
 }

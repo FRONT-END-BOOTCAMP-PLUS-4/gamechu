@@ -27,4 +27,5 @@ export async function GET(
 
     const result = await usecase.execute(parsedId, viewerId || "");
     return NextResponse.json(result);
+    console.log("🧪 API viewerId:", viewerId);
 }

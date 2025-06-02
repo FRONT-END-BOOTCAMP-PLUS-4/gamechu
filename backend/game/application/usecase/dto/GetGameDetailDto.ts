@@ -9,4 +9,5 @@ export interface GetGameDetailDto {
     themes: string[];
     wishCount: number;
     reviewCount: number;
+    rating?: number | null;
 }

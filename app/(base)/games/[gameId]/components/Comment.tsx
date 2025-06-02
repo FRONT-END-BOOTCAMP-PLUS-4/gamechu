@@ -64,7 +64,7 @@ export default function Comment({
     };
 
     return (
-        <div className="w-[1000px] h-[250px] bg-background-100 rounded-[4px] p-4 flex gap-4 relative">
+        <div className="w-[1060px] h-[250px] bg-background-100 rounded-[4px] p-4 flex gap-4 relative">
             <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
@@ -72,7 +72,7 @@ export default function Comment({
                 onBlur={() => setIsFocused(false)}
                 placeholder="리뷰를 입력하세요..."
                 className={cn(
-                    "w-[800px] h-[218px] bg-background-200 rounded-[8px] p-4 resize-none text-body text-font-100 placeholder-font-200 outline-none border transition",
+                    "w-[860px] h-[218px] bg-background-200 rounded-[8px] p-4 resize-none text-body text-font-100 placeholder-font-200 outline-none border transition",
                     isFocused
                         ? "border-2 border-primary-purple-200"
                         : "border border-line-200"

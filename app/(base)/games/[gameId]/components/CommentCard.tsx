@@ -109,7 +109,7 @@ export default function CommentCard({
     };
 
     return (
-        <div className="relative w-[1000px] min-h-[100px] bg-background-200 rounded-[8px] p-4 pb-12 space-y-4 border border-line-100 border-opacity-50">
+        <div className="relative w-[1060px] min-h-[100px] bg-background-200 rounded-[8px] p-4 pb-12 space-y-4 border border-line-100 border-opacity-50">
             {/* 유저 정보 */}
             <div className="flex justify-between items-start">
                 <div className="flex gap-2 items-start">
