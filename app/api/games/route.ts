@@ -13,11 +13,18 @@ import { GetAllPlatformsUsecase } from "@/backend/platform/application/usecase/G
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
+        const page = searchParams.get("page") || undefined;
+        const size = searchParams.get("size") || undefined;
         const genre = searchParams.get("genre") || undefined;
         const theme = searchParams.get("theme") || undefined;
         const platform = searchParams.get("platform") || undefined;
         const keyword = searchParams.get("keyword") || undefined;
         const meta = searchParams.get("meta") === "true";
+        const sort = searchParams.get("sort") as
+            | "latest"
+            | "popular"
+            | "rating"
+            | undefined;
 
         if (meta) {
             const genreUsecase = new GetAllGenresUsecase(
@@ -47,14 +54,23 @@ export async function GET(req: NextRequest) {
             gameRepository
         );
 
-        const games = await getFilteredGamesUsecase.execute({
+        const { data, totalCount } = await getFilteredGamesUsecase.execute({
             genre,
             theme,
             platform,
             keyword,
+            sort,
+            page,
+            size,
         });
 
-        return NextResponse.json(games, { status: 200 });
+        return NextResponse.json(
+            {
+                games: data,
+                totalCount,
+            },
+            { status: 200 }
+        );
     } catch (error) {
         console.error("[GET /api/games] Error:", error);
         return NextResponse.json(

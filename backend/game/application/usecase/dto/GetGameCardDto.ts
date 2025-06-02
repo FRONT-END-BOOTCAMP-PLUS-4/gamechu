@@ -5,4 +5,6 @@ export interface GetGameCardDto {
     developer: string;
     platform: string;
     expertRating: number;
+    reviewCount: number;
+    releaseDate: Date;
 }

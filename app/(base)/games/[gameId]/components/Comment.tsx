@@ -6,6 +6,7 @@ import Button from "@/app/components/Button";
 import { cn } from "@/utils/tailwindUtil";
 import Typing from "@/public/typing.json";
 import Lottie from "lottie-react";
+import { useRouter } from "next/navigation";
 
 interface CommentProps {
     gameId: string;
@@ -19,16 +20,23 @@ export default function Comment({
     editingReviewId,
     defaultValue = "",
     onSuccess,
-}: CommentProps) {
+    viewerId,
+}: CommentProps & { viewerId?: string | null }) {
+    const router = useRouter();
     const [isFocused, setIsFocused] = useState(false);
     const [text, setText] = useState(defaultValue || "");
-    const [rating, setRating] = useState(0); // 수정 시 기존 rating도 넘겨받을 수 있게 개선 가능
+    const [rating, setRating] = useState(0);
 
     useEffect(() => {
         setText(defaultValue || "");
     }, [defaultValue]);
 
     const handleSubmit = async () => {
+        if (!viewerId) {
+            alert("로그인이 필요합니다");
+            router.push("/log-in");
+            return;
+        }
         if (!text.trim() || rating <= 0) return;
 
         const isEditing = !!editingReviewId;

@@ -9,6 +9,7 @@ interface GameCardProps {
     expertRating: number;
     developer: string;
     thumbnail: string;
+    reviewCount: number;
 }
 
 export default function GameCard({
@@ -18,27 +19,29 @@ export default function GameCard({
     expertRating,
     developer,
     thumbnail,
+    reviewCount,
 }: GameCardProps) {
     const router = useRouter();
     const handleClick = () => {
         router.push(`/games/${id}`);
     };
-
+    const thumbnailSrc =
+        !thumbnail || !thumbnail.trim()
+            ? "/icons/default-thumbnail.svg"
+            : thumbnail.startsWith("http")
+            ? thumbnail
+            : thumbnail.startsWith("//")
+            ? `https:${thumbnail}`
+            : thumbnail;
     return (
         <div
             onClick={handleClick}
             className="cursor-pointer box-border w-[348px] h-[348px] overflow-hidden flex flex-col rounded-[6px] border border-[1px] border-line-200 border-opacity-50 hover:border-[2px] hover:border-primary-purple-200 transition-all duration-100"
         >
             {/* 이미지 영역 */}
-            <div
-                className="relative w-full h-[248px]"
-                style={{
-                    backgroundImage: `url(${thumbnail})`,
-                    backgroundSize: "100% 100%",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                }}
-            >
+            <div className="relative w-full h-[248px]">
+                <Image src={thumbnailSrc} alt={title} fill sizes="346px" />
+
                 {/* 플랫폼 태그 */}
                 <div className="absolute top-2 right-2 p-1 opacity-90  bg-background-100 text-caption text-font-100 rounded-[4px] border border-background-300">
                     {platform}
@@ -61,6 +64,15 @@ export default function GameCard({
 
                     {/* 별점 */}
                     <div className="flex items-center  h-[25px]">
+                        <Image
+                            src="/icons/review.svg"
+                            alt="star"
+                            width={16}
+                            height={16}
+                        />
+                        <span className=" text-regular ml-1 mr-2">
+                            {reviewCount}
+                        </span>
                         <Image
                             src="/icons/empty-purple-star.svg"
                             alt="star"
