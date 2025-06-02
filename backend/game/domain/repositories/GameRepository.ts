@@ -6,9 +6,18 @@ export interface GameRepository {
         genreId?: number,
         themeId?: number,
         platformId?: number,
-        keyword?: string
+        keyword?: string,
+        sort?: "latest" | "popular" | "rating",
+        skip?: number,
+        take?: number
     ): Promise<GetGameCardDto[]>;
     findAllGames(): Promise<GetGameCardDto[]>;
     findDetailById(id: number): Promise<GetGameDetailDto>;
     getAverageRatingByExpert(gameId: number): Promise<number | null>;
+    countFilteredGames(
+        genreId?: number,
+        themeId?: number,
+        platformId?: number,
+        keyword?: string
+    ): Promise<number>;
 }

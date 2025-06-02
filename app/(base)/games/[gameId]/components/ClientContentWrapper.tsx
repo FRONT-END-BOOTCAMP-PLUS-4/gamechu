@@ -154,6 +154,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                                     fetchComments();
                                     setEditingId(null);
                                 }}
+                                viewerId={viewerId}
                             />
                         </div>
                     ) : myComment ? (

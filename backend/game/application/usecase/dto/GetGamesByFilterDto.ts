@@ -3,4 +3,5 @@ export interface GetGamesByFilterRequestDto {
     theme?: string;
     platform?: string;
     keyword?: string;
+    sort?: "latest" | "popular" | "rating";
 }

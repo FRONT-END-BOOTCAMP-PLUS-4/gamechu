@@ -16,7 +16,7 @@ export default function SearchBar({ keyword, setKeyword }: SearchBarProps) {
         <div className="flex items-center gap-1">
             <div
                 className={cn(
-                    "relative w-[707px] h-[50px] rounded-[4px] border transition overflow-hidden",
+                    "relative w-[346.67px] h-[50px] rounded-[4px] border transition overflow-hidden",
                     isFocused ? "border-primary-purple-200" : "border-line-200"
                 )}
             >
