@@ -122,12 +122,14 @@ export default function GamePage() {
                 />
                 <div className="w-[1068px] space-y-10">
                     <GameCardList games={gamesForPage} />
-                    <Pager
-                        currentPage={currentPage}
-                        pages={pages}
-                        endPage={endPage}
-                        onPageChange={setCurrentPage}
-                    />
+                    {gamesForPage.length > 0 && (
+                        <Pager
+                            currentPage={currentPage}
+                            pages={pages}
+                            endPage={endPage}
+                            onPageChange={setCurrentPage}
+                        />
+                    )}
                 </div>
             </div>
         </div>

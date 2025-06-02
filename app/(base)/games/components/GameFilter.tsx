@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { cn } from "@/utils/tailwindUtil";
 
 type TagType = "genre" | "theme";
@@ -68,10 +67,10 @@ export default function GameFilter({
                                     setSelectedTag(isSelected ? undefined : tag)
                                 }
                                 className={cn(
-                                    "text-caption px-2 py-1 rounded-full border",
+                                    "text-caption px-2 py-1 rounded-full border transition duration-200 ease-in-out transform hover:scale-[1.03]",
                                     isSelected
                                         ? "bg-primary-purple-200 text-font-100 border-transparent"
-                                        : "bg-background-100 text-font-200 border-line-200"
+                                        : "bg-background-100 text-font-200 border-line-200 hover:border-primary-purple-200 hover:bg-background-200"
                                 )}
                             >
                                 {tag.name}
@@ -92,7 +91,7 @@ export default function GameFilter({
             {/* 플랫폼 */}
             <div>
                 <h2 className="text-h2 font-medium mb-2">플랫폼</h2>
-                <div className="flex flex-col gap-2">
+                <div className="grid grid-cols-2 gap-2">
                     {displayedPlatforms.map((platform) => (
                         <button
                             key={platform.id}
@@ -104,10 +103,10 @@ export default function GameFilter({
                                 )
                             }
                             className={cn(
-                                "text-caption px-2 py-1 rounded-full border",
+                                "text-caption px-2 py-1 rounded-full border transition duration-200 ease-in-out transform hover:scale-[1.03]",
                                 selectedPlatformId === platform.id
                                     ? "bg-primary-purple-200 text-font-100 border-transparent"
-                                    : "bg-background-100 text-font-200 border-line-200"
+                                    : "bg-background-100 text-font-200 border-line-200 hover:border-primary-purple-200 hover:bg-background-200"
                             )}
                         >
                             {platform.name}

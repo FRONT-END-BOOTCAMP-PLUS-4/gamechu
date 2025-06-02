@@ -8,8 +8,14 @@ const config: Config = {
                 "fade-in-right": "fadeInRight 0.8s ease-out forwards",
                 "fade-in-up": "fadeInUp 0.8s ease-out forwards",
                 "slow-pan": "pan 60s linear infinite",
+                "fade-in": "fadeIn 0.8s ease-out",
+                "border-flow": "borderFlow 8s linear infinite",
             },
             keyframes: {
+                fadeIn: {
+                    "0%": { opacity: "0", transform: "translateY(10px)" },
+                    "100%": { opacity: "1", transform: "translateY(0)" },
+                },
                 fadeInLeft: {
                     "0%": { opacity: "0", transform: "translateX(-20px)" },
                     "100%": { opacity: "1", transform: "translateX(0)" },
@@ -25,6 +31,14 @@ const config: Config = {
                 pan: {
                     "0%": { backgroundPosition: "0% 50%" },
                     "100%": { backgroundPosition: "100% 50%" },
+                },
+                borderFlow: {
+                    "0%": {
+                        backgroundPosition: "0% 50%",
+                    },
+                    "100%": {
+                        backgroundPosition: "200% 50%",
+                    },
                 },
             },
             fontSize: {

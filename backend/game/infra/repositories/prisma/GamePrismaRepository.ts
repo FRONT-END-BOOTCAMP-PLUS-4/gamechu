@@ -120,4 +120,18 @@ export class GamePrismaRepository implements GameRepository {
             expertRating: 0, // 기본값 설정, 필요시 수정 가능
         }));
     }
+    async getAverageRatingByExpert(gameId: number): Promise<number | null> {
+        const reviews = await prisma.review.findMany({
+            where: {
+                gameId,
+                member: { score: { gte: 3000 } },
+            },
+            select: { rating: true },
+        });
+
+        if (reviews.length === 0) return null;
+        const avg =
+            reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length / 2;
+        return avg;
+    }
 }

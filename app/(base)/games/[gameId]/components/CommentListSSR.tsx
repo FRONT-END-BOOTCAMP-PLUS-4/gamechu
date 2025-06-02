@@ -1,4 +1,3 @@
-// app/game/[gameId]/components/CommentListSSR.tsx
 import CommentCard from "./CommentCard";
 import { GetReviewsByGameIdUsecase } from "@/backend/review/application/usecase/GetReviewsByGameIdUsecase";
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";

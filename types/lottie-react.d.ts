@@ -2,7 +2,7 @@ declare module "lottie-react" {
     import { ComponentType } from "react";
 
     interface LottieProps {
-        animationData: any;
+        animationData: object;
         loop?: boolean;
         autoplay?: boolean;
         className?: string;
