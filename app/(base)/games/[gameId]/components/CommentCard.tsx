@@ -6,13 +6,14 @@ import Button from "@/app/components/Button";
 import Lottie from "lottie-react";
 import Like from "@/public/like.json";
 import TierBadge from "@/app/components/TierBadge";
+import Toast from "@/app/components/Toast";
+import { useRouter } from "next/navigation";
 
 interface CommentCardProps {
     id: number;
     profileImage: string;
     nickname: string;
     date: string;
-
     rating: number;
     score: number;
     comment: string;
@@ -29,17 +30,17 @@ export default function CommentCard({
     profileImage,
     nickname,
     date,
-
     rating,
     comment,
-    likes,
     score,
+    likes,
     isLiked: initiallyLiked,
     viewerId,
     memberId,
-    onDelete,
     onEdit,
+    onDelete,
 }: CommentCardProps) {
+    const router = useRouter();
     const [isLiked, setIsLiked] = useState(initiallyLiked);
     const [likeCount, setLikeCount] = useState(likes);
     const [showMenu, setShowMenu] = useState(false);
@@ -47,6 +48,11 @@ export default function CommentCard({
     const [animationKey, setAnimationKey] = useState(0);
     const [animationDone, setAnimationDone] = useState(true);
     const menuRef = useRef<HTMLDivElement>(null);
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        status: "info" as "success" | "error" | "info",
+    });
 
     useEffect(() => {
         setIsLiked(initiallyLiked);
@@ -71,8 +77,35 @@ export default function CommentCard({
     const toggleMenu = () => setShowMenu((prev) => !prev);
 
     const handleLike = async () => {
-        if (!viewerId) return alert("로그인 후 좋아요를 누를 수 있습니다.");
-        if (viewerId === memberId) return alert("내가 작성한 댓글입니다.");
+        if (!viewerId) {
+            setToast({
+                show: true,
+                message: "로그인이 필요합니다",
+                status: "error",
+            });
+            setTimeout(() => {
+                setToast((prev) => ({ ...prev, show: false }));
+                router.push(
+                    `/log-in?callbackUrl=${encodeURIComponent(
+                        window.location.pathname
+                    )}`
+                );
+            }, 1000);
+            return;
+        }
+
+        if (viewerId === memberId) {
+            setToast({
+                show: true,
+                message: "내가 작성한 댓글입니다",
+                status: "error",
+            });
+            setTimeout(() => {
+                setToast((prev) => ({ ...prev, show: false }));
+            }, 1000);
+            return;
+        }
+
         if (isLoading) return;
 
         setIsLoading(true);
@@ -168,10 +201,7 @@ export default function CommentCard({
                                     type="black"
                                     size="small"
                                     label="수정"
-                                    onClick={() => {
-                                        onEdit?.(id);
-                                        console.log("수정 클릭 확인", id);
-                                    }}
+                                    onClick={() => onEdit?.(id)}
                                 />
                                 <Button
                                     type="black"
@@ -226,6 +256,13 @@ export default function CommentCard({
                 </button>
                 <span className="text-font-200">좋아요 ({likeCount})</span>
             </div>
+
+            {/* 토스트 알림 */}
+            <Toast
+                show={toast.show}
+                status={toast.status}
+                message={toast.message}
+            />
         </div>
     );
 }
