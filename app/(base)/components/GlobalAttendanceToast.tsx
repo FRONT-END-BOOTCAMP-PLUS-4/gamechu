@@ -67,12 +67,9 @@ export default function GlobalAttendanceToast() {
                     const midnight = new Date(seoulNow);
 
                     midnight.setHours(24, 0, 0, 0); // 다음날 00:00:00
-                    const utcMidnight = new Date(
-                        midnight.toLocaleString("en-US", { timeZone: "UTC" })
-                    );
 
                     Cookies.set(`attendance`, attendedDate, {
-                        expires: utcMidnight, // UTC 기준으로 자정에 만료
+                        expires: midnight, // UTC 기준으로 자정에 만료
                         path: "/",
                     });
                 }
