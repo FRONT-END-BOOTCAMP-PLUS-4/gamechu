@@ -69,7 +69,7 @@ export default function GlobalAttendanceToast() {
                     midnight.setHours(24, 0, 0, 0); // 다음날 00:00:00
 
                     Cookies.set(`attendance`, attendedDate, {
-                        expires: midnight, // UTC 기준으로 자정에 만료
+                        expires: midnight, // 한국시간 기준으로 자정에 만료
                         path: "/",
                     });
                 }
