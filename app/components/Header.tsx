@@ -24,11 +24,7 @@ export default function Header() {
     }, []);
 
     const handleLogout = async () => {
-        const memberId = await getAuthUserId(); // ✅ 쿠키 제거를 위해 ID 확보
-        if (memberId) {
-            const cookieKey = `attendance_${memberId}`;
-            Cookies.remove(cookieKey, { path: "/" }); // ✅ 출석 쿠키 제거
-        }
+        Cookies.remove("attendance", { path: "/" });
 
         await signOut({ redirect: false });
         setIsLoggedIn(false);
