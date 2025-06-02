@@ -6,10 +6,11 @@ import { GetVoteUsecase } from "@/backend/vote/application/usecase/GetVoteUsecas
 // GET /api/arenas/[id]/votes/check?
 export async function GET(
     req: NextRequest,
-    context: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const arenaId = Number(context.params.id);
+        const { id } = await context.params;
+        const arenaId = Number(id);
         const memberId = await getAuthUserId();
         console.log("Arena ID:", arenaId);
         console.log("Member ID:", memberId);

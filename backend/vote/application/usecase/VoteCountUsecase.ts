@@ -2,6 +2,7 @@ import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaReposi
 import { VoteRepository } from "../../domain/repositories/VoteRepository";
 import { VoteFilter } from "../../domain/repositories/filters/VoteFilter";
 
+// TODO: make a DTO instead of using as an interface
 export interface VoteCountResult {
     arenaId: number;
     leftVotes: number;

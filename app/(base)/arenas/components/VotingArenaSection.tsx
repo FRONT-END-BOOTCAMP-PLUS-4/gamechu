@@ -1,17 +1,58 @@
+import useVoteList from "@/hooks/useVoteList";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import VotingArenaCard from "./VotingArenaCard";
 import useArenas from "@/hooks/useArenas";
+import { useEffect, useRef, useState } from "react";
 
 export default function VotingArenaSection() {
-    const { arenaListDto, loading, error } = useArenas({
+    const {
+        arenaListDto,
+        loading: arenaLoading,
+        error: arenaError,
+    } = useArenas({
         status: 4,
         currentPage: 1,
         mine: false,
         pageSize: 3,
     });
 
+    const [arenaIdsToFetch, setArenaIdsToFetch] = useState<number[]>([]);
+    const fetchedIdsRef = useRef<string>(""); // API 중복 호출 방지용
+
+    useEffect(() => {
+        if (!arenaListDto?.arenas) return;
+
+        const ids = arenaListDto.arenas.map((arena) => arena.id).sort();
+        const idsString = ids.join(",");
+
+        if (fetchedIdsRef.current === idsString) return;
+
+        setArenaIdsToFetch(ids); // 필요한 ID 목록 업데이트
+        fetchedIdsRef.current = idsString; // 기록 갱신
+    }, [arenaListDto?.arenas]);
+
+    const {
+        voteResult,
+        loading: voteLoading,
+        error: voteError,
+    } = useVoteList({
+        arenaIds: arenaIdsToFetch,
+    });
+
+    if (arenaListDto && arenaListDto.arenas) {
+        arenaListDto.arenas.forEach((arena) => {
+            const vote = voteResult.find((vote) => vote.arenaId === arena.id);
+            if (vote) {
+                arena.voteCount = vote.total;
+                arena.leftPercent = vote.leftPercent;
+            } else {
+                arena.voteCount = 0;
+            }
+        });
+    }
+
     // TODO: use Loading Page
-    if (loading) {
+    if (arenaLoading || voteLoading) {
         return (
             <div className="col-span-3 text-center text-gray-400">
                 로딩중...
@@ -19,7 +60,7 @@ export default function VotingArenaSection() {
         );
     }
     // TODO: use Error Page
-    if (error) {
+    if (arenaError || voteError) {
         return (
             <div className="col-span-3 text-center text-red-500">
                 투기장 정보를 불러오는 데 실패했습니다. 나중에 다시
