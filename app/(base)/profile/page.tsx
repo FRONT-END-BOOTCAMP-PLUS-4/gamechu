@@ -10,6 +10,7 @@ import ProfileInfoTab from "./components/tabs/ProfileInfoTab";
 import ProfileReviewTab from "./components/tabs/ProfileReviewTab";
 import ProfileWishlistTab from "./components/tabs/ProfileWishlistTab";
 import ProfilePointHistoryTab from "./components/tabs/ProfilePointHistoryTab";
+import ProfileArenaTab from "./components/tabs/ProfileArenaTab";
 
 // ✅ 위시리스트 게임 카드용 타입
 type WishlistGame = {
@@ -128,6 +129,9 @@ export default function ProfilePage() {
                     )}
                     {activeTab === "score-history" && !loading && (
                         <ProfilePointHistoryTab />
+                    )}
+                    {activeTab === "arena" && !loading && (
+                        <ProfileArenaTab />
                     )}
                 </div>
             </div>
