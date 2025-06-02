@@ -1,12 +1,14 @@
 // infra/repositories/PrismaArenaRepository.ts
-import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
+import {
+    ArenaRepository,
+    CreateArenaInput,
+} from "@/backend/arena/domain/repositories/ArenaRepository";
 import { Arena, Prisma, PrismaClient } from "@/prisma/generated";
 import { ArenaStatus } from "@/types/arena-status";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 import dayjs from "dayjs";
 import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilters";
 
-type CreateArenaInput = Omit<Arena, "id">;
 export class PrismaArenaRepository implements ArenaRepository {
     private prisma: PrismaClient;
 
@@ -61,9 +63,9 @@ export class PrismaArenaRepository implements ArenaRepository {
 
         return data;
     }
-    async save(arena: Arena): Promise<Arena> {
+    async save(arena: CreateArenaInput): Promise<Arena> {
         const data = await this.prisma.arena.create({
-            data: arena as CreateArenaInput,
+            data: arena,
         });
 
         return data;
