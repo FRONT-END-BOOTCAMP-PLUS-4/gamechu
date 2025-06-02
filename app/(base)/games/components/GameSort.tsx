@@ -20,7 +20,7 @@ const options: SortOption[] = [
 
 export default function GameSort({ current, onChange }: Props) {
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-[15px]">
             {options.map((option) => (
                 <Button
                     key={option.value}

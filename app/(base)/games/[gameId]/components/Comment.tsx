@@ -7,6 +7,8 @@ import { cn } from "@/utils/tailwindUtil";
 import Typing from "@/public/typing.json";
 import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
+import Toast from "@/app/components/Toast";
+import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 
 interface CommentProps {
     gameId: string;
@@ -20,26 +22,44 @@ export default function Comment({
     editingReviewId,
     defaultValue = "",
     onSuccess,
-    viewerId,
 }: CommentProps & { viewerId?: string | null }) {
+    const viewerId = getAuthUserId();
     const router = useRouter();
     const [isFocused, setIsFocused] = useState(false);
     const [text, setText] = useState(defaultValue || "");
     const [rating, setRating] = useState(0);
-
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        status: "info" as "success" | "error" | "info",
+    });
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         setText(defaultValue || "");
     }, [defaultValue]);
 
     const handleSubmit = async () => {
+        if (isLoading) return;
         if (!viewerId) {
-            alert("로그인이 필요합니다");
-            router.push("/log-in");
+            setToast({
+                show: true,
+                message: "로그인이 필요합니다",
+                status: "error",
+            });
+            setTimeout(() => {
+                setToast((prev) => ({ ...prev, show: false }));
+                router.push(
+                    `/log-in?callbackUrl=${encodeURIComponent(
+                        window.location.pathname
+                    )}`
+                );
+            }, 1000);
             return;
         }
         if (!text.trim() || rating <= 0) return;
 
         const isEditing = !!editingReviewId;
+        setIsLoading(true);
 
         try {
             const res = await fetch(
@@ -67,7 +87,16 @@ export default function Comment({
             onSuccess();
         } catch (err) {
             console.error("🔥 리뷰 저장 실패:", err);
-            alert("리뷰 저장에 실패했습니다.");
+            setToast({
+                show: true,
+                message: "리뷰 저장에 실패했습니다.",
+                status: "error",
+            });
+            setTimeout(() => {
+                setToast((prev) => ({ ...prev, show: false }));
+            }, 3000);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -94,10 +123,21 @@ export default function Comment({
             </div>
             <div className="absolute bottom-4 right-4">
                 <Button
-                    label={editingReviewId ? "수정" : "등록"}
+                    label={
+                        isLoading
+                            ? "등록 중.."
+                            : editingReviewId
+                            ? "수정"
+                            : "등록"
+                    }
                     onClick={handleSubmit}
                 />
             </div>
+            <Toast
+                show={toast.show}
+                status={toast.status}
+                message={toast.message}
+            />
         </div>
     );
 }
