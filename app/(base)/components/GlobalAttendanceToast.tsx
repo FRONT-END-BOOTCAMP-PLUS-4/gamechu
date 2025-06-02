@@ -58,8 +58,21 @@ export default function GlobalAttendanceToast() {
 
                 // ✅ 출석 날짜를 쿠키로 저장 (1일 유지)
                 if (attendedDate) {
-                    Cookies.set(`attendance_${memberId}`, attendedDate, {
-                        expires: 1,
+
+                    // ✅ 한국 시각 자정 계산
+                    const now = new Date();
+                    const seoulNow = new Date(
+                        now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+                    );
+                    const midnight = new Date(seoulNow);
+
+                    midnight.setHours(24, 0, 0, 0); // 다음날 00:00:00
+                    const utcMidnight = new Date(
+                        midnight.toLocaleString("en-US", { timeZone: "UTC" })
+                    );
+
+                    Cookies.set(`attendance`, attendedDate, {
+                        expires: utcMidnight, // UTC 기준으로 자정에 만료
                         path: "/",
                     });
                 }
