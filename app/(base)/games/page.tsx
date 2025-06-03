@@ -63,7 +63,10 @@ export default function GamePage() {
             setPlatforms(data.platforms);
             setLoading(false);
         };
-        fetchFilters();
+        setTimeout(() => {
+            fetchFilters();
+        }, 0);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

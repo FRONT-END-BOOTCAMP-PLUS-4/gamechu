@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import GlobalAttendanceToast from "./components/GlobalAttendanceToast";
 import "../globals.css";
 export { viewport } from "../viewport";
+import LottieLoaderWrapper from "../components/LottieLoaderWrapper";
 
 export default function BaseLayout({
     children,
@@ -14,7 +15,9 @@ export default function BaseLayout({
         <>
             <HeaderWrapper /> {/* CSR로만 렌더링됨 */}
             <main className="max-w-[1480px] mx-auto px-10 bg-background-400 text-font-100 font-sans">
-                <GlobalAttendanceToast /> 
+                <LottieLoaderWrapper />
+                <GlobalAttendanceToast />
+
                 {children}
             </main>
             <Footer />
