@@ -31,7 +31,7 @@ export default function CreateArenaModal() {
         }
 
         try {
-            const res = await fetch(`/api/member/arenas`, {
+            const arenaResult = await fetch(`/api/member/arenas`, {
                 method: "POST",
                 body: JSON.stringify({
                     title,
@@ -39,10 +39,24 @@ export default function CreateArenaModal() {
                     startDate,
                 }),
             });
-            const data = await res.json();
-            if (res.ok) {
+            const arena = await arenaResult.json();
+            if (arenaResult.ok) {
                 closeModal();
-                console.log("투기장 생성 성공:", data);
+                console.log("투기장 생성 성공:", arena);
+            }
+
+            // TODO: get policyId and actualScore from Score Policy Database
+            const scoreRecordResult = await fetch(`/api/member/scores`, {
+                method: "POST",
+                body: JSON.stringify({
+                    policyId: 4,
+                    actualScore: -100,
+                }),
+            });
+            const scoreRecord = await scoreRecordResult.json();
+            if (scoreRecordResult.ok) {
+                closeModal();
+                console.log("점수 기록 생성 성공:", scoreRecord);
             }
         } catch (error: unknown) {
             console.error("Failed to post arena", error);
