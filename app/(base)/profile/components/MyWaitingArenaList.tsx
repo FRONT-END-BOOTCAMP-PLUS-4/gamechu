@@ -1,19 +1,23 @@
 "use client";
 
-import { useEffect  } from "react";
+import { useEffect, useState } from "react";
 import useFetchArenas from "@/hooks/useArenas";
 import WaitingArenaCard from "../../arenas/components/WaitingArenaCard";
+import Pager from "@/app/components/Pager";
 
 export default function MyWaitingArenaList() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 6;
+
     const {
         arenaListDto,
         loading,
         error,
     } = useFetchArenas({
-        currentPage: 1,
+        currentPage,
         status: 2, // 대기 중인 투기장
-        mine: true, // 내가 만든 또는 참여한
-        pageSize: 10,
+        mine: true,
+        pageSize,
     });
 
     useEffect(() => {
@@ -27,15 +31,22 @@ export default function MyWaitingArenaList() {
     }
 
     if (error) {
-        return <p className="text-red-500 text-sm">투기장 정보를 불러오는 데 실패했습니다.</p>;
+        return (
+            <p className="text-red-500 text-sm">
+                투기장 정보를 불러오는 데 실패했습니다.
+            </p>
+        );
     }
 
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
-        return <p className="text-font-200 text-sm">대기 중인 투기장이 없습니다.</p>;
+        return (
+            <p className="text-font-200 text-sm">대기 중인 투기장이 없습니다.</p>
+        );
     }
 
     return (
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-6 w-full">
+            {/* 대기 중 투기장 카드 리스트 */}
             {arenaListDto.arenas.map((arena) => (
                 <WaitingArenaCard
                     key={arena.id}
@@ -48,6 +59,14 @@ export default function MyWaitingArenaList() {
                     startDate={new Date(arena.startDate)}
                 />
             ))}
+
+            {/* 페이저 삽입 */}
+            <Pager
+                currentPage={arenaListDto.currentPage}
+                endPage={arenaListDto.endPage}
+                pages={arenaListDto.pages}
+                onPageChange={(page) => setCurrentPage(page)}
+            />
         </div>
     );
 }
