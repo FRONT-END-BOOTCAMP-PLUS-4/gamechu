@@ -8,7 +8,6 @@ import Typing from "@/public/typing.json";
 import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
 import Toast from "@/app/components/Toast";
-import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 
 interface CommentProps {
     gameId: string;
@@ -22,8 +21,8 @@ export default function Comment({
     editingReviewId,
     defaultValue = "",
     onSuccess,
+    viewerId,
 }: CommentProps & { viewerId?: string | null }) {
-    const viewerId = getAuthUserId();
     const router = useRouter();
     const [isFocused, setIsFocused] = useState(false);
     const [text, setText] = useState(defaultValue || "");
