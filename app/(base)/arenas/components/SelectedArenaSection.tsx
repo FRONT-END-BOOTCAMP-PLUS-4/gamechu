@@ -1,3 +1,5 @@
+"use client";
+
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import VotingArenaCard from "./VotingArenaCard";

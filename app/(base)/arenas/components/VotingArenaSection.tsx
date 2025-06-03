@@ -1,3 +1,5 @@
+"use client";
+
 import useVoteList from "@/hooks/useVoteList";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import VotingArenaCard from "./VotingArenaCard";

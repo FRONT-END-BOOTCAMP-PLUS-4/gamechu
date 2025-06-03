@@ -1,3 +1,5 @@
+"use client";
+
 import TierBadge from "@/app/components/TierBadge";
 import Image from "next/image";
 import VoteStatusBar from "./VoteStatusBar";

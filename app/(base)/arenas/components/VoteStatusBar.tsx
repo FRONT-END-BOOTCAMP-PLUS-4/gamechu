@@ -1,3 +1,5 @@
+"use client";
+
 type VoteStatusBarProps = {
     leftPercent: number;
 };
