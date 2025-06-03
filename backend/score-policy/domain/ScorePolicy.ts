@@ -1,3 +1,4 @@
+// TODO: refactor everything...
 import { ArenaResult } from "../application/usecase/dto/ApplyArenaScoreDto";
 import { ReviewScoreAction } from "../application/usecase/dto/ApplyReviewScoreDto";
 
@@ -13,7 +14,7 @@ export class ScorePolicy {
             case "JOIN":
                 return -100;
             default:
-                return 0;   
+                return 0;
         }
     }
 
