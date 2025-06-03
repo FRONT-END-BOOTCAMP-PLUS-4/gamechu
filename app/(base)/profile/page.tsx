@@ -20,6 +20,7 @@ type WishlistGame = {
     thumbnail: string;
     platform: string;
     expertRating: number;
+    reviewCount: number;
 };
 
 type Review = {

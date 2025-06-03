@@ -11,6 +11,7 @@ interface Game {
     thumbnail: string;
     platform: string;
     expertRating: number;
+    reviewCount: number;
 }
 
 export default function ProfileWishlistTab({ games }: { games: Game[] }) {

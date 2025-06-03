@@ -5,6 +5,7 @@ export class GetWishListGameDto {
         public readonly developer: string,
         public readonly thumbnail: string,
         public readonly platform: string,
-        public readonly expertRating: number
+        public readonly expertRating: number,
+        public readonly reviewCount: number,
     ) {}
 }
