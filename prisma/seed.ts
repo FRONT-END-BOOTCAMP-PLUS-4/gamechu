@@ -1,8 +1,7 @@
 import { getTwitchAccessToken } from "@/utils/GetTwitchAccessToken";
-import { PrismaClient } from "./generated";
 import { getEarliestReleaseDate } from "@/utils/GetEarliestReleaseDate";
 import { getDeveloperName } from "@/utils/GetDeveloperName";
-// import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 async function main() {
@@ -77,6 +76,7 @@ async function main() {
                     developer: boolean;
                     company: { name: string } | null;
                 }[];
+                release_dates: { date: number }[] | null;
                 releaseDate: Date | null;
                 developer: string | null;
             }) => {

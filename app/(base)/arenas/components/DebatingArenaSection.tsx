@@ -2,10 +2,13 @@ import useArenas from "@/hooks/useArenas";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import DebatingArenaCard from "./DebatingArenaCard";
 import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
+import { GetSectionTitle } from "@/utils/GetSectionTitle";
 
 export default function DebatingArenaSection() {
+    const status: number = 3;
+
     const { arenaListDto, loading, error } = useArenas({
-        status: 3,
+        status,
         currentPage: 1,
         mine: false,
         pageSize: 3,
@@ -41,11 +44,11 @@ export default function DebatingArenaSection() {
 
     return (
         <div>
-            <ArenaSectionHeader title="토론이 진행중인 투기장" status={3} />
+            <ArenaSectionHeader status={3} />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 px-6">
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">
-                        현재 토론이 진행중인 투기장이 없습니다.
+                        현재 {GetSectionTitle(status)}이 없습니다.
                     </div>
                 ) : (
                     arenaListDto!.arenas.map((arena) => (
