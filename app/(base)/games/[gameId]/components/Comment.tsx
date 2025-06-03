@@ -40,7 +40,7 @@ export default function Comment({
 
     const handleSubmit = async () => {
         if (isLoading) return;
-        if (!viewerId) {
+        if (!viewerId || typeof viewerId !== "string") {
             setToast({
                 show: true,
                 message: "로그인이 필요합니다",
