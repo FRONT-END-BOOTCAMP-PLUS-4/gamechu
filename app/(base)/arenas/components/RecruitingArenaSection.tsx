@@ -1,3 +1,5 @@
+"use client";
+
 import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
 import ArenaSectionHeader from "./ArenaSectionHeader";

@@ -1,4 +1,6 @@
 // app/components/Button.tsx
+"use client";
+
 import React, { ReactNode } from "react";
 import { cn } from "@/utils/tailwindUtil";
 

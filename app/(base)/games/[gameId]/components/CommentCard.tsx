@@ -54,6 +54,11 @@ export default function CommentCard({
         status: "info" as "success" | "error" | "info",
     });
 
+    // ✅ 리뷰 줄수 관련
+    const [expanded, setExpanded] = useState(false);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+    const commentRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         setIsLiked(initiallyLiked);
         setLikeCount(likes);
@@ -73,6 +78,19 @@ export default function CommentCard({
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        const el = commentRef.current;
+        if (el) {
+            const lineHeight = parseFloat(
+                getComputedStyle(el).lineHeight || "0"
+            );
+            const maxHeight = lineHeight * 2;
+            if (el.scrollHeight > maxHeight) {
+                setIsOverflowing(true);
+            }
+        }
+    }, [comment]);
 
     const toggleMenu = () => setShowMenu((prev) => !prev);
 
@@ -217,9 +235,24 @@ export default function CommentCard({
 
             <hr className="w-full bg-line-100 opacity-75" />
 
-            {/* 댓글 내용 */}
-            <div className="text-body text-font-100 whitespace-pre-wrap">
-                {comment}
+            {/* 댓글 내용 + 더보기 */}
+            <div>
+                <div
+                    ref={commentRef}
+                    className={`text-body text-font-100 whitespace-pre-wrap transition-all duration-200 ${
+                        expanded ? "" : "line-clamp-2"
+                    }`}
+                >
+                    {comment}
+                </div>
+                {isOverflowing && (
+                    <button
+                        onClick={() => setExpanded(!expanded)}
+                        className="mt-1 text-caption text-primary-purple-100 hover:underline"
+                    >
+                        {expanded ? "접기" : "... 더보기"}
+                    </button>
+                )}
             </div>
 
             {/* 좋아요 버튼 */}

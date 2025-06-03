@@ -1,3 +1,5 @@
+"use client";
+
 import useArenas from "@/hooks/useArenas";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import CompleteArenaCard from "./CompleteArenaCard";
