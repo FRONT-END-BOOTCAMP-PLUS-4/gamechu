@@ -4,14 +4,17 @@ import VotingArenaCard from "./VotingArenaCard";
 import useArenas from "@/hooks/useArenas";
 import { useEffect, useRef, useState } from "react";
 import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
+import { GetSectionTitle } from "@/utils/GetSectionTitle";
 
 export default function VotingArenaSection() {
+    const status: number = 4;
+
     const {
         arenaListDto,
         loading: arenaLoading,
         error: arenaError,
     } = useArenas({
-        status: 4,
+        status,
         currentPage: 1,
         mine: false,
         pageSize: 3,
@@ -82,11 +85,11 @@ export default function VotingArenaSection() {
 
     return (
         <div>
-            <ArenaSectionHeader title="투표가 진행중인 투기장" status={4} />
+            <ArenaSectionHeader status={4} />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 px-6">
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">
-                        현재 투표가 진행중인 투기장이 없습니다.
+                        현재 {GetSectionTitle(status)}이 없습니다.
                     </div>
                 ) : (
                     arenaListDto!.arenas.map((arena) => (

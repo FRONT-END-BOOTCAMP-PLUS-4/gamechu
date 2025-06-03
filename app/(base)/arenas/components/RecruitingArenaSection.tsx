@@ -1,11 +1,14 @@
 import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
+import { GetSectionTitle } from "@/utils/GetSectionTitle";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import RecruitingArenaCard from "./RecruitingArenaCard";
 import useArenas from "@/hooks/useArenas";
 
 export default function RecruitingArenaSection() {
+    const status: number = 1;
+
     const { arenaListDto, loading, error } = useArenas({
-        status: 1,
+        status,
         currentPage: 1,
         mine: false,
         pageSize: 3,
@@ -41,11 +44,11 @@ export default function RecruitingArenaSection() {
 
     return (
         <div>
-            <ArenaSectionHeader title="도전자를 찾는중인 투기장" status={1} />
+            <ArenaSectionHeader status={status} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4 px-6">
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">
-                        현재 도전자를 모집중인 투기장이 없습니다.
+                        현재 {GetSectionTitle(status)}이 없습니다.
                     </div>
                 ) : (
                     arenaListDto!.arenas.map((arena) => (

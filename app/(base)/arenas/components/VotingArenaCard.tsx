@@ -22,7 +22,7 @@ export default function VotingArenaCard(props: VotingArenaCardProps) {
     return (
         <div
             className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[440px]
-                border border-transparent hover:border-purple-500
+                border border-transparent hover:cursor-pointer hover:border-purple-500
                 hover:shadow-lg hover:shadow-purple-500/30
                 hover:scale-[1.01] transform transition-all duration-200"
             onClick={onClickHandler}

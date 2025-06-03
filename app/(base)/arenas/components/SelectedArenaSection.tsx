@@ -90,10 +90,7 @@ export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
 
     return (
         <div>
-            <ArenaSectionHeader
-                title={GetSectionTitle(props.status)}
-                status={props.status}
-            />
+            <ArenaSectionHeader status={props.status} />
             <div
                 className={`grid grid-cols-1 sm:grid-cols-2 ${
                     [1, 5].includes(props.status) ? "" : "lg:grid-cols-3"
@@ -101,7 +98,7 @@ export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
             >
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">
-                        현재 투표가 진행중인 투기장이 없습니다.
+                        현재 {GetSectionTitle(props.status)}이 없습니다.
                     </div>
                 ) : (
                     arenaListDto!.arenas.map((arena) => {

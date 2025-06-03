@@ -1,4 +1,3 @@
-import Button from "@/app/components/Button";
 import TierBadge from "@/app/components/TierBadge";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -22,7 +21,7 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
     return (
         <div
             className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[670px]
-                border border-transparent hover:border-purple-500
+                border border-transparent hover:cursor-pointer hover:border-purple-500
                 hover:shadow-lg hover:shadow-purple-500/30
                 hover:scale-[1.01] transform transition-all duration-200"
             onClick={onClickHandler}
@@ -77,9 +76,6 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
                         })}
                     </span>
                 </div>
-                {/* 참여 버튼
-                TODO: onClick 작성*/}
-                <Button label="토론 참여" size="small" />
             </div>
         </div>
     );

@@ -2,10 +2,13 @@ import useArenas from "@/hooks/useArenas";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import WaitingArenaCard from "./WaitingArenaCard";
 import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
+import { GetSectionTitle } from "@/utils/GetSectionTitle";
 
 export default function WaitingArenaSection() {
+    const status: number = 2;
+
     const { arenaListDto, loading, error } = useArenas({
-        status: 2,
+        status,
         currentPage: 1,
         mine: false,
         pageSize: 3,
@@ -40,11 +43,11 @@ export default function WaitingArenaSection() {
     }
     return (
         <div>
-            <ArenaSectionHeader title="대기중인 투기장" status={2} />
+            <ArenaSectionHeader status={2} />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 px-6">
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">
-                        현재 대기기중인 투기장이 없습니다.
+                        현재 {GetSectionTitle(status)}이 없습니다.
                     </div>
                 ) : (
                     arenaListDto!.arenas.map((arena) => (

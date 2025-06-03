@@ -1,13 +1,14 @@
 "use client";
+import { GetSectionTitle } from "@/utils/GetSectionTitle";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 type ArenaSectionHeaderProps = {
-    title: string;
     status: number;
 };
 
 export default function ArenaSectionHeader(props: ArenaSectionHeaderProps) {
+    const title: string = GetSectionTitle(props.status);
     const router = useRouter();
     const handleQueryChange = (newPage: number, newStatus: number | null) => {
         router.push(`?currentPage=${newPage}&status=${newStatus}`);
@@ -25,7 +26,7 @@ export default function ArenaSectionHeader(props: ArenaSectionHeaderProps) {
                         className="object-contain"
                     />
                     <h1 className="text-xl font-semibold text-font-100">
-                        {props.title}
+                        {title}
                     </h1>
                 </div>
             </div>

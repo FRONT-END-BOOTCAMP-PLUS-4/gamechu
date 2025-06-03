@@ -3,6 +3,7 @@ export function getDeveloperName(game: {
         developer: boolean;
         company: { name: string } | null;
     }[];
+    release_dates: { date: number }[] | null;
     releaseDate: Date | null;
     developer: string | null;
 }): string | null {

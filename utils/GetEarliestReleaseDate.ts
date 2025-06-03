@@ -1,8 +1,16 @@
-export function getEarliestReleaseDate(game: any): Date | null {
+export function getEarliestReleaseDate(game: {
+    involved_companies: {
+        developer: boolean;
+        company: { name: string } | null;
+    }[];
+    release_dates: { date: number }[] | null;
+    releaseDate: Date | null;
+    developer: string | null;
+}): Date | null {
     if (!game.release_dates?.length) return null;
 
     const dates = game.release_dates
-        .map((r: any) => r.date)
+        .map((r: { date: number }) => r.date)
         .filter((d: number | undefined) => typeof d === "number");
 
     if (dates.length === 0) return null;
