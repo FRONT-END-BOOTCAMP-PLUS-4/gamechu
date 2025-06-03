@@ -4,24 +4,32 @@ import { useState } from "react";
 import MyWaitingArenaList from "../MyWaitingArenaList";
 import MyDebatingArenaList from "../MyDebatingArenaList";
 import MyCompletedArenaList from "../MyCompletedArenaList";
+import MyRecruitingArenaList from "../MyRecrutingArenaList";
+import MyVotingArenaList from "../MyVotingArenaList";
 
 const TABS = [
+    { key: "recruiting", label: "모집 중" }, // 추가 탭 예시
     { key: "waiting", label: "대기 중" },
     { key: "debating", label: "토론 중" },
+    { key: "voting", label: "투표 중" }, // 추가 탭 예시
     { key: "completed", label: "종료됨" },
 ] as const;
 
 type TabKey = typeof TABS[number]["key"];
 
 export default function ProfileArenaTab() {
-    const [activeTab, setActiveTab] = useState<TabKey>("waiting");
+    const [activeTab, setActiveTab] = useState<TabKey>("debating");
 
     const renderContent = () => {
         switch (activeTab) {
+            case "recruiting":
+                return <MyRecruitingArenaList />;
             case "waiting":
                 return <MyWaitingArenaList />;
             case "debating":
                 return <MyDebatingArenaList />;
+            case "voting":
+                return <MyVotingArenaList />;
             case "completed":
                 return <MyCompletedArenaList />;
             default:
