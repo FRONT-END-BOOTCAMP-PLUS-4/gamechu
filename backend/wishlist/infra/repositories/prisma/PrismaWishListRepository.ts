@@ -40,7 +40,8 @@ export class PrismaWishListRepository implements WishListRepository {
                 game.developer ?? "알 수 없음",
                 game.thumbnail ?? "/images/default-game.png",
                 platform,
-                expertRating
+                expertRating,
+                game.reviews.length
             );
         });
     }
