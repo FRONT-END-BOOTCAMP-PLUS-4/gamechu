@@ -7,6 +7,8 @@ import SearchBar from "./components/SearchBar";
 import Pager from "@/app/components/Pager";
 import { useDebounce } from "@/utils/UseDebounce";
 import GameSort from "./components/GameSort";
+import { useLoadingStore } from "@/stores/loadingStore";
+import Image from "next/image";
 
 interface GameCard {
     id: number;
@@ -24,6 +26,7 @@ interface OptionItem {
 }
 
 export default function GamePage() {
+    const { setLoading } = useLoadingStore();
     const itemsPerPage = 6;
     const [games, setGames] = useState<GameCard[]>([]);
     const [totalItems, setTotalItems] = useState(0);
@@ -52,19 +55,23 @@ export default function GamePage() {
 
     useEffect(() => {
         const fetchFilters = async () => {
+            setLoading(true);
             const res = await fetch("/api/games?meta=true");
             const data = await res.json();
             setGenres(data.genres);
             setThemes(data.themes);
             setPlatforms(data.platforms);
+            setLoading(false);
         };
         fetchFilters();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         const controller = new AbortController();
 
         const fetchGames = async () => {
+            setLoading(true);
             const params = new URLSearchParams();
             if (selectedTag)
                 params.append(selectedTag.type, selectedTag.id.toString());
@@ -95,6 +102,8 @@ export default function GamePage() {
                 } else {
                     console.error("게임 데이터 요청 실패:", error);
                 }
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -102,13 +111,22 @@ export default function GamePage() {
         return () => {
             controller.abort();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedTag, selectedPlatformId, debounceKeyword, sortBy, currentPage]);
 
     return (
         <div className="min-h-screen bg-background-400 text-font-100 py-12 space-y-5">
             <div className="flex justify-between items-end">
                 <div>
-                    <h1 className="text-headline font-bold">게임 찾기</h1>
+                    <h1 className="text-headline font-bold flex items-center gap-2">
+                        <Image
+                            src="/icons/gamesearch.svg"
+                            alt="Game search"
+                            width={32}
+                            height={32}
+                        />
+                        게임 찾기
+                    </h1>
                     <p className="text-body text-font-200 font-regular mt-1">
                         다양한 장르와 플랫폼의 게임을 찾아보세요
                     </p>

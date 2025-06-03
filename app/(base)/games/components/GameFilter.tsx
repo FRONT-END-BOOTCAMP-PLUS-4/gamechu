@@ -10,6 +10,7 @@ interface TagItem {
     name: string;
     type: TagType;
 }
+
 interface FilterItem {
     id: number;
     name: string;
@@ -38,8 +39,8 @@ export default function GameFilter({
     const [isPlatformExpanded, setIsPlatformExpanded] = useState(false);
 
     const genreAndTheme: TagItem[] = [
-        ...(genres ?? []).map((g) => ({ ...g, type: "genre" as const })),
-        ...(themes ?? []).map((t) => ({ ...t, type: "theme" as const })),
+        ...genres.map((g) => ({ ...g, type: "genre" as const })),
+        ...themes.map((t) => ({ ...t, type: "theme" as const })),
     ];
 
     const displayedTags = isGenreExpanded
@@ -50,10 +51,10 @@ export default function GameFilter({
         : platforms.slice(0, 10);
 
     return (
-        <div className="w-[300px] bg-background-300 p-4 rounded-lg space-y-6">
+        <div className="w-[300px] bg-background-300 p-5 rounded-xl shadow-sm space-y-4">
             {/* 장르 및 테마 */}
             <div>
-                <h2 className="text-h2 font-medium mb-2">장르 및 테마</h2>
+                <h2 className="text-h2 font-semibold mb-3">장르 및 테마</h2>
                 <div className="grid grid-cols-2 gap-2">
                     {displayedTags.map((tag) => {
                         const isSelected =
@@ -67,10 +68,10 @@ export default function GameFilter({
                                     setSelectedTag(isSelected ? undefined : tag)
                                 }
                                 className={cn(
-                                    "text-caption px-2 py-1 rounded-full border transition duration-200 ease-in-out transform hover:scale-[1.03]",
+                                    "px-3 py-1 text-sm font-medium rounded-md transition-colors duration-150",
                                     isSelected
-                                        ? "bg-primary-purple-200 text-font-100 border-transparent"
-                                        : "bg-background-100 text-font-200 border-line-200 hover:border-primary-purple-200 hover:bg-background-200"
+                                        ? "bg-primary-purple-300 text-white"
+                                        : "hover:bg-primary-purple-100 text-font-200"
                                 )}
                             >
                                 {tag.name}
@@ -78,48 +79,63 @@ export default function GameFilter({
                         );
                     })}
                 </div>
+
                 {genreAndTheme.length > 20 && (
-                    <button
-                        className="mt-2 text-primary-purple-200 underline"
-                        onClick={() => setIsGenreExpanded((prev) => !prev)}
-                    >
-                        {isGenreExpanded ? "접기 ▲" : "더보기 ▼"}
-                    </button>
+                    <div className="mt-3 flex justify-center">
+                        <button
+                            className="flex items-center gap-1 px-3 py-1  text-primary-purple-200 font-medium hover:bg-background-200 rounded-md transition"
+                            onClick={() => setIsGenreExpanded((prev) => !prev)}
+                        >
+                            {isGenreExpanded ? "접기" : "더보기"}
+                            <span className="text-xs">
+                                {isGenreExpanded ? "▲" : "▼"}
+                            </span>
+                        </button>
+                    </div>
                 )}
             </div>
 
             {/* 플랫폼 */}
             <div>
-                <h2 className="text-h2 font-medium mb-2">플랫폼</h2>
-                <div className="grid grid-cols-2 gap-2">
-                    {displayedPlatforms.map((platform) => (
-                        <button
-                            key={platform.id}
-                            onClick={() =>
-                                setSelectedPlatformId(
-                                    selectedPlatformId === platform.id
-                                        ? undefined
-                                        : platform.id
-                                )
-                            }
-                            className={cn(
-                                "text-caption px-2 py-1 rounded-full border transition duration-200 ease-in-out transform hover:scale-[1.03]",
-                                selectedPlatformId === platform.id
-                                    ? "bg-primary-purple-200 text-font-100 border-transparent"
-                                    : "bg-background-100 text-font-200 border-line-200 hover:border-primary-purple-200 hover:bg-background-200"
-                            )}
-                        >
-                            {platform.name}
-                        </button>
-                    ))}
+                <h2 className="text-h2 font-semibold mb-3">플랫폼</h2>
+                <div className="flex flex-col gap-2">
+                    {displayedPlatforms.map((platform) => {
+                        const isSelected = selectedPlatformId === platform.id;
+                        return (
+                            <button
+                                key={platform.id}
+                                onClick={() =>
+                                    setSelectedPlatformId(
+                                        isSelected ? undefined : platform.id
+                                    )
+                                }
+                                className={cn(
+                                    "px-3 py-1 text-sm font-medium rounded-md transition-colors duration-150",
+                                    isSelected
+                                        ? "bg-primary-purple-300 text-white"
+                                        : "hover:bg-primary-purple-100 text-font-200"
+                                )}
+                            >
+                                {platform.name}
+                            </button>
+                        );
+                    })}
                 </div>
+
                 {platforms.length > 10 && (
-                    <button
-                        className="mt-2 text-primary-purple-200 underline"
-                        onClick={() => setIsPlatformExpanded((prev) => !prev)}
-                    >
-                        {isPlatformExpanded ? "접기 ▲" : "더보기 ▼"}
-                    </button>
+                    <div className="mt-3 flex justify-center">
+                        <button
+                            className="flex items-center gap-1 px-3 py-1 text-sm text-primary-purple-200 font-medium hover:bg-background-200 rounded-md transition"
+                            onClick={() =>
+                                setIsPlatformExpanded((prev) => !prev)
+                            }
+                        >
+                            {isPlatformExpanded ? "접기" : "더보기"}
+                            <span className="text-xs">
+                                {isPlatformExpanded ? "▲" : "▼"}
+                            </span>
+                        </button>
+                    </div>
                 )}
             </div>
         </div>
