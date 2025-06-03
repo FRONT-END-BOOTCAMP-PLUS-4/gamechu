@@ -17,7 +17,7 @@ export default function MyCompletedArenaList() {
     } = useFetchArenas({
         currentPage,
         status: 5, // 종료된 투기장
-        mine: false,
+        mine: true,
         pageSize,
     });
 
