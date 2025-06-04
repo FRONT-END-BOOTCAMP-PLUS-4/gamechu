@@ -4,9 +4,12 @@ import Lottie from "lottie-react";
 import animationData from "@/public/404.json";
 
 export default function NotFoundLottie() {
-  return (
-    <div className="w-80 h-80">
-      <Lottie animationData={animationData} loop autoplay />
-    </div>
-  );
+    return (
+        <Lottie
+            animationData={animationData}
+            loop
+            autoplay
+            style={{ width: "100%", height: "100%" }} // ✅ 필수
+        />
+    );
 }
