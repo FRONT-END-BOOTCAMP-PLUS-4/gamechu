@@ -25,7 +25,7 @@ export async function GET(request: Request) {
 
         if (!memberId && mine) {
             return NextResponse.json(
-                { error: "투기장 조회 권한이 없습니다." },
+                { error: "멤버 투기장 조회 권한이 없습니다." },
                 { status: 401 }
             );
         }

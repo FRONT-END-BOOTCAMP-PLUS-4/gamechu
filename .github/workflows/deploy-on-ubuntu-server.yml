@@ -15,7 +15,7 @@ jobs:
 
         steps:
             - name: Build Next.js Project
-              run: /home/gamechu/www/gamechu/next-app-bulld.sh
+              run: /home/gamechu/www/gamechu/next-app-build.sh
 
     # 두번째 단계: 테스트
     test:
