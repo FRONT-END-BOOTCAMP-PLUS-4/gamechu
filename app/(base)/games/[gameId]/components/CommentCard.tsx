@@ -233,29 +233,16 @@ export default function CommentCard({
                     </div>
                 )}
             </div>
-
             <hr className="w-full bg-line-100 opacity-75" />
-
             {/* 댓글 내용 + 더보기 */}
-            <div>
-                <div
-                    ref={commentRef}
-                    className={`text-body text-font-100 whitespace-pre-wrap transition-all duration-200 ${
-                        expanded ? "" : "line-clamp-2"
-                    }`}
-                >
-                    {comment}
-                </div>
-                {isOverflowing && (
-                    <button
-                        onClick={() => setExpanded(!expanded)}
-                        className="mt-1 text-caption text-primary-purple-100 hover:underline"
-                    >
-                        {expanded ? "접기" : "... 더보기"}
-                    </button>
-                )}
+            <div
+                ref={commentRef}
+                className={`text-body text-font-100 whitespace-pre-wrap transition-all duration-200 ${
+                    expanded ? "" : "line-clamp-2"
+                }`}
+            >
+                {comment}
             </div>
-
             {/* 좋아요 버튼 */}
             <div className="absolute bottom-1 left-1 flex items-center">
                 <button onClick={handleLike} disabled={isLoading}>
@@ -291,6 +278,16 @@ export default function CommentCard({
                 <span className="text-font-200">좋아요 ({likeCount})</span>
             </div>
 
+            {isOverflowing && (
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
+                    <button
+                        onClick={() => setExpanded(!expanded)}
+                        className="border border-line-100 border-opacity-50 flex items-center gap-1 px-3 py-1 text-primary-purple-200 font-bold font-h2 font hover:bg-background-300 rounded-md transition"
+                    >
+                        {expanded ? "접기 ▲" : "펼치기 ▼"}
+                    </button>
+                </div>
+            )}
             {/* 토스트 알림 */}
             <Toast
                 show={toast.show}
