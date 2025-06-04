@@ -45,7 +45,27 @@ export default function ArenaDetailInfo() {
                             진행 일정
                         </h3>
                         <p className="text-caption text-font-100">
-                            {arenaDetail?.startDate} ~{arenaDetail?.endChatting}
+                            {arenaDetail?.startDate.toLocaleDateString(
+                                "ko-KR",
+                                {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                }
+                            )}{" "}
+                            ~{" "}
+                            {arenaDetail?.endChatting.toLocaleDateString(
+                                "ko-KR",
+                                {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                }
+                            )}
                         </p>
                     </div>
                 </div>
@@ -63,7 +83,24 @@ export default function ArenaDetailInfo() {
                             투표 시간
                         </h3>
                         <p className="text-caption text-font-100">
-                            {arenaDetail?.endChatting} ~{arenaDetail?.endVote}
+                            {arenaDetail?.endChatting.toLocaleDateString(
+                                "ko-KR",
+                                {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                }
+                            )}{" "}
+                            ~{" "}
+                            {arenaDetail?.endVote.toLocaleDateString("ko-KR", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                            })}
                         </p>
                     </div>
                 </div>

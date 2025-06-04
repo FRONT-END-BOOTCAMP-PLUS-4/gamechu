@@ -2,7 +2,6 @@
 
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
-import dayjs from "dayjs";
 import { MemberRepository } from "@/backend/member/domain/repositories/MemberRepository";
 import { ArenaStatus } from "@/types/arena-status";
 export class GetArenaDetailUsecase {
@@ -25,14 +24,9 @@ export class GetArenaDetailUsecase {
         const challengerScore = await this.memberRepository.findById(
             ArenaDetail.challengerId || ""
         );
-        const startDateObj = dayjs(ArenaDetail.startDate);
-        const endChattingObj = startDateObj.add(30, "minute");
-        const endVoteObj = endChattingObj.add(24, "hour");
-
-        // 끝 시간도 같은 형식으로 문자열로
-        const StartDate = startDateObj.format("YYYY-MM-DD HH:mm:ss");
-        const endChatting = endChattingObj.format("YYYY-MM-DD HH:mm:ss");
-        const endVote = endVoteObj.format("YYYY-MM-DD HH:mm:ss");
+        const startDate = ArenaDetail.startDate;
+        const endChatting = new Date(startDate.getTime() + 30 * 60 * 1000);
+        const endVote = new Date(endChatting.getTime() + 24 * 60 * 60 * 1000);
 
         return new ArenaDetailDto(
             ArenaDetail.id,
@@ -44,7 +38,7 @@ export class GetArenaDetailUsecase {
             challengerScore?.score || 0,
             ArenaDetail.title,
             ArenaDetail.description,
-            StartDate,
+            ArenaDetail.startDate,
             endChatting,
             endVote,
             ArenaDetail.status as ArenaStatus
