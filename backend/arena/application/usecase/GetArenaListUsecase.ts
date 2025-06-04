@@ -1,7 +1,6 @@
 // usecase/GetArenaListUsecase.ts
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { ArenaDetailDto } from "./dto/ArenaDetailDto";
-import dayjs from "dayjs";
 import { MemberRepository } from "@/backend/member/domain/repositories/MemberRepository";
 import { ArenaStatus } from "@/types/arena-status";
 
@@ -24,15 +23,13 @@ export class GetArenaListUsecase {
                     ? await this.memberRepository.findById(arena.challengerId)
                     : null;
 
-                const startDateObj = dayjs(arena.startDate);
-                const startDate = startDateObj.format("YYYY-MM-DD HH:mm:ss");
-                const endChatting = startDateObj
-                    .add(30, "minute")
-                    .format("YYYY-MM-DD HH:mm:ss");
-                const endVote = startDateObj
-                    .add(30, "minute")
-                    .add(24, "hour")
-                    .format("YYYY-MM-DD HH:mm:ss");
+                const startDate = arena.startDate;
+                const endChatting = new Date(
+                    startDate.getTime() + 30 * 60 * 1000
+                );
+                const endVote = new Date(
+                    endChatting.getTime() + 24 * 60 * 60 * 1000
+                );
 
                 return {
                     id: arena.id,
