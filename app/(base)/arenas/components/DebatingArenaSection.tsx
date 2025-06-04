@@ -5,8 +5,13 @@ import ArenaSectionHeader from "./ArenaSectionHeader";
 import DebatingArenaCard from "./DebatingArenaCard";
 import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
+import { useEffect } from "react";
 
-export default function DebatingArenaSection() {
+interface Props {
+    onLoaded?: () => void; // ✅ 상위로 로딩 완료 알림
+}
+
+export default function DebatingArenaSection({ onLoaded }: Props) {
     const status: number = 3;
 
     const { arenaListDto, loading, error } = useArenas({
@@ -19,14 +24,19 @@ export default function DebatingArenaSection() {
     useArenaAutoStatus({
         arenaList: arenaListDto?.arenas || [],
         onStatusUpdate: (arenaId, newStatus) => {
-            // 선택사항: 콘솔 로깅 또는 새로고침 로직 삽입 가능
             console.log(
                 `Arena ${arenaId}가 상태 ${newStatus}로 전이되었습니다.`
             );
-            // 필요 시 리패칭 로직 넣을 수 있음
         },
     });
-    // TODO: use Loading Page
+
+    // ✅ 로딩이 끝나면 onLoaded 콜백 실행
+    useEffect(() => {
+        if (!loading) {
+            onLoaded?.();
+        }
+    }, [loading, onLoaded]);
+
     if (loading) {
         return (
             <div className="col-span-3 text-center text-gray-400">
@@ -34,12 +44,11 @@ export default function DebatingArenaSection() {
             </div>
         );
     }
-    // TODO: use Error Page
+
     if (error) {
         return (
             <div className="col-span-3 text-center text-red-500">
-                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시
-                시도해주세요.
+                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.
             </div>
         );
     }
@@ -53,7 +62,7 @@ export default function DebatingArenaSection() {
                         현재 {GetSectionTitle(status)}이 없습니다.
                     </div>
                 ) : (
-                    arenaListDto!.arenas.map((arena) => (
+                    arenaListDto?.arenas.map((arena) => (
                         <DebatingArenaCard
                             key={arena.id}
                             {...arena}
