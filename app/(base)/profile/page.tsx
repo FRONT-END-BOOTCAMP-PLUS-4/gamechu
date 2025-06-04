@@ -1,4 +1,3 @@
-// app/profile/page.tsx
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -11,8 +10,8 @@ import ProfileReviewTab from "./components/tabs/ProfileReviewTab";
 import ProfileWishlistTab from "./components/tabs/ProfileWishlistTab";
 import ProfilePointHistoryTab from "./components/tabs/ProfilePointHistoryTab";
 import ProfileArenaTab from "./components/tabs/ProfileArenaTab";
+import { useLoadingStore } from "@/stores/loadingStore"; // ✅ 추가
 
-// ✅ 위시리스트 게임 카드용 타입
 type WishlistGame = {
     id: number;
     title: string;
@@ -35,32 +34,33 @@ type Review = {
 };
 
 export default function ProfilePage() {
+    const { setLoading } = useLoadingStore(); // ✅ 전역 로딩 상태 사용
     const [activeTab, setActiveTab] = useState("reviews");
-    const [reviewCount, setReviewCount] = useState<number>(0);
-    const [wishlistCount, setWishlistCount] = useState<number>(0);
+    const [reviewCount, setReviewCount] = useState(0);
+    const [wishlistCount, setWishlistCount] = useState(0);
     const [wishlistGames, setWishlistGames] = useState<WishlistGame[]>([]);
-    const [nickname, setNickname] = useState<string>("");
-    const [imageUrl, setImageUrl] = useState<string>("/icons/arena.svg");
-    const [score, setScore] = useState<number>(0);
-    const [createdAt, setCreatedAt] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [birthDate, setBirthDate] = useState<string>("");
-    const [isMale, setIsMale] = useState<boolean>(true);
+    const [nickname, setNickname] = useState("");
+    const [imageUrl, setImageUrl] = useState("/icons/arena.svg");
+    const [score, setScore] = useState(0);
+    const [createdAt, setCreatedAt] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [birthDate, setBirthDate] = useState("");
+    const [isMale, setIsMale] = useState(true);
     const [reviews, setReviews] = useState<Review[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [isLoaded, setIsLoaded] = useState(false); // ✅ 단순 로딩 여부 체크용
 
     const fetchProfileData = useCallback(async () => {
         const id = await getAuthUserId();
         if (!id) return;
 
+        setLoading(true); // ✅ 전역 로딩 시작
+
         try {
             const [reviewRes, profileRes, wishlistRes] = await Promise.all([
                 fetch("/api/reviews/member"),
                 fetch("/api/member/profile"),
-                fetch("/api/member/wishlists", {
-                    method: "GET",
-                }),
+                fetch("/api/member/wishlists"),
             ]);
 
             const reviews = await reviewRes.json();
@@ -81,12 +81,13 @@ export default function ProfilePage() {
 
             setWishlistGames(wishlist);
             setWishlistCount(wishlist.length);
+            setIsLoaded(true);
         } catch (err) {
             console.error("프로필 데이터 로딩 실패:", err);
         } finally {
-            setLoading(false);
+            setLoading(false); // ✅ 전역 로딩 종료
         }
-    }, []);
+    }, [setLoading]);
 
     useEffect(() => {
         fetchProfileData();
@@ -112,10 +113,10 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="flex-1">
-                    {activeTab === "reviews" && !loading && (
+                    {activeTab === "reviews" && isLoaded && (
                         <ProfileReviewTab reviews={reviews} />
                     )}
-                    {activeTab === "profile" && !loading && (
+                    {activeTab === "profile" && isLoaded && (
                         <ProfileInfoTab
                             nickname={nickname}
                             email={email}
@@ -125,13 +126,13 @@ export default function ProfilePage() {
                             isMale={isMale}
                         />
                     )}
-                    {activeTab === "wishlists" && !loading && (
+                    {activeTab === "wishlists" && isLoaded && (
                         <ProfileWishlistTab games={wishlistGames} />
                     )}
-                    {activeTab === "score-history" && !loading && (
+                    {activeTab === "score-history" && isLoaded && (
                         <ProfilePointHistoryTab />
                     )}
-                    {activeTab === "arena" && !loading && (
+                    {activeTab === "arena" && isLoaded && (
                         <ProfileArenaTab />
                     )}
                 </div>

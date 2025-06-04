@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import PointHistoryCard from "../PointHistoryCard";
 import Pager from "@/app/components/Pager";
+import { useLoadingStore } from "@/stores/loadingStore"; // ✅ 전역 로딩 상태 사용
 
 interface ScoreRecord {
     actualScore: number;
@@ -15,6 +16,7 @@ interface ScoreRecord {
 }
 
 export default function ProfilePointHistoryTab() {
+    const { setLoading } = useLoadingStore(); // ✅ 전역 로딩 제어
     const [records, setRecords] = useState<ScoreRecord[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
@@ -30,6 +32,8 @@ export default function ProfilePointHistoryTab() {
 
     useEffect(() => {
         const fetchRecords = async () => {
+            setLoading(true); // ✅ 로딩 시작
+
             try {
                 const res = await fetch("/api/member/scores");
                 if (!res.ok) throw new Error("스코어 기록 조회 실패");
@@ -37,11 +41,13 @@ export default function ProfilePointHistoryTab() {
                 setRecords(data);
             } catch (err) {
                 console.error("🔥 포인트 히스토리 조회 실패", err);
+            } finally {
+                setLoading(false); // ✅ 로딩 종료
             }
         };
 
         fetchRecords();
-    }, []);
+    }, [setLoading]);
 
     return (
         <div className="w-full bg-background-300 p-6 rounded-xl shadow flex flex-col gap-8">
@@ -64,7 +70,6 @@ export default function ProfilePointHistoryTab() {
                         ))}
                     </div>
 
-                    {/* 총 페이지 수가 1보다 많을 때만 Pager 출력 */}
                     {endPage > 1 && (
                         <Pager
                             currentPage={currentPage}

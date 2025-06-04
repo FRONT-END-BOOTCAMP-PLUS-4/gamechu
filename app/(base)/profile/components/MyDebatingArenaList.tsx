@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import useFetchArenas from "@/hooks/useArenas";
 import DebatingArenaCard from "../../arenas/components/DebatingArenaCard";
 import Pager from "@/app/components/Pager";
+import { useLoadingStore } from "@/stores/loadingStore"; // ✅ 추가
 
 export default function MyDebatingArenaList() {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 6;
+    const { setLoading } = useLoadingStore(); // ✅ 전역 로딩 제어 가져오기
 
     const {
         arenaListDto,
@@ -19,6 +21,11 @@ export default function MyDebatingArenaList() {
         mine: true,
         pageSize,
     });
+
+    // ✅ 전역 로딩 상태 동기화
+    useEffect(() => {
+        setLoading(loading);
+    }, [loading, setLoading]);
 
     useEffect(() => {
         if (!loading && arenaListDto?.arenas) {
