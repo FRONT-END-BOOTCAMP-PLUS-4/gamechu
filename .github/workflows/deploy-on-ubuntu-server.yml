@@ -32,4 +32,4 @@ jobs:
 
         steps:
             - name: Deploy Next.js Project
-              run: /home/gamechu/next-app-update.sh
+              run: /home/gamechu/www/gamechu/next-app-update.sh
