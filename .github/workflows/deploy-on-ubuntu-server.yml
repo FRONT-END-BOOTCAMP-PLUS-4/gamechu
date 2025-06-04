@@ -15,7 +15,7 @@ jobs:
 
         steps:
             - name: Build Next.js Project
-              run: echo "Build Next.js Project"
+              run: npx prisma generate
 
     # 두번째 단계: 테스트
     test:
