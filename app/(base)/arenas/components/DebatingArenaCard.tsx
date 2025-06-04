@@ -62,7 +62,14 @@ export default function DebatingArenaCard(props: DebatingArenaCardProps) {
                         className="object-contain"
                     />
                     <span className="text-gray-400">
-                        토론 종료: {props.debateEndDate.toISOString()}
+                        토론 종료:{" "}
+                        {props.debateEndDate.toLocaleDateString("ko-KR", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        })}
                     </span>
                 </div>
             </div>
