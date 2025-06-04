@@ -62,7 +62,14 @@ export default function WaitingArenaCard(props: WaitingArenaCardProps) {
                         className="object-contain"
                     />
                     <span className="text-gray-400">
-                        토론 시작: {props.startDate.toISOString()}
+                        토론 시작:{" "}
+                        {props.startDate.toLocaleDateString("ko-KR", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        })}
                     </span>
                 </div>
             </div>

@@ -63,7 +63,14 @@ export default function VotingArenaCard(props: VotingArenaCardProps) {
                         className="object-contain"
                     />
                     <span className="text-gray-400">
-                        투표 종료: {props.voteEndDate.toISOString()}
+                        투표 종료:{" "}
+                        {props.voteEndDate.toLocaleDateString("ko-KR", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        })}
                     </span>
                 </div>
                 <div className="flex items-center gap-1">
