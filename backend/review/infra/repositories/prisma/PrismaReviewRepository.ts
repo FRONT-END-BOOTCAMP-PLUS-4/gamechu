@@ -122,11 +122,9 @@ export class PrismaReviewRepository implements ReviewRepository {
             nickname: review.member?.nickname ?? "유저",
             score: review.member?.score ?? 0,
 
-            imageUrl: review.member?.imageUrl?.startsWith("http")
-                ? review.member.imageUrl
-                : "/icons/arena.svg",
-            likeCount: 0, // Default value or fetch from database if available
-            isLiked: false, // Default value or calculate based on user context
+            imageUrl: review.member?.imageUrl ?? "/icons/arena.svg",
+            likeCount: 0,
+            isLiked: false,
         };
     }
 }

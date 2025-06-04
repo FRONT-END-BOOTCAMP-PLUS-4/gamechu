@@ -41,6 +41,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
     const fetchComments = useCallback(async () => {
         try {
             const res = await fetch(`/api/games/${gameId}/reviews`);
+
             const data = await res.json();
 
             const enriched = data.map(
@@ -58,7 +59,10 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                 }): Review => ({
                     id: r.id,
                     memberId: r.memberId,
-                    profileImage: r.imageUrl ?? "/icons/profile.svg",
+                    profileImage:
+                        r.imageUrl && r.imageUrl.startsWith("data:")
+                            ? r.imageUrl
+                            : r.imageUrl || "/icons/profile.svg",
                     nickname: r.nickname ?? "유저",
                     date: new Date(r.createdAt).toLocaleDateString("ko-KR"),
                     tier: String(r.score),
