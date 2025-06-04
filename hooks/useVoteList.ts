@@ -18,6 +18,7 @@ export default function useVoteList({ arenaIds }: UseVoteListProps) {
 
         // don't fetch if arenaIds is empty
         if (!arenaIds.length || idsString === fetchedIdsRef.current) {
+            setLoading(false);
             return;
         }
 
