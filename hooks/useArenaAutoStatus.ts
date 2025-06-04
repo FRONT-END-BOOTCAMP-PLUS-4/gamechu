@@ -12,7 +12,7 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
     const timers = useRef<Record<number, NodeJS.Timeout>>({}); // arenaId -> timeout
 
     useEffect(() => {
-        const now = Date.now();
+        const now = new Date().getTime();
 
         arenaList.forEach((arena) => {
             const {
