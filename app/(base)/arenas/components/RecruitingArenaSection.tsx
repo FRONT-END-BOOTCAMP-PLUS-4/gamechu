@@ -5,8 +5,13 @@ import { GetSectionTitle } from "@/utils/GetSectionTitle";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import RecruitingArenaCard from "./RecruitingArenaCard";
 import useArenas from "@/hooks/useArenas";
+import { useEffect } from "react";
 
-export default function RecruitingArenaSection() {
+interface Props {
+    onLoaded?: () => void; // ✅ 로딩 완료 시 호출되는 콜백
+}
+
+export default function RecruitingArenaSection({ onLoaded }: Props) {
     const status: number = 1;
 
     const { arenaListDto, loading, error } = useArenas({
@@ -19,14 +24,19 @@ export default function RecruitingArenaSection() {
     useArenaAutoStatus({
         arenaList: arenaListDto?.arenas || [],
         onStatusUpdate: (arenaId, newStatus) => {
-            // 선택사항: 콘솔 로깅 또는 새로고침 로직 삽입 가능
             console.log(
                 `Arena ${arenaId}가 상태 ${newStatus}로 전이되었습니다.`
             );
-            // 필요 시 리패칭 로직 넣을 수 있음
         },
     });
-    // TODO: use Loading Page
+
+    // ✅ 로딩이 끝났을 때 onLoaded 호출
+    useEffect(() => {
+        if (!loading) {
+            onLoaded?.();
+        }
+    }, [loading, onLoaded]);
+
     if (loading) {
         return (
             <div className="col-span-3 text-center text-gray-400">
@@ -34,12 +44,11 @@ export default function RecruitingArenaSection() {
             </div>
         );
     }
-    // TODO: use Error Page
+
     if (error) {
         return (
             <div className="col-span-3 text-center text-red-500">
-                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시
-                시도해주세요.
+                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.
             </div>
         );
     }

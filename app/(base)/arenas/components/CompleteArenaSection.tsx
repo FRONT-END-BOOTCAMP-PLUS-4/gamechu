@@ -8,7 +8,11 @@ import { useEffect, useRef, useState } from "react";
 import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
 
-export default function CompleteArenaSection() {
+interface Props {
+    onLoaded?: () => void; // ✅ 상위 ArenaPage로 로딩 완료 알림
+}
+
+export default function CompleteArenaSection({ onLoaded }: Props) {
     const status: number = 5;
 
     const {
@@ -25,15 +29,14 @@ export default function CompleteArenaSection() {
     useArenaAutoStatus({
         arenaList: arenaListDto?.arenas || [],
         onStatusUpdate: (arenaId, newStatus) => {
-            // 선택사항: 콘솔 로깅 또는 새로고침 로직 삽입 가능
             console.log(
                 `Arena ${arenaId}가 상태 ${newStatus}로 전이되었습니다.`
             );
-            // 필요 시 리패칭 로직 넣을 수 있음
         },
     });
+
     const [arenaIdsToFetch, setArenaIdsToFetch] = useState<number[]>([]);
-    const fetchedIdsRef = useRef<string>(""); // API 중복 호출 방지용
+    const fetchedIdsRef = useRef<string>("");
 
     useEffect(() => {
         if (!arenaListDto?.arenas) return;
@@ -43,8 +46,8 @@ export default function CompleteArenaSection() {
 
         if (fetchedIdsRef.current === idsString) return;
 
-        setArenaIdsToFetch(ids); // 필요한 ID 목록 업데이트
-        fetchedIdsRef.current = idsString; // 기록 갱신
+        setArenaIdsToFetch(ids);
+        fetchedIdsRef.current = idsString;
     }, [arenaListDto?.arenas]);
 
     const {
@@ -55,6 +58,7 @@ export default function CompleteArenaSection() {
         arenaIds: arenaIdsToFetch,
     });
 
+    // ✅ 완료된 투표 데이터를 arena 객체에 반영
     if (arenaListDto && arenaListDto.arenas) {
         arenaListDto.arenas.forEach((arena) => {
             const vote = voteResult.find((vote) => vote.arenaId === arena.id);
@@ -67,7 +71,13 @@ export default function CompleteArenaSection() {
         });
     }
 
-    // TODO: use Loading Page
+    // ✅ 로딩 완료되면 상위로 알림
+    useEffect(() => {
+        if (!arenaLoading && !voteLoading) {
+            onLoaded?.();
+        }
+    }, [arenaLoading, voteLoading, onLoaded]);
+
     if (arenaLoading || voteLoading) {
         return (
             <div className="col-span-3 text-center text-gray-400">
@@ -76,12 +86,10 @@ export default function CompleteArenaSection() {
         );
     }
 
-    // TODO: use Error Page
     if (arenaError || voteError) {
         return (
             <div className="col-span-3 text-center text-red-500">
-                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시
-                시도해주세요.
+                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.
             </div>
         );
     }

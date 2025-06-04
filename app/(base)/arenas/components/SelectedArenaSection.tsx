@@ -16,24 +16,27 @@ import { useEffect, useRef, useState } from "react";
 type SelectedArenaSectionProps = {
     status: number;
     currentPage: number;
+    onLoaded?: () => void; // ✅ 추가: 로딩 완료 콜백
 };
 
-export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
+export default function SelectedArenaSection({
+    status,
+    currentPage,
+    onLoaded,
+}: SelectedArenaSectionProps) {
     const {
         arenaListDto,
         loading: arenaLoading,
         error: arenaError,
     } = useArenas({
-        status: props.status,
-        currentPage: props.currentPage,
+        status,
+        currentPage,
         mine: false,
-        pageSize: [1, 5].includes(props.status) ? 6 : 9,
+        pageSize: [1, 5].includes(status) ? 6 : 9,
     });
-    const pages: number[] = arenaListDto?.pages || [];
-    const endPage: number = arenaListDto?.endPage || 1;
 
     const [arenaIdsToFetch, setArenaIdsToFetch] = useState<number[]>([]);
-    const fetchedIdsRef = useRef<string>(""); // API 중복 호출 방지용
+    const fetchedIdsRef = useRef<string>("");
 
     useEffect(() => {
         if (!arenaListDto?.arenas) return;
@@ -43,8 +46,8 @@ export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
 
         if (fetchedIdsRef.current === idsString) return;
 
-        setArenaIdsToFetch(ids); // 필요한 ID 목록 업데이트
-        fetchedIdsRef.current = idsString; // 기록 갱신
+        setArenaIdsToFetch(ids);
+        fetchedIdsRef.current = idsString;
     }, [arenaListDto?.arenas]);
 
     const {
@@ -54,6 +57,13 @@ export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
     } = useVoteList({
         arenaIds: arenaIdsToFetch,
     });
+
+    // ✅ 로딩 완료되면 상위 콜백 호출
+    useEffect(() => {
+        if (!arenaLoading && !voteLoading) {
+            onLoaded?.();
+        }
+    }, [arenaLoading, voteLoading, onLoaded]);
 
     if (arenaListDto && arenaListDto.arenas) {
         arenaListDto.arenas.forEach((arena) => {
@@ -67,12 +77,14 @@ export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
         });
     }
 
+    const pages: number[] = arenaListDto?.pages || [];
+    const endPage: number = arenaListDto?.endPage || 1;
+
     const router = useRouter();
     const handleQueryChange = (newPage: number, newStatus: number | null) => {
         router.push(`?currentPage=${newPage}&status=${newStatus}`);
     };
 
-    // TODO: use Loading Page
     if (arenaLoading || voteLoading) {
         return (
             <div className="col-span-3 text-center text-gray-400">
@@ -80,31 +92,30 @@ export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
             </div>
         );
     }
-    // TODO: use Error Page
+
     if (arenaError || voteError) {
         return (
             <div className="col-span-3 text-center text-red-500">
-                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시
-                시도해주세요.
+                투기장 정보를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.
             </div>
         );
     }
 
     return (
         <div>
-            <ArenaSectionHeader status={props.status} />
+            <ArenaSectionHeader status={status} />
             <div
                 className={`grid grid-cols-1 sm:grid-cols-2 ${
-                    [1, 5].includes(props.status) ? "" : "lg:grid-cols-3"
+                    [1, 5].includes(status) ? "" : "lg:grid-cols-3"
                 } gap-6 mt-4 px-6`}
             >
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">
-                        현재 {GetSectionTitle(props.status)}이 없습니다.
+                        현재 {GetSectionTitle(status)}이 없습니다.
                     </div>
                 ) : (
-                    arenaListDto!.arenas.map((arena) => {
-                        switch (props.status) {
+                    arenaListDto?.arenas.map((arena) => {
+                        switch (status) {
                             case 1:
                                 return (
                                     <RecruitingArenaCard
@@ -126,9 +137,9 @@ export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
                                     <DebatingArenaCard
                                         key={arena.id}
                                         {...arena}
-                                        debateEndDate={
-                                            new Date(arena.debateEndDate)
-                                        }
+                                        debateEndDate={new Date(
+                                            arena.debateEndDate
+                                        )}
                                     />
                                 );
                             case 4:
@@ -136,17 +147,14 @@ export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
                                     <VotingArenaCard
                                         key={arena.id}
                                         {...arena}
-                                        voteEndDate={
-                                            new Date(arena.voteEndDate)
-                                        }
+                                        voteEndDate={new Date(
+                                            arena.voteEndDate
+                                        )}
                                     />
                                 );
                             case 5:
                                 return (
-                                    <CompleteArenaCard
-                                        key={arena.id}
-                                        {...arena}
-                                    />
+                                    <CompleteArenaCard key={arena.id} {...arena} />
                                 );
                             default:
                                 return null;
@@ -155,15 +163,14 @@ export default function SelectedArenaSection(props: SelectedArenaSectionProps) {
                 )}
             </div>
 
-            {/* ✅ Pager는 전체 레이아웃 기준으로 중앙 정렬 */}
             {arenaListDto?.arenas.length !== 0 && (
                 <div className="w-full flex justify-center mt-12">
                     <Pager
-                        currentPage={props.currentPage}
+                        currentPage={currentPage}
                         pages={pages}
                         endPage={endPage}
                         onPageChange={(newPage: number) => {
-                            handleQueryChange(newPage, props.status);
+                            handleQueryChange(newPage, status);
                         }}
                     />
                 </div>
