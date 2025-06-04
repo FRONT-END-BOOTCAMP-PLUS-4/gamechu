@@ -17,7 +17,14 @@ export default function ArenaDetailWaiting() {
                 />
             </h2>
             <h2 className="text-sm text-font-light animate-pulse">
-                시작 시간: {arenaDetail?.startDate}
+                시작 시간:{" "}
+                {arenaDetail?.startDate.toLocaleDateString("ko-KR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                })}
             </h2>
         </div>
     );
