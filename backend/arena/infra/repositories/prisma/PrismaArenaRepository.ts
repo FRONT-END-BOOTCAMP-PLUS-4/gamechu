@@ -22,10 +22,8 @@ export class PrismaArenaRepository implements ArenaRepository {
                 status,
             }),
             ...(memberId && {
-                creatorId: memberId,
-            }),
-            ...(memberId && {
-                challengerId: memberId,
+                // get if eithor the member is creator of challenger
+                OR: [{ creatorId: memberId }, { challengerId: memberId }],
             }),
         };
     }
