@@ -36,7 +36,23 @@ export default function ArenaDetailPage() {
                 }
 
                 const data: ArenaDetailDto = await res.json();
-                setGlobalArenaData(data);
+                setGlobalArenaData(
+                    new ArenaDetailDto(
+                        data.id,
+                        data.creatorId,
+                        data.creatorName,
+                        data.creatorScore,
+                        data.challengerId,
+                        data.challengerName,
+                        data.challengerScore,
+                        data.title,
+                        data.description,
+                        new Date(data.startDate),
+                        new Date(data.endChatting),
+                        new Date(data.endVote),
+                        data.status
+                    )
+                );
             } catch (error) {
                 console.error("Error fetching arena detail:", error);
             } finally {

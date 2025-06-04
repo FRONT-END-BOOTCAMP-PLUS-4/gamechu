@@ -1,19 +1,22 @@
 import { ArenaDto } from "@/backend/arena/application/usecase/dto/ArenaDto";
 import { ArenaStatus } from "@/types/arena-status";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { useEffect, useRef } from "react";
+
+dayjs.extend(utc);
 
 type Props = {
     arenaList: ArenaDto[];
     onStatusUpdate?: (id: number, newStatus: ArenaStatus) => void;
 };
+
 type ExtraBody = Record<string, unknown>;
 
 export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
-    const timers = useRef<Record<number, NodeJS.Timeout>>({}); // arenaId -> timeout
+    const timers = useRef<Record<number, NodeJS.Timeout>>({});
 
     useEffect(() => {
-        const now = new Date().getTime();
-
         arenaList.forEach((arena) => {
             const {
                 id,
@@ -27,15 +30,23 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
             if (timers.current[id]) return; // 중복 타이머 방지
 
             const schedule = (
-                target: Date,
+                targetUTC: string | Date,
                 nextStatus: ArenaStatus,
                 extraBody?: ExtraBody
             ) => {
-                const delay = new Date(target).getTime() - now;
+                // 1) 현재 시간 KST 기준
+                const nowKST = dayjs().utcOffset(9 * 60);
+                // 2) targetUTC 문자열 → dayjs UTC 파싱
+                const targetUTCDate = dayjs.utc(targetUTC);
+                // 3) targetUTC → KST 시간으로 변환
+                const targetKST = targetUTCDate.add(9, "hour");
+                // 4) 딜레이 계산 (밀리초)
+                const delay = targetKST.valueOf() - nowKST.valueOf();
                 if (delay <= 0) {
                     updateStatus(id, nextStatus, extraBody);
                     return;
                 }
+
                 timers.current[id] = setTimeout(() => {
                     updateStatus(id, nextStatus, extraBody);
                 }, delay);
@@ -49,14 +60,10 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
                     }
                     break;
                 case 3:
-                    if (debateEndDate) {
-                        schedule(debateEndDate, 4);
-                    }
+                    if (debateEndDate) schedule(debateEndDate, 4);
                     break;
                 case 4:
-                    if (voteEndDate) {
-                        schedule(voteEndDate, 5);
-                    }
+                    if (voteEndDate) schedule(voteEndDate, 5);
                     break;
             }
         });

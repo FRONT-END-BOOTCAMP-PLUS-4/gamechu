@@ -11,9 +11,9 @@ export class ArenaDetailDto {
         public challengerScore: number | null,
         public title: string,
         public description: string,
-        public startDate: string,
-        public endChatting: string,
-        public endVote: string,
+        public startDate: Date,
+        public endChatting: Date,
+        public endVote: Date,
         public status: ArenaStatus
     ) {}
 }
