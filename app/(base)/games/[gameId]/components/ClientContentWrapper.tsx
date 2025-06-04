@@ -193,6 +193,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                         <Comment
                             gameId={String(gameId)}
                             onSuccess={fetchComments}
+                            viewerId={viewerId}
                         />
                     ))}
 

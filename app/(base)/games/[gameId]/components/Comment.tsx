@@ -25,6 +25,7 @@ export default function Comment({
     viewerId,
 }: CommentProps & { viewerId?: string | null }) {
     const router = useRouter();
+
     const [isFocused, setIsFocused] = useState(false);
     const [text, setText] = useState(defaultValue || "");
     const [rating, setRating] = useState(0);
