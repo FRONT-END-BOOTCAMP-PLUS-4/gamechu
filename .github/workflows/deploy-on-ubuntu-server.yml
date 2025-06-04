@@ -11,27 +11,15 @@ on:
 jobs:
     # 첫번째 단계 : 빌드
     build:
-        runs-on: ubuntu-latest
-
-        env:
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-            SOCKET_SERVER_URL: ${{ secrets.SOCKET_SERVER_URL }}
+        runs-on: [self-hosted, gamechu-server]
 
         steps:
             - name: Build Next.js Project
-              run: |
-                  set -e
-                  cd ~/www/gamechu || { echo "Failed to change working directory"; exit 1; }
-                  git pull origin dev || { echo "Failed to git pull"; exit 1; }
-                  npx prisma generate || { echo "Failed to generate via prisma client"; exit 1; }
-                  npm ci || { echo "Failed to install dependencies"; exit 1; }
-                  npm run build || { echo "Failed to build"; exit 1; }
+              run: /home/gamechu/www/gamechu/next-app-bulld.sh
 
     # 두번째 단계: 테스트
     test:
-        runs-on: ubuntu-latest
+        runs-on: [self-hosted, gamechu-server]
 
         steps:
             - name: Test Next.js Project
@@ -39,15 +27,8 @@ jobs:
 
     # 세번째 단계: 배포
     deploy:
-        needs: [build, test]
-
+        needs: build
         runs-on: [self-hosted, gamechu-server]
-
-        env:
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-            SOCKET_SERVER_URL: ${{ secrets.SOCKET_SERVER_URL }}
 
         steps:
             - name: Deploy Next.js Project
