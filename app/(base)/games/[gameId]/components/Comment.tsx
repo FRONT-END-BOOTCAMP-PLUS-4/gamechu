@@ -14,7 +14,7 @@ interface CommentProps {
     editingReviewId?: number;
     defaultValue?: string;
     onSuccess: () => void;
-    viewrId?: string | null;
+    viewerId?: string | null;
 }
 
 export default function Comment({

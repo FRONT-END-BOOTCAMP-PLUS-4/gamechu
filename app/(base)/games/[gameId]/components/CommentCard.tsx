@@ -54,7 +54,6 @@ export default function CommentCard({
         status: "info" as "success" | "error" | "info",
     });
 
-    // ✅ 리뷰 줄수 관련
     const [expanded, setExpanded] = useState(false);
     const [isOverflowing, setIsOverflowing] = useState(false);
     const commentRef = useRef<HTMLDivElement>(null);
@@ -164,14 +163,16 @@ export default function CommentCard({
             {/* 유저 정보 */}
             <div className="flex justify-between items-start">
                 <div className="flex gap-2 items-start">
-                    <Image
-                        src={profileImage || "/placeholder.svg"}
-                        alt="profile"
-                        width={44}
-                        height={44}
-                        className="rounded-full border border-line-100 object-cover"
-                        unoptimized
-                    />
+                    <div className="w-[44px] h-[44px] rounded-full border border-line-100 overflow-hidden flex-shrink-0">
+                        <Image
+                            src={profileImage || "/placeholder.svg"}
+                            alt="profile"
+                            width={44}
+                            height={44}
+                            className="object-cover w-full h-full"
+                            unoptimized
+                        />
+                    </div>
                     <div className="flex flex-col">
                         <div className="flex items-center gap-1">
                             <span className="text-h3 text-font-100 font-medium">
