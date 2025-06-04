@@ -15,7 +15,7 @@ export function useArenaAutoStatusDetail({
     useEffect(() => {
         let timer: NodeJS.Timeout | null = null;
 
-        const now = Date.now();
+        const now = new Date().getTime();
 
         const scheduleUpdate = (
             targetTime: Date,
