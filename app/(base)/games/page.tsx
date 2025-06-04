@@ -61,7 +61,6 @@ export default function GamePage() {
             setGenres(data.genres);
             setThemes(data.themes);
             setPlatforms(data.platforms);
-            setLoading(false);
         };
         setTimeout(() => {
             fetchFilters();

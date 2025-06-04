@@ -22,6 +22,8 @@ export default function WishlistButtonClient({
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        if (!viewerId) return;
+        
         console.log("📡 WishlistButtonClient viewerId:", viewerId);
         console.log("📡 Fetching wishlists for gameId:", gameId);
 
