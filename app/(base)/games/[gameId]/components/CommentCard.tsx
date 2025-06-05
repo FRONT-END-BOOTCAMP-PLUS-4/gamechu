@@ -165,7 +165,7 @@ export default function CommentCard({
                 <div className="flex gap-2 items-start">
                     <div className="w-[44px] h-[44px] rounded-full border border-line-100 overflow-hidden flex-shrink-0">
                         <Image
-                            src={profileImage || "/placeholder.svg"}
+                            src={profileImage}
                             alt="profile"
                             width={44}
                             height={44}
