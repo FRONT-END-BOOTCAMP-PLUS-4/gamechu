@@ -33,6 +33,7 @@ export class PrismaMemberRepository implements MemberRepository {
                 ),
                 isMale: data.gender === "M",
                 imageUrl: "/icons/arena.svg",
+
                 score: 500,
             },
         });
