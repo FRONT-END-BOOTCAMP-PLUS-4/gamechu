@@ -32,7 +32,7 @@ export class PrismaMemberRepository implements MemberRepository {
                     )}-${data.birthDate.slice(6, 8)}`
                 ),
                 isMale: data.gender === "M",
-                imageUrl: "icons/arena.svg",
+                imageUrl: "/icons/arena.svg",
                 score: 500,
             },
         });
