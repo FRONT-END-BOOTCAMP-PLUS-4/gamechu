@@ -2,8 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaPreferredGenreRepository } from "@/backend/preferred-genre/infra/repositories/prisma/PrismaPreferredGenreRepository";
-import { SavePreferredGenresUsecase } from "@/backend/preferred-genre/application/usecase/SavePreferredGenresUsecase";
-import { SavePreferredGenresRequestDto } from "@/backend/preferred-genre/application/usecase/dto/SavePreferredGenresRequestDto";
+import { CreatePreferredGenresUsecase } from "@/backend/preferred-genre/application/usecase/CreatePreferredGenresUsecase";
+import { CreatePreferredGenresDto } from "@/backend/preferred-genre/application/usecase/dto/CreatePreferredGenresDto";
 
 export async function POST(req: NextRequest) {
     try {
@@ -16,10 +16,10 @@ export async function POST(req: NextRequest) {
         }
 
         const { genreIds } = await req.json();
-        const dto = new SavePreferredGenresRequestDto(memberId, genreIds);
+        const dto = new CreatePreferredGenresDto(memberId, genreIds);
 
         const repo = new PrismaPreferredGenreRepository();
-        const usecase = new SavePreferredGenresUsecase(repo);
+        const usecase = new CreatePreferredGenresUsecase(repo);
         await usecase.execute(dto);
 
         return NextResponse.json(
