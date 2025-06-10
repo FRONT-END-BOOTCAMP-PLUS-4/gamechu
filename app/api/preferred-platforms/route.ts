@@ -2,8 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaPreferredPlatformRepository } from "@/backend/preferred-platform/infra/repositories/prisma/PrismaPreferredPlatformRepository";
-import { SavePreferredPlatformsUsecase } from "@/backend/preferred-platform/application/usecase/SavePreferredPlatformsUsecase";
-import { SavePreferredPlatformsRequestDto } from "@/backend/preferred-platform/application/usecase/dto/SavePreferredPlatformsRequestDto";
+import { CreatePreferredPlatformsUsecase } from "@/backend/preferred-platform/application/usecase/CreatePreferredPlatformsUsecase";
+import { CreatePreferredPlatformsDto } from "@/backend/preferred-platform/application/usecase/dto/CreatePreferredPlatformsDto";
 
 export async function POST(req: NextRequest) {
     try {
@@ -16,10 +16,10 @@ export async function POST(req: NextRequest) {
         }
 
         const { platformIds } = await req.json();
-        const dto = new SavePreferredPlatformsRequestDto(memberId, platformIds);
+        const dto = new CreatePreferredPlatformsDto(memberId, platformIds);
 
         const repo = new PrismaPreferredPlatformRepository();
-        const usecase = new SavePreferredPlatformsUsecase(repo);
+        const usecase = new CreatePreferredPlatformsUsecase(repo);
         await usecase.execute(dto);
 
         return NextResponse.json(

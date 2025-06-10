@@ -1,11 +1,11 @@
 // 📁 backend/preferred-genre/application/usecase/SavePreferredGenresUsecase.ts
 import { PreferredGenreRepository } from "@/backend/preferred-genre/domain/repositories/PreferredGenreRepository";
-import { SavePreferredGenresRequestDto } from "./dto/SavePreferredGenresRequestDto";
+import { CreatePreferredGenresDto } from "./dto/CreatePreferredGenresDto";
 
-export class SavePreferredGenresUsecase {
+export class CreatePreferredGenresUsecase {
     constructor(private readonly repo: PreferredGenreRepository) {}
 
-    async execute(dto: SavePreferredGenresRequestDto): Promise<void> {
-        await this.repo.savePreferredGenres(dto.memberId, dto.genreIds);
+    async execute(dto: CreatePreferredGenresDto): Promise<void> {
+        await this.repo.save(dto.memberId, dto.genreIds);
     }
 }
