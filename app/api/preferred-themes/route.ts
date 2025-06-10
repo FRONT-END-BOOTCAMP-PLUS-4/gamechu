@@ -2,8 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaPreferredThemeRepository } from "@/backend/preferred-theme/infra/repositories/prisma/PrismaPreferredThemeRepository";
-import { SavePreferredThemesUsecase } from "@/backend/preferred-theme/application/usecase/SavePreferredThemesUsecase";
-import { SavePreferredThemesRequestDto } from "@/backend/preferred-theme/application/usecase/dto/SavePreferredThemesRequestDto";
+import { CreatePreferredThemesUsecase } from "@/backend/preferred-theme/application/usecase/CreatePreferredThemesUsecase";
+import { CreatePreferredThemesDto } from "@/backend/preferred-theme/application/usecase/dto/CreatePreferredThemesDto";
 
 export async function POST(req: NextRequest) {
     try {
@@ -16,10 +16,10 @@ export async function POST(req: NextRequest) {
         }
 
         const { themeIds } = await req.json();
-        const dto = new SavePreferredThemesRequestDto(memberId, themeIds);
+        const dto = new CreatePreferredThemesDto(memberId, themeIds);
 
         const repo = new PrismaPreferredThemeRepository();
-        const usecase = new SavePreferredThemesUsecase(repo);
+        const usecase = new CreatePreferredThemesUsecase(repo);
         await usecase.execute(dto);
 
         return NextResponse.json(

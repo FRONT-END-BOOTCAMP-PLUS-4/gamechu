@@ -1,11 +1,11 @@
 // 📁 backend/preferred-platform/application/usecase/SavePreferredPlatformsUsecase.ts
 import { PreferredPlatformRepository } from "@/backend/preferred-platform/domain/repositories/PreferredPlatformRepository";
-import { SavePreferredPlatformsRequestDto } from "./dto/SavePreferredPlatformsRequestDto";
+import { CreatePreferredPlatformsDto  } from "./dto/CreatePreferredPlatformsDto";
 
-export class SavePreferredPlatformsUsecase {
+export class CreatePreferredPlatformsUsecase {
     constructor(private readonly repo: PreferredPlatformRepository) {}
 
-    async execute(dto: SavePreferredPlatformsRequestDto): Promise<void> {
-        await this.repo.savePreferredPlatforms(dto.memberId, dto.platformIds);
+    async execute(dto: CreatePreferredPlatformsDto): Promise<void> {
+        await this.repo.save(dto.memberId, dto.platformIds);
     }
 }

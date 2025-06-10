@@ -10,10 +10,20 @@ export class PrismaPreferredGenreRepository
         this.prisma = new PrismaClient();
     }
 
-    async savePreferredGenres(
-        memberId: string,
-        genreIds: number[]
-    ): Promise<void> {
+    // async savePreferredGenres(memberId: string, genreIds: number[]): Promise<void> {
+    //     await this.prisma.preferredGenre.deleteMany({ where: { memberId } });
+
+    //     if (genreIds.length === 0) return;
+
+    //     await this.prisma.preferredGenre.createMany({
+    //         data: genreIds.map((genreId) => ({
+    //             memberId,
+    //             genreId,
+    //         })),
+    //     });
+    // }
+
+    async save(memberId: string, genreIds: number[]): Promise<void> {
         await this.prisma.preferredGenre.deleteMany({ where: { memberId } });
 
         if (genreIds.length === 0) return;
