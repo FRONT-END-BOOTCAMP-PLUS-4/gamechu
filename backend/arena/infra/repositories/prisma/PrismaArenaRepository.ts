@@ -5,7 +5,7 @@ import {
 } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { Arena, Prisma, PrismaClient } from "@/prisma/generated";
 import { ArenaStatus } from "@/types/arena-status";
-import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilters";
+import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilter";
 import { UpdateArenaDto } from "@/backend/arena/application/usecase/dto/UpdateArenaDto";
 
 export class PrismaArenaRepository implements ArenaRepository {

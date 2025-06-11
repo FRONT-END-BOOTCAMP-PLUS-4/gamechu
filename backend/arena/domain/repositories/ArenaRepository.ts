@@ -1,6 +1,6 @@
 // domain/repositories/ArenaRepository.ts
 import { ArenaStatus } from "@/types/arena-status";
-import { ArenaFilter } from "./filters/ArenaFilters";
+import { ArenaFilter } from "./filters/ArenaFilter";
 import { Arena } from "@/prisma/generated";
 import { UpdateArenaDto } from "../../application/usecase/dto/UpdateArenaDto";
 
