@@ -1,5 +1,9 @@
+import {
+    CreateNotificationTypeInput,
+    NotificationTypeRepository,
+} from "@/backend/notification-type/domain/repositories/NotificationTypeRepository";
 import { NotificationType, PrismaClient } from "@/prisma/generated";
-import { NotificationTypeRepository } from "@/backend/notification-type/domain/repositories/NotificationTypeRepository";
+import { UpdateNotificationTypeDto } from "@/backend/notification-type/application/usecase/dto/UpdateNotificationTypeDto";
 
 export class PrismaNotificationTypeRepository
     implements NotificationTypeRepository
@@ -30,7 +34,7 @@ export class PrismaNotificationTypeRepository
         return data;
     }
 
-    async save(type: NotificationType): Promise<NotificationType> {
+    async save(type: CreateNotificationTypeInput): Promise<NotificationType> {
         const data = await this.prisma.notificationType.create({
             data: type,
         });
@@ -38,10 +42,22 @@ export class PrismaNotificationTypeRepository
         return data;
     }
 
-    async update(type: NotificationType): Promise<NotificationType> {
+    async update(
+        UpdateNotificationTypeDto: UpdateNotificationTypeDto
+    ): Promise<NotificationType> {
+        const { id, ...fields } = UpdateNotificationTypeDto;
+
+        // undefined가 아닌 값만 추림
+        const data: Record<string, unknown> = {};
+        for (const [key, value] of Object.entries(fields)) {
+            if (value !== undefined) {
+                data[key] = value;
+            }
+        }
+
         const newData = await this.prisma.notificationType.update({
-            where: { id: type.id },
-            data: type,
+            where: { id },
+            data,
         });
 
         return newData;
