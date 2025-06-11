@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { VoteCountResult } from "@/backend/vote/application/usecase/VoteCountUsecase";
+import { CountVoteResult } from "@/backend/vote/application/usecase/CountVoteUsecase";
 
 type UseVoteListProps = {
     arenaIds: number[];
 };
 
 export default function useVoteList({ arenaIds }: UseVoteListProps) {
-    const [voteResult, setVoteResult] = useState<VoteCountResult[]>([]);
+    const [voteResult, setVoteResult] = useState<CountVoteResult[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<Error | null>(null);
     // Use a ref to track the last fetched arena IDs to avoid unnecessary re-fetching

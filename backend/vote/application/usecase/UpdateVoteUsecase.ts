@@ -1,15 +1,15 @@
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { Vote } from "@/prisma/generated";
-import { SubmitVoteDto } from "./dto/SubmitVoteDto";
+import { VoteDto } from "./dto/VoteDto";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 type VoteWithoutId = Omit<Vote, "id">;
-export class SubmitVoteUsecase {
+export class UpdateVoteUsecase {
     constructor(
         private voteRepository: VoteRepository,
         private arenaRepository: ArenaRepository
     ) {}
 
-    async execute(dto: SubmitVoteDto): Promise<Vote> {
+    async execute(dto: VoteDto): Promise<Vote> {
         const { arenaId, memberId, votedTo } = dto;
 
         // 1. 아레나 존재 여부 및 상태 확인
