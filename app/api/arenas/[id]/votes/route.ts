@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
-import { SubmitVoteDto } from "@/backend/vote/application/usecase/dto/SubmitVoteDto";
-import { SubmitVoteUsecase } from "@/backend/vote/application/usecase/SubmitVoteUsecase";
+import { VoteDto } from "@/backend/vote/application/usecase/dto/VoteDto";
+import { UpdateVoteUsecase } from "@/backend/vote/application/usecase/UpdateVoteUsecase";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { VoteCountUsecase } from "@/backend/vote/application/usecase/VoteCountUsecase";
+import { CountVoteUsecase } from "@/backend/vote/application/usecase/CountVoteUsecase";
 
 // POST /api/vote
 export async function POST(req: NextRequest) {
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const dto: SubmitVoteDto = {
+        const dto: VoteDto = {
             arenaId,
             memberId,
             votedTo,
@@ -30,8 +30,11 @@ export async function POST(req: NextRequest) {
         const voteRepository = new PrismaVoteRepository();
         const arenaRepository = new PrismaArenaRepository();
 
-        const usecase = new SubmitVoteUsecase(voteRepository, arenaRepository);
-        const result = await usecase.execute(dto);
+        const updateVoteUsecase = new UpdateVoteUsecase(
+            voteRepository,
+            arenaRepository
+        );
+        const result = await updateVoteUsecase.execute(dto);
 
         return NextResponse.json(result, { status: 200 });
     } catch (error: unknown) {
@@ -59,14 +62,14 @@ export async function GET(
     try {
         const voteRepository = new PrismaVoteRepository();
         const arenaRepository = new PrismaArenaRepository();
-        const voteCountUsecase = new VoteCountUsecase(
+        const voteCountUsecase = new CountVoteUsecase(
             arenaRepository,
             voteRepository
         );
 
-        const voteCountResult = await voteCountUsecase.execute(arenaId);
+        const result = await voteCountUsecase.execute(arenaId);
 
-        return NextResponse.json(voteCountResult);
+        return NextResponse.json(result);
     } catch (error) {
         return NextResponse.json(
             { error: `Failed to fetch vote counts: ${error}` },
