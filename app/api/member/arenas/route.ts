@@ -55,8 +55,6 @@ export async function POST(request: Request) {
             createArenaDto
         );
 
-        // TODO: score record 생성 로직 추가 - 투기장 생성
-
         return NextResponse.json(newArena, { status: 201 });
     } catch (error: unknown) {
         console.error("Error creating arenas:", error);

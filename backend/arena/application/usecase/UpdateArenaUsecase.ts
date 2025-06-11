@@ -10,16 +10,7 @@ export class UpdateArenaUsecase {
     }
 
     async execute(updateArenaDto: UpdateArenaDto): Promise<Arena> {
-        const arena: Arena = {
-            id: updateArenaDto.id,
-            creatorId: "",
-            challengerId: updateArenaDto.challengerId,
-            title: updateArenaDto.title,
-            description: updateArenaDto.description,
-            status: updateArenaDto.status,
-            startDate: updateArenaDto.startDate,
-        };
-        const newArena = this.arenaRepository.update(arena);
+        const newArena = this.arenaRepository.update(updateArenaDto);
         return newArena;
     }
 }

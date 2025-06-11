@@ -104,7 +104,7 @@ export class GetArenaUsecase {
                 Math.floor((currentPage - 1) / pageSize) * pageSize + 1;
             const endPage = Math.ceil(totalCount / pageSize);
             const pages = Array.from(
-                { length: 5 },
+                { length: pageSize },
                 (_, i) => i + startPage
             ).filter((pageNumber) => pageNumber <= endPage);
 
