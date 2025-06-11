@@ -1,13 +1,11 @@
 // backend/chatting/domain/repositories/ChattingRepository.ts
 import { Chatting } from "@/prisma/generated";
+import { ChattingFilter } from "./filters/ChattingFilter";
 
+export type CreateCahttingInput = Omit<Chatting, "id">;
 export interface ChattingRepository {
-    save(chatting: Chatting): Promise<Chatting>; // 메시지 저장 기능 (기존)
-    findByArenaId(arenaId: number): Promise<Chatting[]>; // 특정 아레나 채팅 목록 조회 기능 (기존)
-
-    // 특정 아레나에서 특정 멤버가 보낸 채팅 수를 세는 기능
-    countByArenaIdAndMemberId(
-        arenaId: number,
-        memberId: string
-    ): Promise<number>;
+    save(chatting: CreateCahttingInput): Promise<Chatting>;
+    findAll(filter: ChattingFilter): Promise<Chatting[]>;
+    count(filter: ChattingFilter): Promise<number>;
+    deleteById(id: number): Promise<void>;
 }

@@ -1,6 +1,6 @@
 // api/arenas/[id]/chattings/route.ts
-import { FindChattingUsecase } from "@/backend/chatting/application/usecase/FindChattingUsecase";
-import { SendChattingUsecase } from "@/backend/chatting/application/usecase/SendChattingUsecase";
+import { GetChattingUsecase } from "@/backend/chatting/application/usecase/GetChattingUsecase";
+import { CreateChattingUsecase } from "@/backend/chatting/application/usecase/CreateChattingUsecase";
 import { PrismaChattingRepository } from "@/backend/chatting/infra/repositories/prisma/PrismaChattingRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextRequest, NextResponse } from "next/server";
@@ -59,7 +59,7 @@ export async function POST(
     try {
         const chattingRepository = new PrismaChattingRepository();
         const arenaRepository = new PrismaArenaRepository();
-        const sendChattingUsecase = new SendChattingUsecase(
+        const sendChattingUsecase = new CreateChattingUsecase(
             chattingRepository,
             arenaRepository
         );
@@ -145,13 +145,11 @@ export async function GET(
 
     const memberId = await getAuthUserId();
     const prismaChattingRepository = new PrismaChattingRepository();
-    const findChattingUsecase = new FindChattingUsecase(
-        prismaChattingRepository
-    );
+    const getChattingUsecase = new GetChattingUsecase(prismaChattingRepository);
 
     try {
         // 여기서 memberId도 같이 넘겨줍니다 (null도 가능)
-        const result = await findChattingUsecase.execute({ arenaId, memberId });
+        const result = await getChattingUsecase.execute({ arenaId, memberId });
         return NextResponse.json(result);
     } catch (error) {
         console.error(
