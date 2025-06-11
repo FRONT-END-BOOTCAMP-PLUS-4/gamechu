@@ -3,7 +3,7 @@ import { MemberRepository } from "@/backend/member/domain/repositories/MemberRep
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { GetArenaDto } from "./dto/GetArenaDto";
 import { ArenaListDto } from "./dto/ArenaListDto";
-import { ArenaFilter } from "../../domain/repositories/filters/ArenaFilters";
+import { ArenaFilter } from "../../domain/repositories/filters/ArenaFilter";
 import { Arena, Member } from "@/prisma/generated";
 import { ArenaDto } from "./dto/ArenaDto";
 import { GetArenaDates } from "@/utils/GetArenaDates";

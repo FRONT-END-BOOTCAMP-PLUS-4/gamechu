@@ -1,11 +1,14 @@
 export class ScoreRecordDto {
     constructor(
-        public readonly id: number,
-        public readonly policyName: string,
-        public readonly description: string,
-        public readonly score: number,
-        public readonly imageUrl: string,
-        public readonly createdAt: Date,
-        public readonly actualScore: number
+        public id: number,
+        public memberId: string,
+        public policyId: number,
+        public createdAt: Date,
+        public actualScore: number,
+
+        public policyName: string,
+        public description: string,
+        public score: number,
+        public imageUrl: string // policy's imageUrl?
     ) {}
 }
