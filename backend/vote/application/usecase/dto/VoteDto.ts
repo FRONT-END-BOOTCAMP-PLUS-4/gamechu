@@ -1,4 +1,4 @@
-export class SubmitVoteDto {
+export class VoteDto {
     constructor(
         public readonly arenaId: number,
         public readonly memberId: string,
