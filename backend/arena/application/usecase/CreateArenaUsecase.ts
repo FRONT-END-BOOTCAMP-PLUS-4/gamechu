@@ -23,6 +23,8 @@ export class CreateArenaUsecase {
         };
 
         const newArena = await this.arenaRepository.save(arena);
+
+        // TODO: score record 생성 로직 추가 - 투기장 생성
         return newArena;
     }
 }
