@@ -3,7 +3,7 @@ import { VoteRepository } from "../../domain/repositories/VoteRepository";
 import { VoteFilter } from "../../domain/repositories/filters/VoteFilter";
 
 // TODO: make a DTO instead of using as an interface
-export interface VoteCountResult {
+export interface CountVoteResult {
     arenaId: number;
     leftVotes: number;
     rightVotes: number;
@@ -11,13 +11,13 @@ export interface VoteCountResult {
     leftPercent: number;
 }
 
-export class VoteCountUsecase {
+export class CountVoteUsecase {
     constructor(
         private arenaRepository: ArenaRepository,
         private voteRepository: VoteRepository
     ) {}
 
-    async execute(arenaId: number): Promise<VoteCountResult> {
+    async execute(arenaId: number): Promise<CountVoteResult> {
         const arena = await this.arenaRepository.findById(arenaId);
         if (!arena) throw new Error("Arena not found");
 
