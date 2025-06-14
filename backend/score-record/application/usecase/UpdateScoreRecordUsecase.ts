@@ -12,8 +12,25 @@ export class UpdateScoreRecordUsecase {
     async execute(
         updateScoreRecordDto: UpdateScoreRecordDto
     ): Promise<ScoreRecord> {
-        const newScoreRecord =
-            this.scoreRecordRepository.update(updateScoreRecordDto);
+        const scoreRecord = await this.scoreRecordRepository.findById(
+            updateScoreRecordDto.id
+        );
+
+        if (!scoreRecord) {
+            throw new Error("Score record not found");
+        }
+
+        if (updateScoreRecordDto.memberId) {
+            scoreRecord.memberId = updateScoreRecordDto.memberId;
+        }
+        if (updateScoreRecordDto.policyId) {
+            scoreRecord.policyId = updateScoreRecordDto.policyId;
+        }
+        if (updateScoreRecordDto.actualScore) {
+            scoreRecord.actualScore = updateScoreRecordDto.actualScore;
+        }
+
+        const newScoreRecord = this.scoreRecordRepository.update(scoreRecord);
         return newScoreRecord;
     }
 }

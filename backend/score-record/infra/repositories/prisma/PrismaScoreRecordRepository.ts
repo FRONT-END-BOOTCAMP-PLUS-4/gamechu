@@ -4,7 +4,6 @@ import {
 } from "@/backend/score-record/domain/repositories/ScoreRecordRepository";
 import { ScoreRecord, Prisma, PrismaClient } from "@/prisma/generated";
 import { ScoreRecordFilter } from "@/backend/score-record/domain/repositories/filters/ScoreRecordFilter";
-import { UpdateScoreRecordDto } from "@/backend/score-record/application/usecase/dto/UpdateScoreRecordDto";
 
 import { ScoreRecordDto } from "@/backend/score-record/application/usecase/dto/ScoreRecordDto";
 import { CreateScoreRecordDto } from "@/backend/score-record/application/usecase/dto/CreateScoreRecordDto";
@@ -69,22 +68,10 @@ export class PrismaScoreRecordRepository implements ScoreRecordRepository {
 
         return data;
     }
-    async update(
-        updateScoreRecordDto: UpdateScoreRecordDto
-    ): Promise<ScoreRecord> {
-        const { id, ...fields } = updateScoreRecordDto;
-
-        // undefined가 아닌 값만 추림
-        const data: Record<string, unknown> = {};
-        for (const [key, value] of Object.entries(fields)) {
-            if (value !== undefined) {
-                data[key] = value;
-            }
-        }
-
+    async update(scoreRecord: ScoreRecord): Promise<ScoreRecord> {
         const newData = await this.prisma.scoreRecord.update({
-            where: { id },
-            data,
+            where: { id: scoreRecord.id },
+            data: scoreRecord,
         });
 
         return newData;

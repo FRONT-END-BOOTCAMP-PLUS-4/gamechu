@@ -1,6 +1,5 @@
 import { NotificationRecord } from "@/prisma/generated";
 import { NotificationRecordFilter } from "./filters/NotificationRecordFilter";
-import { UpdateNotificationRecordDto } from "../../application/usecase/dto/UpdateNotificationRecordDto";
 
 export type CreateNotificationRecordInput = Omit<NotificationRecord, "id">;
 
@@ -9,8 +8,6 @@ export interface NotificationRecordRepository {
     findAll(filter: NotificationRecordFilter): Promise<NotificationRecord[]>;
     findById(id: number): Promise<NotificationRecord | null>;
     save(record: CreateNotificationRecordInput): Promise<NotificationRecord>;
-    update(
-        updateNotificationRecordDto: UpdateNotificationRecordDto
-    ): Promise<NotificationRecord>;
+    update(record: NotificationRecord): Promise<NotificationRecord>;
     deleteById(id: number): Promise<void>;
 }

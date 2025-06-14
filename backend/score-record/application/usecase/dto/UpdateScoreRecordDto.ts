@@ -1,9 +1,9 @@
 export class UpdateScoreRecordDto {
     constructor(
         public id: number,
-        public createdAt: string,
+        public createdAt: Date,
         public memberId?: string,
-        public policyId?: string,
+        public policyId?: number,
         public actualScore?: number
     ) {}
 }
