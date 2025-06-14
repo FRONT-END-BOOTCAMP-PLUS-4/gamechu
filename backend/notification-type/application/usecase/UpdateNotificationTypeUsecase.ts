@@ -12,9 +12,23 @@ export class UpdateArenaUsecase {
     async execute(
         updateNotificationTypeDto: UpdateNotificationTypeDto
     ): Promise<NotificationType> {
-        const newArena = this.notificationTypeRepository.update(
-            updateNotificationTypeDto
+        const type = await this.notificationTypeRepository.findById(
+            updateNotificationTypeDto.id
         );
-        return newArena;
+
+        if (!type) {
+            throw new Error("Notification not found");
+        }
+
+        if (updateNotificationTypeDto.imageUrl) {
+            type.imageUrl = updateNotificationTypeDto.imageUrl;
+        }
+
+        if (updateNotificationTypeDto.name) {
+            type.name = updateNotificationTypeDto.name;
+        }
+
+        const newType = this.notificationTypeRepository.update(type);
+        return newType;
     }
 }

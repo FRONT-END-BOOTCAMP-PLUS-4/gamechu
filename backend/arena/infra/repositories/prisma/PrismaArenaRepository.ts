@@ -6,7 +6,6 @@ import {
 import { Arena, Prisma, PrismaClient } from "@/prisma/generated";
 import { ArenaStatus } from "@/types/arena-status";
 import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilter";
-import { UpdateArenaDto } from "@/backend/arena/application/usecase/dto/UpdateArenaDto";
 
 export class PrismaArenaRepository implements ArenaRepository {
     private prisma: PrismaClient;
@@ -67,20 +66,10 @@ export class PrismaArenaRepository implements ArenaRepository {
 
         return data;
     }
-    async update(updateArenaDto: UpdateArenaDto): Promise<Arena> {
-        const { id, ...fields } = updateArenaDto;
-
-        // undefined가 아닌 값만 추림
-        const data: Record<string, unknown> = {};
-        for (const [key, value] of Object.entries(fields)) {
-            if (value !== undefined) {
-                data[key] = value;
-            }
-        }
-
+    async update(arena: Arena): Promise<Arena> {
         const newData = await this.prisma.arena.update({
-            where: { id },
-            data,
+            where: { id: arena.id },
+            data: arena,
         });
 
         return newData;

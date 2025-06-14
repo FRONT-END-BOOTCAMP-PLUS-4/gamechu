@@ -4,7 +4,6 @@ import {
     ScorePolicyRepository,
 } from "@/backend/score-policy/domain/repositories/ScorePolicyRepository";
 import { ScorePolicy, PrismaClient } from "@/prisma/generated";
-import { UpdateScorePolicyDto } from "@/backend/score-policy/application/usecase/dto/UpdateScorePolicyDto";
 
 export class PrismaScorePolicyRepository implements ScorePolicyRepository {
     private prisma: PrismaClient;
@@ -37,22 +36,10 @@ export class PrismaScorePolicyRepository implements ScorePolicyRepository {
 
         return data;
     }
-    async update(
-        updateScorePolicyDto: UpdateScorePolicyDto
-    ): Promise<ScorePolicy> {
-        const { id, ...fields } = updateScorePolicyDto;
-
-        // undefined가 아닌 값만 추림
-        const data: Record<string, unknown> = {};
-        for (const [key, value] of Object.entries(fields)) {
-            if (value !== undefined) {
-                data[key] = value;
-            }
-        }
-
+    async update(scorePolicy: ScorePolicy): Promise<ScorePolicy> {
         const newData = await this.prisma.scorePolicy.update({
-            where: { id },
-            data,
+            where: { id: scorePolicy.id },
+            data: scorePolicy,
         });
 
         return newData;

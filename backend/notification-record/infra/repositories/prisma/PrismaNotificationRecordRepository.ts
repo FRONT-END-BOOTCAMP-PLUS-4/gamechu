@@ -4,7 +4,6 @@ import {
     CreateNotificationRecordInput,
     NotificationRecordRepository,
 } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
-import { UpdateNotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/UpdateNotificationRecordDto";
 
 export class PrismaNotificationRecordRepository
     implements NotificationRecordRepository
@@ -85,22 +84,10 @@ export class PrismaNotificationRecordRepository
         return data;
     }
 
-    async update(
-        updateNotificationRecordDto: UpdateNotificationRecordDto
-    ): Promise<NotificationRecord> {
-        const { id, ...fields } = updateNotificationRecordDto;
-
-        // undefined가 아닌 값만 추림
-        const data: Record<string, unknown> = {};
-        for (const [key, value] of Object.entries(fields)) {
-            if (value !== undefined) {
-                data[key] = value;
-            }
-        }
-
+    async update(record: NotificationRecord): Promise<NotificationRecord> {
         const newData = await this.prisma.notificationRecord.update({
-            where: { id },
-            data,
+            where: { id: record.id },
+            data: record,
         });
 
         return newData;

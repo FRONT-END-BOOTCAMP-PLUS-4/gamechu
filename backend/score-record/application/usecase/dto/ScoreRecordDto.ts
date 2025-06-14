@@ -9,6 +9,6 @@ export class ScoreRecordDto {
         public policyName: string,
         public description: string,
         public score: number,
-        public imageUrl: string // policy's imageUrl?
+        public policyImageUrl: string
     ) {}
 }
