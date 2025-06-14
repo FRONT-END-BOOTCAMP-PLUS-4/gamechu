@@ -8,10 +8,6 @@ export class DeleteArenaUsecase {
     }
 
     async execute(id: number): Promise<void> {
-        if (!id) {
-            throw new Error("id is required");
-        }
-
         await this.arenaRepository.deleteById(id);
     }
 }

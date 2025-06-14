@@ -1,6 +1,6 @@
 // domain/repositories/ArenaRepository.ts
 import { ArenaStatus } from "@/types/arena-status";
-import { ArenaFilter } from "./filters/ArenaFilters";
+import { ArenaFilter } from "./filters/ArenaFilter";
 import { Arena } from "@/prisma/generated";
 
 export type CreateArenaInput = Omit<Arena, "id">;

@@ -43,7 +43,8 @@ export async function GET(
     }
 }
 
-// TODO: 리팩토링 하면서 api/member/arena/[id]/route.ts로 옮기기
+// TODO: api/member/arena/[id]/route.ts 생성 완료! app에서 fetch 경로만 수정하면 끝
+// 해당 API는 시스템(관리자)가 투기장을 자동으로 변경하는 경우 (status값 변화 등) 사용합니다!
 export async function PATCH(
     req: NextRequest,
     context: { params: Promise<{ id: string }> }
@@ -82,6 +83,7 @@ export async function PATCH(
     }
 }
 
+// 해당 API는 투기장 시작 시간 전까지 참여자가 모집되지 않을 경우 서버(관리자)가 자동으로 투기장을 삭제할 때 사용합니다!
 export async function DELETE(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;

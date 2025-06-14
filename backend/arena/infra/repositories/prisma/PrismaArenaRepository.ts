@@ -5,7 +5,7 @@ import {
 } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { Arena, Prisma, PrismaClient } from "@/prisma/generated";
 import { ArenaStatus } from "@/types/arena-status";
-import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilters";
+import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilter";
 
 export class PrismaArenaRepository implements ArenaRepository {
     private prisma: PrismaClient;
@@ -69,13 +69,7 @@ export class PrismaArenaRepository implements ArenaRepository {
     async update(arena: Arena): Promise<Arena> {
         const newData = await this.prisma.arena.update({
             where: { id: arena.id },
-            data: {
-                challengerId: arena.challengerId,
-                title: arena.title,
-                description: arena.description,
-                status: arena.status,
-                startDate: arena.startDate,
-            },
+            data: arena,
         });
 
         return newData;

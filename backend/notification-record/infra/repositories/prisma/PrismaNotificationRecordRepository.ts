@@ -1,6 +1,9 @@
 import { NotificationRecord, Prisma, PrismaClient } from "@/prisma/generated";
 import { NotificationRecordFilter } from "@/backend/notification-record/domain/repositories/filters/NotificationRecordFilter";
-import { NotificationRecordRepository } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
+import {
+    CreateNotificationRecordInput,
+    NotificationRecordRepository,
+} from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
 
 export class PrismaNotificationRecordRepository
     implements NotificationRecordRepository
@@ -71,10 +74,11 @@ export class PrismaNotificationRecordRepository
         return data;
     }
 
-    async save(record: NotificationRecord): Promise<NotificationRecord> {
-        const { id, ...recordWithoutID } = record;
+    async save(
+        record: CreateNotificationRecordInput
+    ): Promise<NotificationRecord> {
         const data = await this.prisma.notificationRecord.create({
-            data: recordWithoutID,
+            data: record,
         });
 
         return data;

@@ -1,5 +1,8 @@
+import {
+    CreateNotificationTypeInput,
+    NotificationTypeRepository,
+} from "@/backend/notification-type/domain/repositories/NotificationTypeRepository";
 import { NotificationType, PrismaClient } from "@/prisma/generated";
-import { NotificationTypeRepository } from "@/backend/notification-type/domain/repositories/NotificationTypeRepository";
 
 export class PrismaNotificationTypeRepository
     implements NotificationTypeRepository
@@ -30,7 +33,7 @@ export class PrismaNotificationTypeRepository
         return data;
     }
 
-    async save(type: NotificationType): Promise<NotificationType> {
+    async save(type: CreateNotificationTypeInput): Promise<NotificationType> {
         const data = await this.prisma.notificationType.create({
             data: type,
         });
