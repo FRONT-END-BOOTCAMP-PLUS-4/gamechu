@@ -110,6 +110,7 @@ export class GetArenaUsecase {
 
             const arenaListDto: ArenaListDto = {
                 arenas: arenaDto,
+                totalCount,
                 currentPage,
                 pages,
                 endPage,

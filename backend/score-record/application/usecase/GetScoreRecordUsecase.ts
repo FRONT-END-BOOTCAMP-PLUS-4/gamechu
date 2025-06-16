@@ -76,6 +76,7 @@ export class GetScoreRecordUsecase {
 
             const scoreRecordListDto: ScoreRecordListDto = {
                 records: scoreRecordDto,
+                totalCount,
                 currentPage,
                 pages,
                 endPage,

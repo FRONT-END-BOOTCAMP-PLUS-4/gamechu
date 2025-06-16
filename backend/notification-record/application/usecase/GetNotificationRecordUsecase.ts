@@ -75,6 +75,7 @@ export class GetNotificationRecordUsecase {
 
             const recordListDto: NotificationRecordListDto = {
                 records: recordDto,
+                totalCount,
                 currentPage,
                 pages,
                 endPage,
