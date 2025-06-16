@@ -3,7 +3,7 @@
 import Button from "@/app/components/Button";
 import VoteStatusBar from "../../components/VoteStatusBar";
 import useArenaStore from "@/stores/useArenaStore";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useVote } from "@/hooks/useVote";
 import { useVoteCheck } from "@/hooks/useVoteCheck";
 import { useVoteCount } from "@/hooks/useVoteCount";
@@ -32,7 +32,7 @@ export default function ArenaDetailVote() {
     const leftPercent = totalVotes ? (leftVotes / totalVotes) * 100 : 0;
     const rightPercent = totalVotes ? (rightVotes / totalVotes) * 100 : 0;
 
-    const calculateRemainingTime = () => {
+    const calculateRemainingTime = useCallback(() => {
         if (!arenaDetail?.endVote) return "";
 
         const now = new Date();
@@ -47,7 +47,7 @@ export default function ArenaDetailVote() {
         );
 
         return `${diffHours}h ${diffMinutes}m`;
-    };
+    }, [arenaDetail?.endVote]);
 
     useEffect(() => {
         setRemainingTime(calculateRemainingTime());
@@ -57,7 +57,7 @@ export default function ArenaDetailVote() {
         }, 60 * 1000);
 
         return () => clearInterval(interval);
-    }, [arenaDetail?.endVote]);
+    }, [calculateRemainingTime]);
 
     if (arenaDetail?.status !== 4 && arenaDetail?.status !== 5) return null;
 
