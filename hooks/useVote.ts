@@ -1,7 +1,11 @@
 import { useState } from "react";
 
 interface UseVoteResult {
-    submitVote: (arenaId: number, votedTo: string) => Promise<void>;
+    submitVote: (
+        arenaId: number,
+        votedTo: string,
+        existingVote: string | null
+    ) => Promise<void>;
     loading: boolean;
     error: string | null;
 }
@@ -10,13 +14,19 @@ export function useVote(): UseVoteResult {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const submitVote = async (arenaId: number, votedTo: string) => {
+    const submitVote = async (
+        arenaId: number,
+        votedTo: string,
+        existingVote: string | null
+    ) => {
         setLoading(true);
         setError(null);
 
         try {
+            const method = existingVote ? "PATCH" : "POST";
+
             const res = await fetch(`/api/arenas/${arenaId}/votes`, {
-                method: "POST",
+                method,
                 headers: {
                     "Content-Type": "application/json",
                 },

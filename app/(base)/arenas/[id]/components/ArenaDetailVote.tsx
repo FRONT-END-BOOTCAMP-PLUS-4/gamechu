@@ -63,7 +63,7 @@ export default function ArenaDetailVote() {
 
     const handleVote = async (votedTo: string | null) => {
         if (!arenaDetail?.id || !votedTo) return;
-        await submitVote(arenaDetail.id, votedTo);
+        await submitVote(arenaDetail.id, votedTo, existingVote);
         refetchVoteCheck();
     };
 
