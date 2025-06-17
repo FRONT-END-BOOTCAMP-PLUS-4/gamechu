@@ -21,11 +21,12 @@ export class PrismaChattingRepository implements ChattingRepository {
             ...(memberId !== undefined && memberId !== null && { memberId }),
         };
     }
-    async save(chatting: CreateCahttingInput): Promise<Chatting> {
-        const data = await this.prisma.chatting.create({
-            data: chatting,
+
+    async count(filter: ChattingFilter): Promise<number> {
+        const count = await this.prisma.chatting.count({
+            where: this.getWhereClause(filter),
         });
-        return data;
+        return count;
     }
 
     async findAll(filter: ChattingFilter): Promise<Chatting[]> {
@@ -35,12 +36,26 @@ export class PrismaChattingRepository implements ChattingRepository {
         });
         return data;
     }
-
-    async count(filter: ChattingFilter): Promise<number> {
-        const count = await this.prisma.chatting.count({
-            where: this.getWhereClause(filter),
+    async findById(id: number): Promise<Chatting | null> {
+        const data = await this.prisma.chatting.findUnique({
+            where: { id },
         });
-        return count;
+        return data;
+    }
+
+    async save(chatting: CreateCahttingInput): Promise<Chatting> {
+        const data = await this.prisma.chatting.create({
+            data: chatting,
+        });
+        return data;
+    }
+
+    async update(chatting: Chatting): Promise<Chatting> {
+        const newData = await this.prisma.chatting.update({
+            where: { id: chatting.id },
+            data: chatting,
+        });
+        return newData;
     }
 
     async deleteById(id: number): Promise<void> {
