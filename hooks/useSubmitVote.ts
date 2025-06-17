@@ -1,31 +1,23 @@
 import { useState } from "react";
 
 interface UseVoteResult {
-    submitVote: (
-        arenaId: number,
-        votedTo: string,
-        existingVote: string | null
-    ) => Promise<void>;
+    submitVote: (arenaId: number, votedTo: string) => Promise<void>;
     loading: boolean;
     error: string | null;
 }
 
-export function useVote(): UseVoteResult {
+export function useSubmitVote(): UseVoteResult {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const submitVote = async (
-        arenaId: number,
-        votedTo: string,
-        existingVote: string | null
-    ) => {
+    const submitVote = async (arenaId: number, votedTo: string) => {
         setLoading(true);
         setError(null);
 
         try {
-            const method = existingVote ? "PATCH" : "POST";
+            const method = votedTo ? "PATCH" : "POST";
 
-            const res = await fetch(`/api/arenas/${arenaId}/votes`, {
+            const res = await fetch(`/api/member/arenas/${arenaId}/votes`, {
                 method,
                 headers: {
                     "Content-Type": "application/json",
