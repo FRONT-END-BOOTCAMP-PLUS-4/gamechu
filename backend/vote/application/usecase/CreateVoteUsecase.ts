@@ -1,7 +1,7 @@
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { Vote } from "@/prisma/generated";
-import { VoteDto } from "./dto/VoteDto";
+import { SubmitVoteDto } from "./dto/SubmitVoteDto";
 
 type VoteWithoutId = Omit<Vote, "id">;
 
@@ -11,8 +11,8 @@ export class CreateVoteUsecase {
         private arenaRepository: ArenaRepository
     ) {}
 
-    async execute(dto: VoteDto): Promise<Vote> {
-        const { arenaId, memberId, votedTo } = dto;
+    async execute(submitVoteDto: SubmitVoteDto): Promise<Vote> {
+        const { arenaId, memberId, votedTo } = submitVoteDto;
 
         const arena = await this.arenaRepository.findById(arenaId);
         if (!arena) throw new Error("해당 아레나가 존재하지 않습니다.");

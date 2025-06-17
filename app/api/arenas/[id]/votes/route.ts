@@ -11,7 +11,10 @@ export async function GET(
     const arenaId = Number((await context.params).id);
     const memberId = await getAuthUserId();
     if (isNaN(arenaId)) {
-        return NextResponse.json({ error: "Invalid arenaId" }, { status: 400 });
+        return NextResponse.json(
+            { error: "유효하지 않은 투기장 ID입니다." },
+            { status: 400 }
+        );
     }
 
     try {
@@ -21,13 +24,13 @@ export async function GET(
             arenaRepository,
             voteRepository
         );
-
         const result = await getVoteUsecase.execute(arenaId, memberId);
 
         return NextResponse.json(result);
     } catch (error) {
+        console.error("투표 정보 조회 중 오류 발생:", error);
         return NextResponse.json(
-            { error: `Failed to fetch vote counts: ${error}` },
+            { error: "알 수 없는 오류 발생" },
             { status: 500 }
         );
     }

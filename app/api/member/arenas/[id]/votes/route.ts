@@ -1,6 +1,6 @@
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
 import { CreateVoteUsecase } from "@/backend/vote/application/usecase/CreateVoteUsecase";
-import { VoteDto } from "@/backend/vote/application/usecase/dto/VoteDto";
+import { SubmitVoteDto } from "@/backend/vote/application/usecase/dto/SubmitVoteDto";
 import { UpdateVoteUsecase } from "@/backend/vote/application/usecase/UpdateVoteUsecase";
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const dto: VoteDto = { arenaId, memberId, votedTo };
+        const submitVoteDto: SubmitVoteDto = { arenaId, memberId, votedTo };
 
         const voteRepository = new PrismaVoteRepository();
         const arenaRepository = new PrismaArenaRepository();
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
             arenaRepository
         );
 
-        const result = await createVoteUsecase.execute(dto);
+        const result = await createVoteUsecase.execute(submitVoteDto);
         return NextResponse.json(result, { status: 201 });
     } catch (error: unknown) {
         const errorMessage =
@@ -50,12 +50,12 @@ export async function PATCH(req: NextRequest) {
             );
         }
 
-        const dto: VoteDto = { arenaId, memberId, votedTo };
+        const submitVoteDto: SubmitVoteDto = { arenaId, memberId, votedTo };
 
         const voteRepository = new PrismaVoteRepository();
         const updateVoteUsecase = new UpdateVoteUsecase(voteRepository);
 
-        const result = await updateVoteUsecase.execute(dto);
+        const result = await updateVoteUsecase.execute(submitVoteDto);
         return NextResponse.json(result, { status: 200 });
     } catch (error: unknown) {
         const errorMessage =
