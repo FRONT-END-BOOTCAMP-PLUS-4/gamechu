@@ -146,11 +146,14 @@ export function useArenaChatManagement({
 
             try {
                 // 백엔드 POST API 호출
-                const res = await fetch(`/api/arenas/${arenaId}/chattings`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ content }),
-                });
+                const res = await fetch(
+                    `/api/member/arenas/${arenaId}/chattings`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ content }),
+                    }
+                );
 
                 if (!res.ok) {
                     const data = await res.json();
