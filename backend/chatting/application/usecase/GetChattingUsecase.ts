@@ -20,12 +20,13 @@ export class GetChattingUsecase {
 
     async execute(params: ExecuteParams): Promise<GetChattingResult> {
         const { arenaId, memberId } = params;
-        const filter = new ChattingFilter(arenaId, memberId);
-        const chats = await this.chattingRepo.findAll(filter);
+        const filterChats = new ChattingFilter(arenaId, null); // 채팅을 filter할 때는 memberId가 null
+        const filterCount = new ChattingFilter(arenaId, memberId);
+        const chats = await this.chattingRepo.findAll(filterChats);
 
         let sentCount = 0;
         if (memberId) {
-            sentCount = await this.chattingRepo.count(filter);
+            sentCount = await this.chattingRepo.count(filterCount);
         }
 
         return {
