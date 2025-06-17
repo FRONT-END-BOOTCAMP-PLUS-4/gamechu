@@ -1,12 +1,12 @@
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { Vote } from "@/prisma/generated";
-import { VoteDto } from "./dto/VoteDto";
+import { SubmitVoteDto } from "./dto/SubmitVoteDto";
 
 export class UpdateVoteUsecase {
     constructor(private voteRepository: VoteRepository) {}
 
-    async execute(dto: VoteDto): Promise<Vote> {
-        const { arenaId, memberId, votedTo } = dto;
+    async execute(submitVoteDto: SubmitVoteDto): Promise<Vote> {
+        const { arenaId, memberId, votedTo } = submitVoteDto;
 
         const existingVotes = await this.voteRepository.findAll({
             arenaId,
