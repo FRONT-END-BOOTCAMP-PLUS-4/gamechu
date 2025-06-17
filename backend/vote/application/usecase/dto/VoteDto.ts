@@ -1,7 +1,9 @@
 export class VoteDto {
     constructor(
-        public readonly arenaId: number,
-        public readonly memberId: string,
-        public readonly votedTo: string
+        public arenaId: number,
+        public memberId: string,
+        public leftVotes: number,
+        public rightVotes: number,
+        public votedTo: string | null
     ) {}
 }

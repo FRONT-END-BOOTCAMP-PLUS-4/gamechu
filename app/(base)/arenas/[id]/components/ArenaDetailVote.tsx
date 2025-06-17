@@ -4,31 +4,29 @@ import Button from "@/app/components/Button";
 import VoteStatusBar from "../../components/VoteStatusBar";
 import useArenaStore from "@/stores/useArenaStore";
 import { useCallback, useEffect, useState } from "react";
-import { useVote } from "@/hooks/useVote";
-import { useVoteCheck } from "@/hooks/useVoteCheck";
-import { useVoteCount } from "@/hooks/useVoteCount";
+import { useSubmitVote } from "@/hooks/useSubmitVote";
+import { useGetVote } from "@/hooks/useGetVote";
 import Image from "next/image";
 import TierBadge from "@/app/components/TierBadge";
 
 export default function ArenaDetailVote() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
 
-    const { voteData } = useVoteCount(arenaDetail?.id || 0);
-
-    const { existingVote, refetch: refetchVoteCheck } = useVoteCheck(
-        arenaDetail?.id
+    const { voteData, refetch: refetchVoteData } = useGetVote(
+        arenaDetail?.id || 0
     );
 
     // 투표 버튼은 항상 활성화 상태, 단 내가 투표한 쪽에는 "내가 투표한 항목" 표시
-    const isVotedToLeft = existingVote === arenaDetail?.creatorId;
-    const isVotedToRight = existingVote === arenaDetail?.challengerId;
+    const isVotedToLeft = voteData?.votedTo === arenaDetail?.creatorId;
+    const isVotedToRight = voteData?.votedTo === arenaDetail?.challengerId;
 
     const [remainingTime, setRemainingTime] = useState<string>("");
-    const { submitVote, loading, error } = useVote();
+    const { submitVote, loading, error } = useSubmitVote();
 
-    const totalVotes = voteData?.total || 0;
     const leftVotes = voteData?.leftVotes || 0;
     const rightVotes = voteData?.rightVotes || 0;
+    const totalVotes = leftVotes + rightVotes;
+
     const leftPercent = totalVotes ? (leftVotes / totalVotes) * 100 : 0;
     const rightPercent = totalVotes ? (rightVotes / totalVotes) * 100 : 0;
 
@@ -63,8 +61,8 @@ export default function ArenaDetailVote() {
 
     const handleVote = async (votedTo: string | null) => {
         if (!arenaDetail?.id || !votedTo) return;
-        await submitVote(arenaDetail.id, votedTo, existingVote);
-        refetchVoteCheck();
+        await submitVote(arenaDetail.id, votedTo);
+        refetchVoteData();
     };
 
     return (
