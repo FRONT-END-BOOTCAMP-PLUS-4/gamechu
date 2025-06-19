@@ -7,8 +7,8 @@ export class PrismaPlatformRepository implements PlatformRepository {
     constructor() {
         this.prisma = new PrismaClient();
     }
-
-    async getAllPlatforms(): Promise<{ id: number; name: string }[]> {
+    
+    async findAll(): Promise<{ id: number; name: string }[]> {
         return await this.prisma.platform.findMany({
             select: {
                 id: true,

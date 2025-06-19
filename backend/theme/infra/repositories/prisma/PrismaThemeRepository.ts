@@ -8,7 +8,7 @@ export class PrismaThemeRepository implements ThemeRepository {
     constructor() {
         this.prisma = new PrismaClient();
     }
-    async getAllThemes(): Promise<Theme[]> {
+    async findAll(): Promise<Theme[]> {
         return await this.prisma.theme.findMany({
             select: {
                 id: true,

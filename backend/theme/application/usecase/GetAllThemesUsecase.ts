@@ -6,6 +6,6 @@ export class GetAllThemesUsecase {
     constructor(private readonly repo: ThemeRepository) {}
 
     async execute(): Promise<Theme[]> {
-        return await this.repo.getAllThemes();
+        return await this.repo.findAll();
     }
 }

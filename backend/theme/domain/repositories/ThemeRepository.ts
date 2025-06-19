@@ -2,5 +2,5 @@
 import { Theme } from "@/prisma/generated";
 
 export interface ThemeRepository {
-    getAllThemes(): Promise<Theme[]>;
+    findAll(): Promise<Theme[]>;
 }
