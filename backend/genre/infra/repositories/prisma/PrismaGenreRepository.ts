@@ -9,7 +9,7 @@ export class PrismaGenreRepository implements GenreRepository {
         this.prisma = new PrismaClient();
     }
 
-    async getAllGenres(): Promise<Genre[]> {
+    async findAll(): Promise<Genre[]> {
         const genres = await this.prisma.genre.findMany({
             select: {
                 id: true,

@@ -2,5 +2,5 @@
 import { Platform } from "@/prisma/generated";
 
 export interface PlatformRepository {
-    getAllPlatforms(): Promise<Platform[]>;
+    findAll(): Promise<Platform[]>;
 }
