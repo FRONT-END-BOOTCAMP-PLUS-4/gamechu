@@ -5,6 +5,6 @@ export class GetAllGenresUsecase {
     constructor(private readonly genreRepo: GenreRepository) {}
 
     async execute(): Promise<Genre[]> {
-        return await this.genreRepo.getAllGenres();
+        return await this.genreRepo.findAll();
     }
 }

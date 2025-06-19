@@ -6,6 +6,6 @@ export class GetAllPlatformsUsecase {
     constructor(private readonly repo: PlatformRepository) {}
 
     async execute(): Promise<Platform[]> {
-        return await this.repo.getAllPlatforms();
+        return await this.repo.findAll();
     }
 }
