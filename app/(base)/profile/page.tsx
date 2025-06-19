@@ -10,7 +10,7 @@ import ProfileReviewTab from "./components/tabs/ProfileReviewTab";
 import ProfileWishlistTab from "./components/tabs/ProfileWishlistTab";
 import ProfilePointHistoryTab from "./components/tabs/ProfilePointHistoryTab";
 import ProfileArenaTab from "./components/tabs/ProfileArenaTab";
-import { useLoadingStore } from "@/stores/loadingStore"; // ✅ 추가
+import { useLoadingStore } from "@/stores/loadingStore";
 
 type WishlistGame = {
     id: number;
@@ -33,12 +33,26 @@ type Review = {
     imageUrl: string | null;
 };
 
+type WishlistPageData = {
+    wishlists: WishlistGame[];
+    currentPage: number;
+    pages: number[];
+    endPage: number;
+    totalCount: number;
+};
+
 export default function ProfilePage() {
-    const { setLoading } = useLoadingStore(); // ✅ 전역 로딩 상태 사용
+    const { setLoading } = useLoadingStore();
     const [activeTab, setActiveTab] = useState("reviews");
     const [reviewCount, setReviewCount] = useState(0);
-    const [wishlistCount, setWishlistCount] = useState(0);
-    const [wishlistGames, setWishlistGames] = useState<WishlistGame[]>([]);
+    const [wishlistPageData, setWishlistPageData] = useState<WishlistPageData>({
+        wishlists: [],
+        currentPage: 1,
+        pages: [],
+        endPage: 1,
+        totalCount: 0,
+    });
+
     const [nickname, setNickname] = useState("");
     const [imageUrl, setImageUrl] = useState("/icons/arena.svg");
     const [score, setScore] = useState(0);
@@ -48,28 +62,31 @@ export default function ProfilePage() {
     const [birthDate, setBirthDate] = useState("");
     const [isMale, setIsMale] = useState(true);
     const [reviews, setReviews] = useState<Review[]>([]);
-    const [isLoaded, setIsLoaded] = useState(false); // ✅ 단순 로딩 여부 체크용
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    const fetchWishlistPage = async (page: number) => {
+        const res = await fetch(`/api/member/wishlists?page=${page}`);
+        const data = await res.json();
+        setWishlistPageData(data);
+    };
 
     const fetchProfileData = useCallback(async () => {
         const id = await getAuthUserId();
         if (!id) return;
 
-        setLoading(true); // ✅ 전역 로딩 시작
+        setLoading(true);
 
         try {
-            const [reviewRes, profileRes, wishlistRes] = await Promise.all([
+            const [reviewRes, profileRes] = await Promise.all([
                 fetch("/api/reviews/member"),
                 fetch("/api/member/profile"),
-                fetch("/api/member/wishlists"),
             ]);
 
             const reviews = await reviewRes.json();
             const profile = await profileRes.json();
-            const wishlist = await wishlistRes.json();
 
             setReviews(reviews);
             setReviewCount(reviews.length);
-
             setNickname(profile.nickname);
             setImageUrl(profile.imageUrl);
             setScore(profile.score);
@@ -79,13 +96,13 @@ export default function ProfilePage() {
             setBirthDate(profile.birthDate);
             setIsMale(profile.isMale);
 
-            setWishlistGames(wishlist);
-            setWishlistCount(wishlist.length);
+            await fetchWishlistPage(1); // ✅ 1페이지 위시리스트 호출
+
             setIsLoaded(true);
         } catch (err) {
             console.error("프로필 데이터 로딩 실패:", err);
         } finally {
-            setLoading(false); // ✅ 전역 로딩 종료
+            setLoading(false);
         }
     }, [setLoading]);
 
@@ -98,7 +115,7 @@ export default function ProfilePage() {
             <div className="flex space-x-10 mb-10">
                 <ProfileSummaryCard
                     reviewCount={reviewCount}
-                    wishlistCount={wishlistCount}
+                    wishlistCount={wishlistPageData.totalCount}
                     nickname={nickname}
                     imageUrl={imageUrl}
                     score={score}
@@ -127,7 +144,13 @@ export default function ProfilePage() {
                         />
                     )}
                     {activeTab === "wishlists" && isLoaded && (
-                        <ProfileWishlistTab games={wishlistGames} />
+                        <ProfileWishlistTab
+                            games={wishlistPageData.wishlists}
+                            pages={wishlistPageData.pages}
+                            currentPage={wishlistPageData.currentPage}
+                            endPage={wishlistPageData.endPage}
+                            onPageChange={fetchWishlistPage}
+                        />
                     )}
                     {activeTab === "score-history" && isLoaded && (
                         <ProfilePointHistoryTab />

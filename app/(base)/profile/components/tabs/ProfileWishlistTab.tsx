@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import GameCard from "@/app/(base)/games/components/GameCard";
 import Pager from "@/app/components/Pager";
 
@@ -14,19 +13,21 @@ interface Game {
     reviewCount: number;
 }
 
-export default function ProfileWishlistTab({ games }: { games: Game[] }) {
-    const itemsPerPage = 4;
-    const [currentPage, setCurrentPage] = useState(1);
+interface Props {
+    games: Game[];
+    pages: number[];
+    currentPage: number;
+    endPage: number;
+    onPageChange: (page: number) => void;
+}
 
-    const totalItems = games.length;
-    const endPage = Math.ceil(totalItems / itemsPerPage);
-    const pages = Array.from({ length: endPage }, (_, i) => i + 1);
-
-    const currentGames = games.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
+export default function ProfileWishlistTab({
+    games,
+    pages,
+    currentPage,
+    endPage,
+    onPageChange,
+}: Props) {
     return (
         <div className="w-full bg-background-300 p-6 rounded-xl shadow flex flex-col gap-6">
             <h2 className="text-lg font-semibold text-body mb-2">
@@ -40,18 +41,17 @@ export default function ProfileWishlistTab({ games }: { games: Game[] }) {
             ) : (
                 <>
                     <div className="grid grid-cols-2 gap-6">
-                        {currentGames.map((game) => (
+                        {games.map((game) => (
                             <GameCard key={game.id} {...game} />
                         ))}
                     </div>
 
-                    {/* 페이지 수가 1보다 많을 때만 Pager 렌더링 */}
                     {endPage > 1 && (
                         <Pager
                             currentPage={currentPage}
                             pages={pages}
                             endPage={endPage}
-                            onPageChange={setCurrentPage}
+                            onPageChange={onPageChange}
                         />
                     )}
                 </>

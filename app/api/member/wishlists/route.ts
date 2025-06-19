@@ -1,73 +1,57 @@
-// app/api/member/wishlists/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-
 import { PrismaWishListRepository } from "@/backend/wishlist/infra/repositories/prisma/PrismaWishListRepository";
-import { GetWishlistGamesUsecase } from "@/backend/wishlist/application/usecase/GetWishlistGamesUsecase";
-import { AddToWishlistUsecase } from "@/backend/wishlist/application/usecase/AddToWishlistUsecase";
-import { RemoveFromWishlistUsecase } from "@/backend/wishlist/application/usecase/RemoveFromWishlistUsecase";
+import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/GamePrismaRepository";
+import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
+import { GetWishlistUsecase } from "@/backend/wishlist/application/usecase/GetWishlistUsecase";
+import { GetWishlistsUsecase } from "@/backend/wishlist/application/usecase/GetWishlistsUsecase";
 
-const repo = new PrismaWishListRepository();
+// ✅ repository instance 생성
+const wishlistRepo = new PrismaWishListRepository();
+const gameRepo = new GamePrismaRepository();
+const reviewRepo = new PrismaReviewRepository();
 
-// ✅ GET: 위시리스트 조회
-export async function GET() {
+export async function GET(req: NextRequest) {
     const memberId = await getAuthUserId();
-    if (!memberId)
+    if (!memberId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-    const usecase = new GetWishlistGamesUsecase(repo);
+    const { searchParams } = new URL(req.url);
+    const gameIdParam = searchParams.get("gameId");
+    const pageParam = searchParams.get("page");
+    const page = Math.max(Number(pageParam) || 1, 1); // 기본값 1, 0 이하 방지
 
+    // ✅ 단일 조회 (isWish 체크)
+    if (gameIdParam !== null) {
+        const gameId = Number(gameIdParam);
+        if (isNaN(gameId)) {
+            return NextResponse.json({ message: "Invalid gameId" }, { status: 400 });
+        }
+
+        const usecase = new GetWishlistUsecase(wishlistRepo);
+        try {
+            const result = await usecase.execute(memberId, gameId);
+            return NextResponse.json(result);
+        } catch (err) {
+            console.error("[WISHLIST_SINGLE_FETCH_ERROR]", err);
+            return NextResponse.json(
+                { message: "단일 위시리스트 조회 실패" },
+                { status: 500 }
+            );
+        }
+    }
+
+    // ✅ 전체 목록 + 페이지네이션
+    const usecase = new GetWishlistsUsecase(wishlistRepo, gameRepo, reviewRepo);
     try {
-        const result = await usecase.execute(memberId);
-        return NextResponse.json(result);
+        const result = await usecase.execute(memberId, page);
+        return NextResponse.json(result); // WishListPageDto 형식 반환
     } catch (error) {
         console.error("[WISHLIST_FETCH_ERROR]", error);
         return NextResponse.json(
-            { message: "위시리스트 조회 실패" },
+            { message: "위시리스트 목록 조회 실패" },
             { status: 500 }
-        );
-    }
-}
-
-// ✅ POST: 위시리스트에 게임 추가
-export async function POST(req: NextRequest) {
-    const memberId = await getAuthUserId();
-    if (!memberId)
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-    const { gameId } = await req.json();
-    const usecase = new AddToWishlistUsecase(repo);
-
-    try {
-        await usecase.execute(memberId, gameId);
-        return NextResponse.json({ message: "위시리스트에 추가되었습니다." });
-    } catch (error) {
-        console.error("[WISHLIST_ADD_ERROR]", error);
-        return NextResponse.json(
-            { message: "위시리스트 등록 실패" },
-            { status: 400 }
-        );
-    }
-}
-
-// ✅ DELETE: 위시리스트에서 게임 삭제
-// TODO: wishlists/[id]/route.ts로 이주시키기
-export async function DELETE(req: NextRequest) {
-    const memberId = await getAuthUserId();
-    if (!memberId)
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-    const { gameId } = await req.json();
-    const usecase = new RemoveFromWishlistUsecase(repo);
-
-    try {
-        await usecase.execute(memberId, gameId);
-        return NextResponse.json({ message: "삭제 완료" });
-    } catch (error) {
-        console.error("[WISHLIST__ERROR]", error);
-        return NextResponse.json(
-            { message: "위시리스트 삭제 실패" },
-            { status: 400 }
         );
     }
 }
