@@ -2,6 +2,9 @@ import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaReposi
 import { VoteRepository } from "../../domain/repositories/VoteRepository";
 import { VoteDto } from "./dto/VoteDto";
 import { VoteFilter } from "../../domain/repositories/filters/VoteFilter";
+import { GetVoteDto } from "./dto/GetVoteDto";
+import { Vote } from "@/prisma/generated";
+import { VoteListDto } from "./dto/VoteListDto";
 
 export class GetVoteUsecase {
     constructor(
@@ -9,26 +12,32 @@ export class GetVoteUsecase {
         private voteRepository: VoteRepository
     ) {}
 
-    async execute(arenaId: number, memberId: string | null): Promise<VoteDto> {
-        if (!arenaId || !memberId) {
+    async execute(getVoteDto: GetVoteDto): Promise<VoteListDto> {
+        const {
+            queryString: { arenaId, votedTo, mine },
+            memberId,
+        } = getVoteDto;
+
+        if (!arenaId) {
             throw new Error("잘못된 쿼리입니다.");
         }
+
         const arena = await this.arenaRepository.findById(arenaId);
         if (!arena) throw new Error("Arena not found");
 
-        const leftVotes = await this.voteRepository.count(
-            new VoteFilter(arenaId, null, arena.creatorId)
+        // mine이 true일 경우에만 memberId를 필터에 넣는다.
+        const filter = new VoteFilter(arenaId, mine ? memberId : null, votedTo);
+
+        const votes: Vote[] = await this.voteRepository.findAll(filter);
+        const totalCount: number = await this.voteRepository.count(
+            new VoteFilter(arenaId, null, votedTo)
         );
 
-        const rightVotes = await this.voteRepository.count(
-            new VoteFilter(arenaId, null, arena.challengerId)
-        );
+        const voteListDto: VoteListDto = {
+            votes: votes.map((vote) => vote as VoteDto),
+            totalCount,
+        };
 
-        const votes = await this.voteRepository.findAll(
-            new VoteFilter(arenaId, memberId, null)
-        );
-        const votedTo = votes[0]?.votedTo ?? null;
-
-        return new VoteDto(arenaId, memberId, leftVotes, rightVotes, votedTo);
+        return voteListDto;
     }
 }

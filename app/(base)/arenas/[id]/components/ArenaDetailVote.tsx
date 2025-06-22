@@ -4,31 +4,29 @@ import Button from "@/app/components/Button";
 import VoteStatusBar from "../../components/VoteStatusBar";
 import useArenaStore from "@/stores/useArenaStore";
 import { useCallback, useEffect, useState } from "react";
-import { useSubmitVote } from "@/hooks/useSubmitVote";
-import { useGetVote } from "@/hooks/useGetVote";
+import { useVote } from "@/hooks/useVote";
 import Image from "next/image";
 import TierBadge from "@/app/components/TierBadge";
 
 export default function ArenaDetailVote() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
-
-    const { voteData, refetch: refetchVoteData } = useGetVote(
-        arenaDetail?.id || 0
-    );
-
+    const {
+        existingVote,
+        loading,
+        error,
+        refetch: refetchVoteData,
+        submitVote,
+    } = useVote({
+        arenaId: arenaDetail?.id || 0,
+        mine: true,
+    });
     // 투표 버튼은 항상 활성화 상태, 단 내가 투표한 쪽에는 "내가 투표한 항목" 표시
-    const isVotedToLeft = voteData?.votedTo === arenaDetail?.creatorId;
-    const isVotedToRight = voteData?.votedTo === arenaDetail?.challengerId;
-
+    const isVotedToLeft = existingVote === arenaDetail?.creatorId;
+    const isVotedToRight = existingVote === arenaDetail?.challengerId;
     const [remainingTime, setRemainingTime] = useState<string>("");
-    const { submitVote, loading, error } = useSubmitVote();
 
-    const leftVotes = voteData?.leftVotes || 0;
-    const rightVotes = voteData?.rightVotes || 0;
-    const totalVotes = leftVotes + rightVotes;
-
-    const leftPercent = totalVotes ? (leftVotes / totalVotes) * 100 : 0;
-    const rightPercent = totalVotes ? (rightVotes / totalVotes) * 100 : 0;
+    const leftPercent = arenaDetail?.leftPercent || 0;
+    const rightPercent = arenaDetail?.rightPercent || 0;
 
     const calculateRemainingTime = useCallback(() => {
         if (!arenaDetail?.endVote) return "";
@@ -61,10 +59,9 @@ export default function ArenaDetailVote() {
 
     const handleVote = async (votedTo: string | null) => {
         if (!arenaDetail?.id || !votedTo) return;
-        await submitVote(arenaDetail.id, votedTo);
+        await submitVote(arenaDetail.id, votedTo, existingVote);
         refetchVoteData();
     };
-
     return (
         <div className="w-full max-w-[1000px] mt-6 bg-background-300 rounded-xl px-6 py-4 flex flex-col items-center justify-center gap-4 min-h-[200px] animate-fade-in-up">
             {/* 상단 투표 영역 */}
