@@ -58,6 +58,7 @@ export async function PATCH(req: NextRequest) {
         const result = await updateVoteUsecase.execute(submitVoteDto);
         return NextResponse.json(result, { status: 200 });
     } catch (error: unknown) {
+        console.error("🔥 PATCH vote error:", error);
         const errorMessage =
             error instanceof Error ? error.message : "서버 오류";
         return NextResponse.json({ message: errorMessage }, { status: 500 });

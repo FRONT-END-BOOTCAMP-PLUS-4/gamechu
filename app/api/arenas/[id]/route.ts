@@ -7,6 +7,7 @@ import { PrismaMemberRepository } from "@/backend/member/infra/repositories/pris
 import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
+import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { Arena } from "@/prisma/generated";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -16,24 +17,23 @@ type RequestParams = {
     }>;
 };
 
-export async function GET(
-    req: NextRequest,
-    context: { params: Promise<{ id: string }> }
-) {
-    const arenaId = Number((await context.params).id);
+export async function GET(request: Request, { params }: RequestParams) {
+    const { id } = await params;
 
-    if (isNaN(arenaId)) {
+    if (isNaN(id)) {
         return NextResponse.json({ error: "Invalid arenaId" }, { status: 400 });
     }
     const arenaRepository = new PrismaArenaRepository();
     const memberRepository = new PrismaMemberRepository();
+    const voteRepository = new PrismaVoteRepository();
     const getArenaDetailusecase = new GetArenaDetailUsecase(
         arenaRepository,
-        memberRepository
+        memberRepository,
+        voteRepository
     );
 
     try {
-        const result = await getArenaDetailusecase.execute(arenaId);
+        const result = await getArenaDetailusecase.execute(Number(id));
         return NextResponse.json(result);
     } catch (error) {
         return NextResponse.json(
@@ -45,12 +45,9 @@ export async function GET(
 
 // TODO: api/member/arena/[id]/route.ts 생성 완료! app에서 fetch 경로만 수정하면 끝
 // 해당 API는 시스템(관리자)가 투기장을 자동으로 변경하는 경우 (status값 변화 등) 사용합니다!
-export async function PATCH(
-    req: NextRequest,
-    context: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: RequestParams) {
     const { status, challengerId } = await req.json();
-    const arenaId = Number((await context.params).id);
+    const { id } = await params;
     const scorePolicy = new ScorePolicy();
     const memberRepository = new PrismaMemberRepository();
     const scoreRecordRepository = new PrismaScoreRecordRepository();
@@ -66,7 +63,11 @@ export async function PATCH(
     );
 
     try {
-        await updateArenaStatusUsecase.execute(arenaId, status, challengerId); // challengerId 없으면 undefined
+        await updateArenaStatusUsecase.execute(
+            Number(id),
+            status,
+            challengerId
+        ); // challengerId 없으면 undefined
         return NextResponse.json({ success: true });
     } catch (error: unknown) {
         console.error("Error updating arenas:", error);

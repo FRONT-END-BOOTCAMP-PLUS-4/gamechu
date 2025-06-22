@@ -1,3 +1,6 @@
+// 탐색 페이지에서 투기장 여러 개 정보 받아올 때 사용
+// 이름을 GetArenaUsecase-> GetArenaListUsecase로 변경할 예졍
+
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { MemberRepository } from "@/backend/member/domain/repositories/MemberRepository";
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
@@ -7,6 +10,7 @@ import { ArenaFilter } from "../../domain/repositories/filters/ArenaFilter";
 import { Arena, Member } from "@/prisma/generated";
 import { ArenaDto } from "./dto/ArenaDto";
 import { GetArenaDates } from "@/utils/GetArenaDates";
+import { VoteFilter } from "@/backend/vote/domain/repositories/filters/VoteFilter";
 
 export class GetArenaUsecase {
     private arenaRepository: ArenaRepository;
@@ -57,19 +61,27 @@ export class GetArenaUsecase {
                         voteEndDate,
                     }: { debateEndDate: Date; voteEndDate: Date } =
                         GetArenaDates(arena.startDate);
-                    const voteTotalCount: number =
-                        await this.voteRepository.count({
-                            arenaId: arena.id,
-                            votedTo: null,
-                        });
-                    const voteCreatorCount: number =
-                        await this.voteRepository.count({
-                            arenaId: arena.id,
-                            votedTo: "creator",
-                        });
-                    const leftPercent: number =
-                        (voteCreatorCount / voteTotalCount) * 100;
 
+                    const totalFilter: VoteFilter = new VoteFilter(
+                        arena.id,
+                        null,
+                        null
+                    );
+                    const voteTotalCount: number =
+                        await this.voteRepository.count(totalFilter);
+                    const leftFilter: VoteFilter = new VoteFilter(
+                        arena.id,
+                        null,
+                        arena.creatorId
+                    );
+                    const voteLeftCount: number =
+                        await this.voteRepository.count(leftFilter);
+                    const voteRightCount: number =
+                        voteTotalCount - voteLeftCount;
+                    const leftPercent: number =
+                        (voteLeftCount / voteTotalCount) * 100;
+                    const rightPercent: number =
+                        (voteRightCount / voteTotalCount) * 100;
                     return {
                         id: arena.id,
                         creatorId: arena.creatorId,
@@ -95,7 +107,10 @@ export class GetArenaUsecase {
                             : null,
                         challengerScore: challenger ? challenger.score : null,
                         voteCount: voteTotalCount,
+                        leftCount: voteLeftCount,
+                        rightCount: voteRightCount,
                         leftPercent: leftPercent,
+                        rightPercent: rightPercent,
                     };
                 })
             );

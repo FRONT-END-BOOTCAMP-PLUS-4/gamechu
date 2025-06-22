@@ -1,16 +1,24 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { GetVoteUsecase } from "@/backend/vote/application/usecase/GetVoteUsecase";
+import { GetVoteDto } from "@/backend/vote/application/usecase/dto/GetVoteDto";
 
-export async function GET(
-    req: NextRequest,
-    context: { params: Promise<{ id: string }> }
-) {
-    const arenaId = Number((await context.params).id);
+type RequestParams = {
+    params: Promise<{
+        id: number;
+    }>;
+};
+
+export async function GET(request: Request, { params }: RequestParams) {
     const memberId = await getAuthUserId();
-    if (isNaN(arenaId)) {
+    const { id } = await params;
+    // get query parameters from URL
+    const url = new URL(request.url);
+    const votedTo: string = url.searchParams.get("votedTo") ?? "";
+    const mine: boolean = url.searchParams.get("mine") === "true";
+    if (isNaN(id)) {
         return NextResponse.json(
             { error: "유효하지 않은 투기장 ID입니다." },
             { status: 400 }
@@ -24,7 +32,12 @@ export async function GET(
             arenaRepository,
             voteRepository
         );
-        const result = await getVoteUsecase.execute(arenaId, memberId);
+
+        const getVoteDto: GetVoteDto = new GetVoteDto(
+            { arenaId: Number(id), votedTo, mine }, // votedTo는 빈 문자열로 초기화
+            memberId
+        );
+        const result = await getVoteUsecase.execute(getVoteDto);
 
         return NextResponse.json(result);
     } catch (error) {

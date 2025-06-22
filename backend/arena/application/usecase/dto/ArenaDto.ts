@@ -17,7 +17,11 @@ export class ArenaDto {
         public challengerNickname: string | null,
         public challengerProfileImageUrl: string | null,
         public challengerScore: number | null,
+
         public voteCount: number,
-        public leftPercent: number
+        public leftCount: number,
+        public rightCount: number,
+        public leftPercent: number,
+        public rightPercent: number
     ) {}
 }

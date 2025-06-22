@@ -50,7 +50,12 @@ export default function ArenaDetailPage() {
                         new Date(data.startDate),
                         new Date(data.endChatting),
                         new Date(data.endVote),
-                        data.status
+                        data.status,
+                        data.voteCount,
+                        data.leftCount,
+                        data.rightCount,
+                        data.leftPercent,
+                        data.rightPercent
                     )
                 );
             } catch (error) {

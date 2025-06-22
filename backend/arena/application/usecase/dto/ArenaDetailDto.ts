@@ -14,6 +14,11 @@ export class ArenaDetailDto {
         public startDate: Date,
         public endChatting: Date,
         public endVote: Date,
-        public status: ArenaStatus
+        public status: ArenaStatus,
+        public voteCount: number,
+        public leftCount: number,
+        public rightCount: number,
+        public leftPercent: number,
+        public rightPercent: number
     ) {}
 }
