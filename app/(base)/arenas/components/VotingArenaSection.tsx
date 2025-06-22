@@ -25,7 +25,6 @@ export default function VotingArenaSection({ onLoaded }: Props) {
         mine: false,
         pageSize: 3,
     });
-
     useArenaAutoStatus({
         arenaList: arenaListDto?.arenas || [],
         onStatusUpdate: (arenaId, newStatus) => {
@@ -69,8 +68,8 @@ export default function VotingArenaSection({ onLoaded }: Props) {
         arenaListDto.arenas.forEach((arena) => {
             const vote = voteResult.find((vote) => vote.arenaId === arena.id);
             if (vote) {
-                arena.voteCount = vote.total;
-                arena.leftPercent = vote.leftPercent;
+                arena.voteCount = arena.voteCount;
+                arena.leftPercent = arena.leftPercent;
             } else {
                 arena.voteCount = 0;
             }
