@@ -69,8 +69,8 @@ export default function SelectedArenaSection({
         arenaListDto.arenas.forEach((arena) => {
             const vote = voteResult.find((vote) => vote.arenaId === arena.id);
             if (vote) {
-                arena.voteCount = vote.total;
-                arena.leftPercent = vote.leftPercent;
+                arena.voteCount = arena.voteCount;
+                arena.leftPercent = arena.leftCount;
             } else {
                 arena.voteCount = 0;
             }

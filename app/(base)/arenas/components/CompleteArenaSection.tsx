@@ -57,14 +57,13 @@ export default function CompleteArenaSection({ onLoaded }: Props) {
     } = useVoteList({
         arenaIds: arenaIdsToFetch,
     });
-
     // ✅ 완료된 투표 데이터를 arena 객체에 반영
     if (arenaListDto && arenaListDto.arenas) {
         arenaListDto.arenas.forEach((arena) => {
             const vote = voteResult.find((vote) => vote.arenaId === arena.id);
             if (vote) {
-                arena.voteCount = vote.total;
-                arena.leftPercent = vote.leftPercent;
+                arena.voteCount = arena.voteCount;
+                arena.leftPercent = arena.leftPercent;
             } else {
                 arena.voteCount = 0;
             }
