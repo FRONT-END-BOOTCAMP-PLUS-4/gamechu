@@ -55,7 +55,7 @@ export default function MyCompletedArenaList() {
     if (arenaListDto?.arenas && voteResult.length > 0) {
         arenaListDto.arenas.forEach((arena) => {
             const vote = voteResult.find((v) => v.arenaId === arena.id);
-            arena.leftPercent = vote ? vote.leftPercent : 50;
+            arena.leftPercent = vote ? arena.leftPercent : 50;
         });
     }
 
