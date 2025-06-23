@@ -2,8 +2,6 @@ import { type NextRequest, NextResponse } from "next/server";
 import { GetGameDetailUsecase } from "@/backend/game/application/usecase/GetGameDetailUsecase";
 import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/GamePrismaRepository";
 
-const usecase = new GetGameDetailUsecase(new GamePrismaRepository());
-
 export async function GET(
     _req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -17,6 +15,8 @@ export async function GET(
             { status: 400 }
         );
     }
+
+    const usecase = new GetGameDetailUsecase(new GamePrismaRepository());
 
     try {
         const gameDetail = await usecase.execute(gameId);
