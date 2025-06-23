@@ -44,6 +44,13 @@ export default function GamePage() {
     const [sortBy, setSortBy] = useState<"popular" | "rating" | "latest">(
         "popular"
     );
+    const isFilterReady =
+        Array.isArray(genres) &&
+        genres.length > 0 &&
+        Array.isArray(themes) &&
+        themes.length > 0 &&
+        Array.isArray(platforms) &&
+        platforms.length > 0;
 
     const debounceKeyword = useDebounce(keyword, 250);
     const endPage = Math.ceil(totalItems / itemsPerPage);
@@ -140,15 +147,17 @@ export default function GamePage() {
             </div>
 
             <div className="flex items-start gap-8">
-                <GameFilter
-                    genres={genres}
-                    themes={themes}
-                    platforms={platforms}
-                    selectedTag={selectedTag}
-                    setSelectedTag={setSelectedTag}
-                    selectedPlatformId={selectedPlatformId}
-                    setSelectedPlatformId={setSelectedPlatformId}
-                />
+                {isFilterReady && (
+                    <GameFilter
+                        genres={genres}
+                        themes={themes}
+                        platforms={platforms}
+                        selectedTag={selectedTag}
+                        setSelectedTag={setSelectedTag}
+                        selectedPlatformId={selectedPlatformId}
+                        setSelectedPlatformId={setSelectedPlatformId}
+                    />
+                )}
                 <div className="w-[1068px] space-y-10">
                     <GameCardList games={games} />
                     {games.length > 0 && (
