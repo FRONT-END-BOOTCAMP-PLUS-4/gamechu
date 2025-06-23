@@ -6,6 +6,7 @@ import { MemberRepository } from "@/backend/member/domain/repositories/MemberRep
 import { ArenaStatus } from "@/types/arena-status";
 import { VoteFilter } from "@/backend/vote/domain/repositories/filters/VoteFilter";
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
+import { GetArenaDetailDto } from "./dto/GetArenaDetailDto";
 export class GetArenaDetailUsecase {
     private arenaRepository: ArenaRepository;
     private memberRepository: MemberRepository;
@@ -21,7 +22,11 @@ export class GetArenaDetailUsecase {
         this.voteRepository = voteRepository;
     }
 
-    async execute(arenaId: number): Promise<ArenaDetailDto> {
+    async execute(
+        getArenaDetailDto: GetArenaDetailDto
+    ): Promise<ArenaDetailDto> {
+        const { arenaId } = getArenaDetailDto;
+        //TODO: getArenaById가 아닌 findById를 사용하도록 수정
         const ArenaDetail = await this.arenaRepository.getArenaById(arenaId);
         const creatorName = await this.memberRepository.findById(
             ArenaDetail.creatorId

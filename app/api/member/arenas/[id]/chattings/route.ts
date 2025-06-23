@@ -1,5 +1,6 @@
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
 import { CreateChattingUsecase } from "@/backend/chatting/application/usecase/CreateChattingUsecase";
+import { CreateChattingDto } from "@/backend/chatting/application/usecase/dto/CreateChattingDto";
 import { PrismaChattingRepository } from "@/backend/chatting/infra/repositories/prisma/PrismaChattingRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextRequest, NextResponse } from "next/server";
@@ -8,44 +9,39 @@ import { NextRequest, NextResponse } from "next/server";
 const MAX_MESSAGE_LENGTH = 200;
 const MAX_SEND_COUNT = 5;
 
-export async function POST(
-    req: NextRequest,
-    context: { params: Promise<{ id: string }> }
-) {
-    // 🔐 로그인된 유저 ID 가져오기 (인증)
-    const memberId = await getAuthUserId();
-    if (!memberId) {
-        console.warn("POST /chattings: Unauthorized access attempt");
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-    const arenaId = Number((await context.params).id);
-    if (isNaN(arenaId)) {
-        console.warn(
-            `POST /chattings(${
-                (await context.params).id
-            }): Invalid arenaId provided for member ${memberId}`
-        );
-        return NextResponse.json({ error: "Invalid arenaId" }, { status: 400 });
-    }
+type RequestParams = {
+    params: Promise<{
+        id: number;
+    }>;
+};
 
+export async function POST(req: NextRequest, { params }: RequestParams) {
+    const { id } = await params;
+    const memberId = await getAuthUserId();
     const { content } = await req.json();
+    if (!memberId) {
+        return NextResponse.json(
+            { message: "권한이 없습니다." },
+            { status: 401 }
+        );
+    }
+    if (isNaN(id)) {
+        return NextResponse.json(
+            { error: "유효하지 않은 투기장 ID입니다." },
+            { status: 400 }
+        );
+    }
     if (
         !content ||
         typeof content !== "string" ||
         content.trim().length === 0
     ) {
-        console.warn(
-            `POST /chattings(${arenaId}): Empty or invalid content received from member ${memberId}`
-        );
         return NextResponse.json(
             { error: "메시지 내용을 입력해주세요." },
             { status: 400 }
         );
     }
     if (content.length > MAX_MESSAGE_LENGTH) {
-        console.warn(
-            `POST /chattings(${arenaId}): Message exceeds max length (${MAX_MESSAGE_LENGTH}) from member ${memberId}`
-        );
         return NextResponse.json(
             {
                 error: `메시지 길이는 ${MAX_MESSAGE_LENGTH}자를 초과할 수 없습니다.`,
@@ -57,27 +53,27 @@ export async function POST(
     try {
         const chattingRepository = new PrismaChattingRepository();
         const arenaRepository = new PrismaArenaRepository();
-        const sendChattingUsecase = new CreateChattingUsecase(
+        const createChattingUsecase = new CreateChattingUsecase(
             chattingRepository,
             arenaRepository
         );
-        const { newChat, remainingSends } = await sendChattingUsecase.execute({
-            arenaId,
+        const createChattingDto = new CreateChattingDto(
+            Number(id),
             memberId,
-            content,
-        });
+            content
+        );
+        const result = await createChattingUsecase.execute(createChattingDto);
 
         // -- 응답 데이터에 새로 저장된 채팅 객체와 남은 횟수 정보 포함 --
         return NextResponse.json(
             {
-                newChat,
-                remainingSends,
+                newChat: result,
             },
             { status: 201 }
         );
     } catch (error: unknown) {
         console.error(
-            `💥 Error processing chat POST for arena ${arenaId} by member ${memberId}:`,
+            `💥 Error processing chat POST for arena ${id} by member ${memberId}:`,
             error
         );
         if (typeof error === "object" && error !== null && "message" in error) {
@@ -122,6 +118,9 @@ export async function POST(
                 return NextResponse.json({ error: message }, { status: 400 });
             }
         }
-        return NextResponse.json({ error: "  " }, { status: 500 });
+        return NextResponse.json(
+            { error: "알 수 없는 오류가 발생했습니다." },
+            { status: 500 }
+        );
     }
 }

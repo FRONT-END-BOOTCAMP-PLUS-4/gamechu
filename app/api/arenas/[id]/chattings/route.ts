@@ -1,15 +1,19 @@
+import { GetChattingDto } from "@/backend/chatting/application/usecase/dto/GetChattingDto";
 import { GetChattingUsecase } from "@/backend/chatting/application/usecase/GetChattingUsecase";
 import { PrismaChattingRepository } from "@/backend/chatting/infra/repositories/prisma/PrismaChattingRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextResponse } from "next/server";
 
-export async function GET(
-    req: Request,
-    context: { params: Promise<{ id: string }> }
-) {
-    const arenaId = Number((await context.params).id);
+type RequestParams = {
+    params: Promise<{
+        id: number;
+    }>;
+};
+
+export async function GET(req: Request, { params }: RequestParams) {
+    const { id } = await params;
     const memberId = await getAuthUserId();
-    if (isNaN(arenaId)) {
+    if (isNaN(id)) {
         return NextResponse.json(
             { error: "유효하지 않은 투기장 ID입니다." },
             { status: 400 }
@@ -19,7 +23,9 @@ export async function GET(
     try {
         const chattingRepository = new PrismaChattingRepository();
         const getChattingUsecase = new GetChattingUsecase(chattingRepository);
-        const result = await getChattingUsecase.execute({ arenaId, memberId });
+        const getChattingDto = new GetChattingDto(Number(id), memberId);
+
+        const result = await getChattingUsecase.execute(getChattingDto);
 
         return NextResponse.json(result);
     } catch (error) {

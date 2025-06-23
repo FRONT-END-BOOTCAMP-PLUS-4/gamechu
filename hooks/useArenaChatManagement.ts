@@ -79,8 +79,11 @@ export function useArenaChatManagement({
             const data: { chats: ChattingDto[]; remainingSends: number } =
                 await res.json();
             setChats(data.chats);
-            // 백엔드에서 받은 남은 횟수로 상태를 업데이트
-            setRemainingSends(data.remainingSends);
+            // 백엔드에서 받은 남은 횟수로 상태를 업데이트(이게 없으면 새로고침하면 5로 초기화 됨)
+            const mySentCount = data.chats.filter(
+                (chat) => chat.memberId === userId
+            ).length;
+            setRemainingSends(MAX_SEND_COUNT - mySentCount);
         } catch (err) {
             let errorMessage =
                 "채팅 및 횟수 정보 불러오기 중 알 수 없는 오류가 발생했습니다.";
@@ -120,7 +123,6 @@ export function useArenaChatManagement({
         async (content: string) => {
             // 추가: 메시지 내용 길이 및 남은 횟수 프론트엔드 1차 체크
             setSendError(null);
-
             if (content.trim().length === 0) {
                 setSendError("메시지 내용을 입력해주세요.");
                 return;
@@ -138,7 +140,6 @@ export function useArenaChatManagement({
                 );
                 return;
             }
-
             // arenaId가 없거나 userId가 없으면 전송 안 함
             if (typeof arenaId !== "number" || !userId) {
                 return;
@@ -154,56 +155,13 @@ export function useArenaChatManagement({
                         body: JSON.stringify({ content }),
                     }
                 );
-
-                if (!res.ok) {
-                    const data = await res.json();
-                    // 백엔드로부터 받은 에러 응답 처리
-                    let errorMsg =
-                        data.error || `메시지 전송 실패: ${res.status}`;
-
-                    if (
-                        data.error?.includes("메시지 길이가 너무 깁니다") ||
-                        data.error?.includes("length limit")
-                    ) {
-                        errorMsg = `메시지 길이는 ${MAX_MESSAGE_LENGTH}자를 초과할 수 없습니다.`;
-                    } else if (
-                        data.error?.includes(
-                            "메시지 전송 횟수를 초과했습니다"
-                        ) ||
-                        data.error?.includes("send count limit")
-                    ) {
-                        errorMsg = `메시지 전송 횟수(${MAX_SEND_COUNT}번)를 모두 사용했습니다.`;
-                        // 백엔드에서 횟수 초과가 확실히 발생했다면 프론트 상태도 0으로 업데이트
-                        setRemainingSends(0);
-                    } else if (
-                        data.error?.includes("참가자가 아닙니다") ||
-                        data.error?.includes("Not a participant")
-                    ) {
-                        errorMsg = "아레나 참가자만 메시지를 보낼 수 있습니다.";
-                    } else if (
-                        data.error?.includes(
-                            "지금은 메시지를 보낼 수 없는 아레나 상태입니다"
-                        )
-                    ) {
-                        errorMsg = data.error;
-                    } else if (res.status === 401)
-                        errorMsg = "메시지 전송에는 로그인이 필요합니다.";
-                    else if (res.status === 403)
-                        errorMsg = data.error || "메시지 전송 권한이 없습니다.";
-                    // 참가자 외 Forbidden 등
-                    else if (res.status === 404)
-                        errorMsg =
-                            data.error || "대상 아레나가 존재하지 않습니다.";
-                    else if (res.status === 400)
-                        errorMsg = data.error || "잘못된 요청입니다.";
-
-                    throw new Error(errorMsg);
-                }
-                const data: { newChat: ChattingDto; remainingSends: number } =
-                    await res.json();
+                const data: { newChat: ChattingDto } = await res.json();
                 const newChat = data.newChat;
-                setRemainingSends(data.remainingSends);
                 setChats((prev) => [...prev, newChat]); // 이거 없으면 안보임
+
+                if (newChat.memberId === userId) {
+                    setRemainingSends((prev) => Math.max(prev - 1, 0));
+                }
                 socket.emit("chat message", {
                     id: newChat.id, // 백엔드에서 생성된 ID 사용
                     roomId: arenaId.toString(),

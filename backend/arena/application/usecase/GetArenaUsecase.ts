@@ -1,6 +1,3 @@
-// 탐색 페이지에서 투기장 여러 개 정보 받아올 때 사용
-// 이름을 GetArenaUsecase-> GetArenaListUsecase로 변경할 예졍
-
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { MemberRepository } from "@/backend/member/domain/repositories/MemberRepository";
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
