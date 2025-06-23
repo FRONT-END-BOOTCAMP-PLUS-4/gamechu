@@ -1,4 +1,5 @@
 import { Wishlist } from "@/prisma/generated";
+// import { WishlistFilter } from "../filters/WishlistFilter";
 
 export interface WishListRepository {
   findAll(memberId: string): Promise<Wishlist[]>;                     // 위시리스트 전체 조회
@@ -6,4 +7,7 @@ export interface WishListRepository {
   findById(memberId: string, gameId: number): Promise<Wishlist | null>; // 단건 조회
   save(memberId: string, gameId: number): Promise<Wishlist>;          // 위시리스트 저장
   deleteById(id: number): Promise<void>;                              // ID로 삭제
+
+  // findAll(filter: WishlistFilter): Promise<Wishlist[]>; // 필터링된 위시리스트 조회
+  // count(filter: WishlistFilter): Promise<number>; // 필터링된 위시리스트 개수
 }
