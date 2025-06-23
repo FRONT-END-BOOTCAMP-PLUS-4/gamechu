@@ -1,4 +1,6 @@
 import { DeleteArenaUsecase } from "@/backend/arena/application/usecase/DeleteArenaUsecase";
+import { GetArenaDetailDto } from "@/backend/arena/application/usecase/dto/GetArenaDetailDto";
+import { UpdateArenaDetailDto } from "@/backend/arena/application/usecase/dto/UpdateArenaDetailDto";
 import { GetArenaDetailUsecase } from "@/backend/arena/application/usecase/GetArenaDetailUsecase";
 import { UpdateArenaStatusUsecase } from "@/backend/arena/application/usecase/UpdateArenaStatusUsecase";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
@@ -31,9 +33,9 @@ export async function GET(request: Request, { params }: RequestParams) {
         memberRepository,
         voteRepository
     );
-
+    const getArenaDetailDto = new GetArenaDetailDto(Number(id));
     try {
-        const result = await getArenaDetailusecase.execute(Number(id));
+        const result = await getArenaDetailusecase.execute(getArenaDetailDto);
         return NextResponse.json(result);
     } catch (error) {
         return NextResponse.json(
@@ -61,13 +63,13 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
         arenaRepository,
         applyArenaScoreUsecase
     );
-
+    const updateArenaDetailDto = new UpdateArenaDetailDto(
+        Number(id),
+        status,
+        challengerId
+    );
     try {
-        await updateArenaStatusUsecase.execute(
-            Number(id),
-            status,
-            challengerId
-        ); // challengerId 없으면 undefined
+        await updateArenaStatusUsecase.execute(updateArenaDetailDto); // challengerId 없으면 undefined
         return NextResponse.json({ success: true });
     } catch (error: unknown) {
         console.error("Error updating arenas:", error);

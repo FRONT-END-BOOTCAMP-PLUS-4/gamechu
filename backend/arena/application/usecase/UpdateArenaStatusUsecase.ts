@@ -2,7 +2,7 @@
 
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
-import { ArenaStatus } from "@/types/arena-status";
+import { UpdateArenaDetailDto } from "./dto/UpdateArenaDetailDto";
 
 export class UpdateArenaStatusUsecase {
     constructor(
@@ -10,11 +10,8 @@ export class UpdateArenaStatusUsecase {
         private readonly applyArenaScoreUsecase: ApplyArenaScoreUsecase
     ) {}
 
-    async execute(
-        arenaId: number,
-        status: ArenaStatus,
-        challengerId?: string
-    ): Promise<void> {
+    async execute(updateArenaDetailDto: UpdateArenaDetailDto): Promise<void> {
+        const { arenaId, status, challengerId } = updateArenaDetailDto;
         const arena = await this.arenaRepository.findById(arenaId);
         if (!arena) {
             throw new Error("투기장이 존재하지 않습니다.");
