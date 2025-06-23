@@ -12,9 +12,23 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { arenaId, votedTo } = body;
 
-        if (!arenaId || !memberId || !votedTo) {
+        if (!arenaId) {
             return NextResponse.json(
-                { message: "잘못된 요청입니다." },
+                { error: "투기장을 찾을 수 없습니다." },
+                { status: 400 }
+            );
+        }
+
+        if (!memberId) {
+            return NextResponse.json(
+                { error: "멤버가 아닙니다." },
+                { status: 401 }
+            );
+        }
+
+        if (!votedTo) {
+            return NextResponse.json(
+                { error: "투표한 인원을 찾을 수 없습니다." },
                 { status: 400 }
             );
         }
@@ -39,6 +53,7 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
     try {
+        //TODO: Patch나 Delete의 경우 우선 해당 데이터가 존재하는지 확인하고, 없을 경우 에러를 출력하는 로직을 먼저 넣어주세요.
         const memberId = await getAuthUserId();
         const body = await req.json();
         const { arenaId, votedTo } = body;

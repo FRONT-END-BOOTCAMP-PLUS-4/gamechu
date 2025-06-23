@@ -1,30 +1,25 @@
 // backend/chatting/application/usecase/SendChattingUsecase.ts
 import { Chatting } from "@/prisma/generated";
-import { ChattingRepository } from "../../domain/repositories/ChattingRepository";
+import {
+    ChattingRepository,
+    CreateChattingInput,
+} from "../../domain/repositories/ChattingRepository";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { ChattingFilter } from "../../domain/repositories/filters/ChattingFilter";
+import { CreateChattingDto } from "./dto/CreateChattingDto";
 
 // 상수 정의 (API 핸들러, 프론트와 맞춰야 함)
 const MAX_MESSAGE_LENGTH = 200;
 const MAX_SEND_COUNT = 5;
-
-// execute 메소드에 필요한 인자들을 정의하는 인터페이스
-interface ExecuteParams {
-    arenaId: number;
-    memberId: string;
-    content: string;
-}
 
 export class CreateChattingUsecase {
     constructor(
         private chattingRepository: ChattingRepository,
         private arenaRepository: ArenaRepository
     ) {}
-    async execute(
-        params: ExecuteParams
-    ): Promise<{ newChat: Chatting; remainingSends: number }> {
+    async execute(createChattingDto: CreateChattingDto): Promise<Chatting> {
         try {
-            const { arenaId, memberId, content } = params;
+            const { arenaId, memberId, content } = createChattingDto;
             const arena = await this.arenaRepository.findById(arenaId);
             if (!arena) {
                 throw new Error("존재하지 않는 아레나입니다.");
@@ -48,19 +43,15 @@ export class CreateChattingUsecase {
                     `메시지 전송 횟수(${MAX_SEND_COUNT}번)를 모두 사용했습니다.`
                 );
             }
-            const savedChat = await this.chattingRepository.save({
+            const chatting: CreateChattingInput = {
                 memberId,
                 arenaId,
                 content,
                 createdAt: new Date(),
-            });
-
-            const remainingSends = MAX_SEND_COUNT - (sentCount + 1);
-
-            return {
-                newChat: savedChat,
-                remainingSends,
             };
+            const newChatting = await this.chattingRepository.save(chatting);
+
+            return newChatting;
         } catch (error) {
             console.error("Error creating chat message", error);
             throw new Error("Error creating chat message");

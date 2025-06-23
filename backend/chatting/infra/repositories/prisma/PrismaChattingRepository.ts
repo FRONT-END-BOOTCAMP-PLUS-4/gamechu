@@ -1,7 +1,7 @@
 // backend/chatting/infra/repositories/prisma/PrismaChattingRepository.ts
 import {
     ChattingRepository,
-    CreateCahttingInput,
+    CreateChattingInput,
 } from "@/backend/chatting/domain/repositories/ChattingRepository";
 import { ChattingFilter } from "@/backend/chatting/domain/repositories/filters/ChattingFilter";
 
@@ -17,8 +17,8 @@ export class PrismaChattingRepository implements ChattingRepository {
         const { arenaId, memberId } = filter;
 
         return {
-            ...(arenaId !== undefined && { arenaId }),
-            ...(memberId !== undefined && memberId !== null && { memberId }),
+            ...(arenaId && { arenaId }),
+            ...(memberId && { memberId }),
         };
     }
 
@@ -43,7 +43,7 @@ export class PrismaChattingRepository implements ChattingRepository {
         return data;
     }
 
-    async save(chatting: CreateCahttingInput): Promise<Chatting> {
+    async save(chatting: CreateChattingInput): Promise<Chatting> {
         const data = await this.prisma.chatting.create({
             data: chatting,
         });
