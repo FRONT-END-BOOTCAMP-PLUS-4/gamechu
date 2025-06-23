@@ -5,6 +5,7 @@ import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/G
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { GetWishlistUsecase } from "@/backend/wishlist/application/usecase/GetWishlistUsecase";
 import { GetWishlistsUsecase } from "@/backend/wishlist/application/usecase/GetWishlistsUsecase";
+import { CreateWishlistUsecase } from "@/backend/wishlist/application/usecase/CreateWishlistUsecase";
 
 // ✅ repository instance 생성
 const wishlistRepo = new PrismaWishListRepository();
@@ -26,7 +27,10 @@ export async function GET(req: NextRequest) {
     if (gameIdParam !== null) {
         const gameId = Number(gameIdParam);
         if (isNaN(gameId)) {
-            return NextResponse.json({ message: "Invalid gameId" }, { status: 400 });
+            return NextResponse.json(
+                { message: "Invalid gameId" },
+                { status: 400 }
+            );
         }
 
         const usecase = new GetWishlistUsecase(wishlistRepo);
@@ -52,6 +56,35 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(
             { message: "위시리스트 목록 조회 실패" },
             { status: 500 }
+        );
+    }
+}
+
+export async function POST(req: NextRequest) {
+    const memberId = await getAuthUserId();
+    if (!memberId)
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+    try {
+        const { gameId } = await req.json();
+        const usecase = new CreateWishlistUsecase(wishlistRepo);
+        const wishlistId = await usecase.execute(memberId, gameId);
+
+        // ✅ 성공적으로 등록되었으면 명시적으로 200 반환
+        return NextResponse.json(
+            {
+                message: "위시리스트에 추가되었습니다.",
+                wishlistId,
+            },
+            { status: 200 }
+        ); // 👈 꼭 명시하세요!
+    } catch (error) {
+        console.error("[WISHLIST_ADD_ERROR]", error);
+
+        // 👇 실제로 에러가 아닐 수도 있으므로 500 아님을 구분
+        return NextResponse.json(
+            { message: "위시리스트 등록 실패" },
+            { status: 400 }
         );
     }
 }

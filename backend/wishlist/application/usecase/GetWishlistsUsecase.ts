@@ -3,6 +3,7 @@ import { GameRepository } from "../../../game/domain/repositories/GameRepository
 import { ReviewRepository } from "../../../review/domain/repositories/ReviewRepository";
 import { GetWishListDto } from "./dto/GetWishListDto";
 import { WishlistsDto } from "./dto/WishlistsDto";
+// import { WishlistFilter } from "../../domain/filters/WishlistFilter";
 
 const ITEMS_PER_PAGE = 4;// 페이지당 아이템 수
 
@@ -46,4 +47,47 @@ export class GetWishlistsUsecase {
 
     return new WishlistsDto(wishlistDtos, page, pages, endPage, totalCount);// WishlistsDto 생성
   }
+
+  // 아래 코드는 필터링 기능이 필요할 때 사용할 수 있습니다.
+
+  // async execute(memberId: string, page: number): Promise<WishlistsDto> {
+  //   const offset = (page - 1) * ITEMS_PER_PAGE;
+
+  //   // ✅ 필터 객체 생성
+  //   const filter = new WishlistFilter(
+  //     memberId,
+  //     "id", // 기본 정렬 필드
+  //     false,        // 최신순
+  //     offset,
+  //     ITEMS_PER_PAGE
+  //   );
+
+  //   const totalCount = await this.wishlistRepo.count(filter);      // ✅ 필터 기반 count
+  //   const paginated = await this.wishlistRepo.findAll(filter);     // ✅ 필터 기반 findAll
+
+  //   // DTO 변환
+  //   const wishlistDtos = await Promise.all(
+  //     paginated.map(async (wishlist) => {
+  //       const game = await this.gameRepo.findDetailById(wishlist.gameId);
+  //       const reviews = await this.reviewRepo.findByGameId(wishlist.gameId);
+  //       const expertRating = (await this.gameRepo.getAverageRatingByExpert(wishlist.gameId)) ?? 0;
+
+  //       return new GetWishListDto(
+  //         game.id,
+  //         game.title,
+  //         game.developer ?? "알 수 없음",
+  //         game.thumbnail ?? "/images/default-game.png",
+  //         game.platforms?.[0] ?? "기타",
+  //         expertRating,
+  //         reviews.length
+  //       );
+  //     })
+  //   );
+
+  //   // 페이지네이션 정보
+  //   const endPage = Math.ceil(totalCount / ITEMS_PER_PAGE);
+  //   const pages = Array.from({ length: endPage }, (_, i) => i + 1);
+
+  //   return new WishlistsDto(wishlistDtos, page, pages, endPage, totalCount);
+  // }
 }
