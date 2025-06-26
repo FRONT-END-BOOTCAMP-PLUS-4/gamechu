@@ -65,6 +65,9 @@ export function useArenaSocket({
             text: string;
             id?: number;
         }) => {
+            if (msg.id === undefined) {
+                throw new Error("msg.id가 없습니다.");
+            }
             const newChat: ChattingDto = {
                 // 서버에서 받은 메시지를 기반으로 새로운 채팅 객체 생성
                 id: msg.id,

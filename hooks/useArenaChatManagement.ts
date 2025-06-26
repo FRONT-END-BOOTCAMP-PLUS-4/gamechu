@@ -1,4 +1,5 @@
 // hooks/useArenaChatManagement.ts
+//TODO: GetChattingResultDto사용하도록 수정하기
 import { useState, useEffect, useCallback } from "react";
 import { ChattingDto } from "@/backend/chatting/application/usecase/dto/ChattingDto";
 import { ArenaStatus } from "@/types/arena-status";
