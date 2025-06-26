@@ -25,9 +25,12 @@ export async function POST() {
     // ✅ lastAttendedDate를 한국 시간 기준 문자열로 변환
     let attendedDateStr: string | null = null;
     if (lastAttendedDate) {
-        const localDateStr = new Date(lastAttendedDate).toLocaleDateString("ko-KR", {
-            timeZone: "Asia/Seoul",
-        });
+        const localDateStr = new Date(lastAttendedDate).toLocaleDateString(
+            "ko-KR",
+            {
+                timeZone: "Asia/Seoul",
+            }
+        );
         attendedDateStr = localDateStr;
     }
 

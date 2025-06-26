@@ -58,7 +58,6 @@ export default function GlobalAttendanceToast() {
 
                 // ✅ 출석 날짜를 쿠키로 저장 (1일 유지)
                 if (attendedDate) {
-
                     // ✅ 한국 시각 자정 계산
                     const now = new Date();
                     const seoulNow = new Date(

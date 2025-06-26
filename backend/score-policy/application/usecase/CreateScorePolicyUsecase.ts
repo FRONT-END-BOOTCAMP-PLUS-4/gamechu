@@ -22,9 +22,8 @@ export class CreateScorePolicyUsecase {
             imageUrl: createScorePolicyDto.imageUrl,
         };
 
-        const newScorePolicy = await this.scorePolicyRepository.save(
-            scorePolicy
-        );
+        const newScorePolicy =
+            await this.scorePolicyRepository.save(scorePolicy);
         return newScorePolicy;
     }
 }

@@ -128,8 +128,8 @@ export default function Comment({
                         isLoading
                             ? "등록 중.."
                             : editingReviewId
-                            ? "수정"
-                            : "등록"
+                              ? "수정"
+                              : "등록"
                     }
                     onClick={handleSubmit}
                 />

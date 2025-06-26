@@ -44,7 +44,10 @@ export default function MyCompletedArenaList() {
 
     useEffect(() => {
         if (!arenaLoading && arenaListDto?.arenas) {
-            console.log("✅ 디버깅: 가져온 arena 개수:", arenaListDto.arenas.length);
+            console.log(
+                "✅ 디버깅: 가져온 arena 개수:",
+                arenaListDto.arenas.length
+            );
         }
     }, [arenaLoading, arenaListDto]);
 
@@ -61,11 +64,19 @@ export default function MyCompletedArenaList() {
     }
 
     if (arenaError || voteError) {
-        return <p className="text-red-500 text-sm">투기장 정보를 불러오는 데 실패했습니다.</p>;
+        return (
+            <p className="text-red-500 text-sm">
+                투기장 정보를 불러오는 데 실패했습니다.
+            </p>
+        );
     }
 
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
-        return <p className="text-font-200 text-sm">참여한 종료된 투기장이 없습니다.</p>;
+        return (
+            <p className="text-font-200 text-sm">
+                참여한 종료된 투기장이 없습니다.
+            </p>
+        );
     }
 
     return (

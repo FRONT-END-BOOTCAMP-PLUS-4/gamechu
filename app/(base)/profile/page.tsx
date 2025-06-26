@@ -132,9 +132,7 @@ export default function ProfilePage() {
                     {activeTab === "score-history" && isLoaded && (
                         <ProfilePointHistoryTab />
                     )}
-                    {activeTab === "arena" && isLoaded && (
-                        <ProfileArenaTab />
-                    )}
+                    {activeTab === "arena" && isLoaded && <ProfileArenaTab />}
                 </div>
             </div>
         </main>

@@ -1,3 +1,6 @@
 export class CreateNotificationTypeDto {
-    constructor(public name: string, public imageUrl: string) {}
+    constructor(
+        public name: string,
+        public imageUrl: string
+    ) {}
 }

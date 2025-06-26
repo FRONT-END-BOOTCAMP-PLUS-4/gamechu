@@ -63,9 +63,8 @@ export class GetScoreRecordUsecase {
                 })
             );
 
-            const totalCount: number = await this.scoreRecordRepository.count(
-                filter
-            );
+            const totalCount: number =
+                await this.scoreRecordRepository.count(filter);
             const startPage =
                 Math.floor((currentPage - 1) / pageSize) * pageSize + 1;
             const endPage = Math.ceil(totalCount / pageSize);

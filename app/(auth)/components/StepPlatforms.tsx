@@ -12,7 +12,9 @@ interface Props {
 
 export default function StepPlatforms({ onSubmit, onBack }: Props) {
     const [platforms, setPlatforms] = useState<Platform[]>([]);
-    const [selectedPlatformIds, setSelectedPlatformIds] = useState<number[]>([]);
+    const [selectedPlatformIds, setSelectedPlatformIds] = useState<number[]>(
+        []
+    );
 
     // ✅ 플랫폼 데이터 가져오기
     useEffect(() => {

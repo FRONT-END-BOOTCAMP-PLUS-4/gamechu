@@ -9,14 +9,10 @@ export default function MyVotingArenaList() {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 6;
 
-    const {
-        arenaListDto,
-        loading,
-        error,
-    } = useFetchArenas({
+    const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
-        status: 4,     // 상태 4 = 투표 중
-        mine: true,    // 내가 생성하거나 참여한 투기장만
+        status: 4, // 상태 4 = 투표 중
+        mine: true, // 내가 생성하거나 참여한 투기장만
         pageSize,
     });
 
@@ -40,7 +36,9 @@ export default function MyVotingArenaList() {
 
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
         return (
-            <p className="text-font-200 text-sm">투표 중인 투기장이 없습니다.</p>
+            <p className="text-font-200 text-sm">
+                투표 중인 투기장이 없습니다.
+            </p>
         );
     }
 

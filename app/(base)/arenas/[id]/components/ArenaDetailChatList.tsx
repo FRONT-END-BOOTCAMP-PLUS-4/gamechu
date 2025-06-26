@@ -34,8 +34,8 @@ function ArenaDetailChatListComponent(
                                 isCreator
                                     ? "justify-start"
                                     : isChallenger
-                                    ? "justify-end"
-                                    : ""
+                                      ? "justify-end"
+                                      : ""
                             }`}
                         >
                             <div className="max-w-[70%]">
@@ -45,8 +45,8 @@ function ArenaDetailChatListComponent(
                                         isCreator
                                             ? "justify-start"
                                             : isChallenger
-                                            ? "justify-end"
-                                            : ""
+                                              ? "justify-end"
+                                              : ""
                                     }`}
                                 >
                                     {isCreator && (
@@ -85,8 +85,8 @@ function ArenaDetailChatListComponent(
                                         isCreator
                                             ? "bg-primary-purple-400 text-white ml-10"
                                             : isChallenger
-                                            ? "bg-primary-blue-400 text-white mr-10"
-                                            : "bg-gray-300"
+                                              ? "bg-primary-blue-400 text-white mr-10"
+                                              : "bg-gray-300"
                                     }`}
                                 >
                                     <div>{chat.content}</div>

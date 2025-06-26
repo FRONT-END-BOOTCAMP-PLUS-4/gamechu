@@ -40,7 +40,9 @@ export default function PointHistoryCard({
                     className="flex-shrink-0 mt-1"
                 />
                 <div className="flex flex-col justify-center">
-                    <h3 className="text-font-100 text-base font-bold">{policyName}</h3>
+                    <h3 className="text-font-100 text-base font-bold">
+                        {policyName}
+                    </h3>
                     <p className="text-font-300 text-sm mt-1">{description}</p>
                 </div>
             </div>
@@ -50,7 +52,9 @@ export default function PointHistoryCard({
                 <span className={clsx("text-lg font-bold", scoreColor)}>
                     {formattedScore}
                 </span>
-                <span className="text-xs text-font-300 mt-2">{formattedDate}</span>
+                <span className="text-xs text-font-300 mt-2">
+                    {formattedDate}
+                </span>
             </div>
         </div>
     );

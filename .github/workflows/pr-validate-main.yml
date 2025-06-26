@@ -1,0 +1,16 @@
+name: "Validate PRs to main"
+
+on:
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    validate-pr-source:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check if PR is from dev branch
+              if: github.head_ref != 'dev'
+              run: |
+                  echo "❌ Only PRs from dev to main are allowed."
+                  exit 1
