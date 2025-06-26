@@ -21,10 +21,11 @@ export class GetChattingUsecase {
         if (memberId) {
             sentCount = await this.chattingRepo.count(filterCount);
         }
-
-        return {
-            chats,
+        const chattingResultDto: GetChattingResultDto = {
+            chats: chats,
             remainingSends: MAX_SEND_COUNT - sentCount,
         };
+
+        return chattingResultDto;
     }
 }
