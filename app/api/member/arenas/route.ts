@@ -51,9 +51,8 @@ export async function POST(request: Request) {
         const createArenaUsecase: CreateArenaUsecase = new CreateArenaUsecase(
             arenaRepository
         );
-        const newArena: Arena = await createArenaUsecase.execute(
-            createArenaDto
-        );
+        const newArena: Arena =
+            await createArenaUsecase.execute(createArenaDto);
 
         return NextResponse.json(newArena, { status: 201 });
     } catch (error: unknown) {

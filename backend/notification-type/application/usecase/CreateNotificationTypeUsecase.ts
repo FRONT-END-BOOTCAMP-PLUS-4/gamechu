@@ -20,9 +20,8 @@ export class CreateNotificationTypeUsecase {
             imageUrl: createNotificationTypeDto.imageUrl,
         };
 
-        const newNotificationType = await this.notificationTypeRepository.save(
-            notificationType
-        );
+        const newNotificationType =
+            await this.notificationTypeRepository.save(notificationType);
         return newNotificationType;
     }
 }

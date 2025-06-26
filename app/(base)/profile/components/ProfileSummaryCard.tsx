@@ -31,7 +31,9 @@ export default function ProfileSummaryCard({
                 />
             </div>
             <h2 className="text-center font-semibold text-body min-h-[24px]">
-                {nickname || <span className="text-font-200">닉네임 불러오는 중</span>}
+                {nickname || (
+                    <span className="text-font-200">닉네임 불러오는 중</span>
+                )}
             </h2>
             <p className="text-center text-caption text-font-200 mt-1 min-h-[20px]">
                 가입일: {createdAt || "-"}

@@ -1,6 +1,6 @@
 // 📁 backend/theme/infra/repositories/prisma/PrismaThemeRepository.ts
 import { ThemeRepository } from "@/backend/theme/domain/repositories/ThemeRepository";
-import { PrismaClient,Theme } from "@/prisma/generated";
+import { PrismaClient, Theme } from "@/prisma/generated";
 
 export class PrismaThemeRepository implements ThemeRepository {
     private prisma: PrismaClient;

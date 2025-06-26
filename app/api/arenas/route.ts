@@ -48,9 +48,8 @@ export async function GET(request: Request) {
             pageSize
         );
 
-        const arenaListDto: ArenaListDto = await getArenaUsecase.execute(
-            getArenaDto
-        );
+        const arenaListDto: ArenaListDto =
+            await getArenaUsecase.execute(getArenaDto);
         return NextResponse.json(arenaListDto);
     } catch (error: unknown) {
         console.error("Error fetching arenas:", error);

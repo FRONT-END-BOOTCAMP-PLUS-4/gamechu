@@ -15,7 +15,7 @@ const TABS = [
     { key: "completed", label: "종료됨" },
 ] as const;
 
-type TabKey = typeof TABS[number]["key"];
+type TabKey = (typeof TABS)[number]["key"];
 
 export default function ProfileArenaTab() {
     const [activeTab, setActiveTab] = useState<TabKey>("debating");

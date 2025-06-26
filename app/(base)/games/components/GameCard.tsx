@@ -29,10 +29,10 @@ export default function GameCard({
         !thumbnail || !thumbnail.trim()
             ? "/icons/default-thumbnail.svg"
             : thumbnail.startsWith("http")
-            ? thumbnail
-            : thumbnail.startsWith("//")
-            ? `https:${thumbnail}`
-            : thumbnail;
+              ? thumbnail
+              : thumbnail.startsWith("//")
+                ? `https:${thumbnail}`
+                : thumbnail;
     return (
         <div
             onClick={handleClick}

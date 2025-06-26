@@ -10,9 +10,8 @@ export class GetGameDetailUsecase {
             throw new Error("게임 정보를 찾을 수 없습니다.");
         }
 
-        const rating = await this.gameRepository.getAverageRatingByExpert(
-            gameId
-        );
+        const rating =
+            await this.gameRepository.getAverageRatingByExpert(gameId);
 
         return {
             ...detail,

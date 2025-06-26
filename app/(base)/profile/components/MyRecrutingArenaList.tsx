@@ -9,11 +9,7 @@ export default function MyRecruitingArenaList() {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 6;
 
-    const {
-        arenaListDto,
-        loading,
-        error,
-    } = useFetchArenas({
+    const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
         status: 1, // 모집 중
         mine: true, // 내가 생성/참여한 것만
@@ -40,7 +36,9 @@ export default function MyRecruitingArenaList() {
 
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
         return (
-            <p className="text-font-200 text-sm">모집 중인 투기장이 없습니다.</p>
+            <p className="text-font-200 text-sm">
+                모집 중인 투기장이 없습니다.
+            </p>
         );
     }
 

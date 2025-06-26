@@ -22,9 +22,8 @@ export class CreateScoreRecordUsecase {
             actualScore: createScoreRecordDto.actualScore,
         };
 
-        const newScoreRecord = await this.scoreRecordRepository.save(
-            scoreRecord
-        );
+        const newScoreRecord =
+            await this.scoreRecordRepository.save(scoreRecord);
 
         return newScoreRecord;
     }
