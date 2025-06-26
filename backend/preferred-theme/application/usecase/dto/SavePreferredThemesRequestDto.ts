@@ -5,6 +5,7 @@ export class SavePreferredThemesRequestDto {
         public readonly themeIds: number[]
     ) {
         if (!memberId) throw new Error("memberId는 필수입니다.");
-        if (!Array.isArray(themeIds)) throw new Error("themeIds는 배열이어야 합니다.");
+        if (!Array.isArray(themeIds))
+            throw new Error("themeIds는 배열이어야 합니다.");
     }
 }

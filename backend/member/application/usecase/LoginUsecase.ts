@@ -13,8 +13,6 @@ export class LoginUsecase {
         const isMatch = await compare(dto.password, member.password);
         if (!isMatch) return null;
 
-        return new LoginResponseDto(
-            member.id,
-        );
+        return new LoginResponseDto(member.id);
     }
 }

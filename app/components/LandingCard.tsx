@@ -23,7 +23,6 @@ export default function LandingCard({
     animationDelay = "0s",
     buttonLabel = "시작하기",
 }: LandingCardProps) {
-
     return (
         <Link
             href={href}
@@ -48,11 +47,7 @@ export default function LandingCard({
 
             {/* 버튼 */}
             <div className="mt-auto pt-4">
-                <Button
-                    label={buttonLabel}
-                    size="medium"
-                    type="purple"
-                />
+                <Button label={buttonLabel} size="medium" type="purple" />
             </div>
         </Link>
     );

@@ -11,11 +11,7 @@ export default function MyDebatingArenaList() {
     const pageSize = 6;
     const { setLoading } = useLoadingStore(); // ✅ 전역 로딩 제어 가져오기
 
-    const {
-        arenaListDto,
-        loading,
-        error,
-    } = useFetchArenas({
+    const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
         status: 3, // 토론 중인 투기장
         mine: true,

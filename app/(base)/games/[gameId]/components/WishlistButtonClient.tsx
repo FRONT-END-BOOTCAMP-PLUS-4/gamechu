@@ -23,7 +23,7 @@ export default function WishlistButtonClient({
 
     useEffect(() => {
         if (!viewerId) return;
-        
+
         console.log("📡 WishlistButtonClient viewerId:", viewerId);
         console.log("📡 Fetching wishlists for gameId:", gameId);
 
@@ -79,8 +79,8 @@ export default function WishlistButtonClient({
                 loading
                     ? "처리 중..."
                     : isWished
-                    ? "위시리스트 삭제"
-                    : "위시리스트 등록"
+                      ? "위시리스트 삭제"
+                      : "위시리스트 등록"
             }
             onClick={handleToggle}
             disabled={loading}

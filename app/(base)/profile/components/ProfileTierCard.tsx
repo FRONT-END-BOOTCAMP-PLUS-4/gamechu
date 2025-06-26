@@ -35,7 +35,7 @@ export default function ProfileTierCard({ score }: Props) {
                 </div>
 
                 {/* 우측 배지 */}
-                <TierBadge score={score} size="md"/>
+                <TierBadge score={score} size="md" />
             </div>
 
             <p className="text-sm font-semibold">

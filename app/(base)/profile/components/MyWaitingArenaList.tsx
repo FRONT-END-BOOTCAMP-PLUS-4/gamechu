@@ -9,11 +9,7 @@ export default function MyWaitingArenaList() {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 6;
 
-    const {
-        arenaListDto,
-        loading,
-        error,
-    } = useFetchArenas({
+    const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
         status: 2, // 대기 중인 투기장
         mine: true,
@@ -40,7 +36,9 @@ export default function MyWaitingArenaList() {
 
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
         return (
-            <p className="text-font-200 text-sm">대기 중인 투기장이 없습니다.</p>
+            <p className="text-font-200 text-sm">
+                대기 중인 투기장이 없습니다.
+            </p>
         );
     }
 
