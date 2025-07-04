@@ -22,7 +22,7 @@ export class ToggleReviewLikeUsecase {
         if (alreadyLiked) {
             await this.likeRepo.unlike(reviewId, memberId);
 
-            // 💥 좋아요 취소 점수 반영
+            // 좋아요 취소 점수 반영
             await this.applyReviewScoreUsecase.execute({
                 memberId: review.memberId,
                 action: "UNLIKE",
@@ -33,7 +33,7 @@ export class ToggleReviewLikeUsecase {
         } else {
             await this.likeRepo.like(reviewId, memberId);
 
-            // ✅ 좋아요 점수 반영
+            // 좋아요 점수 반영
             await this.applyReviewScoreUsecase.execute({
                 memberId: review.memberId,
                 action: "LIKE",

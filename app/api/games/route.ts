@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/GamePrismaRepository";
 import { GetFilteredGamesUsecase } from "@/backend/game/application/usecase/GetFilteredGamesUsecase";
 import { GetGameMetaDataUsecase } from "@/backend/game/application/usecase/GetGameMetaDataUsecase";
 
 import { PrismaGenreRepository } from "@/backend/genre/infra/repositories/prisma/PrismaGenreRepository";
-import { PrismaPlatformRepository } from "@/backend/platform/infra/repositories/prisma/PrismaPlatformRepository";
 import { PrismaThemeRepository } from "@/backend/theme/infra/repositories/prisma/PrismaThemeRepository";
+import { PrismaPlatformRepository } from "@/backend/platform/infra/repositories/prisma/PrismaPlatformRepository";
+import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 
 import redis from "@/lib/redis";
 import { generateCacheKey } from "@/lib/cacheKey";
@@ -16,55 +18,71 @@ export async function GET(req: NextRequest) {
         const url = new URL(req.url);
         const params = url.searchParams;
 
+        // 메타데이터 요청 여부
         const meta = params.get("meta") === "true";
 
+        // 쿼리 파라미터 파싱 (ID 기반)
+        const genreId = params.get("genreId") ?? undefined;
+        const themeId = params.get("themeId") ?? undefined;
+        const platformId = params.get("platformId") ?? undefined;
+        const keyword = params.get("keyword") ?? undefined;
+        const sort = (params.get("sort") || "popular") as SortType;
+        const page = parseInt(params.get("page") || "1", 10);
+        const size = parseInt(params.get("size") || "6", 10);
+        const offset = (page - 1) * size;
+        const limit = size;
+
         const cacheKeyParams: CacheKeyParams = {
-            sort: (params.get("sort") || "popular") as SortType,
-            genre: params.get("genre") ?? undefined,
-            theme: params.get("theme") ?? undefined,
-            platform: params.get("platform") ?? undefined,
-            keyword: params.get("keyword") ?? undefined,
-            page: params.get("page") || "1",
-            size: params.get("size") || "6",
+            genreId,
+            themeId,
+            platformId,
+            keyword,
+            sort,
+            page: page.toString(),
+            size: size.toString(),
         };
 
         const cacheKey = generateCacheKey(cacheKeyParams);
 
         // 메타데이터 요청 처리
         if (meta) {
-            const usecase = new GetGameMetaDataUsecase(
+            const metaUsecase = new GetGameMetaDataUsecase(
                 new PrismaGenreRepository(),
                 new PrismaThemeRepository(),
                 new PrismaPlatformRepository()
             );
-            const metadata = await usecase.execute();
+            const metadata = await metaUsecase.execute();
             return NextResponse.json(metadata, { status: 200 });
         }
 
-        // popular 또는 rating 정렬 & 필터 없는 경우만 캐시 사용
+        // // 캐시 조회
         const isCacheTarget = !!cacheKey;
-
-        // 캐시 조회
         if (isCacheTarget) {
             const cached = await redis.get(cacheKey);
             if (cached) {
-                return NextResponse.json(cached, { status: 200 });
+                const parsedCached =
+                    typeof cached === "string" ? JSON.parse(cached) : cached;
+                return NextResponse.json(parsedCached, { status: 200 });
             }
         }
 
-        // 데이터 조회
+        // 의존성 주입
+        const gameRepo = new GamePrismaRepository();
+        const reviewRepo = new PrismaReviewRepository();
+
         const getFilteredGamesUsecase = new GetFilteredGamesUsecase(
-            new GamePrismaRepository()
+            gameRepo,
+            reviewRepo
         );
 
         const { data, totalCount } = await getFilteredGamesUsecase.execute({
-            genre: cacheKeyParams.genre,
-            theme: cacheKeyParams.theme,
-            platform: cacheKeyParams.platform,
-            keyword: cacheKeyParams.keyword,
-            sort: cacheKeyParams.sort,
-            page: cacheKeyParams.page,
-            size: cacheKeyParams.size,
+            genreId: genreId ? parseInt(genreId) : undefined,
+            themeId: themeId ? parseInt(themeId) : undefined,
+            platformId: platformId ? parseInt(platformId) : undefined,
+            keyword,
+            sort,
+            offset,
+            limit,
         });
 
         const response = { games: data, totalCount };
@@ -77,10 +95,13 @@ export async function GET(req: NextRequest) {
         }
 
         return NextResponse.json(response, { status: 200 });
-    } catch (error) {
-        console.error("[GET /api/games] 에러:", error);
+    } catch (error: any) {
+        console.error("[GET /api/games] 에러:", error.message, error.stack);
         return NextResponse.json(
-            { message: "게임 목록 조회 중 오류가 발생했습니다." },
+            {
+                message: "게임 목록 조회 중 오류가 발생했습니다.",
+                error: error.message,
+            },
             { status: 500 }
         );
     }
