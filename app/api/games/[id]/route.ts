@@ -6,7 +6,7 @@ export async function GET(
     _req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const { id } = await params; // 폴더 이름이 [id]일 경우
+    const { id } = await params;
     const gameId = Number(id);
 
     if (isNaN(gameId)) {

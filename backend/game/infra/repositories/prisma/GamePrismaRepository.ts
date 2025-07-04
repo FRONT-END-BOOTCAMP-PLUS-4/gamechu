@@ -1,8 +1,14 @@
 import { PrismaClient, Prisma } from "@/prisma/generated";
 import { GameRepository } from "@/backend/game/domain/repositories/GameRepository";
-import { GetGameCardDto } from "@/backend/game/application/usecase/dto/GetGameCardDto";
+import { Game, Platform } from "@/prisma/generated";
 import { GetGameDetailDto } from "@/backend/game/application/usecase/dto/GetGameDetailDto";
 import { GameFilter } from "@/backend/game/domain/repositories/filters/GameFilter";
+
+export type GameCard = Game & {
+    gamePlatforms: {
+        platform: Platform;
+    }[];
+};
 
 export class GamePrismaRepository implements GameRepository {
     private prisma = new PrismaClient();
@@ -23,98 +29,41 @@ export class GamePrismaRepository implements GameRepository {
         };
     }
 
-    async countFilteredGames(filter: GameFilter): Promise<number> {
+    async countAll(filter: GameFilter): Promise<number> {
         return this.prisma.game.count({
             where: this.getWhereClause(filter),
         });
     }
 
-    async findFilteredGames(filter: GameFilter): Promise<GetGameCardDto[]> {
-        const { offset, limit, sort } = filter;
+    async findAll(filter: GameFilter): Promise<GameCard[]> {
+        const { sort, offset, limit } = filter;
+
         const where = this.getWhereClause(filter);
-        const safeDate = (date?: Date | null) =>
-            date instanceof Date ? date : new Date(0);
 
-        // 최신순 정렬은 Prisma가 처리
+        const orderBy =
+            sort === "latest"
+                ? { releaseDate: Prisma.SortOrder.desc }
+                : undefined;
+
         if (sort === "latest") {
-            const games = await this.prisma.game.findMany({
-                where: {
-                    ...where,
-                    releaseDate: { not: null },
-                },
-                skip: offset,
-                take: limit,
-                orderBy: { releaseDate: "desc" },
-                include: {
-                    gamePlatforms: { include: { platform: true }, take: 1 },
-                    reviews: { include: { member: true } },
-                },
-            });
-
-            return games.map((game) => {
-                const expertReviews = game.reviews.filter(
-                    (r) => r.member.score >= 3000
-                );
-                const expertRating = expertReviews.length
-                    ? expertReviews.reduce((sum, r) => sum + r.rating, 0) /
-                      expertReviews.length /
-                      2
-                    : 0;
-
-                return {
-                    id: game.id,
-                    title: game.title,
-                    thumbnail: game.thumbnail ?? "",
-                    developer: game.developer ?? "알 수 없음",
-                    platform: game.gamePlatforms[0]?.platform.name ?? "기타",
-                    expertRating,
-                    reviewCount: game.reviews.length,
-                    releaseDate: game.releaseDate ?? new Date(0),
-                };
-            });
+            where.releaseDate = { not: null };
         }
 
-        // Prisma 정렬 불가 → 전부 fetch 후 JS 정렬
-        const allGames = await this.prisma.game.findMany({
+        return this.prisma.game.findMany({
             where,
+            orderBy,
+            skip: sort === "latest" ? offset : undefined,
+            take: sort === "latest" ? limit : undefined,
             include: {
-                gamePlatforms: { include: { platform: true }, take: 1 },
-                reviews: { include: { member: true } },
+                gamePlatforms: {
+                    include: { platform: true },
+                    take: 1,
+                },
             },
         });
-
-        const mapped = allGames.map((game) => {
-            const expertReviews = game.reviews.filter(
-                (r) => r.member.score >= 3000
-            );
-            const expertRating = expertReviews.length
-                ? expertReviews.reduce((sum, r) => sum + r.rating, 0) /
-                  expertReviews.length /
-                  2
-                : 0;
-
-            return {
-                id: game.id,
-                title: game.title,
-                thumbnail: game.thumbnail ?? "",
-                developer: game.developer ?? "알 수 없음",
-                platform: game.gamePlatforms[0]?.platform.name ?? "기타",
-                expertRating,
-                reviewCount: game.reviews.length,
-                releaseDate: safeDate(game.releaseDate),
-            };
-        });
-
-        if (sort === "popular") {
-            mapped.sort((a, b) => b.reviewCount - a.reviewCount);
-        } else if (sort === "rating") {
-            mapped.sort((a, b) => b.expertRating - a.expertRating);
-        }
-
-        return mapped.slice(offset, offset + limit);
     }
 
-    async findDetailById(id: number): Promise<GetGameDetailDto> {
+    async findById(id: number): Promise<GetGameDetailDto> {
         const [game, wishCount, reviewCount] = await Promise.all([
             this.prisma.game.findUnique({
                 where: { id },
