@@ -10,4 +10,7 @@ export interface ReviewRepository {
     update(reviewId: number, dto: UpdateReviewDto): Promise<ReviewDto>;
     delete(reviewId: number): Promise<void>;
     findById(reviewId: number): Promise<ReviewDto | null>;
+    findAllByGameIds(
+        gameIds: number[]
+    ): Promise<{ gameId: number; rating: number; memberScore: number }[]>;
 }

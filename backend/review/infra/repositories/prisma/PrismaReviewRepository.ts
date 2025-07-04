@@ -20,7 +20,6 @@ export class PrismaReviewRepository implements ReviewRepository {
                     },
                 },
             },
-
             orderBy: { createdAt: "desc" },
         });
         return reviews.map(this.toDto);
@@ -82,6 +81,7 @@ export class PrismaReviewRepository implements ReviewRepository {
         });
         return review ? this.toDto(review) : null;
     }
+
     async delete(reviewId: number): Promise<void> {
         try {
             await prisma.reviewLike.deleteMany({
@@ -93,8 +93,71 @@ export class PrismaReviewRepository implements ReviewRepository {
             });
         } catch (err) {
             console.error("🔥 삭제 중 오류 발생:", err);
-            throw err; // 이거 없으면 route.ts에서도 500 에러 못 잡음
+            throw err;
         }
+    }
+
+    async findStatsByGameIds(
+        gameIds: number[]
+    ): Promise<Record<number, { reviewCount: number; expertRating: number }>> {
+        const reviews = await prisma.review.findMany({
+            where: {
+                gameId: {
+                    in: gameIds,
+                },
+            },
+            select: {
+                gameId: true,
+                rating: true,
+                member: {
+                    select: {
+                        score: true,
+                    },
+                },
+            },
+        });
+
+        const stats: Record<
+            number,
+            { reviewCount: number; expertRating: number; _expertCount: number }
+        > = {};
+
+        for (const review of reviews) {
+            const { gameId, rating, member } = review;
+
+            if (!stats[gameId]) {
+                stats[gameId] = {
+                    reviewCount: 0,
+                    expertRating: 0,
+                    _expertCount: 0,
+                };
+            }
+
+            stats[gameId].reviewCount += 1;
+
+            if (member.score >= 3000) {
+                stats[gameId].expertRating += rating;
+                stats[gameId]._expertCount += 1;
+            }
+        }
+
+        // 평균 계산
+        const result: Record<
+            number,
+            { reviewCount: number; expertRating: number }
+        > = {};
+        for (const gameId in stats) {
+            const s = stats[Number(gameId)];
+            result[Number(gameId)] = {
+                reviewCount: s.reviewCount,
+                expertRating:
+                    s._expertCount > 0
+                        ? s.expertRating / s._expertCount / 2
+                        : 0,
+            };
+        }
+
+        return result;
     }
 
     private toDto(review: {
@@ -121,7 +184,6 @@ export class PrismaReviewRepository implements ReviewRepository {
             updatedAt: review.updatedAt,
             nickname: review.member?.nickname ?? "유저",
             score: review.member?.score ?? 0,
-
             imageUrl: review.member?.imageUrl ?? "/icons/arena.svg",
             likeCount: 0,
             isLiked: false,

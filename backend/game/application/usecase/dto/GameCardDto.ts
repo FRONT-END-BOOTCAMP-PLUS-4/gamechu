@@ -1,4 +1,4 @@
-export interface GetGameCardDto {
+export interface GameCardDto {
     id: number;
     title: string;
     thumbnail: string;
