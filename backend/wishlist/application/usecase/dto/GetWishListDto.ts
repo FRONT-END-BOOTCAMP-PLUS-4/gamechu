@@ -1,11 +1,8 @@
-export class GetWishListDto {
+//위시리스트 단건 조회 요청
+
+export class GetWishlistDto {
     constructor(
-        public id: number,
-        public title: string,
-        public developer: string,
-        public thumbnail: string,
-        public platform: string,
-        public expertRating: number,
-        public reviewCount: number,
+        public gameId: number,
+        public memberId: string
     ) {}
 }
