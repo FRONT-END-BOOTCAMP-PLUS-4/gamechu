@@ -4,11 +4,14 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaWishListRepository } from "@/backend/wishlist/infra/repositories/prisma/PrismaWishListRepository";
 import { DeleteWishlistUsecase } from "@/backend/wishlist/application/usecase/DeleteWishlistUsecase";
 
+type RequestParams = {
+    params: Promise<{
+        id: number;
+    }>;
+};
+
 // DELETE 요청 핸들러
-export async function DELETE(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: RequestParams) {
     try {
         const memberId = await getAuthUserId();
         if (!memberId) {
