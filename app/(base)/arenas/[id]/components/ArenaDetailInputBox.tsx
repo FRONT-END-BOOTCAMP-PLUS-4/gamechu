@@ -27,59 +27,58 @@ export default function ArenaDetailInputBox({
     totalSends,
 }: ArenaInputBoxProps) {
     // 글자 수 초과 여부 판단
-    const isOverMaxLength = currentLength > maxLength;
+    const isOverMaxLength = currentLength >= maxLength;
 
     // 남은 횟수가 0인지 판단
     const isSendCountZero = remainingSends <= 0;
-    // 최종 disabled 상태 결정:
-    // 부모에서 넘겨준 disabled가 true거나
-    // 내용이 비어있거나,
-    // 글자 수가 제한을 넘었거나,
-    // 남은 횟수가 0이면 비활성화
-    const finalDisabled = disabled || isOverMaxLength || isSendCountZero;
+    const finalDisabled = disabled || isSendCountZero;
     return (
-        <div className="flex items-end gap-2 mt-auto">
-            <textarea
-                value={content}
-                onChange={onChange}
-                placeholder="의견을 작성하세요..."
-                maxLength={maxLength}
-                className="flex-1 resize-none rounded-lg bg-background-400 p-3 text-font-100 placeholder:text-font-300 h-[80px]"
-                disabled={finalDisabled}
-            />
-            {/* 현재 글자 수 및 남은 횟수 표시 영역 */}
-            <div className="flex justify-between text-sm px-1 gap-4">
-                {/* 글자 수 표시: 초과 시 빨간색 */}
-                <span
-                    className={`${
-                        isOverMaxLength ? "text-red-500" : "text-font-300"
-                    }`}
-                >
-                    {currentLength}/{maxLength}자
-                </span>
-                {/* 남은 횟수 표시: 0이면 빨간색 */}
-                <span
-                    className={`${
-                        isSendCountZero ? "text-red-500" : "text-font-300"
-                    }`}
-                >
-                    {remainingSends}/{totalSends}회
-                </span>
+        <div className="flex items-end gap-2 mt-auto w-full">
+            {/* 텍스트박스 + 하단 인풋 상태 표시 포함 */}
+            <div className="flex-1 flex flex-col gap-1">
+                <textarea
+                    value={content}
+                    onChange={onChange}
+                    placeholder="의견을 작성하세요..."
+                    className="resize-none rounded-lg bg-background-400 p-3 text-font-100 placeholder:text-font-300 h-[80px] w-full"
+                    disabled={finalDisabled}
+                    maxLength={maxLength}
+                />
+                <div className="flex justify-between text-sm text-font-300">
+                    <span
+                        className={`${
+                            isOverMaxLength ? "text-red-500 font-medium" : ""
+                        }`}
+                    >
+                        {currentLength} / {maxLength}자
+                    </span>
+                    <span
+                        className={`${
+                            isSendCountZero ? "text-red-500 font-medium" : ""
+                        }`}
+                    >
+                        남은 횟수: {remainingSends} / {totalSends}
+                    </span>
+                </div>
             </div>
-            <Button
-                icon={
-                    <Image
-                        src="/icons/send.svg"
-                        alt="send"
-                        width={16}
-                        height={16}
-                    />
-                }
-                type="purple"
-                size="send"
-                onClick={onSend}
-                disabled={finalDisabled}
-            />
+
+            {/* 전송 버튼 */}
+            <div className="self-center">
+                <Button
+                    icon={
+                        <Image
+                            src="/icons/send.svg"
+                            alt="send"
+                            width={16}
+                            height={16}
+                        />
+                    }
+                    type="purple"
+                    size="send"
+                    onClick={onSend}
+                    disabled={finalDisabled}
+                />
+            </div>
         </div>
     );
 }
