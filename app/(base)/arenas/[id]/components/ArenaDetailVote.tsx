@@ -65,9 +65,24 @@ export default function ArenaDetailVote() {
     return (
         <div className="w-full max-w-[1000px] mt-6 bg-background-300 rounded-xl px-6 py-4 flex flex-col items-center justify-center gap-4 min-h-[200px] animate-fade-in-up">
             {/* 상단 투표 영역 */}
-            <div className="w-full flex items-center justify-between">
+            <div
+                className="
+    w-full 
+    flex flex-col lg:flex-row 
+    items-center 
+    justify-center sm:justify-between 
+    gap-4
+  "
+            >
                 {/* A 유저 */}
-                <div className="flex items-center gap-2 text-center">
+                <div
+                    className="
+      flex flex-col lg:flex-row
+      items-center
+      gap-2
+      text-center
+    "
+                >
                     {arenaDetail?.status === 4 ? (
                         <Button
                             label={isVotedToLeft ? "✔" : "투표"}
@@ -100,19 +115,13 @@ export default function ArenaDetailVote() {
                 </div>
 
                 {/* B 유저 */}
-                <div className="flex items-center gap-2 flex-row-reverse">
-                    {arenaDetail?.status === 4 ? (
-                        <Button
-                            label={isVotedToRight ? "✔" : "투표"}
-                            type="blue"
-                            onClick={() => handleVote(arenaDetail.challengerId)}
-                            disabled={loading}
-                        />
-                    ) : (
-                        <div className="w-24 text-font-100 font-bold text-center">
-                            {Math.round(rightPercent)}%
-                        </div>
-                    )}
+                <div
+                    className="
+      flex flex-col lg:flex-row
+      items-center
+      gap-2
+    "
+                >
                     <div className="flex items-center gap-2 text-font-100 text-body">
                         <TierBadge
                             score={arenaDetail.challengerScore || 0}
@@ -126,6 +135,18 @@ export default function ArenaDetailVote() {
                             height={40}
                         />
                     </div>
+                    {arenaDetail?.status === 4 ? (
+                        <Button
+                            label={isVotedToRight ? "✔" : "투표"}
+                            type="blue"
+                            onClick={() => handleVote(arenaDetail.challengerId)}
+                            disabled={loading}
+                        />
+                    ) : (
+                        <div className="w-24 text-font-100 font-bold text-center">
+                            {Math.round(rightPercent)}%
+                        </div>
+                    )}
                 </div>
             </div>
 
