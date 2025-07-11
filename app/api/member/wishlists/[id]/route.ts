@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaWishListRepository } from "@/backend/wishlist/infra/repositories/prisma/PrismaWishListRepository";
 import { DeleteWishlistUsecase } from "@/backend/wishlist/application/usecase/DeleteWishlistUsecase";
+import { DeleteWishlistDto } from "@/backend/wishlist/application/usecase/dto/DeleteWishlistDto";
 
 type RequestParams = {
     params: Promise<{
@@ -34,7 +35,9 @@ export async function DELETE(req: NextRequest, { params }: RequestParams) {
         const wishlistRepo = new PrismaWishListRepository();
         const usecase = new DeleteWishlistUsecase(wishlistRepo);
 
-        await usecase.execute(wishlistId);
+        const deleteWishlistDto = new DeleteWishlistDto(wishlistId);
+
+        await usecase.execute(deleteWishlistDto);
 
         return NextResponse.json({ message: "삭제 완료" }, { status: 200 });
     } catch (error) {
