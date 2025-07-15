@@ -1,4 +1,3 @@
-
 export class CreatePreferredThemesDto {
     constructor(
         public memberId: string,
