@@ -20,7 +20,7 @@ export default function ArenaDetailVote() {
         arenaId: arenaDetail?.id || 0,
         mine: true,
     });
-    // 투표 버튼은 항상 활성화 상태, 단 내가 투표한 쪽에는 "내가 투표한 항목" 표시
+
     const isVotedToLeft = existingVote === arenaDetail?.creatorId;
     const isVotedToRight = existingVote === arenaDetail?.challengerId;
     const [remainingTime, setRemainingTime] = useState<string>("");
@@ -62,27 +62,13 @@ export default function ArenaDetailVote() {
         await submitVote(arenaDetail.id, votedTo, existingVote);
         refetchVoteData();
     };
+
     return (
         <div className="w-full max-w-[1000px] mt-6 bg-background-300 rounded-xl px-6 py-4 flex flex-col items-center justify-center gap-4 min-h-[200px] animate-fade-in-up">
             {/* 상단 투표 영역 */}
-            <div
-                className="
-    w-full 
-    flex flex-col lg:flex-row 
-    items-center 
-    justify-center sm:justify-between 
-    gap-4
-  "
-            >
-                {/* A 유저 */}
-                <div
-                    className="
-      flex flex-col lg:flex-row
-      items-center
-      gap-2
-      text-center
-    "
-                >
+            <div className="w-full flex flex-col lg:flex-row gap-4 lg:items-center justify-center relative">
+                {/* 왼쪽 유저 */}
+                <div className="flex-1 flex flex-col-reverse lg:flex-row items-center gap-2 lg:gap-2 text-center lg:text-left justify-start">
                     {arenaDetail?.status === 4 ? (
                         <Button
                             label={isVotedToLeft ? "✔" : "투표"}
@@ -91,7 +77,7 @@ export default function ArenaDetailVote() {
                             disabled={loading}
                         />
                     ) : (
-                        <div className="w-24 text-font-100 font-bold">
+                        <div className="w-full lg:w-24 text-font-100 font-bold text-center">
                             {Math.round(leftPercent)}%
                         </div>
                     )}
@@ -102,7 +88,9 @@ export default function ArenaDetailVote() {
                             width={40}
                             height={40}
                         />
-                        {arenaDetail?.creatorName}
+                        <span className="max-w-[6rem] truncate">
+                            {arenaDetail?.creatorName}
+                        </span>
                         <TierBadge
                             score={arenaDetail.creatorScore || 0}
                             size="sm"
@@ -110,31 +98,36 @@ export default function ArenaDetailVote() {
                     </div>
                 </div>
 
-                <div className="w-10 h-10 rounded-full bg-background-200 flex items-center justify-center text-white font-bold">
-                    VS
+                {/* 중앙 VS or 모바일 게이지 */}
+                <div className="flex w-auto justify-center">
+                    <div className="hidden lg:flex items-center justify-center w-10 h-10 rounded-full bg-background-200 text-white font-bold text-sm">
+                        VS
+                    </div>
+                    <div className="lg:hidden w-full">
+                        {arenaDetail?.status === 5 && (
+                            <VoteStatusBar leftPercent={leftPercent} />
+                        )}
+                    </div>
                 </div>
 
-                {/* B 유저 */}
-                <div
-                    className="
-      flex flex-col lg:flex-row
-      items-center
-      gap-2
-    "
-                >
-                    <div className="flex items-center gap-2 text-font-100 text-body">
-                        <TierBadge
-                            score={arenaDetail.challengerScore || 0}
-                            size="sm"
-                        />
-                        {arenaDetail?.challengerName}
+                {/* 오른쪽 유저 */}
+                <div className="flex-1 flex flex-col lg:flex-row items-center gap-2 lg:gap-2 text-center lg:text-right justify-end">
+                    <div className="flex flex-row items-center gap-2 text-font-100 text-body lg:flex-row-reverse">
                         <Image
                             src="/icons/teamB.svg"
                             alt="게시자 아이콘"
                             width={40}
                             height={40}
                         />
+                        <span className="max-w-[6rem] truncate">
+                            {arenaDetail?.challengerName}
+                        </span>
+                        <TierBadge
+                            score={arenaDetail.challengerScore || 0}
+                            size="sm"
+                        />
                     </div>
+
                     {arenaDetail?.status === 4 ? (
                         <Button
                             label={isVotedToRight ? "✔" : "투표"}
@@ -143,23 +136,25 @@ export default function ArenaDetailVote() {
                             disabled={loading}
                         />
                     ) : (
-                        <div className="w-24 text-font-100 font-bold text-center">
+                        <div className="w-full lg:w-24 text-font-100 font-bold text-center">
                             {Math.round(rightPercent)}%
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* 게이지 바 (투표 종료 시만 보임) */}
+            {/* 데스크탑에선 투표 게이지 별도 위치에 */}
             {arenaDetail?.status === 5 && (
-                <VoteStatusBar leftPercent={leftPercent} />
+                <div className="hidden lg:block w-full mt-4">
+                    <VoteStatusBar leftPercent={leftPercent} />
+                </div>
             )}
 
             {/* 하단 상태 메시지 */}
-            <div className="text-font-100 text-caption">
+            <div className="text-font-100 text-caption text-center">
                 {arenaDetail?.status === 4 ? (
                     <>
-                        투표가 진행중입니다. 남은시간 :{" "}
+                        투표가 진행중입니다. 남은시간:{" "}
                         <span className="font-bold">{remainingTime}</span>
                     </>
                 ) : (

@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function ArenaDetailInfo() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
     return (
-        <div className="rounded-xl overflow-hidden animate-fade-in-up">
+        <div className="rounded-xl overflow-hidden animate-fade-in-up min-w-[280px]">
             {/* 상단 제목 영역 */}
             <div className="bg-background-200 px-4 py-3">
                 <h2 className="text-h1 font-bold text-font-100">토론 정보</h2>
@@ -44,7 +44,7 @@ export default function ArenaDetailInfo() {
                         <h3 className="text-body font-bold text-font-100">
                             진행 일정
                         </h3>
-                        <p className="text-caption text-font-100">
+                        <p className="text-caption text-font-100 max-w-[180px] sm:max-w-none lg:max-w-[180px]">
                             {arenaDetail?.startDate.toLocaleDateString(
                                 "ko-KR",
                                 {
@@ -82,7 +82,7 @@ export default function ArenaDetailInfo() {
                         <h3 className="text-body font-bold text-font-100">
                             투표 시간
                         </h3>
-                        <p className="text-caption text-font-100">
+                        <p className="text-caption text-font-100 max-w-[180px] sm:max-w-none lg:max-w-[160px]">
                             {arenaDetail?.endChatting.toLocaleDateString(
                                 "ko-KR",
                                 {
