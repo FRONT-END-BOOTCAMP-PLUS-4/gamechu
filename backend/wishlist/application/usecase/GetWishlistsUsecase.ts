@@ -79,9 +79,7 @@ export class GetWishlistsUsecase {
         // DTO 변환
         const wishlistDtos = await Promise.all(
             paginated.map(async (wishlist) => {
-                const game = await this.gameRepo.findDetailById(
-                    wishlist.gameId
-                );
+                const game = await this.gameRepo.findById(wishlist.gameId);
                 const reviews = await this.reviewRepo.findByGameId(
                     wishlist.gameId
                 );

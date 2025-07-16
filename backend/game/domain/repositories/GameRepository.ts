@@ -6,5 +6,6 @@ export interface GameRepository {
     findAll(filter: GameFilter): Promise<GameCard[]>;
     count(filter: GameFilter): Promise<number>;
     findById(id: number): Promise<GetGameDetailDto>;
-   
+
+    getAverageRatingByExpert(gameId: number): Promise<number | null>;
 }

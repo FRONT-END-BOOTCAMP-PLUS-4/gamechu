@@ -11,9 +11,9 @@ export class GetGameMetaDataUsecase {
 
     async execute() {
         const [genres, themes, platforms] = await Promise.all([
-            this.genreRepo.getAllGenres(),
-            this.themeRepo.getAllThemes(),
-            this.platformRepo.getAllPlatforms(),
+            this.genreRepo.findAll(),
+            this.themeRepo.findAll(),
+            this.platformRepo.findAll(),
         ]);
 
         return { genres, themes, platforms };
