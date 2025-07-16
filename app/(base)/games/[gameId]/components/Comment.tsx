@@ -178,20 +178,6 @@ export default function Comment({
                     />
                 </div>
             </div>
-<<<<<<< HEAD
-            <div className="absolute bottom-4 right-4">
-                <Button
-                    label={
-                        isLoading
-                            ? "등록 중.."
-                            : editingReviewId
-                              ? "수정"
-                              : "등록"
-                    }
-                    onClick={handleSubmit}
-                />
-            </div>
-=======
 
             {/* 에디터 영역 */}
             <EditorContent
@@ -200,7 +186,6 @@ export default function Comment({
             />
 
             {/* 토스트 */}
->>>>>>> 73c5c50 ([refactor/#185] textEditor 및 자잘한 수정)
             <Toast
                 show={toast.show}
                 status={toast.status}

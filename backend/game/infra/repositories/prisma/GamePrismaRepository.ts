@@ -94,6 +94,18 @@ export class GamePrismaRepository implements GameRepository {
             reviewCount,
         };
     }
+    async getAverageRatingByExpert(gameId: number): Promise<number | null> {
+        const reviews = await this.prisma.review.findMany({
+            where: {
+                gameId,
+                member: { score: { gte: 3000 } },
+            },
+            select: { rating: true },
+        });
 
-    
+        if (reviews.length === 0) return null;
+        return (
+            reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length / 2
+        );
+    }
 }
