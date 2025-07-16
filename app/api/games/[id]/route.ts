@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { GetGameDetailUsecase } from "@/backend/game/application/usecase/GetGameDetailUsecase";
 import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/GamePrismaRepository";
+import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 
 export async function GET(
     _req: NextRequest,
@@ -16,7 +17,10 @@ export async function GET(
         );
     }
 
-    const usecase = new GetGameDetailUsecase(new GamePrismaRepository());
+    const usecase = new GetGameDetailUsecase(
+        new GamePrismaRepository(),
+        new PrismaReviewRepository()
+    );
 
     try {
         const gameDetail = await usecase.execute(gameId);

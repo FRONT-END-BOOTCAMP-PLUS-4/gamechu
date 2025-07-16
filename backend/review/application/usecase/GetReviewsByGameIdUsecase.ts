@@ -15,8 +15,11 @@ export class GetReviewsByGameIdUsecase {
 
         const result = await Promise.all(
             rawReviews.map(async (review) => {
-                const likeCount = await this.likeRepo.countLikes(review.id);
-                const isLiked = await this.likeRepo.exists(review.id, viewerId);
+                const likeCount = await this.likeRepo.count(review.id);
+                const isLiked = await this.likeRepo.isLiked(
+                    review.id,
+                    viewerId
+                );
 
                 return {
                     ...review,

@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import StarRating from "@/app/(base)/games/[gameId]/components/StarRating";
 import Button from "@/app/components/Button";
-import { cn } from "@/utils/tailwindUtil";
-import Typing from "@/public/typing.json";
-import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
 import Toast from "@/app/components/Toast";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { CustomImage } from "./extensions/CustomImage";
+import { FontSize } from "./extensions/FontSize";
+import Placeholder from "@tiptap/extension-placeholder";
+import CommentEditorToolbar from "./CommentEditorToolbar";
+import TextStyle from "@tiptap/extension-text-style";
 
 interface CommentProps {
     gameId: string;
@@ -23,11 +27,8 @@ export default function Comment({
     defaultValue = "",
     onSuccess,
     viewerId,
-}: CommentProps & { viewerId?: string | null }) {
+}: CommentProps) {
     const router = useRouter();
-
-    const [isFocused, setIsFocused] = useState(false);
-    const [text, setText] = useState(defaultValue || "");
     const [rating, setRating] = useState(0);
     const [toast, setToast] = useState({
         show: false,
@@ -35,9 +36,57 @@ export default function Comment({
         status: "info" as "success" | "error" | "info",
     });
     const [isLoading, setIsLoading] = useState(false);
-    useEffect(() => {
-        setText(defaultValue || "");
-    }, [defaultValue]);
+
+    const editor = useEditor({
+        extensions: [
+            StarterKit,
+            CustomImage,
+            TextStyle,
+            FontSize.configure({
+                types: ["textStyle"], // FontSize는 이거 필요
+            }),
+            Placeholder.configure({
+                placeholder: "리뷰를 입력하세요...",
+            }),
+        ],
+
+        content: defaultValue || null,
+        editorProps: {
+            attributes: {
+                class: " w-full min-h-[218px] bg-background-200 rounded-[8px] p-4 outline-none overflow-y-auto border border-line-200 focus:border-primary-purple-200 focus:border-2",
+                placeholder: "리뷰를 입력하세요...",
+            },
+        },
+    });
+
+    const handleImageUpload = async () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.onchange = async () => {
+            const file = input.files?.[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    editor
+                        ?.chain()
+                        .focus()
+                        .insertContent([
+                            {
+                                type: "image",
+                                attrs: {
+                                    src: reader.result as string,
+                                    width: "300",
+                                },
+                            },
+                        ])
+                        .run();
+                };
+                reader.readAsDataURL(file); // base64
+            }
+        };
+        input.click();
+    };
 
     const handleSubmit = async () => {
         if (isLoading) return;
@@ -57,10 +106,12 @@ export default function Comment({
             }, 1000);
             return;
         }
-        if (!text.trim() || rating <= 0) return;
 
-        const isEditing = !!editingReviewId;
+        const html = editor?.getHTML() ?? "";
+        if (!html.trim() || rating <= 0) return;
+
         setIsLoading(true);
+        const isEditing = !!editingReviewId;
 
         try {
             const res = await fetch(
@@ -72,7 +123,7 @@ export default function Comment({
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         gameId: Number(gameId),
-                        content: text,
+                        content: html,
                         rating: Math.round(rating * 2),
                     }),
                 }
@@ -83,11 +134,11 @@ export default function Comment({
                     isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패"
                 );
 
-            setText("");
+            editor?.commands.setContent("");
             setRating(0);
             onSuccess();
         } catch (err) {
-            console.error("🔥 리뷰 저장 실패:", err);
+            console.error("리뷰 저장 실패:", err);
             setToast({
                 show: true,
                 message: "리뷰 저장에 실패했습니다.",
@@ -102,26 +153,32 @@ export default function Comment({
     };
 
     return (
-        <div className="w-[1060px] h-[250px] bg-background-100 rounded-[4px] p-4 flex gap-4 relative">
-            <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                placeholder="리뷰를 입력하세요..."
-                className={cn(
-                    "w-[860px] h-[218px] bg-background-200 rounded-[8px] p-4 resize-none text-body text-font-100 placeholder-font-200 outline-none border transition",
-                    isFocused
-                        ? "border-2 border-primary-purple-200"
-                        : "border border-line-200"
-                )}
-            />
-            <div className="absolute top-4 right-4">
-                <StarRating value={rating} onChange={setRating} />
-                <div className="w-[110px] h-[110px] relative -translate-y-2 ml-4">
-                    <Lottie animationData={Typing} loop autoplay />
+        <div className="w-[1060px] min-h-[250px] bg-background-100 rounded-[4px] p-4 flex flex-col gap-3 relative">
+            {/* 상단 툴바 + 별점 + 버튼 */}
+            <div className="flex justify-between items-center w-full">
+                <CommentEditorToolbar
+                    editor={editor}
+                    onImageUpload={handleImageUpload}
+                />
+                <div className="flex items-center gap-4">
+                    <StarRating
+                        value={rating}
+                        variant="noText"
+                        onChange={setRating}
+                    />
+                    <Button
+                        label={
+                            isLoading
+                                ? "등록 중.."
+                                : editingReviewId
+                                ? "수정"
+                                : "등록"
+                        }
+                        onClick={handleSubmit}
+                    />
                 </div>
             </div>
+<<<<<<< HEAD
             <div className="absolute bottom-4 right-4">
                 <Button
                     label={
@@ -134,6 +191,16 @@ export default function Comment({
                     onClick={handleSubmit}
                 />
             </div>
+=======
+
+            {/* 에디터 영역 */}
+            <EditorContent
+                editor={editor}
+                className="prose max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:max-w-full [&_img.ProseMirror-selectednode]:outline [&_img.ProseMirror-selectednode]:outline-2 [&_img.ProseMirror-selectednode]:outline-primary-blue-200"
+            />
+
+            {/* 토스트 */}
+>>>>>>> 73c5c50 ([refactor/#185] textEditor 및 자잘한 수정)
             <Toast
                 show={toast.show}
                 status={toast.status}
