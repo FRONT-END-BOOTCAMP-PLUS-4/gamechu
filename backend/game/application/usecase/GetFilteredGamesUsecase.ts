@@ -62,9 +62,13 @@ export class GetFilteredGamesUsecase {
         }
 
         for (const gameId of gameIds) {
+            if (!stats[gameId]) {
+                stats[gameId] = { reviewCount: 0, expertRating: 0 };
+            }
+
             const count = expertCount[gameId] ?? 0;
             stats[gameId].expertRating =
-                count > 0 ? expertRatingSum[gameId] / count / 2 : 0;
+                count > 0 ? expertRatingSum[gameId]! / count / 2 : 0;
         }
 
         const enrichedGames: GameCardDto[] = games.map((game) => {
@@ -84,7 +88,6 @@ export class GetFilteredGamesUsecase {
                 releaseDate: game.releaseDate ?? new Date(0),
             };
         });
-
         if (!isLatest) {
             switch (dto.sort) {
                 case "popular":

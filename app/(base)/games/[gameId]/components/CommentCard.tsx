@@ -237,12 +237,11 @@ export default function CommentCard({
             {/* 댓글 내용 + 더보기 */}
             <div
                 ref={commentRef}
-                className={`text-body text-font-100 whitespace-pre-wrap transition-all duration-200 ${
+                className={`prose text-body text-font-100 whitespace-pre-wrap transition-all duration-200 max-w-[860px] [&_img]:w-1/3 [&_img]:h-auto [&_img]:rounded-md ${
                     expanded ? "" : "line-clamp-2"
                 }`}
-            >
-                {comment}
-            </div>
+                dangerouslySetInnerHTML={{ __html: comment }}
+            ></div>
             {/* 좋아요 버튼 */}
             <div className="absolute bottom-1 left-1 flex items-center">
                 <button onClick={handleLike} disabled={isLoading}>

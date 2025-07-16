@@ -13,7 +13,7 @@ export class DeleteReviewUsecase {
         const review = await this.reviewRepo.findById(reviewId);
         if (!review) throw new Error("리뷰가 존재하지 않음");
 
-        const likeCount = await this.likeRepo.countLikes(reviewId);
+        const likeCount = await this.likeRepo.count(reviewId);
 
         await this.applyReviewScoreUsecase.execute({
             memberId: review.memberId,

@@ -95,14 +95,24 @@ export async function GET(req: NextRequest) {
         }
 
         return NextResponse.json(response, { status: 200 });
-    } catch (error: any) {
-        console.error("[GET /api/games] 에러:", error.message, error.stack);
-        return NextResponse.json(
-            {
-                message: "게임 목록 조회 중 오류가 발생했습니다.",
-                error: error.message,
-            },
-            { status: 500 }
-        );
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error("[GET /api/games] 에러:", error.message, error.stack);
+            return NextResponse.json(
+                {
+                    message: "게임 목록 조회 중 오류가 발생했습니다.",
+                    error: error.message,
+                },
+                { status: 500 }
+            );
+        } else {
+            console.error("[GET /api/games] 알 수 없는 에러:", error);
+            return NextResponse.json(
+                {
+                    message: "게임 목록 조회 중 알 수 없는 오류가 발생했습니다.",
+                },
+                { status: 500 }
+            );
+        }
     }
 }

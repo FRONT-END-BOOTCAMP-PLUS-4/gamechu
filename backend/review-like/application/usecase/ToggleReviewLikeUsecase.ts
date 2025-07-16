@@ -13,9 +13,9 @@ export class ToggleReviewLikeUsecase {
     async execute(dto: ToggleReviewLikeDto): Promise<{ liked: boolean }> {
         const { reviewId, memberId } = dto;
 
-        const alreadyLiked = await this.likeRepo.exists(reviewId, memberId);
+        const alreadyLiked = await this.likeRepo.isLiked(reviewId, memberId);
         const review = await this.reviewRepo.findById(reviewId);
-        const likeCount = await this.likeRepo.countLikes(reviewId);
+        const likeCount = await this.likeRepo.count(reviewId);
 
         if (!review) throw new Error("리뷰 없음");
 

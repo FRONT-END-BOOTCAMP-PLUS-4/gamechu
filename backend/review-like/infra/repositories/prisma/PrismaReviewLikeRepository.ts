@@ -18,14 +18,14 @@ export class PrismaReviewLikeRepository implements ReviewLikeRepository {
         });
     }
 
-    async exists(reviewId: number, memberId: string): Promise<boolean> {
+    async isLiked(reviewId: number, memberId: string): Promise<boolean> {
         const like = await prisma.reviewLike.findFirst({
             where: { reviewId, memberId },
         });
         return !!like;
     }
 
-    async countLikes(reviewId: number): Promise<number> {
+    async count(reviewId: number): Promise<number> {
         return prisma.reviewLike.count({
             where: { reviewId },
         });

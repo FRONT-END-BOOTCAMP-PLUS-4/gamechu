@@ -97,14 +97,12 @@ export class PrismaReviewRepository implements ReviewRepository {
         }
     }
 
-    async findStatsByGameIds(
+    async findAllByGameIds(
         gameIds: number[]
-    ): Promise<Record<number, { reviewCount: number; expertRating: number }>> {
+    ): Promise<{ gameId: number; rating: number; memberScore: number }[]> {
         const reviews = await prisma.review.findMany({
             where: {
-                gameId: {
-                    in: gameIds,
-                },
+                gameId: { in: gameIds },
             },
             select: {
                 gameId: true,
@@ -117,47 +115,11 @@ export class PrismaReviewRepository implements ReviewRepository {
             },
         });
 
-        const stats: Record<
-            number,
-            { reviewCount: number; expertRating: number; _expertCount: number }
-        > = {};
-
-        for (const review of reviews) {
-            const { gameId, rating, member } = review;
-
-            if (!stats[gameId]) {
-                stats[gameId] = {
-                    reviewCount: 0,
-                    expertRating: 0,
-                    _expertCount: 0,
-                };
-            }
-
-            stats[gameId].reviewCount += 1;
-
-            if (member.score >= 3000) {
-                stats[gameId].expertRating += rating;
-                stats[gameId]._expertCount += 1;
-            }
-        }
-
-        // 평균 계산
-        const result: Record<
-            number,
-            { reviewCount: number; expertRating: number }
-        > = {};
-        for (const gameId in stats) {
-            const s = stats[Number(gameId)];
-            result[Number(gameId)] = {
-                reviewCount: s.reviewCount,
-                expertRating:
-                    s._expertCount > 0
-                        ? s.expertRating / s._expertCount / 2
-                        : 0,
-            };
-        }
-
-        return result;
+        return reviews.map((review) => ({
+            gameId: review.gameId,
+            rating: review.rating,
+            memberScore: review.member.score,
+        }));
     }
 
     private toDto(review: {

@@ -4,6 +4,7 @@ import ClientContentWrapper from "../components/ClientContentWrapper";
 import { GetGameDetailUsecase } from "@/backend/game/application/usecase/GetGameDetailUsecase";
 import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/GamePrismaRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 
 interface Props {
     gameId: number;
@@ -13,7 +14,11 @@ export default async function GameDetailContainer({ gameId }: Props) {
     const viewerId = await getAuthUserId();
 
     const gameRepository = new GamePrismaRepository();
-    const gameDetailUsecase = new GetGameDetailUsecase(gameRepository);
+    const reviewRepository = new PrismaReviewRepository();
+    const gameDetailUsecase = new GetGameDetailUsecase(
+        gameRepository,
+        reviewRepository
+    );
     const game = await gameDetailUsecase.execute(gameId);
 
     return (
