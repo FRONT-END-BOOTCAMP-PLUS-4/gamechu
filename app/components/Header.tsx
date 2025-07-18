@@ -11,7 +11,7 @@ import useModalStore from "@/stores/modalStore";
 import Button from "./Button";
 import { Menu, User } from "lucide-react";
 
-export default function ResponsiveHeader() {
+export default function Header() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const router = useRouter();
