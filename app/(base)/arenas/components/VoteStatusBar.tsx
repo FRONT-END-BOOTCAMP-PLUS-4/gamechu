@@ -6,7 +6,7 @@ type VoteStatusBarProps = {
 
 export default function VoteStatusBar(props: VoteStatusBarProps) {
     return (
-        <div className="w-full mt-4 h-3 rounded-lg overflow-hidden flex">
+        <div className="mt-4 flex h-3 w-full overflow-hidden rounded-lg">
             <div
                 className="rounded-l-lg"
                 style={{

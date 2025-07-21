@@ -65,9 +65,9 @@ export default function CreateArenaModal() {
 
     return (
         <ModalWrapper isOpen={isOpen} onClose={closeModal}>
-            <div className="w-[480px] max-h-[80vh] flex flex-col gap-4 m-2">
+            <div className="m-2 flex max-h-[80vh] w-[480px] flex-col gap-4">
                 {/* ✅ 제목 */}
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <h2 className="flex items-center gap-2 text-xl font-bold text-white">
                     <Image
                         src="/icons/arena2.svg"
                         alt="투기장 아이콘"
@@ -86,7 +86,7 @@ export default function CreateArenaModal() {
                         placeholder="토론 주제를 입력하세요"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="bg-zinc-800 text-white placeholder-zinc-400 px-4 py-2 rounded border border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        className="rounded border border-purple-500 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-600"
                     />
                 </div>
 
@@ -97,12 +97,12 @@ export default function CreateArenaModal() {
                         placeholder="토론장 내용을 입력하세요"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="bg-zinc-800 text-white placeholder-zinc-400 px-4 py-2 rounded border border-zinc-600 resize-none h-28"
+                        className="h-28 resize-none rounded border border-zinc-600 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400"
                     />
                 </div>
 
                 {/* ✅ 일정  */}
-                <div className="text-black flex flex-col gap-2">
+                <div className="flex flex-col gap-2 text-black">
                     <label className="text-sm text-white">시작 시간</label>
                     <DatePicker
                         selected={startDate}
@@ -113,7 +113,7 @@ export default function CreateArenaModal() {
                         timeIntervals={10} // ⏱ 10분 단위
                         timeCaption="시간"
                         dateFormat="yyyy-MM-dd HH:mm"
-                        className="border border-gray-300 rounded px-3 py-2 w-full"
+                        className="w-full rounded border border-gray-300 px-3 py-2"
                     />
                 </div>
 

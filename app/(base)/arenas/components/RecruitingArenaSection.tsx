@@ -18,7 +18,7 @@ export default function RecruitingArenaSection({ onLoaded }: Props) {
         status,
         currentPage: 1,
         mine: false,
-        pageSize: 3,
+        pageSize: 2,
     });
 
     useArenaAutoStatus({
@@ -57,7 +57,7 @@ export default function RecruitingArenaSection({ onLoaded }: Props) {
     return (
         <div>
             <ArenaSectionHeader status={status} />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4 px-6">
+            <div className="mt-4 grid grid-cols-1 gap-6 px-6 sm:grid-cols-2">
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">
                         현재 {GetSectionTitle(status)}이 없습니다.

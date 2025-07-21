@@ -22,22 +22,19 @@ export default function WaitingArenaCard(props: WaitingArenaCardProps) {
 
     return (
         <div
-            className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[440px]
-                border border-transparent hover:cursor-pointer hover:border-purple-500
-                hover:shadow-lg hover:shadow-purple-500/30
-                hover:scale-[1.01] transform transition-all duration-200"
+            className="w-[440px] transform gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
             onClick={onClickHandler}
         >
             <div className="flex items-center justify-between">
-                <div className="text-lg font-bold line-clamp-2">
+                <div className="line-clamp-2 text-lg font-bold">
                     {props.title}
                 </div>
-                <div className="bg-background-200 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <div className="rounded-full bg-background-200 px-3 py-1 text-xs font-semibold text-white">
                     대기중
                 </div>
             </div>
 
-            <div className="flex items-center justify-between gap-4 text-sm text-gray-100 mt-4 m-4">
+            <div className="m-4 mt-4 flex items-center justify-between gap-4 text-sm text-gray-100">
                 <div className="flex items-center gap-2">
                     <span>{props.creatorNickname}</span>
                     <TierBadge score={props.creatorScore} size="sm" />
@@ -52,7 +49,7 @@ export default function WaitingArenaCard(props: WaitingArenaCardProps) {
                 </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm text-gray-300 mt-4">
+            <div className="mt-4 flex items-center justify-between text-sm text-gray-300">
                 <div className="flex items-center gap-1">
                     <Image
                         src="/icons/infoCalendar.svg"

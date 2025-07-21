@@ -15,7 +15,7 @@ export default function ArenaSectionHeader(props: ArenaSectionHeaderProps) {
     };
 
     return (
-        <div className="px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex flex-col items-start justify-between gap-4 px-6 md:flex-row md:items-center">
             <div className="space-y-1">
                 <div className="flex items-center gap-2">
                     <Image
@@ -35,7 +35,7 @@ export default function ArenaSectionHeader(props: ArenaSectionHeaderProps) {
                 onClick={() => {
                     handleQueryChange(1, props.status);
                 }}
-                className="flex items-center gap-1 text-base text-purple-500 hover:underline whitespace-nowrap"
+                className="flex items-center gap-1 whitespace-nowrap text-base text-purple-500 hover:underline"
             >
                 <span>모두 보기</span>
                 <Image

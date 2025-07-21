@@ -22,10 +22,7 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
 
     return (
         <div
-            className="bg-background-300 rounded-2xl gap-4 p-4 shadow-md text-white w-[670px]
-                border border-transparent hover:cursor-pointer hover:border-purple-500
-                hover:shadow-lg hover:shadow-purple-500/30
-                hover:scale-[1.01] transform transition-all duration-200"
+            className="w-[670px] transform gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
             onClick={onClickHandler}
         >
             <div className="flex items-center justify-between pb-2">
@@ -41,7 +38,7 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
                     <span>{props.creatorNickname}</span>
                     <TierBadge score={props.creatorScore} size="sm" />
                 </div>
-                <div className="bg-background-200 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <div className="rounded-full bg-background-200 px-3 py-1 text-xs font-semibold text-white">
                     모집중
                 </div>
             </div>
@@ -57,9 +54,9 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
             </div>
 
             {/* 하단 영역 */}
-            <div className="flex items-center justify-between mt-2">
+            <div className="mt-2 flex items-center justify-between">
                 {/* 시작 시간 */}
-                <div className="flex items-center gap-1 text-gray-400 text-sm">
+                <div className="flex items-center gap-1 text-sm text-gray-400">
                     <Image
                         src="/icons/infoCalendar.svg"
                         alt="달력 아이콘"
