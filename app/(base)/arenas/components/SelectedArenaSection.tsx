@@ -108,7 +108,7 @@ export default function SelectedArenaSection({
             <div
                 className={`grid grid-cols-1 sm:grid-cols-2 ${
                     [1, 5].includes(status) ? "" : "lg:grid-cols-3"
-                } gap-6 mt-4 px-6`}
+                } mt-4 gap-6 px-6`}
             >
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500">
@@ -168,7 +168,7 @@ export default function SelectedArenaSection({
             </div>
 
             {arenaListDto?.arenas.length !== 0 && (
-                <div className="w-full flex justify-center mt-12">
+                <div className="mt-12 flex w-full justify-center">
                     <Pager
                         currentPage={currentPage}
                         pages={pages}

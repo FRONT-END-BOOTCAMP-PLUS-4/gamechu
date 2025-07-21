@@ -45,7 +45,7 @@ export default function ArenaPage() {
     }, [setLoading]);
 
     return (
-        <div className="min-h-screen bg-background-400 text-font-100 py-12 space-y-10">
+        <div className="min-h-screen space-y-10 bg-background-400 py-12 text-font-100">
             <ArenaPageHeader />
             <Modals />
             {(() => {
