@@ -45,20 +45,24 @@ export class GetArenaDetailUsecase {
         const endVote = new Date(endChatting.getTime() + 24 * 60 * 60 * 1000);
 
         const totalFilter: VoteFilter = new VoteFilter(arenaId, null, null);
-        const voteTotalCount: number = await this.voteRepository.count(
-            totalFilter
-        );
+        const voteTotalCount: number =
+            await this.voteRepository.count(totalFilter);
         const leftFilter: VoteFilter = new VoteFilter(
             arenaId,
             null,
             ArenaDetail.creatorId
         );
-        const voteLeftCount: number = await this.voteRepository.count(
-            leftFilter
-        );
+        const voteLeftCount: number =
+            await this.voteRepository.count(leftFilter);
         const voteRightCount: number = voteTotalCount - voteLeftCount;
-        const leftPercent: number = (voteLeftCount / voteTotalCount) * 100;
-        const rightPercent: number = (voteRightCount / voteTotalCount) * 100;
+        const leftPercent: number =
+            voteTotalCount === 0
+                ? 0
+                : Math.round((voteLeftCount / voteTotalCount) * 100);
+        const rightPercent: number =
+            voteTotalCount === 0
+                ? 0
+                : Math.round((voteRightCount / voteTotalCount) * 100);
         console.log("--- ArenaDetailDto 생성 직전 값 확인 ---");
         console.log("voteTotalCount:", voteTotalCount);
         console.log("voteLeftCount:", voteLeftCount);
