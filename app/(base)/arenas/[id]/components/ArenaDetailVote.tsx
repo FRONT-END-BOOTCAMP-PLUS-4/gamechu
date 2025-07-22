@@ -64,11 +64,11 @@ export default function ArenaDetailVote() {
     };
 
     return (
-        <div className="w-full max-w-[1000px] mt-6 bg-background-300 rounded-xl px-6 py-4 flex flex-col items-center justify-center gap-4 min-h-[200px] animate-fade-in-up">
+        <div className="mt-6 flex min-h-[200px] w-full max-w-[1000px] animate-fade-in-up flex-col items-center justify-center gap-4 rounded-xl bg-background-300 px-6 py-4">
             {/* 상단 투표 영역 */}
-            <div className="w-full flex flex-col lg:flex-row gap-4 lg:items-center justify-center relative">
+            <div className="relative flex w-full flex-col justify-center gap-4 lg:flex-row lg:items-center">
                 {/* 왼쪽 유저 */}
-                <div className="flex-1 flex flex-col-reverse lg:flex-row items-center gap-2 lg:gap-2 text-center lg:text-left justify-start">
+                <div className="flex flex-1 flex-col-reverse items-center justify-start gap-2 text-center lg:flex-row lg:gap-2 lg:text-left">
                     {arenaDetail?.status === 4 ? (
                         <Button
                             label={isVotedToLeft ? "✔" : "투표"}
@@ -77,11 +77,11 @@ export default function ArenaDetailVote() {
                             disabled={loading}
                         />
                     ) : (
-                        <div className="w-full lg:w-24 text-font-100 font-bold text-center">
-                            {Math.round(leftPercent)}%
+                        <div className="w-full text-center font-bold text-font-100 lg:w-24">
+                            {leftPercent}%
                         </div>
                     )}
-                    <div className="flex items-center gap-2 text-font-100 text-body">
+                    <div className="flex items-center gap-2 text-body text-font-100">
                         <Image
                             src="/icons/teamA.svg"
                             alt="게시자 아이콘"
@@ -100,10 +100,10 @@ export default function ArenaDetailVote() {
 
                 {/* 중앙 VS or 모바일 게이지 */}
                 <div className="flex w-auto justify-center">
-                    <div className="hidden lg:flex items-center justify-center w-10 h-10 rounded-full bg-background-200 text-white font-bold text-sm">
+                    <div className="hidden h-10 w-10 items-center justify-center rounded-full bg-background-200 text-sm font-bold text-white lg:flex">
                         VS
                     </div>
-                    <div className="lg:hidden w-full">
+                    <div className="w-full lg:hidden">
                         {arenaDetail?.status === 5 && (
                             <VoteStatusBar leftPercent={leftPercent} />
                         )}
@@ -111,8 +111,8 @@ export default function ArenaDetailVote() {
                 </div>
 
                 {/* 오른쪽 유저 */}
-                <div className="flex-1 flex flex-col lg:flex-row items-center gap-2 lg:gap-2 text-center lg:text-right justify-end">
-                    <div className="flex flex-row items-center gap-2 text-font-100 text-body lg:flex-row-reverse">
+                <div className="flex flex-1 flex-col items-center justify-end gap-2 text-center lg:flex-row lg:gap-2 lg:text-right">
+                    <div className="flex flex-row items-center gap-2 text-body text-font-100 lg:flex-row-reverse">
                         <Image
                             src="/icons/teamB.svg"
                             alt="게시자 아이콘"
@@ -136,8 +136,8 @@ export default function ArenaDetailVote() {
                             disabled={loading}
                         />
                     ) : (
-                        <div className="w-full lg:w-24 text-font-100 font-bold text-center">
-                            {Math.round(rightPercent)}%
+                        <div className="w-full text-center font-bold text-font-100 lg:w-24">
+                            {rightPercent}%
                         </div>
                     )}
                 </div>
@@ -145,13 +145,13 @@ export default function ArenaDetailVote() {
 
             {/* 데스크탑에선 투표 게이지 별도 위치에 */}
             {arenaDetail?.status === 5 && (
-                <div className="hidden lg:block w-full mt-4">
+                <div className="mt-4 hidden w-full lg:block">
                     <VoteStatusBar leftPercent={leftPercent} />
                 </div>
             )}
 
             {/* 하단 상태 메시지 */}
-            <div className="text-font-100 text-caption text-center">
+            <div className="text-center text-caption text-font-100">
                 {arenaDetail?.status === 4 ? (
                     <>
                         투표가 진행중입니다. 남은시간:{" "}
@@ -163,7 +163,7 @@ export default function ArenaDetailVote() {
             </div>
 
             {/* 에러 메시지 */}
-            {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
+            {error && <div className="mt-2 text-sm text-red-500">{error}</div>}
         </div>
     );
 }

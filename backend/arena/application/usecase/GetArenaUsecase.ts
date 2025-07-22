@@ -76,9 +76,17 @@ export class GetArenaUsecase {
                     const voteRightCount: number =
                         voteTotalCount - voteLeftCount;
                     const leftPercent: number =
-                        (voteLeftCount / voteTotalCount) * 100;
+                        voteTotalCount === 0
+                            ? 0
+                            : Math.round(
+                                  (voteLeftCount / voteTotalCount) * 100
+                              );
                     const rightPercent: number =
-                        (voteRightCount / voteTotalCount) * 100;
+                        voteTotalCount === 0
+                            ? 0
+                            : Math.round(
+                                  (voteRightCount / voteTotalCount) * 100
+                              );
                     return {
                         id: arena.id,
                         creatorId: arena.creatorId,
