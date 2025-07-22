@@ -7,15 +7,21 @@ import { useRouter } from "next/navigation";
 
 type CompleteArenaCardProps = {
     id: number;
+    title: string;
+    description: string;
+
     creatorNickname: string;
     creatorProfileImageUrl: string;
     creatorScore: number;
     challengerNickname: string | null;
     challengerProfileImageUrl: string | null;
     challengerScore: number | null;
-    title: string;
-    description: string;
+
+    voteCount: number;
+    leftCount: number;
+    rightCount: number;
     leftPercent: number;
+    rightPercent: number;
 };
 
 export default function CompleteArenaCard(props: CompleteArenaCardProps) {
@@ -58,7 +64,7 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
 
                 {/* 도전자 */}
                 <div className="flex items-center gap-2">
-                    <span>{100 - props.leftPercent}%</span>
+                    <span>{props.rightPercent}%</span>
                     <Image
                         src={
                             props.challengerProfileImageUrl ||
