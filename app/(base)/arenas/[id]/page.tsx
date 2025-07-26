@@ -73,15 +73,15 @@ export default function ArenaDetailPage() {
     }, [arenaId, setGlobalArenaData, clearGlobalArenaData, setLoading]);
 
     return (
-        <div className="px-4 sm:px-8 md:px-12 lg:px-16 py-10">
+        <div className="px-4 py-10 sm:px-8 md:px-12 lg:px-16">
             {/* 반응형 레이아웃: 기본 column, 큰 화면에서 row */}
-            <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex flex-col gap-8 lg:flex-row">
                 {/* 왼쪽: 채팅, 투표 등 */}
-                <div className="flex flex-col flex-1 lg:flex-[3] w-full">
+                <div className="flex w-full flex-1 flex-col lg:flex-[3]">
                     <ArenaDetailHeader />
 
                     {/* 모바일일 때는 이 위치에 토론 정보 표시 */}
-                    <div className="block lg:hidden mt-6">
+                    <div className="mt-6 block lg:hidden">
                         <ArenaDetailInfo />
                     </div>
 
@@ -90,7 +90,7 @@ export default function ArenaDetailPage() {
                 </div>
 
                 {/* 오른쪽: 정보 패널 (큰 화면에서만 보임) */}
-                <div className="hidden lg:block flex-[1] mt-16">
+                <div className="mt-16 hidden flex-[1] lg:block">
                     <ArenaDetailInfo />
                 </div>
             </div>
