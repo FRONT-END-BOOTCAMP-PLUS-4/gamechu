@@ -29,7 +29,6 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
     const onClickHandler = () => {
         router.push(`/arenas/${props.id}`);
     };
-
     return (
         <div
             className="w-[670px] transform gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
@@ -45,7 +44,11 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                 <div className="text-sm text-gray-300">{props.description}</div>
             </div>
 
-            <VoteStatusBar leftPercent={props.leftPercent} />
+            <VoteStatusBar
+                voteCount={props.voteCount}
+                leftPercent={props.leftPercent}
+                rightPercent={props.rightPercent}
+            />
             <div className="m-4 mt-4 flex items-center justify-between gap-4 text-sm text-gray-100">
                 <div className="flex items-center gap-2">
                     <Image

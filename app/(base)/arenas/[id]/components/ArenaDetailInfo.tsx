@@ -6,16 +6,16 @@ import Image from "next/image";
 export default function ArenaDetailInfo() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
     return (
-        <div className="rounded-xl overflow-hidden animate-fade-in-up min-w-[280px]">
+        <div className="min-w-[280px] animate-fade-in-up overflow-hidden rounded-xl">
             {/* 상단 제목 영역 */}
             <div className="bg-background-200 px-4 py-3">
                 <h2 className="text-h1 font-bold text-font-100">토론 정보</h2>
             </div>
 
             {/* 정보 리스트 영역 */}
-            <div className="bg-background-300 px-4 py-4 flex flex-col gap-4">
+            <div className="flex flex-col gap-4 bg-background-300 px-4 py-4">
                 {/* 항목 1 */}
-                <div className="flex items-center gap-2 animate-fade-in-left">
+                <div className="flex animate-fade-in-left items-center gap-2">
                     <Image
                         src="/icons/infoMessage.svg"
                         alt="메세지 아이콘"
@@ -33,7 +33,7 @@ export default function ArenaDetailInfo() {
                 </div>
 
                 {/* 항목 2 */}
-                <div className="flex items-center gap-2 animate-fade-in-left">
+                <div className="flex animate-fade-in-left items-center gap-2">
                     <Image
                         src="/icons/infoCalendar.svg"
                         alt="달력 아이콘"
@@ -44,7 +44,7 @@ export default function ArenaDetailInfo() {
                         <h3 className="text-body font-bold text-font-100">
                             진행 일정
                         </h3>
-                        <p className="text-caption text-font-100 max-w-[180px] sm:max-w-none lg:max-w-[180px]">
+                        <p className="max-w-[180px] text-caption text-font-100 sm:max-w-none lg:max-w-[180px]">
                             {arenaDetail?.startDate.toLocaleDateString(
                                 "ko-KR",
                                 {
@@ -71,7 +71,7 @@ export default function ArenaDetailInfo() {
                 </div>
 
                 {/* 항목 3 */}
-                <div className="flex items-center gap-2 animate-fade-in-left">
+                <div className="flex animate-fade-in-left items-center gap-2">
                     <Image
                         src="/icons/infoTime.svg"
                         alt="시간 아이콘"
@@ -82,7 +82,7 @@ export default function ArenaDetailInfo() {
                         <h3 className="text-body font-bold text-font-100">
                             투표 시간
                         </h3>
-                        <p className="text-caption text-font-100 max-w-[180px] sm:max-w-none lg:max-w-[160px]">
+                        <p className="max-w-[180px] text-caption text-font-100 sm:max-w-none lg:max-w-[160px]">
                             {arenaDetail?.endChatting.toLocaleDateString(
                                 "ko-KR",
                                 {
