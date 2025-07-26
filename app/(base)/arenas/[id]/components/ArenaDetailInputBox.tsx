@@ -33,28 +33,28 @@ export default function ArenaDetailInputBox({
     const isSendCountZero = remainingSends <= 0;
     const finalDisabled = disabled || isSendCountZero;
     return (
-        <div className="flex items-end gap-2 mt-auto w-full">
+        <div className="mt-auto flex w-full items-end gap-2">
             {/* 텍스트박스 + 하단 인풋 상태 표시 포함 */}
-            <div className="flex-1 flex flex-col gap-1">
+            <div className="flex flex-1 flex-col gap-1">
                 <textarea
                     value={content}
                     onChange={onChange}
                     placeholder="의견을 작성하세요..."
-                    className="resize-none rounded-lg bg-background-400 p-3 text-font-100 placeholder:text-font-300 h-[80px] w-full"
+                    className="placeholder:text-font-300 h-[80px] w-full resize-none rounded-lg bg-background-400 p-3 text-font-100"
                     disabled={finalDisabled}
                     maxLength={maxLength}
                 />
-                <div className="flex justify-between text-sm text-font-300">
+                <div className="text-font-300 flex justify-between text-sm">
                     <span
                         className={`${
-                            isOverMaxLength ? "text-red-500 font-medium" : ""
+                            isOverMaxLength ? "font-medium text-red-500" : ""
                         }`}
                     >
                         {currentLength} / {maxLength}자
                     </span>
                     <span
                         className={`${
-                            isSendCountZero ? "text-red-500 font-medium" : ""
+                            isSendCountZero ? "font-medium text-red-500" : ""
                         }`}
                     >
                         남은 횟수: {remainingSends} / {totalSends}

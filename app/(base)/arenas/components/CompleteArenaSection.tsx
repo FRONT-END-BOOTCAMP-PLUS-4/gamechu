@@ -13,14 +13,12 @@ interface Props {
 
 export default function CompleteArenaSection({ onLoaded }: Props) {
     const status: number = 5;
-
     const { arenaListDto, loading, error } = useArenas({
         status,
         currentPage: 1,
         mine: false,
         pageSize: 2,
     });
-
     useArenaAutoStatus({
         arenaList: arenaListDto?.arenas || [],
         onStatusUpdate: (arenaId, newStatus) => {
@@ -55,7 +53,6 @@ export default function CompleteArenaSection({ onLoaded }: Props) {
             </div>
         );
     }
-
     return (
         <div>
             <ArenaSectionHeader status={status} />

@@ -58,12 +58,12 @@ export default function ArenaDetailRecruiting() {
     };
 
     return (
-        <div className="w-full max-w-[1000px] px-4 py-6 mt-6 text-center text-font-200 bg-background-300 rounded-lg min-h-[740px] animate-fade-in-up">
-            <h2 className="text-lg mb-2 animate-pulse">
+        <div className="mt-6 min-h-[740px] w-full max-w-[1000px] animate-fade-in-up rounded-lg bg-background-300 px-4 py-6 text-center text-font-200">
+            <h2 className="mb-2 animate-pulse text-lg">
                 도전 상대를 모집 중입니다.
             </h2>
             <p className="text-md mb-2 animate-pulse">도전해보세요!</p>
-            <div className="animate-bounce w-fit mx-auto my-4">
+            <div className="mx-auto my-4 w-fit animate-bounce">
                 <Image
                     src="/icons/arrowDown.svg"
                     alt="아래 화살표"
@@ -78,7 +78,7 @@ export default function ArenaDetailRecruiting() {
                 onClick={handleJoin}
                 disabled={loading}
             />
-            {error && <p className="text-red-500 mt-2">{error}</p>}
+            {error && <p className="mt-2 text-red-500">{error}</p>}
         </div>
     );
 }

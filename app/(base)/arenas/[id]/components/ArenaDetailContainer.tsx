@@ -84,7 +84,7 @@ export default function ArenaDetailContainer() {
     }
     // 상태 3 이상일 때 (Active, Voting, Closed 등) 채팅 관련 UI 렌더링
     return (
-        <div className="w-full max-w-[1000px] mt-6 px-4 py-6 bg-background-300 rounded-lg min-h-[740px] flex flex-col animate-fade-in-up">
+        <div className="mt-6 flex min-h-[740px] w-full max-w-[1000px] animate-fade-in-up flex-col rounded-lg bg-background-300 px-4 py-6">
             <ArenaDetailChatList chats={chats} ref={chatContainerRef} />
             <ArenaDetailInputBox
                 content={content}

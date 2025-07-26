@@ -27,7 +27,6 @@ export default function ArenaDetailVote() {
 
     const leftPercent = arenaDetail?.leftPercent || 0;
     const rightPercent = arenaDetail?.rightPercent || 0;
-
     const calculateRemainingTime = useCallback(() => {
         if (!arenaDetail?.endVote) return "";
 
@@ -105,7 +104,11 @@ export default function ArenaDetailVote() {
                     </div>
                     <div className="w-full lg:hidden">
                         {arenaDetail?.status === 5 && (
-                            <VoteStatusBar leftPercent={leftPercent} />
+                            <VoteStatusBar
+                                voteCount={arenaDetail.voteCount}
+                                leftPercent={leftPercent}
+                                rightPercent={rightPercent}
+                            />
                         )}
                     </div>
                 </div>
@@ -146,7 +149,11 @@ export default function ArenaDetailVote() {
             {/* 데스크탑에선 투표 게이지 별도 위치에 */}
             {arenaDetail?.status === 5 && (
                 <div className="mt-4 hidden w-full lg:block">
-                    <VoteStatusBar leftPercent={leftPercent} />
+                    <VoteStatusBar
+                        voteCount={arenaDetail.voteCount}
+                        leftPercent={leftPercent}
+                        rightPercent={rightPercent}
+                    />
                 </div>
             )}
 
