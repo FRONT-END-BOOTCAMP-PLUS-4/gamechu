@@ -9,7 +9,7 @@ type VoteStatusBarProps = {
 export default function VoteStatusBar(props: VoteStatusBarProps) {
     return (
         <div className="relative mt-4 flex h-3 w-full overflow-hidden rounded-lg">
-            {props.leftPercent === 0 ? (
+            {props.leftPercent === 0 ? ( //Todo: voteCount로 변경하기
                 <>
                     <div
                         className="h-full w-full rounded-lg"
