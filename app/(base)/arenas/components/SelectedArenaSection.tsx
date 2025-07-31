@@ -10,8 +10,8 @@ import DebatingArenaCard from "./DebatingArenaCard";
 import CompleteArenaCard from "./CompleteArenaCard";
 import Pager from "@/app/components/Pager";
 import { useRouter } from "next/navigation";
-import useVoteList from "@/hooks/useVoteList";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
+import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 
 type SelectedArenaSectionProps = {
     status: number;
@@ -24,58 +24,27 @@ export default function SelectedArenaSection({
     currentPage,
     onLoaded,
 }: SelectedArenaSectionProps) {
-    const {
-        arenaListDto,
-        loading: arenaLoading,
-        error: arenaError,
-    } = useArenas({
+    const { arenaListDto, loading, error } = useArenas({
         status,
         currentPage,
         mine: false,
         pageSize: [1, 5].includes(status) ? 6 : 9,
     });
 
-    const [arenaIdsToFetch, setArenaIdsToFetch] = useState<number[]>([]);
-    const fetchedIdsRef = useRef<string>("");
-
-    useEffect(() => {
-        if (!arenaListDto?.arenas) return;
-
-        const ids = arenaListDto.arenas.map((arena) => arena.id).sort();
-        const idsString = ids.join(",");
-
-        if (fetchedIdsRef.current === idsString) return;
-
-        setArenaIdsToFetch(ids);
-        fetchedIdsRef.current = idsString;
-    }, [arenaListDto?.arenas]);
-
-    const {
-        voteResult,
-        loading: voteLoading,
-        error: voteError,
-    } = useVoteList({
-        arenaIds: arenaIdsToFetch,
+    useArenaAutoStatus({
+        arenaList: arenaListDto?.arenas || [],
+        onStatusUpdate: (arenaId, newStatus) => {
+            console.log(
+                `Arena ${arenaId}가 상태 ${newStatus}로 전이되었습니다.`
+            );
+        },
     });
 
-    // ✅ 로딩 완료되면 상위 콜백 호출
     useEffect(() => {
-        if (!arenaLoading && !voteLoading) {
+        if (!loading) {
             onLoaded?.();
         }
-    }, [arenaLoading, voteLoading, onLoaded]);
-
-    if (arenaListDto && arenaListDto.arenas) {
-        arenaListDto.arenas.forEach((arena) => {
-            const vote = voteResult.find((vote) => vote.arenaId === arena.id);
-            if (vote) {
-                arena.voteCount = arena.voteCount;
-                arena.leftPercent = arena.leftCount;
-            } else {
-                arena.voteCount = 0;
-            }
-        });
-    }
+    }, [loading, onLoaded]);
 
     const pages: number[] = arenaListDto?.pages || [];
     const endPage: number = arenaListDto?.endPage || 1;
@@ -85,16 +54,18 @@ export default function SelectedArenaSection({
         router.push(`?currentPage=${newPage}&status=${newStatus}`);
     };
 
-    if (arenaLoading || voteLoading) {
+    if (loading) {
         return (
+            // TODO: 로딩 컴포넌트 출력으로 변경하기
             <div className="col-span-3 text-center text-gray-400">
                 로딩중...
             </div>
         );
     }
 
-    if (arenaError || voteError) {
+    if (error) {
         return (
+            // TODO: 에러 컴포넌트 출력으로 변경하기
             <div className="col-span-3 text-center text-red-500">
                 투기장 정보를 불러오는 데 실패했습니다. 나중에 다시
                 시도해주세요.
