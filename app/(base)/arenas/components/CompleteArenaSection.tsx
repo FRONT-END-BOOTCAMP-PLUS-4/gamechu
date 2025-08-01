@@ -56,9 +56,10 @@ export default function CompleteArenaSection({ onLoaded }: Props) {
     return (
         <div>
             <ArenaSectionHeader status={status} />
-            <div className="mt-4 grid grid-cols-1 gap-6 px-6 sm:grid-cols-2">
+            <div className="mt-4 grid grid-cols-1 justify-center gap-6 px-4 sm:sm:[grid-template-columns:repeat(auto-fit,minmax(360px,1fr))]">
+                {" "}
                 {arenaListDto?.arenas.length === 0 ? (
-                    <div className="col-span-3 text-center text-gray-500">
+                    <div className="w-full text-center text-gray-500">
                         {GetSectionTitle(status)}이 없습니다.
                     </div>
                 ) : (

@@ -31,17 +31,19 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
     };
     return (
         <div
-            className="w-[670px] transform gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
+            className="flex h-full w-full transform flex-col gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
             onClick={onClickHandler}
         >
-            <div className="rounded-2xl bg-background-200 p-4">
+            <div className="flex-grow rounded-2xl bg-background-200 p-4">
                 {/* 제목 */}
                 <div className="text-base font-semibold text-white">
                     {props.title}
                 </div>
 
                 {/* 설명 */}
-                <div className="text-sm text-gray-300">{props.description}</div>
+                <div className="line-clamp-3 overflow-hidden text-sm text-gray-300">
+                    {props.description}
+                </div>
             </div>
 
             <VoteStatusBar
@@ -49,8 +51,9 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                 leftPercent={props.leftPercent}
                 rightPercent={props.rightPercent}
             />
-            <div className="m-4 mt-4 flex items-center justify-between gap-4 text-sm text-gray-100">
-                <div className="flex items-center gap-2">
+            <div className="flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:justify-between">
+                {/* 작성자 */}
+                <div className="flex min-w-0 flex-shrink items-center gap-2 overflow-hidden">
                     <Image
                         src={props.creatorProfileImageUrl}
                         alt="작성자 프로필"
@@ -58,16 +61,24 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                         height={24}
                         className="rounded-full object-cover"
                     />
-                    <span>{props.creatorNickname}</span>
+                    <span className="max-w-[80px] truncate whitespace-nowrap">
+                        {props.creatorNickname}
+                    </span>
                     <TierBadge score={props.creatorScore} size="sm" />
-                    <span>{props.leftPercent}%</span>
+                    <span className="whitespace-nowrap">
+                        {props.leftPercent}%
+                    </span>
                 </div>
 
-                <span className="mx-2 text-gray-400">vs</span>
+                <span className="mx-2 flex-shrink-0 items-center text-gray-400">
+                    vs
+                </span>
 
                 {/* 도전자 */}
-                <div className="flex items-center gap-2">
-                    <span>{props.rightPercent}%</span>
+                <div className="flex min-w-0 flex-shrink items-center justify-end gap-2 overflow-hidden">
+                    <span className="whitespace-nowrap">
+                        {props.rightPercent}%
+                    </span>
                     <Image
                         src={
                             props.challengerProfileImageUrl ||
@@ -78,7 +89,9 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                         height={24}
                         className="rounded-full object-cover"
                     />
-                    <span>{props.challengerNickname}</span>
+                    <span className="max-w-[80px] truncate whitespace-nowrap">
+                        {props.challengerNickname}
+                    </span>
                     <TierBadge score={props.challengerScore || 0} size="sm" />
                 </div>
             </div>
