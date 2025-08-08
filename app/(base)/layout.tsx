@@ -14,7 +14,7 @@ export default function BaseLayout({
     return (
         <>
             <HeaderWrapper /> {/* CSR로만 렌더링됨 */}
-            <main className="max-w-[1480px] mx-auto px-10 bg-background-400 text-font-100 font-sans">
+            <main className="mx-auto max-w-[1480px] px-10 font-sans text-font-100">
                 <LottieLoaderWrapper />
                 <GlobalAttendanceToast />
 
