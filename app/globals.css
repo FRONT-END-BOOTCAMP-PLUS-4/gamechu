@@ -105,3 +105,31 @@
     animation: glowFlow 8s ease-in-out infinite;
     box-shadow: 0 0 12px #9333ea88, 0 0 24px #2563eb66;
 }
+
+
+.animate-fade-in-up {
+    opacity: 0;
+}
+
+@keyframes gradient-x {
+  0% { background-position: 0% }
+  50% { background-position: 100% }
+  100% { background-position: 0% }
+}
+.animate-gradient {
+  background-size: 200%;
+  animation: gradient-x 4s ease infinite;
+}
+
+.animate-typing {
+    opacity: 0;
+}
+.animate-fade-in-up-strong {
+    opacity: 0;
+}
+.animate-fade-in-left-strong {
+    opacity: 0;
+}
+.animate-fade-in-right-strong {
+    opacity: 0;
+}
