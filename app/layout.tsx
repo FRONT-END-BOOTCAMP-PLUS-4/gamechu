@@ -9,7 +9,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="ko">
-            <body className="font-sans bg-background-400 text-font-100">
+            <body className="bg-background-400 font-sans text-font-100">
                 <Modals />
                 {children}
             </body>

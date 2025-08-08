@@ -10,6 +10,13 @@ const config: Config = {
                 "slow-pan": "pan 60s linear infinite",
                 "fade-in": "fadeIn 0.8s ease-out",
                 "border-flow": "borderFlow 8s linear infinite",
+                "gradient-xy": "gradientXy 8s ease infinite",
+                "fade-in-up-strong": "fadeInUpStrong 0.8s ease-out forwards",
+                "fade-in-left-strong":
+                    "fadeInLeftStrong 0.8s ease-out forwards",
+                "fade-in-right-strong":
+                    "fadeInRightStrong 0.8s ease-out forwards",
+                typing: "typing 5s steps(60, end) forwards",
             },
             keyframes: {
                 fadeIn: {
@@ -28,6 +35,19 @@ const config: Config = {
                     "0%": { opacity: "0", transform: "translateY(20px)" },
                     "100%": { opacity: "1", transform: "translateY(0)" },
                 },
+                fadeInUpStrong: {
+                    "0%": { opacity: "0", transform: "translateY(100px)" },
+                    "100%": { opacity: "1", transform: "translateY(0)" },
+                },
+                fadeInLeftStrong: {
+                    "0%": { opacity: "0", transform: "translateX(-100px)" },
+                    "100%": { opacity: "1", transform: "translateX(0)" },
+                },
+
+                fadeInRightStrong: {
+                    "0%": { opacity: "0", transform: "translateX(100px)" },
+                    "100%": { opacity: "1", transform: "translateX(0)" },
+                },
                 pan: {
                     "0%": { backgroundPosition: "0% 50%" },
                     "100%": { backgroundPosition: "100% 50%" },
@@ -39,6 +59,16 @@ const config: Config = {
                     "100%": {
                         backgroundPosition: "200% 50%",
                     },
+                },
+                typing: {
+                    "0%": { width: "0", opacity: "0" },
+                    "1%": { opacity: "1" },
+                    "100%": { width: "100vw", opacity: "1" },
+                },
+                gradientXy: {
+                    "0%": { backgroundPosition: "0% 0%" },
+                    "50%": { backgroundPosition: "100% 100%" },
+                    "100%": { backgroundPosition: "0% 0%" },
                 },
             },
             fontSize: {
