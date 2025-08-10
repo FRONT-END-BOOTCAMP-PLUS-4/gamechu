@@ -65,7 +65,7 @@ export default function CreateArenaModal() {
 
     return (
         <ModalWrapper isOpen={isOpen} onClose={closeModal}>
-            <div className="m-2 flex max-h-[80vh] w-[480px] flex-col gap-4">
+            <div className="flex flex-col gap-4">
                 {/* ✅ 제목 */}
                 <h2 className="flex items-center gap-2 text-xl font-bold text-white">
                     <Image
