@@ -25,7 +25,7 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
             className="flex h-full w-full transform flex-col gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
             onClick={onClickHandler}
         >
-            <div className="flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-row items-center justify-between gap-1">
                 {/* 작성자 정보 */}
                 <div className="flex min-w-0 flex-shrink items-center gap-2 overflow-hidden">
                     <Image
@@ -40,19 +40,19 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
                     </span>
                     <TierBadge score={props.creatorScore} size="sm" />
                 </div>
-                <div className="rounded-full bg-background-200 px-3 py-1 text-xs font-semibold text-white">
+                <div className="flex h-6 flex-shrink-0 items-center rounded-full bg-background-200 px-3 text-xs font-semibold">
                     모집중
                 </div>
             </div>
 
             <div className="flex-grow rounded-2xl bg-background-200 p-4">
                 {/* 제목 */}
-                <div className="text-base font-semibold text-white">
+                <div className="break-keep text-base font-semibold text-white">
                     {props.title}
                 </div>
 
                 {/* 설명 */}
-                <div className="line-clamp-3 overflow-hidden text-sm text-gray-300">
+                <div className="line-clamp-3 overflow-hidden break-keep text-sm text-gray-300">
                     {props.description}
                 </div>
             </div>
