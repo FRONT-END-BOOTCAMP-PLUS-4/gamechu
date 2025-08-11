@@ -57,7 +57,7 @@ export default function RecruitingArenaSection({ onLoaded }: Props) {
     return (
         <div>
             <ArenaSectionHeader status={status} />
-            <div className="mt-4 grid grid-cols-1 justify-center gap-6 px-4 sm:sm:[grid-template-columns:repeat(auto-fit,minmax(360px,1fr))]">
+            <div className="mt-4 grid grid-cols-1 justify-center gap-6 px-4 sm:sm:[grid-template-columns:repeat(auto-fill,minmax(500px,1fr))]">
                 {" "}
                 {arenaListDto?.arenas.length === 0 ? (
                     <div className="w-full text-center text-gray-500">
