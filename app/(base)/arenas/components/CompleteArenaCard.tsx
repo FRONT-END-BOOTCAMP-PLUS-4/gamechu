@@ -36,12 +36,12 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
         >
             <div className="flex-grow rounded-2xl bg-background-200 p-4">
                 {/* 제목 */}
-                <div className="text-base font-semibold text-white">
+                <div className="break-keep text-base font-semibold text-white">
                     {props.title}
                 </div>
 
                 {/* 설명 */}
-                <div className="line-clamp-3 overflow-hidden text-sm text-gray-300">
+                <div className="line-clamp-3 overflow-hidden break-keep text-sm text-gray-300">
                     {props.description}
                 </div>
             </div>
