@@ -59,7 +59,7 @@ export default function DebatingArenaSection({ onLoaded }: Props) {
             <ArenaSectionHeader status={3} />
             <div className="mt-4 grid grid-cols-1 justify-center gap-6 px-4 sm:sm:[grid-template-columns:repeat(auto-fill,minmax(360px,1fr))]">
                 {arenaListDto?.arenas.length === 0 ? (
-                    <div className="w-full text-center text-gray-500">
+                    <div className="w-full text-left text-gray-500">
                         현재 {GetSectionTitle(status)}이 없습니다.
                     </div>
                 ) : (

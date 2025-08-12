@@ -19,7 +19,7 @@ export default function ArenaPageHeader() {
                         토론 투기장
                     </h1>
                 </div>
-                <p className="text-font-300 text-sm text-gray-400">
+                <p className="text-font-300 sm:text-md break-keep text-sm text-gray-400">
                     게임에 대한 열띤 토론의 장입니다. 자신의 의견을 피력하고
                     다른 게이머들과 논쟁을 벌여보세요. 토론에서 승리하여 최고의
                     평론가로 인정받으세요.
