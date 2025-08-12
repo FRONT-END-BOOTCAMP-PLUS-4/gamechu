@@ -25,7 +25,7 @@ export default function ArenaSectionHeader(props: ArenaSectionHeaderProps) {
                         height={20}
                         className="object-contain"
                     />
-                    <h1 className="text-xl font-semibold text-font-100">
+                    <h1 className="whitespace-nowrap text-lg font-semibold text-font-100 sm:text-xl">
                         {title}
                     </h1>
                 </div>
