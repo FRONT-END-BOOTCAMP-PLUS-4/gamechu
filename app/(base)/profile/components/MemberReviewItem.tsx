@@ -35,10 +35,10 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
     }, [review.content]);
 
     return (
-        <li className="bg-background-200 p-4 rounded-lg shadow relative flex gap-4">
+        <li className="relative flex gap-4 rounded-lg bg-background-200 p-4 shadow">
             {/* 게임 이미지 → 상세 페이지 링크 */}
             <Link href={`/games/${review.gameId}`}>
-                <div className="w-[80px] h-[80px] flex-shrink-0 rounded overflow-hidden cursor-pointer">
+                <div className="h-[80px] w-[80px] flex-shrink-0 cursor-pointer overflow-hidden rounded">
                     <Image
                         src={
                             review.imageUrl?.startsWith("//")
@@ -48,33 +48,38 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                         alt={review.gameTitle}
                         width={80}
                         height={80}
-                        className="object-cover rounded"
+                        className="rounded object-cover"
                     />
                 </div>
             </Link>
 
             {/* 텍스트 콘텐츠 */}
-            <div className="flex-1 flex flex-col gap-2 relative">
-                {/* 별점 (우측 상단) */}
-                <div className="absolute top-0 right-0 flex items-center gap-1">
-                    <Image
-                        src="/icons/purple-star.svg"
-                        alt="별점 아이콘"
-                        width={16}
-                        height={16}
-                    />
-                    <span className="text-sm text-purple-500 font-semibold">
-                        {(review.rating / 2).toFixed(1)}
-                    </span>
+            <div className="relative flex flex-1 flex-col gap-2">
+                {/* 제목 + 별점 영역 */}
+                <div className="grid grid-cols-[1fr_auto] items-start gap-2">
+                    {/* 게임 제목 */}
+                    <Link href={`/games/${review.gameId}`} className="min-w-0">
+                        <h3
+                            className="truncate text-body text-sm font-semibold hover:underline"
+                            title={review.gameTitle}
+                        >
+                            {review.gameTitle}
+                        </h3>
+                    </Link>
+
+                    {/* 별점 */}
+                    <div className="flex items-center gap-1 justify-self-end whitespace-nowrap">
+                        <Image
+                            src="/icons/purple-star.svg"
+                            alt="별점 아이콘"
+                            width={16}
+                            height={16}
+                        />
+                        <span className="text-sm font-semibold tabular-nums text-purple-500">
+                            {(review.rating / 2).toFixed(1)}
+                        </span>
+                    </div>
                 </div>
-
-                {/* 게임 제목 */}
-                <Link href={`/games/${review.gameId}`}>
-                    <h3 className="font-semibold text-body hover:underline cursor-pointer">
-                        {review.gameTitle}
-                    </h3>
-                </Link>
-
                 {/* 리뷰 내용 */}
                 <p
                     ref={contentRef}
@@ -96,7 +101,7 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                 )}
 
                 {/* 작성일자 */}
-                <p className="text-xs text-font-300 mt-1">
+                <p className="text-font-300 mt-1 text-xs">
                     작성일: {new Date(review.createdAt).toLocaleDateString()}
                 </p>
             </div>

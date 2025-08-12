@@ -111,8 +111,8 @@ export default function ProfilePage() {
     }, [fetchProfileData]);
 
     return (
-        <main className="min-h-screen bg-background-400 font-sans text-font-100 p-10">
-            <div className="flex space-x-10 mb-10">
+        <main className="min-h-screen bg-background-400 p-4 font-sans text-font-100 md:p-10">
+            <div className="mb-10 flex flex-col items-center gap-4 md:flex-row md:items-start md:gap-10">
                 <ProfileSummaryCard
                     reviewCount={reviewCount}
                     wishlistCount={wishlistPageData.totalCount}
@@ -124,8 +124,8 @@ export default function ProfilePage() {
                 <ProfileTierCard score={score} />
             </div>
 
-            <div className="flex space-x-10">
-                <div className="w-[250px]">
+            <div className="flex flex-col md:flex-row md:space-x-10">
+                <div className="mb-6 w-full md:mb-0 md:w-[250px]">
                     <ProfileSidebar onSelect={setActiveTab} />
                 </div>
 
