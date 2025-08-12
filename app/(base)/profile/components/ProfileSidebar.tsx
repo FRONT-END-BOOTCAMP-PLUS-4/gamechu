@@ -1,4 +1,3 @@
-// components/ProfileSidebar.tsx
 "use client";
 
 import { useState } from "react";
@@ -19,7 +18,16 @@ export default function ProfileSidebar({
     const [active, setActive] = useState("reviews");
 
     return (
-        <div className="w-[250px] bg-background-200 rounded-xl p-4 space-y-2">
+        <div
+            className={[
+                // 기본(>820px): 좌측 세로 리스트
+                "w-[250px] space-y-2 rounded-xl bg-background-200 p-4",
+                // ≤820px: 가운데 배치 + 2열 그리드
+                "max-[820px]:mx-auto max-[820px]:w-full max-[820px]:max-w-[520px]",
+                "max-[820px]:grid max-[820px]:grid-cols-2 max-[820px]:gap-3",
+                "max-[820px]:space-y-0",
+            ].join(" ")}
+        >
             {tabs.map((tab) => (
                 <button
                     key={tab.key}
@@ -27,13 +35,18 @@ export default function ProfileSidebar({
                         setActive(tab.key);
                         onSelect(tab.key);
                     }}
-                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors font-medium ${
+                    className={[
+                        "w-full rounded-lg px-4 py-2 text-left font-medium transition-colors",
+                        // ≤820px: 중앙 정렬 + 균일 높이
+                        "max-[820px]:h-12 max-[820px]:text-center",
                         active === tab.key
                             ? "bg-primary-purple-200 text-white"
-                            : "text-font-100 hover:bg-background-300"
-                    }`}
+                            : "text-font-100 hover:bg-background-300",
+                    ].join(" ")}
                 >
-                    {tab.label}
+                    <span className="whitespace-normal break-keep">
+                        {tab.label}
+                    </span>
                 </button>
             ))}
         </div>
