@@ -111,8 +111,9 @@ export default function ProfilePage() {
     }, [fetchProfileData]);
 
     return (
-        <main className="min-h-screen bg-background-400 p-4 font-sans text-font-100 md:p-10">
-            <div className="mb-10 flex flex-col items-center gap-4 md:flex-row md:items-start md:gap-10">
+        <main className="min-h-screen w-full bg-background-400 px-4 py-4 font-sans text-font-100 min-[821px]:px-10 min-[821px]:py-10">
+            {/* 상단 카드 영역: 821px 이상 가로 배치, 이하 세로 가운데 */}
+            <div className="mb-10 flex flex-col items-center gap-4 min-[821px]:flex-row min-[821px]:items-start min-[821px]:gap-10">
                 <ProfileSummaryCard
                     reviewCount={reviewCount}
                     wishlistCount={wishlistPageData.totalCount}
@@ -124,12 +125,15 @@ export default function ProfilePage() {
                 <ProfileTierCard score={score} />
             </div>
 
-            <div className="flex flex-col md:flex-row md:space-x-10">
-                <div className="mb-6 w-full md:mb-0 md:w-[250px]">
+            {/* 본문: 821px 이상 데스크탑 배치 / 820px 이하는 가운데 정렬 */}
+            <div className="flex flex-col max-[820px]:items-center min-[821px]:flex-row min-[821px]:space-x-10">
+                {/* 사이드바: 820px 이하는 가로폭 꽉 차게, 821px 이상은 고정폭 */}
+                <div className="mb-6 w-full max-[820px]:w-full min-[821px]:mb-0 min-[821px]:w-[250px]">
                     <ProfileSidebar onSelect={setActiveTab} />
                 </div>
 
-                <div className="flex-1">
+                {/* 컨텐츠 영역 */}
+                <div className="w-full flex-1">
                     {activeTab === "reviews" && isLoaded && (
                         <ProfileReviewTab reviews={reviews} />
                     )}
