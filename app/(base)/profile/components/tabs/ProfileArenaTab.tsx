@@ -8,10 +8,10 @@ import MyRecruitingArenaList from "../MyRecrutingArenaList";
 import MyVotingArenaList from "../MyVotingArenaList";
 
 const TABS = [
-    { key: "recruiting", label: "모집 중" }, // 추가 탭 예시
+    { key: "recruiting", label: "모집 중" },
     { key: "waiting", label: "대기 중" },
     { key: "debating", label: "토론 중" },
-    { key: "voting", label: "투표 중" }, // 추가 탭 예시
+    { key: "voting", label: "투표 중" },
     { key: "completed", label: "종료됨" },
 ] as const;
 
@@ -38,20 +38,20 @@ export default function ProfileArenaTab() {
     };
 
     return (
-        <div className="w-full bg-background-300 p-6 rounded-xl shadow flex flex-col gap-6">
-            <h2 className="text-lg font-semibold text-body">투기장</h2>
+        <div className="flex w-full flex-col gap-6 rounded-xl bg-background-300 p-6 shadow">
+            <h2 className="text-body text-lg font-semibold">투기장</h2>
 
             {/* 탭 메뉴 */}
-            <div className="flex gap-4 border-b border-gray-600 pb-2">
+            <div className="flex justify-center gap-2 whitespace-nowrap border-b border-gray-600 pb-2 sm:gap-4">
                 {TABS.map((tab) => (
                     <button
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key)}
-                        className={`px-4 py-2 text-sm font-semibold border-b-2 transition-all ${
+                        className={`border-b-2 px-3 py-2 text-sm font-semibold transition-all sm:px-4 ${
                             activeTab === tab.key
                                 ? "border-purple-500 text-purple-500"
                                 : "border-transparent text-gray-400 hover:text-white"
-                        }`}
+                        } `}
                     >
                         {tab.label}
                     </button>
