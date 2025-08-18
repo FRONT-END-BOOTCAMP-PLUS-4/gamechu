@@ -36,41 +36,51 @@ export default function GameCard({
     return (
         <div
             onClick={handleClick}
-            className="cursor-pointer box-border w-[348px] h-[348px] overflow-hidden flex flex-col rounded-[6px] border border-[1px] border-line-200 border-opacity-50 hover:border-[2px] hover:border-primary-purple-200 transition-all duration-100"
+            className="box-border flex w-full cursor-pointer flex-col overflow-hidden rounded-[6px] border border-[1px] border-line-200 border-opacity-50 bg-background-100 transition-all duration-100 hover:border-[2px] hover:border-primary-purple-200"
+            // className="cursor-pointer box-border w-[348px] h-[348px] overflow-hidden flex flex-col rounded-[6px] border border-[1px] border-line-200 border-opacity-50 hover:border-[2px] hover:border-primary-purple-200 transition-all duration-100"
         >
-            {/* 이미지 영역 */}
-            <div className="relative w-full h-[248px]">
-                <Image src={thumbnailSrc} alt={title} fill sizes="346px" />
+            {/* 이미지 영역: 모바일 16:9 → 데스크탑 1:1 */}
+            {/* <div className="relative w-full h-[248px]">
+                <Image src={thumbnailSrc} alt={title} fill sizes="346px" /> */}
+            <div className="relative aspect-[16/9] w-full min-[1024px]:aspect-square">
+                <Image
+                    src={thumbnailSrc}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width:1024px) 33vw, (min-width:820px) 50vw, 100vw"
+                    priority={false}
+                />
 
                 {/* 플랫폼 태그 */}
-                <div className="absolute top-2 right-2 p-1 opacity-90  bg-background-100 text-caption text-font-100 rounded-[4px] border border-background-300">
+                <div className="absolute right-2 top-2 rounded-[4px] border border-background-300 bg-background-100 p-1 text-caption text-font-100 opacity-90">
                     {platform}
                 </div>
             </div>
 
             {/* 콘텐츠 영역 */}
-            <div className="w-full h-[100px] bg-background-100 px-4 py-2 flex flex-col justify-between relative">
+            <div className="relative flex w-full flex-col justify-between gap-2 px-4 py-3">
                 {/* 제목 */}
 
-                <h2 className="text-h3 font-semibold text-font-100 line-clamp-2">
+                <h2 className="line-clamp-2 text-h3 font-semibold text-font-100">
                     {title}
                 </h2>
 
-                <div className="flex justify-between items-center mt-auto">
+                <div className="mt-auto flex items-center justify-between">
                     {/* 개발자 */}
-                    <span className="text-caption text-font-200 line-clamp-1">
+                    <span className="line-clamp-1 text-caption text-font-200">
                         {developer}
                     </span>
 
                     {/* 별점 */}
-                    <div className="flex items-center  h-[25px]">
+                    <div className="flex h-[25px] items-center">
                         <Image
                             src="/icons/review.svg"
                             alt="star"
                             width={16}
                             height={16}
                         />
-                        <span className=" text-regular ml-1 mr-2">
+                        <span className="text-regular ml-1 mr-2">
                             {reviewCount}
                         </span>
                         <Image
@@ -79,7 +89,7 @@ export default function GameCard({
                             width={16}
                             height={16}
                         />
-                        <span className="text-regular text-font-100 ml-1">
+                        <span className="text-regular ml-1 text-font-100">
                             {(expertRating ?? 0).toFixed(1)}
                         </span>
                     </div>

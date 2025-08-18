@@ -29,18 +29,18 @@ export default function ProfileWishlistTab({
     onPageChange,
 }: Props) {
     return (
-        <div className="w-full bg-background-300 p-6 rounded-xl shadow flex flex-col gap-6">
-            <h2 className="text-lg font-semibold text-body mb-2">
+        <div className="flex w-full flex-col gap-6 rounded-xl bg-background-300 p-6 shadow">
+            <h2 className="mb-2 text-body text-lg font-semibold">
                 위시리스트 목록
             </h2>
 
             {games.length === 0 ? (
-                <p className="text-font-200 text-sm">
+                <p className="text-sm text-font-200">
                     위시리스트에 등록된 게임이 없습니다.
                 </p>
             ) : (
                 <>
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 min-[820px]:grid-cols-2">
                         {games.map((game) => (
                             <GameCard key={game.id} {...game} />
                         ))}
