@@ -112,7 +112,7 @@ export default function ProfilePage() {
 
     return (
         <main className="min-h-screen w-full bg-background-400 px-4 py-4 font-sans text-font-100 min-[821px]:px-10 min-[821px]:py-10">
-            {/* 상단 카드 영역: 821px 이상 가로 배치, 이하 세로 가운데 */}
+            {/* 상단 카드 영역 */}
             <div className="mb-10 flex flex-col items-center gap-4 min-[821px]:flex-row min-[821px]:items-start min-[821px]:gap-10">
                 <ProfileSummaryCard
                     reviewCount={reviewCount}
@@ -125,9 +125,9 @@ export default function ProfilePage() {
                 <ProfileTierCard score={score} />
             </div>
 
-            {/* 본문: 821px 이상 데스크탑 배치 / 820px 이하는 가운데 정렬 */}
+            {/* 본문 */}
             <div className="flex flex-col max-[820px]:items-center min-[821px]:flex-row min-[821px]:space-x-10">
-                {/* 사이드바: 820px 이하는 가로폭 꽉 차게, 821px 이상은 고정폭 */}
+                {/* 사이드바  */}
                 <div className="mb-6 w-full max-[820px]:w-full min-[821px]:mb-0 min-[821px]:w-[250px]">
                     <ProfileSidebar onSelect={setActiveTab} />
                 </div>
