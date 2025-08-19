@@ -38,7 +38,7 @@ export default function ProfileArenaTab() {
     };
 
     return (
-        <div className="flex w-full flex-col gap-6 rounded-xl bg-background-300 p-6 shadow">
+        <div className="flex w-full flex-col gap-6 rounded-xl bg-background-400 p-6 shadow">
             <h2 className="text-body text-lg font-semibold">투기장</h2>
 
             {/* 탭 메뉴 */}

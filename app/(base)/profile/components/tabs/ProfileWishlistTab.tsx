@@ -29,7 +29,7 @@ export default function ProfileWishlistTab({
     onPageChange,
 }: Props) {
     return (
-        <div className="flex w-full flex-col gap-6 rounded-xl bg-background-300 p-6 shadow">
+        <div className="flex w-full flex-col gap-6 rounded-xl bg-background-400 p-6 shadow">
             <h2 className="mb-2 text-body text-lg font-semibold">
                 위시리스트 목록
             </h2>
