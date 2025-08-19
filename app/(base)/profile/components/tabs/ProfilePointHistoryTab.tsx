@@ -50,11 +50,11 @@ export default function ProfilePointHistoryTab() {
     }, [setLoading]);
 
     return (
-        <div className="w-full bg-background-300 p-6 rounded-xl shadow flex flex-col gap-8">
-            <h2 className="text-lg font-semibold text-body">포인트 히스토리</h2>
+        <div className="flex w-full flex-col gap-8 rounded-xl bg-background-400 p-6 shadow">
+            <h2 className="text-body text-lg font-semibold">포인트 히스토리</h2>
 
             {records.length === 0 ? (
-                <p className="text-font-200 text-sm">포인트 기록이 없습니다.</p>
+                <p className="text-sm text-font-200">포인트 기록이 없습니다.</p>
             ) : (
                 <>
                     <div className="flex flex-col gap-4">

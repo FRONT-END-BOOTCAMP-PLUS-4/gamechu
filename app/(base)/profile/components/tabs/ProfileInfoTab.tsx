@@ -38,17 +38,17 @@ export default function ProfileInfoTab(props: Props) {
     };
 
     return (
-        <div className="w-full bg-background-300 p-6 rounded-xl shadow flex flex-col gap-8">
-            <h2 className="text-lg font-semibold text-body">프로필 정보</h2>
+        <div className="flex w-full flex-col gap-8 rounded-xl bg-background-400 p-6 shadow">
+            <h2 className="text-body text-lg font-semibold">프로필 정보</h2>
 
             <div className="flex flex-col gap-6">
                 {/* 프로필 이미지 */}
                 <div className="space-y-1">
-                    <label className="block text-body text-font-100 font-semibold">
+                    <label className="block text-body font-semibold text-font-100">
                         프로필 이미지
                     </label>
                     <div className="flex items-center gap-4">
-                        <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+                        <div className="h-[80px] w-[80px] overflow-hidden rounded-full">
                             <Image
                                 src={previewImage || "/images/default.png"}
                                 alt="프로필 미리보기"
@@ -76,7 +76,7 @@ export default function ProfileInfoTab(props: Props) {
 
                 {/* 닉네임 */}
                 <div className="space-y-1">
-                    <label className="block text-body text-font-100 font-semibold">
+                    <label className="block text-body font-semibold text-font-100">
                         닉네임
                     </label>
                     <Input
@@ -89,7 +89,7 @@ export default function ProfileInfoTab(props: Props) {
 
                 {/* 이메일 (수정 불가) */}
                 <div className="space-y-1">
-                    <label className="block text-body text-font-100 font-semibold">
+                    <label className="block text-body font-semibold text-font-100">
                         이메일
                     </label>
                     <Input
@@ -101,16 +101,16 @@ export default function ProfileInfoTab(props: Props) {
 
                 {/* 성별 선택 */}
                 <div className="space-y-1">
-                    <label className="block text-body text-font-100 font-semibold">
+                    <label className="block text-body font-semibold text-font-100">
                         성별
                     </label>
                     <div className="flex justify-center gap-4">
                         <button
                             onClick={() => isEdit && setGender("M")}
-                            className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 ${
+                            className={`h-[50px] w-[150px] rounded-xl font-semibold transition-all duration-200 ${
                                 gender === "M"
                                     ? "bg-primary-blue-200 text-white shadow-md"
-                                    : "bg-background-200 text-font-100 border border-line-200 hover:border-primary-blue-200"
+                                    : "border border-line-200 bg-background-200 text-font-100 hover:border-primary-blue-200"
                             } ${
                                 !isEdit ? "cursor-not-allowed opacity-50" : ""
                             }`}
@@ -119,10 +119,10 @@ export default function ProfileInfoTab(props: Props) {
                         </button>
                         <button
                             onClick={() => isEdit && setGender("F")}
-                            className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 ${
+                            className={`h-[50px] w-[150px] rounded-xl font-semibold transition-all duration-200 ${
                                 gender === "F"
                                     ? "bg-primary-purple-200 text-white shadow-md"
-                                    : "bg-background-200 text-font-100 border border-line-200 hover:border-primary-purple-200"
+                                    : "border border-line-200 bg-background-200 text-font-100 hover:border-primary-purple-200"
                             } ${
                                 !isEdit ? "cursor-not-allowed opacity-50" : ""
                             }`}
@@ -134,7 +134,7 @@ export default function ProfileInfoTab(props: Props) {
 
                 {/* 생년월일 */}
                 <div className="space-y-1">
-                    <label className="block text-body text-font-100 font-semibold">
+                    <label className="block text-body font-semibold text-font-100">
                         생년월일
                     </label>
                     <Input
@@ -147,7 +147,7 @@ export default function ProfileInfoTab(props: Props) {
             </div>
 
             {/* 버튼 영역 */}
-            <div className="flex justify-end w-full gap-2 pt-4">
+            <div className="flex w-full justify-end gap-2 pt-4">
                 {isEdit ? (
                     <>
                         <Button

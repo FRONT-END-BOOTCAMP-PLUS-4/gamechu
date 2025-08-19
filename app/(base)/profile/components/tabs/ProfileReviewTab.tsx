@@ -28,13 +28,13 @@ export default function ProfileReviewTab({
     }, [totalPages]);
 
     return (
-        <div className="w-full bg-background-300 p-6 rounded-xl shadow flex flex-col gap-6">
-            <h2 className="text-lg font-semibold text-body mb-2">
+        <div className="flex w-full flex-col gap-6 rounded-xl bg-background-400 p-6 shadow">
+            <h2 className="mb-2 text-body text-lg font-semibold">
                 작성한 리뷰
             </h2>
 
             {reviews.length === 0 ? (
-                <p className="text-font-200 text-sm">
+                <p className="text-sm text-font-200">
                     아직 작성한 리뷰가 없습니다.
                 </p>
             ) : (
