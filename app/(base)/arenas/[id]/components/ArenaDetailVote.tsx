@@ -90,10 +90,7 @@ export default function ArenaDetailVote() {
                         <span className="max-w-[6rem] truncate">
                             {arenaDetail?.creatorName}
                         </span>
-                        <TierBadge
-                            score={arenaDetail.creatorScore || 0}
-                            size="sm"
-                        />
+                        <TierBadge score={arenaDetail.creatorScore || 0} />
                     </div>
                 </div>
 
@@ -125,10 +122,7 @@ export default function ArenaDetailVote() {
                         <span className="max-w-[6rem] truncate">
                             {arenaDetail?.challengerName}
                         </span>
-                        <TierBadge
-                            score={arenaDetail.challengerScore || 0}
-                            size="sm"
-                        />
+                        <TierBadge score={arenaDetail.challengerScore || 0} />
                     </div>
 
                     {arenaDetail?.status === 4 ? (
