@@ -33,7 +33,7 @@ export default function PointHistoryCard({
             {/* 왼쪽: 아이콘 + 텍스트 */}
             <div className="flex min-w-0 items-start gap-3 min-[821px]:gap-4">
                 <Image
-                    src={`/${imageUrl}`}
+                    src={`${imageUrl}`}
                     alt={policyName}
                     width={32}
                     height={32}

@@ -58,7 +58,7 @@ export class GetScoreRecordUsecase {
                         policyName: scorePolicy ? scorePolicy.name : "",
                         description: scorePolicy ? scorePolicy.description : "",
                         score: scorePolicy ? scorePolicy.score : 0,
-                        policyImageUrl: scorePolicy ? scorePolicy.imageUrl : "",
+                        imageUrl: scorePolicy ? scorePolicy.imageUrl : "",
                     };
                 })
             );
