@@ -1,71 +1,37 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import useFetchArenas from "@/hooks/useArenas";
-import useVoteList from "@/hooks/useVoteList";
+import { useEffect, useState } from "react";
+import useArenas from "@/hooks/useArenas";
 import CompleteArenaCard from "@/app/(base)/arenas/components/CompleteArenaCard";
 import Pager from "@/app/components/Pager";
 
 export default function MyCompletedArenaList() {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 6;
+    const status = 5; // 종료된 투기장
 
-    const {
-        arenaListDto,
-        loading: arenaLoading,
-        error: arenaError,
-    } = useFetchArenas({
+    // ✅ API 호출 (공용 섹션과 동일한 방식)
+    const { arenaListDto, loading, error } = useArenas({
         currentPage,
-        status: 5, // 종료된 투기장
-        mine: true,
+        status,
+        mine: true, // 내가 참여/생성한 투기장만
         pageSize,
     });
 
-    const [arenaIdsToFetch, setArenaIdsToFetch] = useState<number[]>([]);
-    const fetchedIdsRef = useRef<string>("");
-
     useEffect(() => {
-        if (!arenaListDto?.arenas) return;
-
-        const ids = arenaListDto.arenas.map((arena) => arena.id).sort();
-        const idsString = ids.join(",");
-
-        if (fetchedIdsRef.current === idsString) return;
-
-        setArenaIdsToFetch(ids);
-        fetchedIdsRef.current = idsString;
-    }, [arenaListDto?.arenas]);
-
-    const {
-        voteResult,
-        loading: voteLoading,
-        error: voteError,
-    } = useVoteList({ arenaIds: arenaIdsToFetch });
-
-    useEffect(() => {
-        if (!arenaLoading && arenaListDto?.arenas) {
-            console.log(
-                "✅ 디버깅: 가져온 arena 개수:",
-                arenaListDto.arenas.length
-            );
+        if (!loading && arenaListDto?.arenas) {
+            console.log("✅ 완료된 투기장 개수:", arenaListDto.arenas.length);
         }
-    }, [arenaLoading, arenaListDto]);
+    }, [loading, arenaListDto]);
 
-    // 투표 결과 반영
-    if (arenaListDto?.arenas && voteResult.length > 0) {
-        arenaListDto.arenas.forEach((arena) => {
-            const vote = voteResult.find((v) => v.arenaId === arena.id);
-            arena.leftPercent = vote ? arena.leftPercent : 50;
-        });
+    // ✅ 로딩 처리
+    if (loading) {
+        return <p className="text-sm text-font-200">로딩 중입니다...</p>;
     }
 
-    if (arenaLoading || voteLoading) {
-        return <p className="text-font-200 text-sm">로딩 중입니다...</p>;
-    }
-
-    if (arenaError || voteError) {
+    if (error) {
         return (
-            <p className="text-red-500 text-sm">
+            <p className="text-sm text-red-500">
                 투기장 정보를 불러오는 데 실패했습니다.
             </p>
         );
@@ -73,14 +39,15 @@ export default function MyCompletedArenaList() {
 
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
         return (
-            <p className="text-font-200 text-sm">
+            <p className="text-sm text-font-200">
                 참여한 종료된 투기장이 없습니다.
             </p>
         );
     }
 
+    // ✅ 출력
     return (
-        <div className="flex flex-col items-center gap-6 w-full">
+        <div className="flex w-full flex-col items-center gap-6">
             {arenaListDto.arenas.map((arena) => (
                 <CompleteArenaCard key={arena.id} {...arena} />
             ))}
