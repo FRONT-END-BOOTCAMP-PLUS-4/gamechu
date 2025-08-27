@@ -159,33 +159,33 @@ export default function CommentCard({
     };
 
     return (
-        <div className="relative w-[1060px] min-h-[100px] bg-background-200 rounded-[8px] p-4 pb-12 space-y-4 border border-line-100 border-opacity-50">
+        <div className="relative min-h-[100px] w-[1060px] space-y-4 rounded-[8px] border border-line-100 border-opacity-50 bg-background-200 p-4 pb-12">
             {/* 유저 정보 */}
-            <div className="flex justify-between items-start">
-                <div className="flex gap-2 items-start">
-                    <div className="w-[44px] h-[44px] rounded-full border border-line-100 overflow-hidden flex-shrink-0">
+            <div className="flex items-start justify-between">
+                <div className="flex items-start gap-2">
+                    <div className="h-[44px] w-[44px] flex-shrink-0 overflow-hidden rounded-full border border-line-100">
                         <Image
                             src={profileImage}
                             alt="profile"
                             width={44}
                             height={44}
-                            className="object-cover w-full h-full"
+                            className="h-full w-full object-cover"
                             unoptimized
                         />
                     </div>
                     <div className="flex flex-col">
                         <div className="flex items-center gap-1">
-                            <span className="text-h3 text-font-100 font-medium">
+                            <span className="text-h3 font-medium text-font-100">
                                 {nickname}
                             </span>
-                            <TierBadge score={score} size="sm" />
+                            <TierBadge score={score} />
                         </div>
                         <span className="text-caption text-font-200">
                             {date}
                         </span>
                     </div>
-                    <div className="w-px h-[40px] bg-line-100 mx-2 opacity-50" />
-                    <div className="flex items-center h-[44px]">
+                    <div className="mx-2 h-[40px] w-px bg-line-100 opacity-50" />
+                    <div className="flex h-[44px] items-center">
                         <Image
                             src="/icons/empty-purple-star.svg"
                             alt="star"
@@ -203,7 +203,7 @@ export default function CommentCard({
                     <div className="relative" ref={menuRef}>
                         <button
                             onClick={toggleMenu}
-                            className="p-1 rounded hover:bg-primary-purple-100 transition"
+                            className="rounded p-1 transition hover:bg-primary-purple-100"
                         >
                             <Image
                                 src="/icons/hamburger.svg"
@@ -215,7 +215,7 @@ export default function CommentCard({
                         </button>
 
                         {showMenu && (
-                            <div className="absolute top-0 right-0 px-4 py-4 space-y-1 z-30 ">
+                            <div className="absolute right-0 top-0 z-30 space-y-1 px-4 py-4">
                                 <Button
                                     type="black"
                                     size="small"
@@ -237,7 +237,7 @@ export default function CommentCard({
             {/* 댓글 내용 + 더보기 */}
             <div
                 ref={commentRef}
-                className={`prose text-body text-font-100 whitespace-pre-wrap transition-all duration-200 max-w-[860px] [&_img]:w-1/3 [&_img]:h-auto [&_img]:rounded-md ${
+                className={`prose max-w-[860px] whitespace-pre-wrap text-body text-font-100 transition-all duration-200 [&_img]:h-auto [&_img]:w-1/3 [&_img]:rounded-md ${
                     expanded ? "" : "line-clamp-2"
                 }`}
                 dangerouslySetInnerHTML={{ __html: comment }}
@@ -245,7 +245,7 @@ export default function CommentCard({
             {/* 좋아요 버튼 */}
             <div className="absolute bottom-1 left-1 flex items-center">
                 <button onClick={handleLike} disabled={isLoading}>
-                    <div className="w-[50px] h-[50px] flex items-center justify-center">
+                    <div className="flex h-[50px] w-[50px] items-center justify-center">
                         {isLiked ? (
                             animationDone ? (
                                 <Image
@@ -260,7 +260,7 @@ export default function CommentCard({
                                     key={`liked-${animationKey}`}
                                     animationData={Like}
                                     loop={false}
-                                    className="w-full h-full"
+                                    className="h-full w-full"
                                 />
                             )
                         ) : (
@@ -278,10 +278,10 @@ export default function CommentCard({
             </div>
 
             {isOverflowing && (
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transform">
                     <button
                         onClick={() => setExpanded(!expanded)}
-                        className="border border-line-100 border-opacity-50 flex items-center gap-1 px-3 py-1 text-primary-purple-200 font-bold font-h2 font hover:bg-background-300 rounded-md transition"
+                        className="font-h2 font flex items-center gap-1 rounded-md border border-line-100 border-opacity-50 px-3 py-1 font-bold text-primary-purple-200 transition hover:bg-background-300"
                     >
                         {expanded ? "접기 ▲" : "펼치기 ▼"}
                     </button>
