@@ -131,7 +131,7 @@ export default function ProfileTierCard({ score }: Props) {
             </div>
 
             {/* ✅ 데스크탑: 기존 전체 표시(점수 구간 보임) */}
-            <div className="hidden grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3 text-center text-caption lg:grid">
+            <div className="grid hidden grid-cols-5 gap-3 text-center text-caption lg:grid">
                 {tiers.map((tier) => {
                     const isActive = tier.label === currentTier.label;
                     return (
