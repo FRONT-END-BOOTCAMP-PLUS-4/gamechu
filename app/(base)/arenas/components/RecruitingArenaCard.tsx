@@ -38,7 +38,7 @@ export default function RecruitingArenaCard(props: RecruitingArenaCardProps) {
                     <span className="max-w-[100px] truncate whitespace-nowrap">
                         {props.creatorNickname}
                     </span>
-                    <TierBadge score={props.creatorScore} size="sm" />
+                    <TierBadge score={props.creatorScore} />
                 </div>
                 <div className="flex h-6 flex-shrink-0 items-center rounded-full bg-background-200 px-3 text-xs font-semibold">
                     모집중

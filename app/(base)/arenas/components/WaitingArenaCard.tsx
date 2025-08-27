@@ -40,7 +40,7 @@ export default function WaitingArenaCard(props: WaitingArenaCardProps) {
                     <span className="max-w-[100px] truncate whitespace-nowrap">
                         {props.creatorNickname}
                     </span>
-                    <TierBadge score={props.creatorScore} size="sm" />
+                    <TierBadge score={props.creatorScore} />
                 </div>
 
                 <span className="mx-2 text-gray-400">vs</span>
@@ -50,7 +50,7 @@ export default function WaitingArenaCard(props: WaitingArenaCardProps) {
                     <span className="max-w-[100px] truncate whitespace-nowrap">
                         {props.challengerNickname}
                     </span>
-                    <TierBadge score={props.challengerScore || 0} size="sm" />
+                    <TierBadge score={props.challengerScore || 0} />
                 </div>
             </div>
 

@@ -64,7 +64,7 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                     <span className="max-w-[80px] truncate whitespace-nowrap">
                         {props.creatorNickname}
                     </span>
-                    <TierBadge score={props.creatorScore} size="sm" />
+                    <TierBadge score={props.creatorScore} />
                     <span className="whitespace-nowrap">
                         {props.leftPercent}%
                     </span>
@@ -92,7 +92,7 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                     <span className="max-w-[80px] truncate whitespace-nowrap">
                         {props.challengerNickname}
                     </span>
-                    <TierBadge score={props.challengerScore || 0} size="sm" />
+                    <TierBadge score={props.challengerScore || 0} />
                 </div>
             </div>
         </div>
