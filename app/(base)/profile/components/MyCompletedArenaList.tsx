@@ -10,11 +10,10 @@ export default function MyCompletedArenaList() {
     const pageSize = 6;
     const status = 5; // 종료된 투기장
 
-    // ✅ API 호출 (공용 섹션과 동일한 방식)
     const { arenaListDto, loading, error } = useArenas({
         currentPage,
         status,
-        mine: true, // 내가 참여/생성한 투기장만
+        mine: true,
         pageSize,
     });
 
@@ -24,7 +23,6 @@ export default function MyCompletedArenaList() {
         }
     }, [loading, arenaListDto]);
 
-    // ✅ 로딩 처리
     if (loading) {
         return <p className="text-sm text-font-200">로딩 중입니다...</p>;
     }
@@ -45,12 +43,14 @@ export default function MyCompletedArenaList() {
         );
     }
 
-    // ✅ 출력
     return (
         <div className="flex w-full flex-col items-center gap-6">
-            {arenaListDto.arenas.map((arena) => (
-                <CompleteArenaCard key={arena.id} {...arena} />
-            ))}
+            {/* ✅ 그리드 배치 */}
+            <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2">
+                {arenaListDto.arenas.map((arena) => (
+                    <CompleteArenaCard key={arena.id} {...arena} />
+                ))}
+            </div>
 
             {/* 페이지네이션 */}
             <Pager

@@ -23,12 +23,12 @@ export default function MyRecruitingArenaList() {
     }, [loading, arenaListDto]);
 
     if (loading) {
-        return <p className="text-font-200 text-sm">로딩 중입니다...</p>;
+        return <p className="text-sm text-font-200">로딩 중입니다...</p>;
     }
 
     if (error) {
         return (
-            <p className="text-red-500 text-sm">
+            <p className="text-sm text-red-500">
                 투기장 정보를 불러오는 데 실패했습니다.
             </p>
         );
@@ -36,29 +36,31 @@ export default function MyRecruitingArenaList() {
 
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
         return (
-            <p className="text-font-200 text-sm">
+            <p className="text-sm text-font-200">
                 모집 중인 투기장이 없습니다.
             </p>
         );
     }
 
     return (
-        <div className="flex flex-col items-center gap-6 w-full">
-            {/* 모집 중 투기장 카드 리스트 */}
-            {arenaListDto.arenas.map((arena) => (
-                <RecruitingArenaCard
-                    key={arena.id}
-                    {...arena}
-                    startDate={new Date(arena.startDate)}
-                />
-            ))}
+        <div className="flex w-full flex-col items-center gap-6">
+            {/* ✅ 그리드 배치 */}
+            <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2">
+                {arenaListDto.arenas.map((arena) => (
+                    <RecruitingArenaCard
+                        key={arena.id}
+                        {...arena}
+                        startDate={new Date(arena.startDate)}
+                    />
+                ))}
+            </div>
 
-            {/* 페이저 삽입 */}
+            {/* 페이지네이션 */}
             <Pager
                 currentPage={arenaListDto.currentPage}
                 endPage={arenaListDto.endPage}
                 pages={arenaListDto.pages}
-                onPageChange={(page) => setCurrentPage(page)}
+                onPageChange={setCurrentPage}
             />
         </div>
     );
