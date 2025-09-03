@@ -133,7 +133,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* 컨텐츠 영역 */}
-                <div className="w-full flex-1">
+                <div className="w-full min-w-0 flex-1">
                     {activeTab === "reviews" && isLoaded && (
                         <ProfileReviewTab reviews={reviews} />
                     )}
