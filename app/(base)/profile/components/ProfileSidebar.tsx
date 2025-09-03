@@ -21,7 +21,7 @@ export default function ProfileSidebar({
         <div
             className={[
                 "w-[250px] space-y-2 rounded-xl bg-background-200 p-4",
-                "max-[820px]:mx-auto max-[820px]:w-full max-[820px]:max-w-[520px]",
+                "max-[820px]:mx-auto max-[820px]:w-full max-[820px]:max-w-full",
                 "max-[820px]:grid max-[820px]:grid-cols-2 max-[820px]:gap-3",
                 "max-[820px]:space-y-0 max-[820px]:p-3",
             ].join(" ")}
