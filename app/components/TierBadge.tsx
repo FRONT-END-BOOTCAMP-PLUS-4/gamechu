@@ -1,4 +1,4 @@
-// TierBadge.tsx 파일 (수정 제안)
+// ✅ components/profile/TierBadge.tsx
 "use client";
 
 import Image from "next/image";
@@ -6,16 +6,39 @@ import { getTier } from "@/utils/GetTiers";
 
 interface TierBadgeProps {
     score: number;
+    size?: "sm" | "md" | "lg";
 }
 
-export default function TierBadge({ score }: TierBadgeProps) {
+export default function TierBadge({ score, size = "md" }: TierBadgeProps) {
     const tier = getTier(score);
+
+    const sizeStyles = {
+        sm: {
+            width: "w-[80px]",
+            height: "h-[28px]",
+            icon: 14,
+            textSize: "text-xs",
+            iconClass: "w-[14px] h-[14px]",
+        },
+        md: {
+            width: "w-[100px]",
+            height: "h-[32px]",
+            icon: 18,
+            textSize: "text-sm",
+            iconClass: "w-[18px] h-[18px]",
+        },
+        lg: {
+            width: "w-[120px]",
+            height: "h-[36px]",
+            icon: 22,
+            textSize: "text-base",
+            iconClass: "w-[22px] h-[22px]",
+        },
+    }[size];
 
     return (
         <div
-            className={
-                "flex h-[32px] w-[30px] items-center justify-center gap-2 whitespace-nowrap rounded-full text-xs font-semibold sm:h-[32px] sm:w-[120px]"
-            }
+            className={`flex items-center justify-center gap-2 ${sizeStyles.width} ${sizeStyles.height} rounded-full font-semibold ${sizeStyles.textSize}`}
             style={{
                 backgroundColor: `${tier.color}1A`,
                 color: tier.color,
@@ -25,11 +48,11 @@ export default function TierBadge({ score }: TierBadgeProps) {
             <Image
                 src={tier.icon}
                 alt={`${tier.label} 배지`}
-                width={18}
-                height={18}
-                className={"h-[24px] w-[24px] sm:h-[18px] sm:w-[18px]"}
+                width={sizeStyles.icon}
+                height={sizeStyles.icon}
+                className={sizeStyles.iconClass}
             />
-            <span className="hidden sm:inline">{tier.label}</span>
+            <span>{tier.label}</span>
         </div>
     );
 }
