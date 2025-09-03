@@ -29,17 +29,17 @@ export default function ProfileTierCard({ score }: Props) {
             <div className="mb-4 flex items-start justify-between">
                 <div>
                     <h2 className="text-body font-semibold">나의 티어</h2>
-                    {/* <p className="text-sm text-font-200">
+                    <p className="text-sm text-font-200">
                         포인트를 모아 더 높은 티어로 승급하세요!
-                    </p> */}
+                    </p>
                 </div>
 
                 {/* 우측 배지 (모바일용 sm, 데스크탑용 md) */}
                 <div className="block md:hidden">
-                    <TierBadge score={score} size="sm" />
+                    <TierBadge score={score} />
                 </div>
                 <div className="hidden md:block">
-                    <TierBadge score={score} size="md" />
+                    <TierBadge score={score} />
                 </div>
             </div>
 
