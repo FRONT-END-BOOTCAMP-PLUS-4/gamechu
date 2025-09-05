@@ -15,9 +15,14 @@ type VotingArenaCardProps = {
 
     voteEndDate: Date;
     voteCount: number;
+
+    showBadgeIconOnly?: boolean;
 };
 
-export default function VotingArenaCard(props: VotingArenaCardProps) {
+export default function VotingArenaCard({
+    showBadgeIconOnly = false,
+    ...props
+}: VotingArenaCardProps) {
     const router = useRouter();
     const onClickHandler = () => {
         router.push(`/arenas/${props.id}`);
@@ -43,7 +48,10 @@ export default function VotingArenaCard(props: VotingArenaCardProps) {
                     <span className="max-w-[100px] truncate whitespace-nowrap">
                         {props.creatorNickname}
                     </span>
-                    <TierBadge score={props.creatorScore} />
+                    <TierBadge
+                        score={props.creatorScore}
+                        iconOnly={showBadgeIconOnly}
+                    />
                 </div>
 
                 <span className="mx-2 text-gray-400">vs</span>
@@ -53,7 +61,10 @@ export default function VotingArenaCard(props: VotingArenaCardProps) {
                     <span className="max-w-[100px] truncate whitespace-nowrap">
                         {props.challengerNickname}
                     </span>
-                    <TierBadge score={props.challengerScore || 0} />
+                    <TierBadge
+                        score={props.challengerScore || 0}
+                        iconOnly={showBadgeIconOnly}
+                    />
                 </div>
             </div>
 

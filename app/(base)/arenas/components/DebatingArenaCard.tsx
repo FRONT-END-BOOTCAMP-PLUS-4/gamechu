@@ -12,9 +12,13 @@ type DebatingArenaCardProps = {
     challengerNickname: string | null;
     challengerScore: number | null;
     debateEndDate: Date;
+    showBadgeIconOnly?: boolean;
 };
 
-export default function DebatingArenaCard(props: DebatingArenaCardProps) {
+export default function DebatingArenaCard({
+    showBadgeIconOnly = false,
+    ...props
+}: DebatingArenaCardProps) {
     const router = useRouter();
     const onClickHandler = () => {
         router.push(`/arenas/${props.id}`);
@@ -50,7 +54,10 @@ export default function DebatingArenaCard(props: DebatingArenaCardProps) {
                     <span className="max-w-[100px] truncate whitespace-nowrap">
                         {props.challengerNickname}
                     </span>
-                    <TierBadge score={props.challengerScore || 0} />
+                    <TierBadge
+                        score={props.challengerScore || 0}
+                        iconOnly={showBadgeIconOnly}
+                    />
                 </div>
             </div>
 
