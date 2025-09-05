@@ -44,15 +44,18 @@ export default function MyRecruitingArenaList() {
 
     return (
         <div className="flex w-full flex-col items-center gap-6">
-            {/* ✅ 그리드 배치 */}
-            <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2">
-                {arenaListDto.arenas.map((arena) => (
-                    <RecruitingArenaCard
-                        key={arena.id}
-                        {...arena}
-                        startDate={new Date(arena.startDate)}
-                    />
-                ))}
+            {/* ✅ 반응형 + 가로 스크롤 */}
+            <div className="w-full overflow-x-auto overflow-y-hidden">
+                <div className="grid grid-cols-1 gap-6 break-keep px-1 min-[821px]:min-w-[640px] min-[821px]:grid-cols-2">
+                    {arenaListDto.arenas.map((arena) => (
+                        <RecruitingArenaCard
+                            key={arena.id}
+                            {...arena}
+                            startDate={new Date(arena.startDate)}
+                            showBadgeIconOnly={true}
+                        />
+                    ))}
+                </div>
             </div>
 
             {/* 페이지네이션 */}

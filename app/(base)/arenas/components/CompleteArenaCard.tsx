@@ -22,9 +22,13 @@ type CompleteArenaCardProps = {
     rightCount: number;
     leftPercent: number;
     rightPercent: number;
+    showBadgeIconOnly?: boolean;
 };
 
-export default function CompleteArenaCard(props: CompleteArenaCardProps) {
+export default function CompleteArenaCard({
+    showBadgeIconOnly = false,
+    ...props
+}: CompleteArenaCardProps) {
     const router = useRouter();
     const onClickHandler = () => {
         router.push(`/arenas/${props.id}`);
@@ -64,7 +68,10 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                     <span className="max-w-[80px] truncate whitespace-nowrap">
                         {props.creatorNickname}
                     </span>
-                    <TierBadge score={props.creatorScore} />
+                    <TierBadge
+                        score={props.creatorScore}
+                        iconOnly={showBadgeIconOnly}
+                    />
                     <span className="whitespace-nowrap">
                         {props.leftPercent}%
                     </span>
@@ -92,7 +99,10 @@ export default function CompleteArenaCard(props: CompleteArenaCardProps) {
                     <span className="max-w-[80px] truncate whitespace-nowrap">
                         {props.challengerNickname}
                     </span>
-                    <TierBadge score={props.challengerScore || 0} />
+                    <TierBadge
+                        score={props.challengerScore || 0}
+                        iconOnly={showBadgeIconOnly}
+                    />
                 </div>
             </div>
         </div>
