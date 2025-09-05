@@ -44,20 +44,23 @@ export default function MyWaitingArenaList() {
 
     return (
         <div className="flex w-full flex-col items-center gap-6">
-            {/* ✅ 그리드 레이아웃 적용 */}
-            <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2">
-                {arenaListDto.arenas.map((arena) => (
-                    <WaitingArenaCard
-                        key={arena.id}
-                        id={arena.id}
-                        title={arena.title}
-                        creatorNickname={arena.creatorNickname}
-                        creatorScore={arena.creatorScore}
-                        challengerNickname={arena.challengerNickname}
-                        challengerScore={arena.challengerScore}
-                        startDate={new Date(arena.startDate)}
-                    />
-                ))}
+            {/* ✅ 반응형 + 가로 스크롤 */}
+            <div className="w-full overflow-x-auto overflow-y-hidden">
+                <div className="grid grid-cols-1 gap-6 break-keep px-1 min-[821px]:min-w-[640px] min-[821px]:grid-cols-2">
+                    {arenaListDto.arenas.map((arena) => (
+                        <WaitingArenaCard
+                            key={arena.id}
+                            id={arena.id}
+                            title={arena.title}
+                            creatorNickname={arena.creatorNickname}
+                            creatorScore={arena.creatorScore}
+                            challengerNickname={arena.challengerNickname}
+                            challengerScore={arena.challengerScore}
+                            startDate={new Date(arena.startDate)}
+                            showBadgeIconOnly={true}
+                        />
+                    ))}
+                </div>
             </div>
 
             {/* 페이지네이션 */}

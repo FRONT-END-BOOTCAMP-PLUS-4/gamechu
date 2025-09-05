@@ -12,9 +12,13 @@ type WaitingArenaCardProps = {
     challengerNickname: string | null;
     challengerScore: number | null;
     startDate: Date;
+    showBadgeIconOnly?: boolean;
 };
 
-export default function WaitingArenaCard(props: WaitingArenaCardProps) {
+export default function WaitingArenaCard({
+    showBadgeIconOnly = false,
+    ...props
+}: WaitingArenaCardProps) {
     const router = useRouter();
     const onClickHandler = () => {
         router.push(`/arenas/${props.id}`);
@@ -40,7 +44,10 @@ export default function WaitingArenaCard(props: WaitingArenaCardProps) {
                     <span className="max-w-[100px] truncate whitespace-nowrap">
                         {props.creatorNickname}
                     </span>
-                    <TierBadge score={props.creatorScore} />
+                    <TierBadge
+                        score={props.creatorScore}
+                        iconOnly={showBadgeIconOnly}
+                    />
                 </div>
 
                 <span className="mx-2 text-gray-400">vs</span>
@@ -50,7 +57,10 @@ export default function WaitingArenaCard(props: WaitingArenaCardProps) {
                     <span className="max-w-[100px] truncate whitespace-nowrap">
                         {props.challengerNickname}
                     </span>
-                    <TierBadge score={props.challengerScore || 0} />
+                    <TierBadge
+                        score={props.challengerScore || 0}
+                        iconOnly={showBadgeIconOnly}
+                    />
                 </div>
             </div>
 
