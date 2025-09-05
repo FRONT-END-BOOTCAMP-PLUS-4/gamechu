@@ -19,8 +19,8 @@ export default function GameInfoCard({
     const display = (arr: string[]) => arr.slice(0, 2).join(", ");
 
     return (
-        <div className="w-[300px] h-[330px] bg-background-100 rounded-[8px] p-4 pl-8 space-y-4">
-            <h2 className="text-h2 font-medium text-font-100 line-clamp-1">
+        <div className="h-[330px] w-[300px] w-full min-w-[200px] space-y-4 rounded-3xl bg-background-100 p-4 pl-8">
+            <h2 className="line-clamp-1 text-h2 font-medium text-font-100">
                 게임 정보
             </h2>
 
@@ -71,7 +71,7 @@ function InfoRow({
     value: string;
 }) {
     return (
-        <div className="flex items-center h-9 gap-3">
+        <div className="flex h-9 items-center gap-3">
             <Image src={icon} alt={label} width={20} height={20} />
             <div className="flex flex-col">
                 <span className="text-regular text-font-100">{label}</span>
