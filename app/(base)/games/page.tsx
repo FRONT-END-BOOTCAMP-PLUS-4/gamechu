@@ -8,7 +8,7 @@ import Pager from "@/app/components/Pager";
 import { useDebounce } from "@/utils/UseDebounce";
 import GameSort from "./components/GameSort";
 import { useLoadingStore } from "@/stores/loadingStore";
-import Image from "next/image";
+import GamePageHeader from "./components/GamePageHeader";
 
 interface GameCard {
     id: number;
@@ -124,24 +124,11 @@ export default function GamePage() {
     }, [selectedTag, selectedPlatformId, debounceKeyword, sortBy, currentPage]);
 
     return (
-        <div className="min-h-screen bg-background-400 text-font-100 py-12 space-y-5">
-            <div className="flex justify-between items-end">
-                <div>
-                    <h1 className="text-headline font-bold flex items-center gap-2">
-                        <Image
-                            src="/icons/gamesearch.svg"
-                            alt="Game search"
-                            width={32}
-                            height={32}
-                        />
-                        게임 찾기
-                    </h1>
-                    <p className="text-body text-font-200 font-regular mt-1">
-                        다양한 장르와 플랫폼의 게임을 찾아보세요
-                    </p>
-                    <div className="mt-2">
-                        <GameSort current={sortBy} onChange={setSortBy} />
-                    </div>
+        <div className="min-h-screen space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
+            <GamePageHeader />
+            <div className="flex items-end justify-between gap-6 px-4">
+                <div className="mt-2">
+                    <GameSort current={sortBy} onChange={setSortBy} />
                 </div>
                 <SearchBar keyword={keyword} setKeyword={setKeyword} />
             </div>
