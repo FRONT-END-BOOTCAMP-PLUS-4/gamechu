@@ -42,18 +42,13 @@ export default function Comment({
             StarterKit,
             CustomImage,
             TextStyle,
-            FontSize.configure({
-                types: ["textStyle"], // FontSize는 이거 필요
-            }),
-            Placeholder.configure({
-                placeholder: "리뷰를 입력하세요...",
-            }),
+            FontSize.configure({ types: ["textStyle"] }),
+            Placeholder.configure({ placeholder: "리뷰를 입력하세요..." }),
         ],
-
         content: defaultValue || null,
         editorProps: {
             attributes: {
-                class: " w-full min-h-[218px] bg-background-200 rounded-[8px] p-4 outline-none overflow-y-auto border border-line-200 focus:border-primary-purple-200 focus:border-2",
+                class: "w-full min-h-[218px] sm:min-h-[200px] bg-background-200 rounded-[8px] p-4 outline-none overflow-y-auto border border-line-200 focus:border-primary-purple-200 focus:border-2",
                 placeholder: "리뷰를 입력하세요...",
             },
         },
@@ -76,13 +71,13 @@ export default function Comment({
                                 type: "image",
                                 attrs: {
                                     src: reader.result as string,
-                                    width: "300",
+                                    style: "max-width: 100%; height: auto;", // 반응형 적용
                                 },
                             },
                         ])
                         .run();
                 };
-                reader.readAsDataURL(file); // base64
+                reader.readAsDataURL(file);
             }
         };
         input.click();
@@ -153,14 +148,14 @@ export default function Comment({
     };
 
     return (
-        <div className="w-[1060px] min-h-[250px] bg-background-100 rounded-[4px] p-4 flex flex-col gap-3 relative">
+        <div className="relative flex w-full max-w-full flex-col gap-3 overflow-hidden rounded-[4px] bg-background-100 p-4">
             {/* 상단 툴바 + 별점 + 버튼 */}
-            <div className="flex justify-between items-center w-full">
+            <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                 <CommentEditorToolbar
                     editor={editor}
                     onImageUpload={handleImageUpload}
                 />
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-4">
                     <StarRating
                         value={rating}
                         variant="noText"
@@ -171,8 +166,8 @@ export default function Comment({
                             isLoading
                                 ? "등록 중.."
                                 : editingReviewId
-                                ? "수정"
-                                : "등록"
+                                  ? "수정"
+                                  : "등록"
                         }
                         onClick={handleSubmit}
                     />
@@ -182,7 +177,7 @@ export default function Comment({
             {/* 에디터 영역 */}
             <EditorContent
                 editor={editor}
-                className="prose max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:max-w-full [&_img.ProseMirror-selectednode]:outline [&_img.ProseMirror-selectednode]:outline-2 [&_img.ProseMirror-selectednode]:outline-primary-blue-200"
+                className="prose prose-sm sm:prose-base max-w-full break-words [&_img.ProseMirror-selectednode]:outline [&_img.ProseMirror-selectednode]:outline-2 [&_img.ProseMirror-selectednode]:outline-primary-blue-200 [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-md"
             />
 
             {/* 토스트 */}

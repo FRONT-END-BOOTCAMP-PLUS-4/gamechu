@@ -47,7 +47,7 @@ export default function StarRating({
                     <div
                         key={i}
                         className={cn(
-                            "relative w-[30px] h-[30px] cursor-pointer",
+                            "relative h-[30px] w-[30px] cursor-pointer",
                             readOnly && "cursor-default"
                         )}
                         onMouseEnter={() => !readOnly && setHoverValue(i + 1)}
@@ -80,12 +80,12 @@ export default function StarRating({
                             />
                         )}
                         {getStarType(i) === "half" && (
-                            <div className="w-full h-full relative">
+                            <div className="relative h-full w-full">
                                 <Image
                                     src="/icons/purple-star.svg"
                                     alt="half"
                                     fill
-                                    className="object-contain clip-half"
+                                    className="clip-half object-contain"
                                 />
                                 <Image
                                     src="/icons/empty-purple-star.svg"

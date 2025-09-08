@@ -118,9 +118,9 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
     );
 
     return (
-        <div className="w-full flex gap-10 items-start">
+        <div className="flex w-full flex-col items-start gap-10 lg:flex-row">
             {/* 좌측: 셀렉터 */}
-            <div className="w-[300px] flex-shrink-0">
+            <div className="flex w-full flex-shrink-0 flex-col lg:w-[300px]">
                 <ReviewSelector
                     selected={selectedReviewType}
                     onSelect={(type) => {
@@ -145,7 +145,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
             </div>
 
             {/* 우측: 댓글 등록 + 리스트 */}
-            <div className="flex-1 space-y-10">
+            <div className="w-full max-w-full flex-1 space-y-10 px-4 lg:px-0">
                 {/* 내가 쓴 댓글 or 댓글 작성 */}
                 {typeof gameId === "number" &&
                     (editingId !== null ? (
@@ -162,7 +162,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                             />
                         </div>
                     ) : myComment ? (
-                        <div className="glow-border w-fit mx-auto">
+                        <div className="glow-border w-full">
                             <div className="glow-border-inner">
                                 <CommentCard
                                     id={myComment.id}

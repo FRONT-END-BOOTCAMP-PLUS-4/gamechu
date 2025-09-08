@@ -35,20 +35,23 @@ export default function ReviewSelector({
             <button
                 onClick={() => onSelect(type)}
                 className={cn(
-                    "w-[300px] h-[200px] rounded-lg px-4 py-6 flex items-center justify-center gap-3 text-font-100 border border-line-200 transition-all",
+                    "flex h-[200px] w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-lg border px-4 py-6 text-font-100 transition-all lg:w-[300px] lg:flex-row",
                     isSelected
                         ? "border-2 border-primary-purple-200"
                         : "opacity-70 hover:opacity-100"
                 )}
             >
-                {isSelected && (
-                    <div className="w-[120px] h-[120px]">
-                        <Lottie animationData={Rio} loop autoplay />
-                    </div>
-                )}
+                <div className="h-[100px] w-[100px] shrink-0 lg:h-[120px] lg:w-[120px]">
+                    <Lottie
+                        animationData={Rio}
+                        loop
+                        autoplay
+                        className={cn(isSelected ? "opacity-100" : "opacity-0")}
+                    />
+                </div>
 
-                <div className="flex flex-col items-start gap-2">
-                    <h2 className="text-h2 font-semibold">{label}</h2>
+                <div className="flex flex-col items-start whitespace-nowrap lg:gap-2">
+                    <h2 className="text-lg font-semibold">{label}</h2>
 
                     <div className="flex items-center gap-2">
                         <Image
@@ -62,7 +65,7 @@ export default function ReviewSelector({
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 whitespace-nowrap">
                         <Image
                             src="/icons/review.svg"
                             alt="리뷰"
@@ -79,7 +82,7 @@ export default function ReviewSelector({
     };
 
     return (
-        <div className="flex flex-col items-start gap-6">
+        <div className="flex flex-row items-start justify-between gap-6 px-6 lg:flex-col lg:px-0">
             {renderBox(
                 "겜잘알 리뷰",
                 "expert",
