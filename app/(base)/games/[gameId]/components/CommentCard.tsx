@@ -100,14 +100,11 @@ export default function CommentCard({
                 message: "로그인이 필요합니다",
                 status: "error",
             });
-            setTimeout(() => {
-                setToast((prev) => ({ ...prev, show: false }));
-                router.push(
-                    `/log-in?callbackUrl=${encodeURIComponent(
-                        window.location.pathname
-                    )}`
-                );
-            }, 1000);
+            router.push(
+                `/log-in?callbackUrl=${encodeURIComponent(
+                    window.location.pathname
+                )}`
+            );
             return;
         }
 
@@ -117,9 +114,6 @@ export default function CommentCard({
                 message: "내가 작성한 댓글입니다",
                 status: "error",
             });
-            setTimeout(() => {
-                setToast((prev) => ({ ...prev, show: false }));
-            }, 1000);
             return;
         }
 
@@ -159,7 +153,7 @@ export default function CommentCard({
     };
 
     return (
-        <div className="relative min-h-[100px] w-[1060px] space-y-4 rounded-[8px] border border-line-100 border-opacity-50 bg-background-200 p-4 pb-12">
+        <div className="relative min-h-[100px] w-full space-y-4 rounded-[8px] border border-line-100 border-opacity-50 bg-background-200 p-4 pb-12">
             {/* 유저 정보 */}
             <div className="flex items-start justify-between">
                 <div className="flex items-start gap-2">
