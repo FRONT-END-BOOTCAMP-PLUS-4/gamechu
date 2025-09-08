@@ -23,13 +23,13 @@ export default function GameTitleCardBase({
     return (
         <div className="flex w-full max-w-[960px] flex-col overflow-visible rounded-3xl bg-background-100 shadow lg:h-[330px] lg:min-w-[800px] lg:flex-row">
             {/* 이미지 영역 */}
-            <div className="relative aspect-[16/9] w-full flex-none lg:h-[330px] lg:w-[480px]">
+            <div className="relative aspect-[12/9] w-full flex-none lg:h-[330px] lg:w-[480px]">
                 <Image
                     src={image.startsWith("//") ? `https:${image}` : image}
                     alt={title}
                     fill
                     sizes="(max-width: 768px) 100vw, 480px"
-                    className="rounded-t-3xl object-cover lg:rounded-l-3xl lg:rounded-t-none"
+                    className="rounded-t-3xl lg:rounded-l-3xl lg:rounded-r-none"
                 />
             </div>
 
