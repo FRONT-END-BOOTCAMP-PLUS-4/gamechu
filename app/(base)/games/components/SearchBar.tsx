@@ -13,10 +13,10 @@ export default function SearchBar({ keyword, setKeyword }: SearchBarProps) {
     const [isFocused, setIsFocused] = useState(false);
 
     return (
-        <div className="flex items-center gap-1">
+        <div className="gap-1s flex w-full items-center sm:max-w-[32ch]">
             <div
                 className={cn(
-                    "relative w-[346.67px] h-[50px] rounded-[4px] border transition overflow-hidden",
+                    "relative h-10 w-full overflow-hidden rounded-[4px] border transition",
                     isFocused ? "border-primary-purple-200" : "border-line-200"
                 )}
             >
@@ -36,7 +36,7 @@ export default function SearchBar({ keyword, setKeyword }: SearchBarProps) {
                     placeholder="영문으로 제목 혹은 개발사를 입력하세요"
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    className="w-full h-full pl-8 pr-3 text-font-100 font-small placeholder-font-200 bg-background-100 outline-none rounded-[4px]"
+                    className="font-small h-full w-full rounded-[4px] bg-background-100 pl-8 pr-3 text-font-100 placeholder-font-200 outline-none"
                 />
             </div>
         </div>

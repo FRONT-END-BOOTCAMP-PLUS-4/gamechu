@@ -126,10 +126,8 @@ export default function GamePage() {
     return (
         <div className="min-h-screen space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
             <GamePageHeader />
-            <div className="flex items-end justify-between gap-6 px-4">
-                <div className="mt-2">
-                    <GameSort current={sortBy} onChange={setSortBy} />
-                </div>
+            <div className="flex flex-wrap-reverse items-start gap-6 px-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+                <GameSort current={sortBy} onChange={setSortBy} />
                 <SearchBar keyword={keyword} setKeyword={setKeyword} />
             </div>
 
