@@ -29,8 +29,8 @@ export default function GameTitleInfoSection({
                 </p>
             </div>
 
-            <div className="mb-4 flex flex-col gap-4 lg:mb-6 lg:flex-row lg:gap-6">
-                <div className="mb-2 flex items-start gap-2 lg:mb-0 lg:gap-3">
+            <div className="mb-4 flex flex-wrap gap-4 lg:mb-6 lg:gap-6">
+                <div className="flex min-w-[120px] items-start gap-2">
                     <Image
                         src="/icons/yellow-star.svg"
                         alt="rating"
@@ -54,7 +54,7 @@ export default function GameTitleInfoSection({
                     </div>
                 </div>
 
-                <div className="flex items-start gap-2 lg:gap-3">
+                <div className="flex min-w-[120px] items-start gap-2">
                     <Image
                         src="/icons/release-date.svg"
                         alt="release date"
