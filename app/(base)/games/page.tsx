@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import GameCardList from "./components/GameCardList";
-import GameFilter from "./components/GameFilter";
 import SearchBar from "./components/SearchBar";
 import Pager from "@/app/components/Pager";
 import { useDebounce } from "@/utils/UseDebounce";
 import GameSort from "./components/GameSort";
 import { useLoadingStore } from "@/stores/loadingStore";
 import GamePageHeader from "./components/GamePageHeader";
+import GameFilterWrapper from "./components/GameFilterWrapper";
 
 interface GameCard {
     id: number;
@@ -124,16 +124,16 @@ export default function GamePage() {
     }, [selectedTag, selectedPlatformId, debounceKeyword, sortBy, currentPage]);
 
     return (
-        <div className="min-h-screen space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
+        <div className="min-h-screen w-full space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
             <GamePageHeader />
             <div className="flex flex-wrap-reverse items-start gap-6 px-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
                 <GameSort current={sortBy} onChange={setSortBy} />
                 <SearchBar keyword={keyword} setKeyword={setKeyword} />
             </div>
 
-            <div className="flex items-start gap-8">
+            <div className="flex w-full items-start gap-8 px-6">
                 {isFilterReady && (
-                    <GameFilter
+                    <GameFilterWrapper
                         genres={genres}
                         themes={themes}
                         platforms={platforms}
@@ -143,7 +143,7 @@ export default function GamePage() {
                         setSelectedPlatformId={setSelectedPlatformId}
                     />
                 )}
-                <div className="w-[1068px] space-y-10">
+                <div className="w-full flex-1">
                     <GameCardList games={games} />
                     {games.length > 0 && (
                         <Pager

@@ -17,7 +17,7 @@ interface GameCardListProps {
 
 export default function GameCardList({ games }: GameCardListProps) {
     return (
-        <div className="grid grid-cols-3 gap-3 w-[1068px]">
+        <div className="mb-4 grid grid-cols-1 justify-center gap-6 sm:sm:[grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
             {games.map((game) => (
                 <GameCard key={game.id} {...game} />
             ))}
