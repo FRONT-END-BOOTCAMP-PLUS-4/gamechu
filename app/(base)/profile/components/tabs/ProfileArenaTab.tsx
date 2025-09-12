@@ -42,20 +42,22 @@ export default function ProfileArenaTab() {
             <h2 className="text-body text-lg font-semibold">투기장</h2>
 
             {/* 탭 메뉴 */}
-            <div className="flex justify-center gap-2 whitespace-nowrap border-b border-gray-600 pb-2 sm:gap-4">
-                {TABS.map((tab) => (
-                    <button
-                        key={tab.key}
-                        onClick={() => setActiveTab(tab.key)}
-                        className={`border-b-2 px-3 py-2 text-sm font-semibold transition-all sm:px-4 ${
-                            activeTab === tab.key
-                                ? "border-purple-500 text-purple-500"
-                                : "border-transparent text-gray-400 hover:text-white"
-                        } `}
-                    >
-                        {tab.label}
-                    </button>
-                ))}
+            <div className="no-scrollbar relative overflow-x-auto">
+                <div className="flex min-w-max justify-center gap-2 whitespace-nowrap border-b border-gray-600 px-4 pb-2 sm:gap-4">
+                    {TABS.map((tab) => (
+                        <button
+                            key={tab.key}
+                            onClick={() => setActiveTab(tab.key)}
+                            className={`border-b-2 px-3 py-2 text-sm font-semibold transition-all sm:px-4 ${
+                                activeTab === tab.key
+                                    ? "border-purple-500 text-purple-500"
+                                    : "border-transparent text-gray-400 hover:text-white"
+                            }`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* 탭 내용 */}
