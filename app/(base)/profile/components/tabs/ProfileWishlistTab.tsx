@@ -40,7 +40,8 @@ export default function ProfileWishlistTab({
                 </p>
             ) : (
                 <>
-                    <div className="grid grid-cols-1 gap-6 min-[820px]:grid-cols-2">
+                    {/* 820px → md 로 교체 */}
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         {games.map((game) => (
                             <GameCard key={game.id} {...game} />
                         ))}
