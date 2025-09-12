@@ -19,8 +19,8 @@ export default function GameInfoCard({
     const display = (arr: string[]) => arr.slice(0, 2).join(", ");
 
     return (
-        <div className="h-[330px] w-[300px] w-full min-w-[200px] space-y-4 rounded-3xl bg-background-100 p-4 pl-8">
-            <h2 className="line-clamp-1 text-h2 font-medium text-font-100">
+        <div className="w-full space-y-6 p-4 lg:h-[330px] lg:space-y-4">
+            <h2 className="line-clamp-1 text-lg font-semibold text-font-100 lg:text-h2">
                 게임 정보
             </h2>
 
