@@ -21,7 +21,7 @@ export default function ProfileSummaryCard({
     createdAt,
 }: Props) {
     return (
-        <div className="w-full rounded-xl bg-background-300 p-6 shadow min-[820px]:h-[320px] min-[820px]:w-[250px]">
+        <div className="w-full rounded-xl bg-background-300 p-6 shadow md:h-[320px] md:w-[250px]">
             <div className="mx-auto mb-4 h-[120px] w-[120px] overflow-hidden rounded-full">
                 <Image
                     src={imageUrl || "/icons/arena.svg"}
