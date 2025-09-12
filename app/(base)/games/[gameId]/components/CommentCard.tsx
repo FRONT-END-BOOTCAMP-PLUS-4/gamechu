@@ -156,7 +156,8 @@ export default function CommentCard({
         <div className="relative min-h-[100px] w-full space-y-4 rounded-[8px] border border-line-100 border-opacity-50 bg-background-200 p-4 pb-12">
             {/* 유저 정보 */}
             <div className="flex items-start justify-between">
-                <div className="flex items-start gap-2">
+                <div className="flex w-full items-start gap-2">
+                    {/* 프로필 이미지 */}
                     <div className="h-[44px] w-[44px] flex-shrink-0 overflow-hidden rounded-full border border-line-100">
                         <Image
                             src={profileImage}
@@ -167,79 +168,86 @@ export default function CommentCard({
                             unoptimized
                         />
                     </div>
-                    <div className="flex flex-col">
-                        <div className="flex items-center gap-1">
-                            <span className="text-h3 font-medium text-font-100">
+                    {/* 닉네임, 티어, 날짜 */}
+                    <div className="flex flex-1 flex-col">
+                        <div className="flex items-center gap-2">
+                            <span className="truncate text-sm font-semibold text-font-100 lg:text-base">
                                 {nickname}
                             </span>
                             <TierBadge score={score} />
                         </div>
-                        <span className="text-caption text-font-200">
+                        <span className="max-w-[100px] truncate text-caption text-font-200">
                             {date}
                         </span>
                     </div>
-                    <div className="mx-2 h-[40px] w-px bg-line-100 opacity-50" />
-                    <div className="flex h-[44px] items-center">
+                    {/* 평점 */}
+                    <div className="ml-2 flex flex-shrink-0 items-center gap-2">
                         <Image
                             src="/icons/empty-purple-star.svg"
                             alt="star"
                             width={20}
                             height={20}
-                            className="mr-1"
                         />
-                        <span className="text-font-100">
+                        <span className="whitespace-nowrap text-sm text-font-100 lg:text-base">
                             {rating.toFixed(1)} / 5.0
                         </span>
                     </div>
-                </div>
-
-                {viewerId === memberId && (
-                    <div className="relative" ref={menuRef}>
-                        <button
-                            onClick={toggleMenu}
-                            className="rounded p-1 transition hover:bg-primary-purple-100"
+                    {/* 메뉴 */}
+                    {viewerId === memberId && (
+                        <div
+                            className="relative ml-2 flex-shrink-0"
+                            ref={menuRef}
                         >
-                            <Image
-                                src="/icons/hamburger.svg"
-                                alt="menu"
-                                width={24}
-                                height={24}
-                                className="cursor-pointer invert"
-                            />
-                        </button>
-
-                        {showMenu && (
-                            <div className="absolute right-0 top-0 z-30 space-y-1 px-4 py-4">
-                                <Button
-                                    type="black"
-                                    size="small"
-                                    label="수정"
-                                    onClick={() => onEdit?.(id)}
+                            <button
+                                onClick={toggleMenu}
+                                className="rounded p-1 transition hover:bg-primary-purple-100"
+                            >
+                                <Image
+                                    src="/icons/hamburger.svg"
+                                    alt="menu"
+                                    width={24}
+                                    height={24}
+                                    className="cursor-pointer invert"
                                 />
-                                <Button
-                                    type="black"
-                                    size="small"
-                                    label="삭제"
-                                    onClick={() => onDelete?.(id)}
-                                />
-                            </div>
-                        )}
-                    </div>
-                )}
+                            </button>
+                            {showMenu && (
+                                <div className="absolute right-0 top-0 z-30 space-y-1 px-4 py-4">
+                                    <Button
+                                        type="black"
+                                        size="small"
+                                        label="수정"
+                                        onClick={() => onEdit?.(id)}
+                                    />
+                                    <Button
+                                        type="black"
+                                        size="small"
+                                        label="삭제"
+                                        onClick={() => onDelete?.(id)}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
-            <hr className="w-full bg-line-100 opacity-75" />
+            {/* 구분선 */}
+            <hr className="w-full border-t opacity-75" />
             {/* 댓글 내용 + 더보기 */}
             <div
                 ref={commentRef}
-                className={`prose max-w-[860px] whitespace-pre-wrap text-body text-font-100 transition-all duration-200 [&_img]:h-auto [&_img]:w-1/3 [&_img]:rounded-md ${
+                className={`prose max-w-[860px] text-sm text-font-100 transition-all duration-200 lg:text-body [&_img]:h-auto [&_img]:w-1/3 [&_img]:rounded-md ${
                     expanded ? "" : "line-clamp-2"
                 }`}
                 dangerouslySetInnerHTML={{ __html: comment }}
             ></div>
             {/* 좋아요 버튼 */}
             <div className="absolute bottom-1 left-1 flex items-center">
-                <button onClick={handleLike} disabled={isLoading}>
-                    <div className="flex h-[50px] w-[50px] items-center justify-center">
+                <button
+                    onClick={handleLike}
+                    disabled={isLoading}
+                    className="group flex items-center"
+                >
+                    <div className="flex h-[40px] w-[40px] items-center justify-center">
                         {isLiked ? (
                             animationDone ? (
                                 <Image
@@ -267,8 +275,15 @@ export default function CommentCard({
                             />
                         )}
                     </div>
+
+                    <span
+                        className={`text-sm transition-colors lg:text-base ${
+                            isLiked ? "text-red-500" : "text-font-200"
+                        }`}
+                    >
+                        좋아요({likeCount})
+                    </span>
                 </button>
-                <span className="text-font-200">좋아요 ({likeCount})</span>
             </div>
 
             {isOverflowing && (
