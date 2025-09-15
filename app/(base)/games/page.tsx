@@ -127,8 +127,8 @@ export default function GamePage() {
     return (
         <div className="min-h-screen w-full space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
             <GamePageHeader />
-            <div className="flex flex-wrap-reverse items-center gap-4 px-6 sm:gap-6">
-                <div className="flex flex-1 gap-2 sm:gap-4">
+            <div className="flex flex-wrap-reverse items-center justify-between gap-4 px-6 sm:gap-6">
+                <div className="flex w-full flex-shrink-0 gap-2 sm:w-auto sm:gap-4">
                     {/* 모바일 전용 토글 버튼 */}
                     <button
                         className="h-10 flex-shrink-0 justify-center rounded-md bg-primary-blue-200 px-4 py-2 text-button text-sm font-medium text-font-100 text-white xl:hidden"
