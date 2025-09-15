@@ -25,7 +25,7 @@ export default function GameSort({ current, onChange }: Props) {
         "bg-background-400 text-font-100 border border-line-100 hover:border-primary-purple-200";
 
     return (
-        <div className="mt-2 flex w-full gap-2 sm:w-auto sm:gap-4">
+        <div className="flex w-full gap-2 sm:w-auto sm:gap-4">
             {options.map((option) => (
                 // TODO: Button component에 반응형 적용
                 <button

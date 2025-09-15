@@ -42,7 +42,7 @@ export default function GameCard({
             {/* 이미지 영역: 모바일 16:9 → 데스크탑 1:1 */}
             {/* <div className="relative w-full h-[248px]">
                 <Image src={thumbnailSrc} alt={title} fill sizes="346px" /> */}
-            <div className="min-lg:aspect-square relative aspect-[16/9] w-full">
+            <div className="min-lg:aspect-square relative aspect-[284/384] w-full">
                 <Image
                     src={thumbnailSrc}
                     alt={title}

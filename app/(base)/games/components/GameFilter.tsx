@@ -51,10 +51,10 @@ export default function GameFilter({
         : platforms.slice(0, 10);
 
     return (
-        <div className="w-[300px] bg-background-300 p-5 rounded-xl shadow-sm space-y-4">
+        <div className="max-h-full w-[300px] space-y-4 overflow-y-auto rounded-xl bg-background-300 p-5 shadow-sm">
             {/* 장르 및 테마 */}
             <div>
-                <h2 className="text-h2 font-semibold mb-3">장르 및 테마</h2>
+                <h2 className="mb-3 text-h2 font-semibold">장르 및 테마</h2>
                 <div className="grid grid-cols-2 gap-2">
                     {displayedTags.map((tag) => {
                         const isSelected =
@@ -68,10 +68,10 @@ export default function GameFilter({
                                     setSelectedTag(isSelected ? undefined : tag)
                                 }
                                 className={cn(
-                                    "px-3 py-1 text-sm font-medium rounded-md transition-colors duration-150",
+                                    "rounded-md px-3 py-1 text-sm font-medium transition-colors duration-150",
                                     isSelected
                                         ? "bg-primary-purple-300 text-white"
-                                        : "hover:bg-primary-purple-100 text-font-200"
+                                        : "text-font-200 hover:bg-primary-purple-100"
                                 )}
                             >
                                 {tag.name}
@@ -83,7 +83,7 @@ export default function GameFilter({
                 {genreAndTheme.length > 20 && (
                     <div className="mt-3 flex justify-center">
                         <button
-                            className="flex items-center gap-1 px-3 py-1  text-primary-purple-200 font-medium hover:bg-background-200 rounded-md transition"
+                            className="flex items-center gap-1 rounded-md px-3 py-1 font-medium text-primary-purple-200 transition hover:bg-background-200"
                             onClick={() => setIsGenreExpanded((prev) => !prev)}
                         >
                             {isGenreExpanded ? "접기" : "더보기"}
@@ -97,7 +97,7 @@ export default function GameFilter({
 
             {/* 플랫폼 */}
             <div>
-                <h2 className="text-h2 font-semibold mb-3">플랫폼</h2>
+                <h2 className="mb-3 text-h2 font-semibold">플랫폼</h2>
                 <div className="flex flex-col gap-2">
                     {displayedPlatforms.map((platform) => {
                         const isSelected = selectedPlatformId === platform.id;
@@ -110,10 +110,10 @@ export default function GameFilter({
                                     )
                                 }
                                 className={cn(
-                                    "px-3 py-1 text-sm font-medium rounded-md transition-colors duration-150",
+                                    "rounded-md px-3 py-1 text-sm font-medium transition-colors duration-150",
                                     isSelected
                                         ? "bg-primary-purple-300 text-white"
-                                        : "hover:bg-primary-purple-100 text-font-200"
+                                        : "text-font-200 hover:bg-primary-purple-100"
                                 )}
                             >
                                 {platform.name}
@@ -125,7 +125,7 @@ export default function GameFilter({
                 {platforms.length > 10 && (
                     <div className="mt-3 flex justify-center">
                         <button
-                            className="flex items-center gap-1 px-3 py-1 text-sm text-primary-purple-200 font-medium hover:bg-background-200 rounded-md transition"
+                            className="flex items-center gap-1 rounded-md px-3 py-1 text-sm font-medium text-primary-purple-200 transition hover:bg-background-200"
                             onClick={() =>
                                 setIsPlatformExpanded((prev) => !prev)
                             }
