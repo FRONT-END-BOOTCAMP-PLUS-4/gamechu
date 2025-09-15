@@ -27,6 +27,7 @@ interface OptionItem {
 
 export default function GamePage() {
     const { setLoading } = useLoadingStore();
+    const [filterIsOpen, setFilterIsOpen] = useState(false);
     const itemsPerPage = 6;
     const [games, setGames] = useState<GameCard[]>([]);
     const [totalItems, setTotalItems] = useState(0);
@@ -126,14 +127,25 @@ export default function GamePage() {
     return (
         <div className="min-h-screen w-full space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
             <GamePageHeader />
-            <div className="flex flex-wrap-reverse items-start gap-6 px-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
-                <GameSort current={sortBy} onChange={setSortBy} />
+            <div className="flex flex-wrap-reverse items-center gap-4 px-6 sm:gap-6">
+                <div className="flex flex-1 gap-2 sm:gap-4">
+                    {/* 모바일 전용 토글 버튼 */}
+                    <button
+                        className="h-10 flex-shrink-0 justify-center rounded-md bg-primary-blue-200 px-4 py-2 text-button text-sm font-medium text-font-100 text-white xl:hidden"
+                        onClick={() => setFilterIsOpen(true)}
+                    >
+                        필터
+                    </button>
+                    <GameSort current={sortBy} onChange={setSortBy} />
+                </div>
                 <SearchBar keyword={keyword} setKeyword={setKeyword} />
             </div>
 
-            <div className="flex w-full items-start gap-8 px-6">
+            <div className="flex w-full items-start gap-0 px-6 xl:gap-8">
                 {isFilterReady && (
                     <GameFilterWrapper
+                        isOpen={filterIsOpen}
+                        onClose={() => setFilterIsOpen(false)}
                         genres={genres}
                         themes={themes}
                         platforms={platforms}
