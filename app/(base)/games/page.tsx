@@ -124,8 +124,21 @@ export default function GamePage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedTag, selectedPlatformId, debounceKeyword, sortBy, currentPage]);
 
+    // 필터 사이드바가 열린 상태에서 메인 화면 스크롤 방지
+    useEffect(() => {
+        if (filterIsOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [filterIsOpen]);
+
     return (
-        <div className="min-h-screen w-full space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
+        <div className="custom-scroll min-h-screen w-full space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
             <GamePageHeader />
             <div className="flex flex-wrap-reverse items-center justify-between gap-4 px-6 sm:gap-6">
                 <div className="flex w-full flex-shrink-0 gap-2 sm:w-auto sm:gap-4">

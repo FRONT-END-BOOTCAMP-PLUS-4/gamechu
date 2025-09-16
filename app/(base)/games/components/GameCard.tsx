@@ -37,11 +37,9 @@ export default function GameCard({
         <div
             onClick={handleClick}
             className="box-border flex w-full cursor-pointer flex-col overflow-hidden rounded-[6px] border border-[1px] border-line-200 border-opacity-50 bg-background-100 transition-all duration-100 hover:border-[2px] hover:border-primary-purple-200"
-            // className="cursor-pointer box-border w-[348px] h-[348px] overflow-hidden flex flex-col rounded-[6px] border border-[1px] border-line-200 border-opacity-50 hover:border-[2px] hover:border-primary-purple-200 transition-all duration-100"
         >
-            {/* 이미지 영역: 모바일 16:9 → 데스크탑 1:1 */}
-            {/* <div className="relative w-full h-[248px]">
-                <Image src={thumbnailSrc} alt={title} fill sizes="346px" /> */}
+            {/* 이미지 영역: TODO: 모바일에서 사진 크기 조정 */}
+
             <div className="min-lg:aspect-square relative aspect-[284/384] w-full">
                 <Image
                     src={thumbnailSrc}
