@@ -38,26 +38,24 @@ export default function GameFilterWrapper(props: GameFilterWrapperProps) {
                 <GameFilter {...props} />
             </div>
 
-            {/* 모바일 Drawer (오버레이) */}
-            {props.isOpen && (
+            {/* 필터 Drawer, 애니메이션 적용 */}
+            <div
+                className={`fixed inset-0 z-50 flex rounded-lg bg-black bg-opacity-50 transition-opacity duration-300 ${props.isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                onClick={() => props.onClose()}
+            >
                 <div
-                    className="fixed inset-0 z-50 flex rounded-lg bg-black bg-opacity-50 transition-opacity duration-300"
-                    onClick={() => props.onClose()}
+                    className={`h-full transform bg-background-100 p-5 shadow-lg transition-transform duration-300 ${props.isOpen ? "translate-x-0" : "-translate-x-full"}`}
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    <div
-                        className={`h-full transform bg-background-100 p-5 shadow-lg transition-transform duration-300 ${props.isOpen ? "translate-x-0" : "-translate-x-full"}`}
-                        onClick={(e) => e.stopPropagation()}
+                    <button
+                        className="mb-4 text-right text-primary-purple-200"
+                        onClick={() => props.onClose()}
                     >
-                        <button
-                            className="mb-4 text-right text-primary-purple-200"
-                            onClick={() => props.onClose()}
-                        >
-                            닫기 ✕
-                        </button>
-                        <GameFilter {...props} />
-                    </div>
+                        닫기 ✕
+                    </button>
+                    <GameFilter {...props} />
                 </div>
-            )}
+            </div>
         </div>
     );
 }
