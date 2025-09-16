@@ -51,7 +51,7 @@ export default function GameFilter({
         : platforms.slice(0, 10);
 
     return (
-        <div className="max-h-full w-[300px] space-y-4 overflow-y-auto rounded-xl bg-background-300 p-5 shadow-sm">
+        <div className="custom-scroll max-h-full w-[300px] space-y-4 overflow-y-auto rounded-xl bg-background-300 p-5 shadow-sm">
             {/* 장르 및 테마 */}
             <div>
                 <h2 className="mb-3 text-h2 font-semibold">장르 및 테마</h2>
