@@ -44,7 +44,7 @@ export default function Header() {
         <Link
             href={href}
             onClick={() => setMenuOpen(false)}
-            className={`rounded-lg px-16 py-2 text-center text-base font-medium transition-all duration-200 hover:bg-white/10 sm:px-4 sm:text-2xl sm:py-2${
+            className={`rounded-lg px-16 py-2 text-center text-base font-medium transition-all duration-200 hover:bg-white/10 sm:px-4 sm:py-2 sm:text-2xl ${
                 pathname === href ? "text-primary-purple-100" : "text-white"
             }`}
         >
