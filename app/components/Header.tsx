@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import useModalStore from "@/stores/modalStore";
 import Button from "./Button";
-import { Menu, User } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 
 export default function Header() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -44,7 +44,7 @@ export default function Header() {
         <Link
             href={href}
             onClick={() => setMenuOpen(false)}
-            className={`text-base md:text-2xl font-medium hover:text-primary-purple-100 ${
+            className={`rounded-lg px-16 py-2 text-center text-base font-medium transition-all duration-200 hover:bg-white/10 sm:px-4 sm:text-2xl sm:py-2${
                 pathname === href ? "text-primary-purple-100" : "text-white"
             }`}
         >
@@ -53,38 +53,42 @@ export default function Header() {
     );
 
     return (
-        <header className="bg-background-300 text-white shadow-md mb-6 md:mb-0">
-            <div className="max-w-screen-xl relative mx-auto px-4 py-6 flex items-center justify-between">
+        <header className="relative border-b border-white/10 bg-background-300 text-white shadow-lg">
+            <div className="mx-auto flex max-w-screen-xl items-center justify-between px-6 py-4">
                 {/* 로고 */}
-                <Link href="/" className="flex items-center space-x-2">
+                <Link
+                    href="/"
+                    className="flex items-center transition-all duration-200 hover:scale-105"
+                >
                     <Image
                         src="/icons/gamechu-logo.svg"
                         alt="Gamechu 로고"
-                        width={150}
-                        height={150}
+                        width={160}
+                        height={100}
                         priority
                     />
                 </Link>
 
-                {/* 모바일 메뉴 버튼 */}
+                {/* 모바일 햄버거 버튼 */}
                 <button
-                    className="md:hidden"
+                    className="rounded-lg bg-white/10 p-1 transition-all sm:hidden"
                     onClick={toggleMenu}
                     aria-label="메뉴 열기"
                 >
-                    <Menu width={28} height={28} />
+                    {menuOpen ? <X size={28} /> : <Menu size={28} />}
                 </button>
 
-                {/* 가운데 메뉴 (게임, 투기장) */}
-                <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-16 text-2xl">
+                {/* 가운데  */}
+                <nav className="hidden whitespace-nowrap sm:flex sm:space-x-8">
                     <MenuLink href="/games" label="게임" />
                     <MenuLink href="/arenas" label="투기장" />
                 </nav>
 
-                {/* 오른쪽 메뉴 (알림, 마이페이지, 로그인/로그아웃) */}
-                <div className="hidden md:flex items-center space-x-8">
+                {/* 오른쪽  */}
+                <div className="flex hidden flex-shrink-0 items-center space-x-8 sm:flex">
                     {isLoggedIn && (
                         <button
+                            className="relative rounded-lg p-2 transition-colors hover:bg-white/20"
                             onClick={() => {
                                 useModalStore
                                     .getState()
@@ -97,13 +101,20 @@ export default function Header() {
                                 alt="알림"
                                 width={24}
                                 height={24}
+                                className="text-white"
                             />
                         </button>
                     )}
                     {isLoggedIn ? (
                         <>
-                            <Link href="/profile">
-                                <User size={28} color="#9333EA" />
+                            <Link
+                                href="/profile"
+                                className="rounded-lg p-2 transition-colors hover:bg-white/10"
+                            >
+                                <User
+                                    size={28}
+                                    className="text-primary-purple-100"
+                                />
                             </Link>
                             <Button
                                 label="로그아웃"
@@ -124,43 +135,77 @@ export default function Header() {
             </div>
 
             {/* 모바일 드롭다운 메뉴 */}
-            {menuOpen && (
-                <div className="md:hidden px-4 pb-4 flex flex-col space-y-4 bg-background-300 border-t border-white/10">
-                    <MenuLink href="/games" label="게임" />
-                    <MenuLink href="/arenas" label="투기장" />
-                    {isLoggedIn && (
-                        <button
-                            className="text-white text-base text-left"
-                            onClick={() => {
-                                useModalStore
-                                    .getState()
-                                    .openModal("notification", null);
-                                setMenuOpen(false);
-                            }}
-                        >
-                            알림
-                        </button>
-                    )}
-                    {isLoggedIn ? (
-                        <>
-                            <MenuLink href="/profile" label="마이페이지" />
+            <div
+                className={`absolute left-0 right-0 z-40 overflow-hidden border-b border-t border-white/10 bg-background-300 transition-all duration-300 sm:hidden ${
+                    menuOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+                }`}
+            >
+                <div className="flex items-start justify-between px-6 py-4">
+                    {/* 왼쪽  */}
+                    <nav className="flex flex-col space-y-2">
+                        <MenuLink href="/games" label="게임" />
+                        <MenuLink href="/arenas" label="투기장" />
+                    </nav>
+
+                    {/* 오른쪽 */}
+                    <div className="flex flex-col items-end space-y-3">
+                        {isLoggedIn ? (
+                            <>
+                                <div className="flex items-center space-x-4">
+                                    {/* 알림 버튼 */}
+                                    <button
+                                        className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-white/10"
+                                        onClick={() => {
+                                            useModalStore
+                                                .getState()
+                                                .openModal(
+                                                    "notification",
+                                                    null
+                                                );
+                                            setMenuOpen(false);
+                                        }}
+                                    >
+                                        <Image
+                                            src="/icons/bell.svg"
+                                            alt="알림"
+                                            width={20}
+                                            height={20}
+                                            className="text-white"
+                                        />
+                                    </button>
+
+                                    {/* 마이페이지 버튼 */}
+                                    <Link
+                                        href="/profile"
+                                        className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-white/10"
+                                        onClick={() => setMenuOpen(false)}
+                                    >
+                                        <User
+                                            size={20}
+                                            className="text-primary-purple-100"
+                                        />
+                                    </Link>
+                                </div>
+
+                                {/* 하단 로그아웃 버튼 */}
+                                <Button
+                                    label="로그아웃"
+                                    size="small"
+                                    type="purple"
+                                    onClick={handleLogout}
+                                />
+                            </>
+                        ) : (
                             <Button
-                                label="로그아웃"
+                                label="로그인"
                                 size="small"
                                 type="purple"
-                                onClick={handleLogout}
+                                onClick={handleLogin}
                             />
-                        </>
-                    ) : (
-                        <Button
-                            label="로그인"
-                            size="small"
-                            type="purple"
-                            onClick={handleLogin}
-                        />
-                    )}
+                        )}
+                    </div>
                 </div>
-            )}
+            </div>
         </header>
     );
 }
