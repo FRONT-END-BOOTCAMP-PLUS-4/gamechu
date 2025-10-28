@@ -152,15 +152,33 @@ export default function ArenaDetailVote() {
             )}
 
             {/* 하단 상태 메시지 */}
-            <div className="text-center text-caption text-font-100">
+            <div className="text-center text-sm text-font-100">
                 {arenaDetail?.status === 4 ? (
                     <>
                         투표가 진행중입니다. 남은시간:{" "}
                         <span className="font-bold">{remainingTime}</span>
                     </>
-                ) : (
-                    <>투표가 종료되었습니다.</>
-                )}
+                ) : arenaDetail?.status === 5 ? (
+                    !arenaDetail.challengerId ? (
+                        <>도전자가 없어 투기장이 취소되었습니다.</>
+                    ) : arenaDetail.leftPercent === arenaDetail.rightPercent ? (
+                        <>투기장이 무승부로 종료되었습니다.</>
+                    ) : arenaDetail.leftPercent > arenaDetail.rightPercent ? (
+                        <>
+                            <span className="px-1 font-bold">
+                                {arenaDetail.creatorName}
+                            </span>
+                            님이 승리하였습니다.
+                        </>
+                    ) : (
+                        <>
+                            <span className="px-1 font-bold">
+                                {arenaDetail.challengerName}
+                            </span>
+                            님이 승리하였습니다.
+                        </>
+                    )
+                ) : null}
             </div>
 
             {/* 에러 메시지 */}
