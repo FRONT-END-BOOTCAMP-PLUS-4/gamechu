@@ -53,6 +53,12 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
             };
 
             switch (status) {
+                case 1: {
+                    if (startDate && !challengerId) {
+                        schedule(startDate, 5);
+                    }
+                    break;
+                }
                 case 2:
                     if (startDate) {
                         const nextStatus = challengerId ? 3 : 5;
