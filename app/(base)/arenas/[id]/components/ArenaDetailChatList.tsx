@@ -14,10 +14,12 @@ function ArenaDetailChatListComponent(
     const arenaDetail = useArenaStore((state) => state.arenaData);
 
     return (
-        <div className="flex-1 overflow-y-auto space-y-3 pr-2 mb-4 max-h-[550px] custom-scroll">
+        <div className="custom-scroll mb-4 max-h-[550px] flex-1 space-y-3 overflow-y-auto pr-2">
             {chats.length === 0 ? (
-                <p className="text-font-300 text-center mt-4">
-                    아직 채팅이 없습니다.
+                <p className="text-font-300 mt-4 text-center">
+                    {arenaDetail?.status === 3
+                        ? "채팅이 아직 없습니다. 토론을 시작해보세요!"
+                        : "채팅이 없습니다."}
                 </p>
             ) : (
                 chats.map((chat) => {
@@ -38,62 +40,54 @@ function ArenaDetailChatListComponent(
                                       : ""
                             }`}
                         >
-                            <div className="max-w-[70%]">
+                            <div className="flex max-w-[75%] flex-col gap-1">
                                 {/* 닉네임 + 팀 SVG */}
-                                <div
-                                    className={`flex items-center mb-1 gap-2 ${
-                                        isCreator
-                                            ? "justify-start"
-                                            : isChallenger
-                                              ? "justify-end"
-                                              : ""
-                                    }`}
-                                >
-                                    {isCreator && (
-                                        <div className="flex flex-column items-center gap-4">
+                                {(isCreator || isChallenger) && (
+                                    <div
+                                        className={`flex items-center gap-2 ${isCreator ? "justify-start" : "justify-end"}`}
+                                    >
+                                        {isCreator && (
                                             <Image
                                                 src="/icons/teamA.svg"
                                                 alt="Team A"
                                                 width={32}
                                                 height={32}
-                                                className="mr-auto"
                                             />
-                                            <span className="text-xs text-font-300">
-                                                {arenaDetail?.creatorName}
-                                            </span>
-                                        </div>
-                                    )}
-                                    {isChallenger && (
-                                        <div className="flex items-center mb-1 gap-2">
-                                            <span className="text-xs text-font-300">
-                                                {arenaDetail?.challengerName}
-                                            </span>
+                                        )}
+                                        <span className="text-font-300 text-xs">
+                                            {isCreator
+                                                ? arenaDetail?.creatorName
+                                                : arenaDetail?.challengerName}
+                                        </span>
+                                        {isChallenger && (
                                             <Image
                                                 src="/icons/teamB.svg"
                                                 alt="Team B"
                                                 width={32}
                                                 height={32}
-                                                className="ml-auto"
                                             />
-                                        </div>
-                                    )}
-                                </div>
+                                        )}
+                                    </div>
+                                )}
 
                                 {/* 채팅 내용 */}
                                 <div
-                                    className={`px-4 py-2 rounded-lg text-sm ${
+                                    className={`rounded-lg px-4 py-2 text-sm ${
                                         isCreator
-                                            ? "bg-primary-purple-400 text-white ml-10"
+                                            ? "ml-10 bg-primary-purple-400 text-white"
                                             : isChallenger
-                                              ? "bg-primary-blue-400 text-white mr-10"
+                                              ? "mr-10 bg-primary-blue-400 text-white"
                                               : "bg-gray-300"
                                     }`}
                                 >
                                     <div>{chat.content}</div>
-                                    <div className="text-[10px] text-gray-200 text-right mt-1">
+                                    <div className="mt-1 text-right text-[10px] text-gray-200">
                                         {new Date(
                                             chat.createdAt
-                                        ).toLocaleTimeString()}
+                                        ).toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
                                     </div>
                                 </div>
                             </div>
