@@ -43,10 +43,12 @@ export class EndArenaUsecase {
                 memberId: arena?.creatorId || "",
                 result: "CANCEL",
             });
-            await this.applyArenaScoreUsecase.execute({
-                memberId: arena?.challengerId || "",
-                result: "CANCEL",
-            });
+            if (arena?.challengerId) {
+                await this.applyArenaScoreUsecase.execute({
+                    memberId: arena.challengerId,
+                    result: "CANCEL",
+                });
+            }
         } else if (result === "DRAW") {
             await this.applyArenaScoreUsecase.execute({
                 memberId: arena?.creatorId || "",
@@ -57,11 +59,6 @@ export class EndArenaUsecase {
                 result: "DRAW",
             });
         } else if (result === "WIN" && winnerId) {
-            // 승자에게 WIN, 패자에게 JOIN(패배)
-            const loserId =
-                winnerId === arena?.creatorId
-                    ? arena.challengerId
-                    : arena?.creatorId;
             await this.applyArenaScoreUsecase.execute({
                 memberId: winnerId,
                 result: "WIN",

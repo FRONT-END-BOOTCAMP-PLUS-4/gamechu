@@ -57,6 +57,12 @@ export function useArenaAutoStatusDetail({
         if (!arenaDetail?.id || !arenaDetail?.status) return;
 
         switch (arenaDetail.status) {
+            case 1: {
+                if (arenaDetail.startDate && !arenaDetail.challengerId) {
+                    scheduleUpdate(new Date(arenaDetail.startDate), 5);
+                }
+                break;
+            }
             case 2: {
                 if (!arenaDetail.startDate) return;
                 const nextStatus = arenaDetail.challengerId ? 3 : 5;
