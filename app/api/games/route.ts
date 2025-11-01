@@ -89,9 +89,12 @@ export async function GET(req: NextRequest) {
 
         // 캐시 저장
         if (isCacheTarget) {
-            await redis.set(cacheKey, JSON.stringify(response), {
-                ex: 60 * 60 * 24, // 24시간
-            });
+            await redis.set(
+                cacheKey,
+                JSON.stringify(response),
+                "EX",
+                60 * 60 * 24 // 24시간
+            );
         }
 
         return NextResponse.json(response, { status: 200 });
@@ -109,7 +112,8 @@ export async function GET(req: NextRequest) {
             console.error("[GET /api/games] 알 수 없는 에러:", error);
             return NextResponse.json(
                 {
-                    message: "게임 목록 조회 중 알 수 없는 오류가 발생했습니다.",
+                    message:
+                        "게임 목록 조회 중 알 수 없는 오류가 발생했습니다.",
                 },
                 { status: 500 }
             );
