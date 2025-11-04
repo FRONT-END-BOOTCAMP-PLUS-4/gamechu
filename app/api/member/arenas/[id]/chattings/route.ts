@@ -11,12 +11,13 @@ const MAX_SEND_COUNT = 5;
 
 type RequestParams = {
     params: Promise<{
-        id: number;
+        id: string;
     }>;
 };
 
 export async function POST(req: NextRequest, { params }: RequestParams) {
     const { id } = await params;
+    const arenaId: number = Number(id);
     const memberId = await getAuthUserId();
     const { content } = await req.json();
     if (!memberId) {
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
             { status: 401 }
         );
     }
-    if (isNaN(id)) {
+    if (isNaN(arenaId)) {
         return NextResponse.json(
             { error: "유효하지 않은 투기장 ID입니다." },
             { status: 400 }
@@ -58,7 +59,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
             arenaRepository
         );
         const createChattingDto = new CreateChattingDto(
-            Number(id),
+            arenaId,
             memberId,
             content
         );
@@ -73,7 +74,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
         );
     } catch (error: unknown) {
         console.error(
-            `💥 Error processing chat POST for arena ${id} by member ${memberId}:`,
+            `💥 Error processing chat POST for arena ${arenaId} by member ${memberId}:`,
             error
         );
         if (typeof error === "object" && error !== null && "message" in error) {

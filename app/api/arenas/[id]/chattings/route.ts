@@ -6,14 +6,15 @@ import { NextResponse } from "next/server";
 
 type RequestParams = {
     params: Promise<{
-        id: number;
+        id: string;
     }>;
 };
 
 export async function GET(req: Request, { params }: RequestParams) {
     const { id } = await params;
-    const memberId = await getAuthUserId();
-    if (isNaN(id)) {
+    const arenaId: number = Number(id);
+    const memberId: string | null = await getAuthUserId();
+    if (isNaN(arenaId)) {
         return NextResponse.json(
             { error: "유효하지 않은 투기장 ID입니다." },
             { status: 400 }
@@ -23,7 +24,7 @@ export async function GET(req: Request, { params }: RequestParams) {
     try {
         const chattingRepository = new PrismaChattingRepository();
         const getChattingUsecase = new GetChattingUsecase(chattingRepository);
-        const getChattingDto = new GetChattingDto(Number(id), memberId);
+        const getChattingDto = new GetChattingDto(arenaId, memberId);
 
         const result = await getChattingUsecase.execute(getChattingDto);
 

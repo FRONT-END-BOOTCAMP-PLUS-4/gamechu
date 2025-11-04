@@ -5,12 +5,17 @@ import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/useca
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
+import { NextResponse } from "next/server";
 
-export async function POST(
-    req: Request,
-    context: { params: Promise<{ id: string }> }
-) {
-    const arenaId = Number((await context.params).id);
+type RequestParams = {
+    params: Promise<{
+        id: string;
+    }>;
+};
+
+export async function POST(request: Request, { params }: RequestParams) {
+    const { id } = await params;
+    const arenaId: number = Number(id);
 
     const memberRepository = new PrismaMemberRepository();
     const scoreRecordRepository = new PrismaScoreRecordRepository();
@@ -27,6 +32,23 @@ export async function POST(
         applyArenaScoreUsecase,
         voteRepository
     );
-    await endArenaUsecase.execute(arenaId);
-    return new Response("OK");
+    try {
+        await endArenaUsecase.execute(arenaId);
+        return NextResponse.json(
+            { message: "투기장 종료 성공" },
+            { status: 200 }
+        );
+    } catch (error: unknown) {
+        console.error("Error ending arenas:", error);
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { message: error.message || "투기장 종료 실패" },
+                { status: 400 }
+            );
+        }
+        return NextResponse.json(
+            { message: "알 수 없는 오류 발생" },
+            { status: 500 }
+        );
+    }
 }

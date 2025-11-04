@@ -7,18 +7,19 @@ import { GetVoteDto } from "@/backend/vote/application/usecase/dto/GetVoteDto";
 
 type RequestParams = {
     params: Promise<{
-        id: number;
+        id: string;
     }>;
 };
 
 export async function GET(request: Request, { params }: RequestParams) {
     const memberId = await getAuthUserId();
     const { id } = await params;
+    const arenaId: number = Number(id);
     // get query parameters from URL
     const url = new URL(request.url);
     const votedTo: string = url.searchParams.get("votedTo") ?? "";
     const mine: boolean = url.searchParams.get("mine") === "true";
-    if (isNaN(id)) {
+    if (isNaN(arenaId)) {
         return NextResponse.json(
             { error: "유효하지 않은 투기장 ID입니다." },
             { status: 400 }
@@ -34,7 +35,7 @@ export async function GET(request: Request, { params }: RequestParams) {
         );
 
         const getVoteDto: GetVoteDto = new GetVoteDto(
-            { arenaId: Number(id), votedTo, mine }, // votedTo는 빈 문자열로 초기화
+            { arenaId, votedTo, mine }, // votedTo는 빈 문자열로 초기화
             memberId
         );
         const result = await getVoteUsecase.execute(getVoteDto);

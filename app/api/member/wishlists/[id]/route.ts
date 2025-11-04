@@ -7,7 +7,7 @@ import { DeleteWishlistDto } from "@/backend/wishlist/application/usecase/dto/De
 
 type RequestParams = {
     params: Promise<{
-        id: number;
+        id: string;
     }>;
 };
 
