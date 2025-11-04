@@ -17,6 +17,7 @@ type RequestParams = {
 export async function PATCH(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
+        const arenaId: number = Number(id);
 
         // body validation
         const body = await request.json();
@@ -41,7 +42,7 @@ export async function PATCH(request: Request, { params }: RequestParams) {
             arenaRepository
         );
         const updateArenaDto: UpdateArenaDto = {
-            id: +id,
+            id: arenaId,
             challengerId: body.challengerId,
             description: body.description,
             startDate: body.startDate,
@@ -71,6 +72,7 @@ export async function PATCH(request: Request, { params }: RequestParams) {
 export async function DELETE(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
+        const arenaId: number = Number(id);
 
         const arenaRepository: ArenaRepository = new PrismaArenaRepository();
         const deleteArenaUsecase: DeleteArenaUsecase = new DeleteArenaUsecase(
@@ -78,7 +80,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         );
 
         // arena validation
-        const arena: Arena | null = await arenaRepository.findById(Number(id));
+        const arena: Arena | null = await arenaRepository.findById(arenaId);
 
         if (!arena) {
             return NextResponse.json(
@@ -100,7 +102,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         }
 
         // execute usecase
-        await deleteArenaUsecase.execute(Number(id));
+        await deleteArenaUsecase.execute(arenaId);
         return NextResponse.json(
             { message: "투기장 삭제 성공" },
             { status: 200 }

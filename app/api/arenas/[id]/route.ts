@@ -15,14 +15,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 type RequestParams = {
     params: Promise<{
-        id: number;
+        id: string;
     }>;
 };
 
 export async function GET(request: Request, { params }: RequestParams) {
     const { id } = await params;
+    const arenaId: number = Number(id);
 
-    if (isNaN(id)) {
+    if (isNaN(arenaId)) {
         return NextResponse.json({ error: "Invalid arenaId" }, { status: 400 });
     }
     const arenaRepository = new PrismaArenaRepository();
@@ -50,6 +51,8 @@ export async function GET(request: Request, { params }: RequestParams) {
 export async function PATCH(req: NextRequest, { params }: RequestParams) {
     const { status, challengerId } = await req.json();
     const { id } = await params;
+    const arenaId: number = Number(id);
+
     const scorePolicy = new ScorePolicy();
     const memberRepository = new PrismaMemberRepository();
     const scoreRecordRepository = new PrismaScoreRecordRepository();
@@ -64,7 +67,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
         applyArenaScoreUsecase
     );
     const updateArenaDetailDto = new UpdateArenaDetailDto(
-        Number(id),
+        arenaId,
         status,
         challengerId
     );
@@ -90,6 +93,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
 export async function DELETE(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
+        const arenaId: number = Number(id);
 
         const arenaRepository: ArenaRepository = new PrismaArenaRepository();
         const deleteArenaUsecase: DeleteArenaUsecase = new DeleteArenaUsecase(
@@ -97,7 +101,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         );
 
         // validation of arena
-        const arena: Arena | null = await arenaRepository.findById(Number(id));
+        const arena: Arena | null = await arenaRepository.findById(arenaId);
 
         if (!arena) {
             return NextResponse.json(
@@ -107,7 +111,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         }
 
         // execute usecase
-        await deleteArenaUsecase.execute(Number(id));
+        await deleteArenaUsecase.execute(arenaId);
         return NextResponse.json(
             { message: "투기장 삭제 성공" },
             { status: 200 }
