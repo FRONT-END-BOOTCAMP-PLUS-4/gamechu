@@ -60,16 +60,13 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
                     break;
                 }
                 case 2:
-                    if (startDate) {
-                        const nextStatus = challengerId ? 3 : 5;
-                        schedule(startDate, nextStatus, { challengerId });
-                    }
+                    schedule(startDate, 3);
                     break;
                 case 3:
-                    if (debateEndDate) schedule(debateEndDate, 4);
+                    schedule(debateEndDate, 4);
                     break;
                 case 4:
-                    if (voteEndDate) schedule(voteEndDate, 5);
+                    schedule(voteEndDate, 5);
                     break;
             }
         });
