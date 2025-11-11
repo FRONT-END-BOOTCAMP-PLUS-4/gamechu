@@ -4,7 +4,7 @@ import ArenaDetailVote from "./components/ArenaDetailVote";
 import ArenaDetailHeader from "./components/ArenaDetailHeader";
 import ArenaDetailInfo from "./components/ArenaDetailInfo";
 import ArenaDetailContainer from "./components/ArenaDetailContainer";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 import useArenaStore from "@/stores/useArenaStore";
 import { useArenaAutoStatusDetail } from "@/hooks/useArenaAutoStatusDetail";
@@ -22,6 +22,8 @@ export default function ArenaDetailPage() {
         onStatusUpdate: () => {},
     });
 
+    const [notFound, setNotFound] = useState(false);
+
     useEffect(() => {
         const fetchArenaDetail = async () => {
             setLoading(true); // ✅ 로딩 시작
@@ -32,7 +34,8 @@ export default function ArenaDetailPage() {
                 });
 
                 if (!res.ok) {
-                    throw new Error("Failed to fetch arena detail");
+                    setNotFound(true);
+                    return;
                 }
 
                 const data: ArenaDetailDto = await res.json();
@@ -72,6 +75,13 @@ export default function ArenaDetailPage() {
         };
     }, [arenaId, setGlobalArenaData, clearGlobalArenaData, setLoading]);
 
+    if (notFound) {
+        return (
+            <div className="flex h-screen flex-col items-center justify-center overflow-hidden bg-background-400">
+                존재하지 않는 투기장입니다.
+            </div>
+        );
+    }
     return (
         <div className="px-4 py-10 sm:px-8 md:px-12 lg:px-16">
             {/* 반응형 레이아웃: 기본 column, 큰 화면에서 row */}
