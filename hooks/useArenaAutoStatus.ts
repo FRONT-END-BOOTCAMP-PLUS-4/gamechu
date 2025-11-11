@@ -11,8 +11,6 @@ type Props = {
     onStatusUpdate?: (id: number, newStatus: ArenaStatus) => void;
 };
 
-type ExtraBody = Record<string, unknown>;
-
 export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
     const timers = useRef<Record<number, NodeJS.Timeout>>({});
 
@@ -31,31 +29,33 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
 
             const schedule = (
                 targetUTC: string | Date,
-                nextStatus: ArenaStatus,
-                extraBody?: ExtraBody
+                newStatus: ArenaStatus | "delete"
             ) => {
-                // 1) 현재 시간 KST 기준
-                const nowKST = dayjs().utcOffset(9 * 60);
-                // 2) targetUTC 문자열 → dayjs UTC 파싱
-                const targetUTCDate = dayjs.utc(targetUTC);
-                // 3) targetUTC → KST 시간으로 변환
-                const targetKST = targetUTCDate.add(9, "hour");
-                // 4) 딜레이 계산 (밀리초)
-                const delay = targetKST.valueOf() - nowKST.valueOf();
+                if (!targetUTC) return;
+
+                const now = dayjs();
+                const targetTime = dayjs(targetUTC).utcOffset(9 * 60);
+                const delay = targetTime.diff(now);
+
+                const run = async () => {
+                    try {
+                        if (newStatus === "delete") await deleteArena(id);
+                        else await updateStatus(id, newStatus);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                };
+
                 if (delay <= 0) {
-                    updateStatus(id, nextStatus, extraBody);
-                    return;
+                    run();
+                } else {
+                    timers.current[id] = setTimeout(run, delay);
                 }
-
-                timers.current[id] = setTimeout(() => {
-                    updateStatus(id, nextStatus, extraBody);
-                }, delay);
             };
-
             switch (status) {
                 case 1: {
                     if (startDate && !challengerId) {
-                        schedule(startDate, 5);
+                        schedule(startDate, "delete");
                     }
                     break;
                 }
@@ -71,22 +71,33 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
             }
         });
 
+        // cleanup: 언마운트 시 모든 타이머 제거
         return () => {
             Object.values(timers.current).forEach(clearTimeout);
             timers.current = {};
         };
     }, [arenaList]);
 
-    const updateStatus = async (
-        arenaId: number,
-        newStatus: ArenaStatus,
-        extraBody?: ExtraBody
-    ) => {
+    // 아레나 삭제
+    const deleteArena = async (arenaId: number) => {
+        try {
+            const res = await fetch(`/api/arenas/${arenaId}`, {
+                method: "DELETE",
+            });
+            if (!res.ok) throw new Error("아레나 삭제 실패");
+            onStatusUpdate?.(arenaId, 0 as ArenaStatus);
+        } catch (err) {
+            console.error(`아레나 ${arenaId} 삭제 실패:`, err);
+        }
+    };
+
+    // 아레나 상태 업데이트
+    const updateStatus = async (arenaId: number, newStatus: ArenaStatus) => {
         try {
             const res = await fetch(`/api/arenas/${arenaId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: newStatus, ...extraBody }),
+                body: JSON.stringify({ status: newStatus }),
             });
             if (!res.ok) throw new Error("상태 업데이트 실패");
             if (newStatus === 5) {

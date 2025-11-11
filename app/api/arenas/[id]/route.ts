@@ -34,11 +34,21 @@ export async function GET(request: Request, { params }: RequestParams) {
         memberRepository,
         voteRepository
     );
-    const getArenaDetailDto = new GetArenaDetailDto(Number(id));
+    const getArenaDetailDto = new GetArenaDetailDto(arenaId);
     try {
         const result = await getArenaDetailusecase.execute(getArenaDetailDto);
-        return NextResponse.json(result);
-    } catch (error) {
+
+        return NextResponse.json(result, { status: 200 });
+    } catch (error: unknown) {
+        if (
+            error instanceof Error &&
+            error.message.includes("Arena not found")
+        ) {
+            return NextResponse.json(
+                { error: "투기장이 존재하지 않습니다." },
+                { status: 404 }
+            );
+        }
         return NextResponse.json(
             { error: `Failed to fetch participants: ${error}` },
             { status: 500 }
@@ -99,8 +109,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         const deleteArenaUsecase: DeleteArenaUsecase = new DeleteArenaUsecase(
             arenaRepository
         );
-
-        // validation of arena
+        // 점수도 돌려줘야함
         const arena: Arena | null = await arenaRepository.findById(arenaId);
 
         if (!arena) {
