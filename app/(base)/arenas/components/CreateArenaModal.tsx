@@ -7,6 +7,7 @@ import Image from "next/image";
 import Button from "@/app/components/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Swal from "sweetalert2";
 
 export default function CreateArenaModal() {
     const { isOpen, closeModal } = useModalStore();
@@ -20,13 +21,42 @@ export default function CreateArenaModal() {
     });
 
     const handleSubmit = async () => {
-        if (
-            !description.trim() ||
-            !description.trim() ||
-            startDate <= new Date()
-        ) {
-            // TODO: custom alert로 변경
-            alert("모든 필드를 올바르게 입력해주세요.");
+        // 제목 비어있음
+        if (!title.trim()) {
+            Swal.fire({
+                icon: "error",
+                title: "제목이 작성되지 않았습니다.",
+                text: "도전장 제목을 작성해주세요.",
+                background: "#18181b",
+                color: "#fff",
+                confirmButtonColor: "#ef4444",
+            });
+            return;
+        }
+
+        // 내용 비어있음
+        if (!description.trim()) {
+            Swal.fire({
+                icon: "error",
+                title: "내용이 작성되지 않았습니다.",
+                text: "도전장 내용을 작성해주세요.",
+                background: "#18181b",
+                color: "#fff",
+                confirmButtonColor: "#ef4444",
+            });
+            return;
+        }
+
+        // 날짜가 현재보다 이전
+        if (startDate <= new Date()) {
+            Swal.fire({
+                icon: "error",
+                title: "날짜가 올바르지 않습니다",
+                text: "시작 시간은 현재 이후로 설정해주세요.",
+                background: "#18181b",
+                color: "#fff",
+                confirmButtonColor: "#ef4444",
+            });
             return;
         }
 
@@ -39,10 +69,18 @@ export default function CreateArenaModal() {
                     startDate,
                 }),
             });
-            const arena = await arenaResult.json();
             if (arenaResult.ok) {
                 closeModal();
-                console.log("투기장 생성 성공:", arena);
+                Swal.fire({
+                    icon: "success",
+                    title: "등록 완료!",
+                    text: "도전장이 정상적으로 등록되었습니다.",
+                    confirmButtonColor: "#22c55e",
+                    background: "#1f1f1f",
+                    color: "#fff",
+                }).then(() => {
+                    window.location.reload();
+                });
             }
 
             // TODO: get policyId and actualScore from Score Policy Database
@@ -86,7 +124,7 @@ export default function CreateArenaModal() {
                         placeholder="토론 주제를 입력하세요"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="rounded border border-purple-500 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        className="rounded border border-zinc-600 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400 focus:border-zinc-100 focus:outline-none"
                     />
                 </div>
 
@@ -97,7 +135,7 @@ export default function CreateArenaModal() {
                         placeholder="토론장 내용을 입력하세요"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="h-28 resize-none rounded border border-zinc-600 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400"
+                        className="h-48 resize-none rounded border border-zinc-600 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400"
                     />
                 </div>
 
@@ -121,7 +159,7 @@ export default function CreateArenaModal() {
                 <div className="flex justify-end gap-2">
                     <Button
                         onClick={closeModal}
-                        type="black"
+                        type="red"
                         label="취소하기"
                         size="small"
                     />
