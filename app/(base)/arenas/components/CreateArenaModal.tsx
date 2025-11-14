@@ -2,7 +2,7 @@
 
 import ModalWrapper from "@/app/components/ModalWrapper";
 import useModalStore from "@/stores/modalStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/app/components/Button";
 import DatePicker from "react-datepicker";
@@ -19,6 +19,18 @@ export default function CreateArenaModal() {
         tomorrow.setMinutes(0, 0, 0);
         return tomorrow;
     });
+
+    // 모달 열렸을 때 스크롤 방지
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isOpen]);
 
     const handleSubmit = async () => {
         // 제목 비어있음
