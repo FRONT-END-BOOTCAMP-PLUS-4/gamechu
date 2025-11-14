@@ -5,7 +5,7 @@ import React, { ReactNode } from "react";
 import { cn } from "@/utils/tailwindUtil";
 
 type ButtonSize = "xs" | "small" | "medium" | "large" | "send";
-type ButtonType = "purple" | "blue" | "black";
+type ButtonType = "purple" | "blue" | "black" | "red";
 
 interface ButtonProps {
     label?: string;
@@ -29,6 +29,7 @@ const typeClasses: Record<ButtonType, string> = {
     purple: "bg-primary-purple-200 text-font-100 hover:bg-primary-purple-300",
     blue: "bg-primary-blue-200 text-font-100 hover:bg-primary-blue-300",
     black: "bg-background-400 text-font-100 border border-line-100 hover:border-primary-purple-200",
+    red: "bg-red-400 text-white hover:bg-red-500",
 };
 
 const disabledClass = "opacity-50 cursor-not-allowed pointer-events-none";

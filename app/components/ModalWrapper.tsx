@@ -33,7 +33,7 @@ export default function ModalWrapper(modalWrapperProps: ModalWrapperProps) {
             onClick={modalWrapperProps.onClose}
         >
             <div
-                className="max-h-[90vh] w-full max-w-[480px] overflow-y-auto rounded-xl bg-background-300 p-6 text-font-100 shadow-xl"
+                className="max-h-[90vh] w-full max-w-[700px] overflow-y-auto rounded-xl bg-background-300 p-6 text-font-100 shadow-xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 {modalWrapperProps.children}
