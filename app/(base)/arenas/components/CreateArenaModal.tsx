@@ -39,7 +39,7 @@ export default function CreateArenaModal() {
                 icon: "error",
                 title: "제목이 작성되지 않았습니다.",
                 text: "도전장 제목을 작성해주세요.",
-                background: "#18181b",
+                background: "#1f1f1f",
                 color: "#fff",
                 confirmButtonColor: "#ef4444",
             });
@@ -52,7 +52,7 @@ export default function CreateArenaModal() {
                 icon: "error",
                 title: "내용이 작성되지 않았습니다.",
                 text: "도전장 내용을 작성해주세요.",
-                background: "#18181b",
+                background: "#1f1f1f",
                 color: "#fff",
                 confirmButtonColor: "#ef4444",
             });
@@ -65,12 +65,26 @@ export default function CreateArenaModal() {
                 icon: "error",
                 title: "날짜가 올바르지 않습니다",
                 text: "시작 시간은 현재 이후로 설정해주세요.",
-                background: "#18181b",
+                background: "#1f1f1f",
                 color: "#fff",
                 confirmButtonColor: "#ef4444",
             });
             return;
         }
+
+        // 작성 후 수정 불가 안내
+        const confirmed = await Swal.fire({
+            title: "도전장 작성",
+            text: "작성 후 수정이 불가능합니다. 계속 진행하시겠습니까?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "작성",
+            cancelButtonText: "취소",
+            background: "#1f1f1f",
+            color: "#fff",
+            confirmButtonColor: "#ef4444",
+        });
+        if (!confirmed.isConfirmed) return;
 
         try {
             const arenaResult = await fetch(`/api/member/arenas`, {
@@ -128,6 +142,9 @@ export default function CreateArenaModal() {
                     <span>도전장 작성</span>
                 </h2>
 
+                <div className="rounded-sm border border-yellow-600 bg-yellow-50/10 px-4 py-2 text-sm text-yellow-400">
+                    작성 후 수정이 불가능합니다. 내용을 신중히 작성해주세요.
+                </div>
                 {/* ✅ 도전장 제목 입력 */}
                 <div className="flex flex-col gap-1">
                     <label className="text-sm text-white">도전장 제목</label>
@@ -152,8 +169,8 @@ export default function CreateArenaModal() {
                 </div>
 
                 {/* ✅ 일정  */}
-                <div className="flex flex-col gap-2 text-black">
-                    <label className="text-sm text-white">시작 시간</label>
+                <div className="flex flex-col text-black">
+                    <label className="mb-2 text-sm text-white">시작 시간</label>
                     <DatePicker
                         selected={startDate}
                         onChange={(date: Date | null) => {
