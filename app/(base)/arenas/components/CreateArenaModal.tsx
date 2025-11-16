@@ -143,7 +143,9 @@ export default function CreateArenaModal() {
                 </h2>
 
                 <div className="rounded-sm border border-yellow-600 bg-yellow-50/10 px-4 py-2 text-sm text-yellow-400">
-                    작성 후 수정이 불가능합니다. 내용을 신중히 작성해주세요.
+                    작성 후 수정이 불가능합니다.{" "}
+                    <br className="block sm:hidden" />
+                    내용을 신중히 작성해주세요.
                 </div>
                 {/* ✅ 도전장 제목 입력 */}
                 <div className="flex flex-col gap-1">
