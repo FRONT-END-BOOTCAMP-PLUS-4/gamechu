@@ -95,11 +95,6 @@ export function useArenaAutoStatusDetail({
                 body: JSON.stringify({ status: newStatus }),
             });
             if (!res.ok) throw new Error("상태 변경 실패");
-            if (newStatus === 5) {
-                await fetch(`/api/arenas/${arenaDetail?.id}/end`, {
-                    method: "POST",
-                });
-            }
             onStatusUpdate?.(newStatus);
         } catch (err) {
             console.error("상태 자동 업데이트 실패:", err);
