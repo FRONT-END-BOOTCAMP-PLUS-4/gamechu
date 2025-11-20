@@ -37,7 +37,7 @@ export default function RecruitingArenaCard({
                         alt="작성자 프로필"
                         width={24}
                         height={24}
-                        className="rounded-full object-cover"
+                        className="aspect-square rounded-full object-cover"
                     />
                     <span className="max-w-[100px] truncate whitespace-nowrap">
                         {props.creatorNickname}

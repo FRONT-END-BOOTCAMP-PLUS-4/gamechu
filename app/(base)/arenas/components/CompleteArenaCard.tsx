@@ -43,11 +43,6 @@ export default function CompleteArenaCard({
                 <div className="break-keep text-base font-semibold text-white">
                     {props.title}
                 </div>
-
-                {/* 설명 */}
-                <div className="line-clamp-3 overflow-hidden break-keep text-sm text-gray-300">
-                    {props.description}
-                </div>
             </div>
 
             <VoteStatusBar
@@ -63,7 +58,7 @@ export default function CompleteArenaCard({
                         alt="작성자 프로필"
                         width={24}
                         height={24}
-                        className="rounded-full object-cover"
+                        className="aspect-square rounded-full object-cover"
                     />
                     <span className="max-w-[80px] truncate whitespace-nowrap">
                         {props.creatorNickname}
@@ -94,7 +89,7 @@ export default function CompleteArenaCard({
                         alt="도전자 프로필"
                         width={24}
                         height={24}
-                        className="rounded-full object-cover"
+                        className="aspect-square rounded-full object-cover"
                     />
                     <span className="max-w-[80px] truncate whitespace-nowrap">
                         {props.challengerNickname}
