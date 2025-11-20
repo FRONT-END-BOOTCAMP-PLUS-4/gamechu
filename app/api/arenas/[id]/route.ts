@@ -1,6 +1,7 @@
 import { DeleteArenaUsecase } from "@/backend/arena/application/usecase/DeleteArenaUsecase";
 import { GetArenaDetailDto } from "@/backend/arena/application/usecase/dto/GetArenaDetailDto";
 import { UpdateArenaDetailDto } from "@/backend/arena/application/usecase/dto/UpdateArenaDetailDto";
+import { EndArenaUsecase } from "@/backend/arena/application/usecase/EndArenaUsecase";
 import { GetArenaDetailUsecase } from "@/backend/arena/application/usecase/GetArenaDetailUsecase";
 import { UpdateArenaStatusUsecase } from "@/backend/arena/application/usecase/UpdateArenaStatusUsecase";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
@@ -72,10 +73,17 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
         scoreRecordRepository
     );
     const arenaRepository = new PrismaArenaRepository();
+    const voteRepository = new PrismaVoteRepository();
     const updateArenaStatusUsecase = new UpdateArenaStatusUsecase(
         arenaRepository,
         applyArenaScoreUsecase
     );
+    const endArenaUsecase = new EndArenaUsecase(
+        arenaRepository,
+        applyArenaScoreUsecase,
+        voteRepository
+    );
+
     const updateArenaDetailDto = new UpdateArenaDetailDto(
         arenaId,
         status,
@@ -83,6 +91,9 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
     );
     try {
         await updateArenaStatusUsecase.execute(updateArenaDetailDto); // challengerId 없으면 undefined
+        if (status === 5) {
+            await endArenaUsecase.execute(arenaId);
+        }
         return NextResponse.json({ success: true });
     } catch (error: unknown) {
         console.error("Error updating arenas:", error);
@@ -106,6 +117,22 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         const arenaId: number = Number(id);
 
         const arenaRepository: ArenaRepository = new PrismaArenaRepository();
+        const voteRepository = new PrismaVoteRepository();
+        const scorePolicy = new ScorePolicy();
+        const memberRepository = new PrismaMemberRepository();
+        const scoreRecordRepository = new PrismaScoreRecordRepository();
+        const applyArenaScoreUsecase = new ApplyArenaScoreUsecase(
+            scorePolicy,
+            memberRepository,
+            scoreRecordRepository
+        );
+
+        const endArenaUsecase = new EndArenaUsecase(
+            arenaRepository,
+            applyArenaScoreUsecase,
+            voteRepository
+        );
+
         const deleteArenaUsecase: DeleteArenaUsecase = new DeleteArenaUsecase(
             arenaRepository
         );
@@ -118,8 +145,9 @@ export async function DELETE(request: Request, { params }: RequestParams) {
                 { status: 404 }
             );
         }
-
         // execute usecase
+        await endArenaUsecase.execute(arenaId);
+        // endArenaUsecase에서 점수 돌려준 후 delete 실행
         await deleteArenaUsecase.execute(arenaId);
         return NextResponse.json(
             { message: "투기장 삭제 성공" },
