@@ -7,7 +7,6 @@ import Image from "next/image";
 import Button from "@/app/components/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Swal from "sweetalert2";
 
 export default function CreateArenaModal() {
     const { isOpen, closeModal } = useModalStore();
@@ -19,6 +18,10 @@ export default function CreateArenaModal() {
         tomorrow.setMinutes(0, 0, 0);
         return tomorrow;
     });
+    const [titleError, setTitleError] = useState<string>("");
+    const [descriptionError, setDescriptionError] = useState<string>("");
+    const [dateError, setDateError] = useState<string>("");
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     // 모달 열렸을 때 스크롤 방지
     useEffect(() => {
@@ -32,59 +35,37 @@ export default function CreateArenaModal() {
         };
     }, [isOpen]);
 
-    const handleSubmit = async () => {
-        // 제목 비어있음
+    const validate = () => {
+        let valid = true;
         if (!title.trim()) {
-            Swal.fire({
-                icon: "error",
-                title: "제목이 작성되지 않았습니다.",
-                text: "도전장 제목을 작성해주세요.",
-                background: "#1f1f1f",
-                color: "#fff",
-                confirmButtonColor: "#ef4444",
-            });
-            return;
+            setTitleError("제목을 입력해주세요.");
+            valid = false;
+        } else {
+            setTitleError("");
         }
 
-        // 내용 비어있음
         if (!description.trim()) {
-            Swal.fire({
-                icon: "error",
-                title: "내용이 작성되지 않았습니다.",
-                text: "도전장 내용을 작성해주세요.",
-                background: "#1f1f1f",
-                color: "#fff",
-                confirmButtonColor: "#ef4444",
-            });
-            return;
+            setDescriptionError("내용을 입력해주세요.");
+            valid = false;
+        } else {
+            setDescriptionError("");
         }
 
-        // 날짜가 현재보다 이전
-        if (startDate <= new Date()) {
-            Swal.fire({
-                icon: "error",
-                title: "날짜가 올바르지 않습니다",
-                text: "시작 시간은 현재 이후로 설정해주세요.",
-                background: "#1f1f1f",
-                color: "#fff",
-                confirmButtonColor: "#ef4444",
-            });
-            return;
+        if (!startDate || startDate <= new Date()) {
+            setDateError("시작 시간은 현재 이후로 설정해주세요.");
+            valid = false;
+        } else {
+            setDateError("");
         }
 
-        // 작성 후 수정 불가 안내
-        const confirmed = await Swal.fire({
-            title: "도전장 작성",
-            text: "작성 후 수정이 불가능합니다. 계속 진행하시겠습니까?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "작성",
-            cancelButtonText: "취소",
-            background: "#1f1f1f",
-            color: "#fff",
-            confirmButtonColor: "#ef4444",
-        });
-        if (!confirmed.isConfirmed) return;
+        return valid;
+    };
+
+    const handleSubmit = async () => {
+        if (submitting) return;
+        if (!validate()) return;
+
+        setSubmitting(true);
 
         try {
             const arenaResult = await fetch(`/api/member/arenas`, {
@@ -97,16 +78,8 @@ export default function CreateArenaModal() {
             });
             if (arenaResult.ok) {
                 closeModal();
-                Swal.fire({
-                    icon: "success",
-                    title: "등록 완료!",
-                    text: "도전장이 정상적으로 등록되었습니다.",
-                    confirmButtonColor: "#22c55e",
-                    background: "#1f1f1f",
-                    color: "#fff",
-                }).then(() => {
-                    window.location.reload();
-                });
+                // 새로고침
+                window.location.reload();
             }
 
             // TODO: get policyId and actualScore from Score Policy Database
@@ -124,6 +97,8 @@ export default function CreateArenaModal() {
             }
         } catch (error: unknown) {
             console.error("Failed to post arena", error);
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -149,40 +124,82 @@ export default function CreateArenaModal() {
                 </div>
                 {/* ✅ 도전장 제목 입력 */}
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm text-white">도전장 제목</label>
+                    <label className="flex items-center justify-between text-sm text-white">
+                        <span>도전장 제목</span>
+                        {titleError && (
+                            <span className="text-sm text-red-400">
+                                {titleError}
+                            </span>
+                        )}
+                    </label>
                     <input
                         type="text"
                         placeholder="토론 주제를 입력하세요"
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="rounded border border-zinc-600 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400 focus:border-zinc-100 focus:outline-none"
+                        onChange={(e) => {
+                            setTitle(e.target.value);
+                            if (titleError) setTitleError("");
+                        }}
+                        className={`rounded bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400 ${
+                            titleError
+                                ? "border border-red-500 focus:outline-none"
+                                : "border border-zinc-600"
+                        }`}
                     />
                 </div>
 
                 {/* ✅ 도전 내용 입력 */}
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm text-white">도전 내용</label>
+                    <label className="flex items-center justify-between text-sm text-white">
+                        <span>도전 내용</span>
+                        {descriptionError && (
+                            <span className="text-sm text-red-400">
+                                {descriptionError}
+                            </span>
+                        )}
+                    </label>
                     <textarea
                         placeholder="토론장 내용을 입력하세요"
                         value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="h-48 resize-none rounded border border-zinc-600 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400"
+                        onChange={(e) => {
+                            setDescription(e.target.value);
+                            if (descriptionError) setDescriptionError("");
+                        }}
+                        className={`h-48 resize-none rounded bg-zinc-800 px-4 py-2 text-white placeholder-zinc-400 ${
+                            descriptionError
+                                ? "border border-red-500 focus:outline-none"
+                                : "border border-zinc-600"
+                        }`}
                     />
                 </div>
 
                 {/* ✅ 일정  */}
                 <div className="flex flex-col text-black">
-                    <label className="mb-2 text-sm text-white">시작 시간</label>
+                    <label className="mb-2 flex items-center justify-between text-sm text-white">
+                        <span>시작 시간</span>
+                        {dateError && (
+                            <span className="text-sm text-red-400">
+                                {dateError}
+                            </span>
+                        )}
+                    </label>
                     <DatePicker
                         selected={startDate}
                         onChange={(date: Date | null) => {
-                            if (date) setStartDate(date);
+                            if (date) {
+                                setStartDate(date);
+                                if (dateError) setDateError("");
+                            }
                         }}
                         showTimeSelect
                         timeIntervals={10} // ⏱ 10분 단위
                         timeCaption="시간"
                         dateFormat="yyyy-MM-dd HH:mm"
-                        className="w-full rounded border border-gray-300 px-3 py-2"
+                        className={`w-full rounded px-4 py-2 ${
+                            dateError
+                                ? "border border-red-500 bg-red-100/10 text-red-200 focus:outline-none"
+                                : "border border-gray-300"
+                        }`}
                     />
                 </div>
 
