@@ -60,7 +60,7 @@ export default function GameCard({
             <div className="relative flex w-full flex-col justify-between gap-2 px-4 py-3">
                 {/* 제목 */}
 
-                <h2 className="line-clamp-2 text-h3 font-semibold text-font-100">
+                <h2 className="line-clamp-2 h-[3.2rem] text-h3 font-semibold text-font-100">
                     {title}
                 </h2>
 
