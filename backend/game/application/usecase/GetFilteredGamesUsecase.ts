@@ -31,10 +31,22 @@ export class GetFilteredGamesUsecase {
         const games = await this.gameRepository.findAll(filter);
         const gameIds = games.map((g) => g.id);
 
-        // 모든 리뷰 가져오기
-        const allReviews = await this.reviewRepository.findAllByGameIds(
-            gameIds
+        const gamesTotalCount = await this.gameRepository.count(
+            new GameFilter(
+                dto.genreId,
+                dto.themeId,
+                dto.platformId,
+                dto.keyword,
+                dto.sort,
+                false,
+                0,
+                undefined
+            )
         );
+
+        // 모든 리뷰 가져오기
+        const allReviews =
+            await this.reviewRepository.findAllByGameIds(gameIds);
 
         // 리뷰 통계 계산
         const stats: Record<
@@ -107,7 +119,7 @@ export class GetFilteredGamesUsecase {
 
         return {
             data: paged,
-            totalCount: enrichedGames.length,
+            totalCount: gamesTotalCount,
         };
     }
 }
