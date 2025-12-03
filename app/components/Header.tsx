@@ -110,6 +110,7 @@ export default function Header() {
                             <Link
                                 href="/profile"
                                 className="rounded-lg p-2 transition-colors hover:bg-white/10"
+                                aria-label="마이페이지"
                             >
                                 <User
                                     size={28}
@@ -179,6 +180,7 @@ export default function Header() {
                                         href="/profile"
                                         className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-white/10"
                                         onClick={() => setMenuOpen(false)}
+                                        aria-label="마이페이지"
                                     >
                                         <User
                                             size={20}
