@@ -111,7 +111,7 @@ export default function ProfilePage() {
     }, [fetchProfileData]);
 
     return (
-        <main className="min-h-screen w-full bg-background-400 px-4 py-4 font-sans text-font-100 md:px-10 md:py-10">
+        <section className="min-h-screen w-full bg-background-400 px-4 py-4 font-sans text-font-100 md:px-10 md:py-10">
             {/* 상단 카드 영역 */}
             <div className="mb-10 flex flex-col items-center gap-4 md:flex-row md:items-start md:gap-10">
                 <ProfileSummaryCard
@@ -162,6 +162,6 @@ export default function ProfilePage() {
                     {activeTab === "arena" && isLoaded && <ProfileArenaTab />}
                 </div>
             </div>
-        </main>
+        </section>
     );
 }
