@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 
 export interface MemberReviewItemProps {
     id: number;
@@ -20,6 +20,35 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
     const [isOverflowing, setIsOverflowing] = useState(false);
     const contentRef = useRef<HTMLParagraphElement>(null);
 
+    // ✅ 리뷰 HTML 안의 <img>에 alt 자동 부여
+    const processedContent = useMemo(() => {
+        if (!review.content) return "";
+
+        try {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(review.content, "text/html");
+            const imgs = doc.querySelectorAll("img");
+
+            const defaultAltBase = `${review.gameTitle} 관련 리뷰 이미지`;
+
+            imgs.forEach((img, idx) => {
+                if (!img.hasAttribute("alt")) {
+                    img.setAttribute(
+                        "alt",
+                        imgs.length === 1
+                            ? defaultAltBase
+                            : `${defaultAltBase} ${idx + 1}`
+                    );
+                }
+            });
+
+            return doc.body.innerHTML;
+        } catch {
+            // 파싱 실패 시 원본 그대로
+            return review.content;
+        }
+    }, [review.content, review.gameTitle]);
+
     useEffect(() => {
         const el = contentRef.current;
         if (!el) return;
@@ -32,7 +61,7 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
         checkOverflow();
         window.addEventListener("resize", checkOverflow);
         return () => window.removeEventListener("resize", checkOverflow);
-    }, [review.content]);
+    }, [processedContent]); // ✅ 실제 렌더되는 HTML 기준으로 체크
 
     return (
         <li className="relative flex gap-4 rounded-lg bg-background-200 p-4 shadow">
@@ -45,7 +74,7 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                                 ? `https:${review.imageUrl}`
                                 : review.imageUrl || "/images/default-game.png"
                         }
-                        alt={review.gameTitle}
+                        alt={review.gameTitle} // ✅ 이건 이미 alt 있음
                         width={80}
                         height={80}
                         className="rounded object-cover"
@@ -80,11 +109,14 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                         </span>
                     </div>
                 </div>
-                {/* 리뷰 내용 */}
+
+                {/* 리뷰 내용 (HTML 렌더 + img alt 채워진 상태) */}
                 <p
                     ref={contentRef}
-                    className={`text-sm text-font-200 ${isExpanded ? "" : "line-clamp-1"}`}
-                    dangerouslySetInnerHTML={{ __html: review.content }}
+                    className={`text-sm text-font-200 ${
+                        isExpanded ? "" : "line-clamp-1"
+                    }`}
+                    dangerouslySetInnerHTML={{ __html: processedContent }}
                 />
 
                 {/* '펼쳐보기' 토글 */}
