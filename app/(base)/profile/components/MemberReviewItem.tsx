@@ -83,12 +83,9 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                 {/* 리뷰 내용 */}
                 <p
                     ref={contentRef}
-                    className={`text-sm text-font-200 ${
-                        isExpanded ? "" : "line-clamp-1"
-                    }`}
-                >
-                    {review.content}
-                </p>
+                    className={`text-sm text-font-200 ${isExpanded ? "" : "line-clamp-1"}`}
+                    dangerouslySetInnerHTML={{ __html: review.content }}
+                />
 
                 {/* '펼쳐보기' 토글 */}
                 {isOverflowing && (
