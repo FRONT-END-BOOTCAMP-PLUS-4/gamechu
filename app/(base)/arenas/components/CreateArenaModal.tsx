@@ -117,10 +117,14 @@ export default function CreateArenaModal() {
                     <span>도전장 작성</span>
                 </h2>
 
-                <div className="rounded-sm border border-yellow-600 bg-yellow-50/10 px-4 py-2 text-sm text-yellow-400">
-                    작성 후 수정이 불가능합니다.{" "}
-                    <br className="block sm:hidden" />
-                    내용을 신중히 작성해주세요.
+                <div className="rounded border border-yellow-600/50 bg-yellow-50/10 px-4 py-2 text-xs text-yellow-500 sm:text-sm">
+                    <div className="space-y-1">
+                        <div>
+                            작성 후 수정이 불가능하니 내용을 신중히
+                            작성해주세요.
+                        </div>
+                        <div>투기장 작성 시 100점의 포인트가 차감됩니다.</div>
+                    </div>
                 </div>
                 {/* ✅ 도전장 제목 입력 */}
                 <div className="flex flex-col gap-1">
