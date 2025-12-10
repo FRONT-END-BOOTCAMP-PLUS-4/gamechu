@@ -2,6 +2,7 @@ import { CreateArenaUsecase } from "@/backend/arena/application/usecase/CreateAr
 import { CreateArenaDto } from "@/backend/arena/application/usecase/dto/CreateArenaDto";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
+import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { Arena } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextResponse } from "next/server";
@@ -37,6 +38,24 @@ export async function POST(request: Request) {
             return NextResponse.json(
                 { error: "투기장 작성 권한이 없습니다." },
                 { status: 401 }
+            );
+        }
+
+        // score validation
+        const memberRepository = new PrismaMemberRepository();
+        const member = await memberRepository.findById(memberId);
+        if (!member) {
+            return NextResponse.json(
+                { error: "회원 정보를 찾을 수 없습니다." },
+                { status: 404 }
+            );
+        }
+        if (member.score < 100) {
+            return NextResponse.json(
+                {
+                    error: "투기장 작성을 위해서는 최소 100점 이상의 점수가 필요합니다.",
+                },
+                { status: 403 }
             );
         }
 
