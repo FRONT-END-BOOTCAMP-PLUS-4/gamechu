@@ -90,6 +90,33 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
         challengerId
     );
     try {
+        // score validation for arena join
+        if (status === 2) {
+            if (!challengerId) {
+                return NextResponse.json(
+                    { error: "참여자 정보를 찾을 수 없습니다." },
+                    { status: 400 }
+                );
+            }
+
+            const challenger = await memberRepository.findById(challengerId);
+            if (!challenger) {
+                return NextResponse.json(
+                    { error: "회원 정보를 찾을 수 없습니다." },
+                    { status: 404 }
+                );
+            }
+
+            if (challenger.score < 100) {
+                return NextResponse.json(
+                    {
+                        error: "투기장 참여를 위해서는 최소 100점 이상의 점수가 필요합니다.",
+                    },
+                    { status: 403 }
+                );
+            }
+        }
+
         await updateArenaStatusUsecase.execute(updateArenaDetailDto); // challengerId 없으면 undefined
         if (status === 5) {
             await endArenaUsecase.execute(arenaId);
