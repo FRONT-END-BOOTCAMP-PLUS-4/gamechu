@@ -22,7 +22,11 @@ export default function CreateArenaModal() {
     const [descriptionError, setDescriptionError] = useState<string>("");
     const [dateError, setDateError] = useState<string>("");
     const [submitting, setSubmitting] = useState<boolean>(false);
-
+    const [noticeMessage, setNoticeMessage] = useState(
+        "작성 후 수정이 불가능하니 내용을 신중히 작성해주세요.\n도전장 작성 시 100포인트가 차감됩니다."
+    );
+    const [noticeType, setNoticeType] = useState<"normal" | "error">("normal");
+    const [shakeKey, setShakeKey] = useState(0);
     // 모달 열렸을 때 스크롤 방지
     useEffect(() => {
         if (isOpen) {
@@ -76,12 +80,18 @@ export default function CreateArenaModal() {
                     startDate,
                 }),
             });
-            if (arenaResult.ok) {
-                closeModal();
-                // 새로고침
-                window.location.reload();
+
+            if (!arenaResult.ok) {
+                const errorData = await arenaResult.json();
+                const errorMessage =
+                    errorData.error || "투기장 생성에 실패했습니다.";
+                setNoticeMessage(errorMessage);
+                setNoticeType("error");
+                setShakeKey((prev) => prev + 1);
+                return;
             }
 
+            // 투기장 생성 성공 시에만 점수 차감
             // TODO: get policyId and actualScore from Score Policy Database
             const scoreRecordResult = await fetch(`/api/member/scores`, {
                 method: "POST",
@@ -95,6 +105,8 @@ export default function CreateArenaModal() {
                 closeModal();
                 console.log("점수 기록 생성 성공:", scoreRecord);
             }
+            // 새로고침
+            window.location.reload();
         } catch (error: unknown) {
             console.error("Failed to post arena", error);
         } finally {
@@ -116,14 +128,16 @@ export default function CreateArenaModal() {
                     />
                     <span>도전장 작성</span>
                 </h2>
-
-                <div className="rounded border border-yellow-600/50 bg-yellow-50/10 px-4 py-2 text-xs text-yellow-500 sm:text-sm">
+                <div
+                    key={shakeKey}
+                    className={`rounded border px-4 py-2 text-xs sm:text-sm ${
+                        noticeType === "error"
+                            ? "animate-shake border-red-600/50 bg-red-50/10 text-red-400"
+                            : "border-yellow-600/50 bg-yellow-50/10 text-yellow-500"
+                    }`}
+                >
                     <div className="space-y-1">
-                        <div>
-                            작성 후 수정이 불가능하니 내용을 신중히
-                            작성해주세요.
-                        </div>
-                        <div>투기장 작성 시 100점의 포인트가 차감됩니다.</div>
+                        <div>{noticeMessage}</div>
                     </div>
                 </div>
                 {/* ✅ 도전장 제목 입력 */}

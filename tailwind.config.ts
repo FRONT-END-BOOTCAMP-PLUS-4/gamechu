@@ -17,6 +17,7 @@ const config: Config = {
                 "fade-in-right-strong":
                     "fadeInRightStrong 0.8s ease-out forwards",
                 typing: "typing 5s steps(60, end) forwards",
+                shake: "shake 0.4s ease-in-out",
             },
             keyframes: {
                 fadeIn: {
@@ -69,6 +70,14 @@ const config: Config = {
                     "0%": { backgroundPosition: "0% 0%" },
                     "50%": { backgroundPosition: "100% 100%" },
                     "100%": { backgroundPosition: "0% 0%" },
+                },
+                shake: {
+                    "0%": { transform: "translateX(0)" },
+                    "20%": { transform: "translateX(-8px)" },
+                    "40%": { transform: "translateX(8px)" },
+                    "60%": { transform: "translateX(-2px)" },
+                    "80%": { transform: "translateX(2px)" },
+                    "100%": { transform: "translateX(0)" },
                 },
             },
             fontSize: {
