@@ -2,24 +2,30 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import TierBadge from "@/app/components/TierBadge";
 import { tiers, Tier } from "@/constants/tiers";
 import { getTier } from "@/utils/GetTiers";
+import PointHelpModal from "./PointHelpModal";
 
 type Props = {
     score: number;
 };
 
 export default function ProfileTierCard({ score }: Props) {
+    const [isHelpOpen, setIsHelpOpen] = useState(false);
+
     const currentTier: Tier = getTier(score);
     const currentIndex = tiers.indexOf(currentTier);
     const nextTier = tiers[Math.min(currentIndex + 1, tiers.length - 1)];
+
     const progress =
         currentTier.max === Infinity
             ? 100
             : ((score - currentTier.min) /
                   (currentTier.max - currentTier.min)) *
               100;
+
     const pointsToNext =
         currentTier.max === Infinity ? 0 : Math.max(0, nextTier.min - score);
 
@@ -29,12 +35,29 @@ export default function ProfileTierCard({ score }: Props) {
             <div className="mb-4 flex items-start justify-between">
                 <div>
                     <h2 className="text-body font-semibold">나의 티어</h2>
-                    <p className="text-sm text-font-200">
-                        포인트를 모아 더 높은 티어로 승급하세요!
-                    </p>
+
+                    {/* ✅ 설명 + ? 버튼 */}
+                    <div className="mt-1 flex items-center gap-2">
+                        <p className="text-sm text-font-200">
+                            포인트를 모아 더 높은 티어로 승급하세요!
+                        </p>
+
+                        <button
+                            type="button"
+                            onClick={() => setIsHelpOpen(true)}
+                            className="focus:ring-primary/60 inline-flex h-6 w-6 items-center justify-center rounded-full border border-background-200 bg-background-200 text-xs font-bold text-font-100 hover:opacity-90 focus:outline-none focus:ring-2"
+                            aria-label="포인트 안내 보기"
+                            aria-haspopup="dialog"
+                            aria-expanded={isHelpOpen}
+                            aria-controls="tier-point-help-modal"
+                            title="포인트 안내"
+                        >
+                            ?
+                        </button>
+                    </div>
                 </div>
 
-                {/* 우측 배지 (모바일용 sm, 데스크탑용 md) */}
+                {/* 우측 배지 */}
                 <div className="block md:hidden">
                     <TierBadge score={score} />
                 </div>
@@ -65,7 +88,7 @@ export default function ProfileTierCard({ score }: Props) {
                 />
             </div>
 
-            {/* ✅ 모바일: 현재 티어만 보여줌 */}
+            {/* ✅ 모바일: 현재 티어만 */}
             <div className="grid grid-cols-1 gap-2 text-center text-caption md:hidden">
                 <div
                     className="flex flex-col items-center rounded-xl border px-4 py-4 font-bold text-white"
@@ -90,7 +113,7 @@ export default function ProfileTierCard({ score }: Props) {
                 </div>
             </div>
 
-            {/* ✅ 태블릿 전용: 5열 고정, 점수 구간 숨김 */}
+            {/* ✅ 태블릿 */}
             <div className="hidden grid-cols-5 gap-2 text-center text-caption md:grid lg:hidden">
                 {tiers.map((tier) => {
                     const isActive = tier.label === currentTier.label;
@@ -121,16 +144,13 @@ export default function ProfileTierCard({ score }: Props) {
                             <div className="truncate text-xs sm:text-sm">
                                 {tier.label}
                             </div>
-                            {/* 점수 구간은 태블릿에서 숨김 */}
-                            <div className="hidden text-[10px]">
-                                {/* hidden on tablet */}
-                            </div>
+                            <div className="hidden text-[10px]" />
                         </div>
                     );
                 })}
             </div>
 
-            {/* ✅ 데스크탑: 기존 전체 표시(점수 구간 보임) */}
+            {/* ✅ 데스크탑 */}
             <div className="grid hidden grid-cols-5 gap-3 text-center text-caption lg:grid">
                 {tiers.map((tier) => {
                     const isActive = tier.label === currentTier.label;
@@ -159,7 +179,6 @@ export default function ProfileTierCard({ score }: Props) {
                                 className={`${isActive ? "brightness-[1.5]" : "opacity-70"} mb-1`}
                             />
                             <div className="text-sm">{tier.label}</div>
-                            {/* 데스크탑에서만 점수 구간 노출 */}
                             <div className="text-xs">
                                 {tier.max === Infinity
                                     ? `${tier.min}+`
@@ -169,6 +188,12 @@ export default function ProfileTierCard({ score }: Props) {
                     );
                 })}
             </div>
+
+            {/* ✅ 모달 */}
+            <PointHelpModal
+                open={isHelpOpen}
+                onClose={() => setIsHelpOpen(false)}
+            />
         </div>
     );
 }
