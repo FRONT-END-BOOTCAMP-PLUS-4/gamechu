@@ -6,7 +6,7 @@ interface Props {
 
 export default function GameTitleImageSection({ image, title }: Props) {
     return (
-        <div className="flex w-full flex-col overflow-visible rounded-3xl shadow lg:flex-row">
+        <div className="flex w-full flex-col overflow-visible rounded-3xl border-2 border-gray-800 shadow lg:flex-row">
             <div className="relative aspect-[12/9] w-full flex-none">
                 <Image
                     src={image.startsWith("//") ? `https:${image}` : image}

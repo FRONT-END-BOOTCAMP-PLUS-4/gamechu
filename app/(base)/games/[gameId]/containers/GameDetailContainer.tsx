@@ -31,7 +31,7 @@ export default async function GameDetailContainer({ gameId }: Props) {
                     title={game.title}
                 />
                 <div className="flex">
-                    <div className="flex-1">
+                    <div className="min-w-0 flex-1">
                         <GameHeaderInfoSection
                             title={game.title}
                             developer={game.developer}
@@ -41,7 +41,7 @@ export default async function GameDetailContainer({ gameId }: Props) {
                             viewerId={viewerId ?? ""}
                         />
                     </div>
-                    <div className="flex-1">
+                    <div className="min-w-0 flex-1">
                         <GameInfoCard
                             platforms={game.platforms}
                             genres={game.genres}
