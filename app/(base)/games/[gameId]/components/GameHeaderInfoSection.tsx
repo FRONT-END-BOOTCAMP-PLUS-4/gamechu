@@ -19,9 +19,9 @@ export default function GameTitleInfoSection({
     viewerId,
 }: GameTitleInfoSectionProps) {
     return (
-        <div className="flex h-[350px] flex-1 flex-col whitespace-nowrap p-4 lg:p-10">
+        <div className="flex min-h-[350px] flex-col p-4 lg:p-10">
             <div className="mb-4 lg:mb-6">
-                <h2 className="line-clamp-2 text-lg font-semibold text-font-100 lg:text-h2">
+                <h2 className="text-lg font-semibold text-font-100 lg:text-h2">
                     {title}
                 </h2>
                 <p className="text-xs text-font-200 lg:text-caption">
@@ -63,10 +63,10 @@ export default function GameTitleInfoSection({
                         className="lg:h-[36px] lg:w-[36px]"
                     />
                     <div className="flex flex-col">
-                        <span className="lg:text-regular text-base font-semibold text-font-100">
+                        <span className="lg:text-regular whitespace-nowrap text-base font-semibold text-font-100">
                             {releaseDate}
                         </span>
-                        <span className="text-xs text-font-200 lg:text-caption">
+                        <span className="whitespace-nowrap text-xs text-font-200 lg:text-caption">
                             출시일
                         </span>
                     </div>
