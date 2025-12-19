@@ -19,7 +19,7 @@ export default function GameTitleInfoSection({
     viewerId,
 }: GameTitleInfoSectionProps) {
     return (
-        <div className="flex min-h-[350px] flex-col p-4 lg:p-10">
+        <div className="flex flex-col p-4 lg:p-10">
             <div className="mb-4 lg:mb-6">
                 <h2 className="text-lg font-semibold text-font-100 lg:text-h2">
                     {title}
