@@ -11,6 +11,32 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
     const dialogTitleId = useId();
     const closeBtnRef = useRef<HTMLButtonElement | null>(null);
 
+    // ✅ (1) 모달 열릴 때 body 스크롤 잠금 + 스크롤바 폭만큼 padding-right 보정
+    useEffect(() => {
+        if (!open) return;
+
+        const body = document.body;
+
+        // 스크롤바 폭 계산 (스크롤바가 없으면 0)
+        const scrollbarWidth =
+            window.innerWidth - document.documentElement.clientWidth;
+
+        // 기존 인라인 스타일 백업
+        const prevOverflow = body.style.overflow;
+        const prevPaddingRight = body.style.paddingRight;
+
+        // 스크롤 잠금 + 레이아웃 밀림 방지
+        body.style.overflow = "hidden";
+        if (scrollbarWidth > 0) {
+            body.style.paddingRight = `${scrollbarWidth}px`;
+        }
+
+        return () => {
+            body.style.overflow = prevOverflow;
+            body.style.paddingRight = prevPaddingRight;
+        };
+    }, [open]);
+
     useEffect(() => {
         if (!open) return;
 
@@ -60,20 +86,60 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
                     <div className="rounded-xl bg-background-200 p-4">
                         <div className="font-semibold">✅ 포인트 적립</div>
                         <ul className="mt-2 list-disc space-y-1 pl-5 text-font-200">
-                            <li>출석 체크: +5</li>
-                            <li>리뷰 좋아요 획득:+5</li>
-                            <li>투기장 무승부: +100</li>
-                            <li>투기장 미성립: +100</li>
-                            <li>투기장 승리: +190</li>
+                            <li>
+                                출석 체크:{" "}
+                                <span className="font-semibold text-green-600">
+                                    +5
+                                </span>
+                            </li>
+                            <li>
+                                리뷰 좋아요 획득:{" "}
+                                <span className="font-semibold text-green-600">
+                                    +5
+                                </span>
+                            </li>
+                            <li>
+                                투기장 무승부:{" "}
+                                <span className="font-semibold text-green-600">
+                                    +100
+                                </span>
+                            </li>
+                            <li>
+                                투기장 미성립:{" "}
+                                <span className="font-semibold text-green-600">
+                                    +100
+                                </span>
+                            </li>
+                            <li>
+                                투기장 승리:{" "}
+                                <span className="font-semibold text-green-600">
+                                    +190
+                                </span>
+                            </li>
                         </ul>
                     </div>
 
                     <div className="rounded-xl bg-background-200 p-4">
                         <div className="font-semibold">⚠️ 포인트 차감</div>
                         <ul className="mt-2 list-disc space-y-1 pl-5 text-font-200">
-                            <li>투기장 참여: -100</li>
-                            <li>리뷰 좋아요 삭제: -5</li>
-                            <li>리뷰 삭제: -5 ~ -100</li>
+                            <li>
+                                투기장 참여:{" "}
+                                <span className="font-semibold text-red-500">
+                                    -100
+                                </span>
+                            </li>
+                            <li>
+                                리뷰 좋아요 삭제:{" "}
+                                <span className="font-semibold text-red-500">
+                                    -5
+                                </span>
+                            </li>
+                            <li>
+                                리뷰 삭제:{" "}
+                                <span className="font-semibold text-red-500">
+                                    -5 ~ -100
+                                </span>
+                            </li>
                         </ul>
                     </div>
 
@@ -82,16 +148,27 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
                         <ul className="mt-2 list-disc space-y-1 pl-5 text-font-200">
                             <li>처음 가입할 때 500점으로 시작합니다.</li>
                             <li>
-                                0~999점은 브론즈, 1000~1999점은 실버,
-                                2000~2999점은 골드, 3000~3999점은 플래티넘,
-                                4000점 이상은 다이아몬드입니다.
-                            </li>
-                            <li>
-                                다음 티어까지는{" "}
-                                <span className="font-semibold text-font-100">
-                                    다음 티어 최소점수 - 현재점수
+                                0~999점은{" "}
+                                <span className="font-semibold text-[#C97A40]">
+                                    브론즈
                                 </span>
-                                로 표시됩니다.
+                                , 1000~1999점은{" "}
+                                <span className="font-semibold text-[#B0B0B0]">
+                                    실버
+                                </span>
+                                , 2000~2999점은{" "}
+                                <span className="font-semibold text-[#FFD700]">
+                                    골드
+                                </span>
+                                , 3000~3999점은{" "}
+                                <span className="font-semibold text-[#45E0FF]">
+                                    플래티넘
+                                </span>
+                                , 4000점 이상은{" "}
+                                <span className="font-semibold text-[#4C7DFF]">
+                                    다이아몬드
+                                </span>
+                                입니다.
                             </li>
                         </ul>
                     </div>
