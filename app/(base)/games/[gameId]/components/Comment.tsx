@@ -148,14 +148,14 @@ export default function Comment({
     };
 
     return (
-        <div className="relative flex w-full max-w-full flex-col gap-3 overflow-hidden rounded-[4px] bg-background-100 p-4">
+        <div className="relative flex w-full max-w-full flex-col gap-3 overflow-visible rounded-[4px] bg-background-100 p-4">
             {/* 상단 툴바 + 별점 + 버튼 */}
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                 <CommentEditorToolbar
                     editor={editor}
                     onImageUpload={handleImageUpload}
                 />
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-4">
                     <StarRating
                         value={rating}
                         variant="noText"
