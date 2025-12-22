@@ -66,10 +66,15 @@ export default function CommentCard({
         const el = commentRef.current;
         if (!el) return;
 
-        const scrollHeight = el.scrollHeight;
-        setContentHeight(scrollHeight); // 실제 콘텐츠 높이 저장
-        setIsOverflowing(scrollHeight > 150);
-    }, [comment]);
+        const observer = new ResizeObserver(() => {
+            setContentHeight(el.scrollHeight);
+            setIsOverflowing(el.scrollHeight > 150);
+        });
+
+        observer.observe(el);
+
+        return () => observer.disconnect();
+    }, []);
 
     useEffect(() => {
         setIsLiked(initiallyLiked);
@@ -90,16 +95,6 @@ export default function CommentCard({
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
-    useEffect(() => {
-        const el = commentRef.current;
-        if (!el) return;
-
-        // 실제 렌더된 영역(clientHeight)보다 스크롤 가능한 높이(scrollHeight)가
-        // 더 크면 "내용이 넘친다"고 판단해서 접기/펼치기 버튼을 노출
-        const hasOverflow = el.scrollHeight - el.clientHeight > 2;
-        setIsOverflowing(hasOverflow);
-    }, [comment]);
 
     const toggleMenu = () => setShowMenu((prev) => !prev);
 
