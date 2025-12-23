@@ -134,12 +134,6 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
                                     -5
                                 </span>
                             </li>
-                            <li>
-                                리뷰 삭제:{" "}
-                                <span className="font-semibold text-red-500">
-                                    -5 ~ -100
-                                </span>
-                            </li>
                         </ul>
                     </div>
 
