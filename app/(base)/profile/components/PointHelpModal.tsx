@@ -134,6 +134,18 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
                                     -5
                                 </span>
                             </li>
+                            <li>
+                                리뷰 삭제:{" "}
+                                <span className="font-semibold text-red-500">
+                                    -5 ~ -100
+                                </span>
+                                <span>
+                                    {" "}
+                                    (해당 리뷰가 받은 좋아요 수에 비례해서
+                                    줄어듭니다. 예: 좋아요 20개 받은 리뷰 삭제
+                                    시 -100점)
+                                </span>
+                            </li>
                         </ul>
                     </div>
 
