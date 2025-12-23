@@ -97,6 +97,11 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
                                 <span className="font-semibold text-green-600">
                                     +5
                                 </span>
+                                <span>
+                                    {" "}
+                                    (한 리뷰당 획득할 수 있는 좋아요 포인트는
+                                    최대 20개로 총 100포인트 획득 가능합니다.)
+                                </span>
                             </li>
                             <li>
                                 투기장 무승부:{" "}
@@ -123,7 +128,7 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
                         <div className="font-semibold">⚠️ 포인트 차감</div>
                         <ul className="mt-2 list-disc space-y-1 pl-5 text-font-200">
                             <li>
-                                투기장 참여:{" "}
+                                투기장 작성 및 참여:{" "}
                                 <span className="font-semibold text-red-500">
                                     -100
                                 </span>
