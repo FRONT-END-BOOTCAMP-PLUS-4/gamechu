@@ -101,7 +101,9 @@ export default function ArenaDetailPage() {
 
                 {/* 오른쪽: 정보 패널 (큰 화면에서만 보임) */}
                 <div className="mt-16 hidden flex-[1] lg:block">
-                    <ArenaDetailInfo />
+                    <div className="sticky top-6">
+                        <ArenaDetailInfo />
+                    </div>
                 </div>
             </div>
         </div>
