@@ -1,4 +1,5 @@
 "use client";
+
 import Button from "@/app/components/Button";
 import useArenaStore from "@/stores/useArenaStore";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
@@ -58,27 +59,61 @@ export default function ArenaDetailRecruiting() {
     };
 
     return (
-        <div className="mt-6 min-h-[740px] w-full max-w-[1000px] animate-fade-in-up rounded-lg bg-background-300 px-4 py-6 text-center text-font-200">
-            <h2 className="mb-2 animate-pulse text-lg">
-                도전 상대를 모집 중입니다.
-            </h2>
-            <p className="text-md mb-2 animate-pulse">도전해보세요!</p>
-            <div className="mx-auto my-4 w-fit animate-bounce">
-                <Image
-                    src="/icons/arrowDown.svg"
-                    alt="아래 화살표"
-                    width={24}
-                    height={24}
-                />
+        <div className="mt-6 flex min-h-[400px] w-full max-w-[1000px] animate-fade-in-up flex-col items-center justify-center rounded-3xl bg-background-300 px-6 py-12 text-center sm:min-h-[500px] sm:px-10 sm:py-20">
+            <div className="relative mb-6 flex items-center justify-center">
+                {/* 아이콘 */}
+                <div className="relative flex h-24 w-24 animate-spin items-center justify-center rounded-full bg-background-400/50 ring-2 ring-primary-purple-200/40 [animation-duration:8s] sm:h-40 sm:w-40">
+                    <Image
+                        src="/icons/infotime.svg"
+                        alt="시간 아이콘"
+                        width={40}
+                        height={40}
+                        className="h-16 w-16 sm:h-28 sm:w-28"
+                    />
+                </div>
             </div>
-            <Button
-                label="참가하기"
-                type="purple"
-                size="large"
-                onClick={handleJoin}
-                disabled={loading}
-            />
-            {error && <p className="mt-2 text-red-500">{error}</p>}
+
+            {/* 메인 텍스트 */}
+            <div className="flex flex-col gap-3">
+                <h2 className="text-2xl font-black tracking-tight text-font-100 sm:text-4xl">
+                    도전 상대를 모집 중입니다
+                </h2>
+                <p className="mx-auto max-w-[280px] text-xs font-medium leading-relaxed text-font-200 sm:max-w-none sm:text-base">
+                    이 투기장의 주인이 당신의 도전을 기다리고 있습니다.
+                    <br className="hidden sm:block" />
+                    지금 참가하여 치열한 토론의 주인공이 되어보세요!
+                </p>
+            </div>
+
+            {/* 화살표, 버튼 */}
+            <div className="mt-6 flex flex-col items-center gap-6">
+                <div className="animate-bounce">
+                    <Image
+                        src="/icons/arrowDown.svg"
+                        alt="아래 화살표"
+                        width={28}
+                        height={28}
+                    />
+                </div>
+
+                <div className="w-full transition-all hover:scale-105 active:scale-95">
+                    <Button
+                        label={loading ? "참가 처리 중..." : "도전하기"}
+                        type="purple"
+                        size="large"
+                        onClick={handleJoin}
+                        disabled={loading}
+                    />
+                </div>
+
+                {error && (
+                    <div className="mt-2 rounded-xl bg-red-400/10 px-5 py-3">
+                        <p className="text-xs font-bold text-red-400 sm:text-sm">
+                            {error}
+                        </p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
