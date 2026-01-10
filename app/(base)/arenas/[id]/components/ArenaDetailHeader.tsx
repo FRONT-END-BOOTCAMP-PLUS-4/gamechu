@@ -5,39 +5,44 @@ import Image from "next/image";
 
 export default function ArenaDetailHeader() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
+
     return (
-        <div className="flex w-full max-w-[1000px] flex-col gap-4">
-            {/* 상단: 제목 & 게시자 */}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-                {/* 제목 */}
-                <div className="flex min-w-0 animate-fade-in-left items-center">
-                    <Image
-                        src="/icons/arena2.svg"
-                        alt="투기장 아이콘"
-                        width={40}
-                        height={40}
-                    />
-                    <h2 className="ml-2 max-w-[400px] truncate text-h2 font-bold text-font-100">
+        <div className="flex w-full max-w-[1000px] flex-col gap-4 rounded-3xl border border-background-200 bg-background-300 px-4 py-6 sm:px-8 sm:py-10">
+            <div className="relative flex flex-col gap-6">
+                <div className="flex flex-col gap-4">
+                    {/* 메인 제목 */}
+                    <h2 className="animate-fade-in-left break-words text-xl font-extrabold tracking-tight text-font-100 sm:text-3xl">
                         {arenaDetail?.title ?? "투기장 제목"}
                     </h2>
                 </div>
+
                 {/* 게시자 */}
-                <div className="flex min-w-0 animate-fade-in-right items-center gap-2">
-                    <Image
-                        src="/icons/teamA.svg"
-                        alt="게시자 아이콘"
-                        width={40}
-                        height={40}
-                    />
-                    <h2 className="max-w-[150px] truncate text-h2 font-bold text-font-100">
-                        {arenaDetail?.creatorName ?? "게시자"}
-                    </h2>
+                <div className="flex animate-fade-in items-center gap-4">
+                    <div className="flex shrink-0 items-center justify-center">
+                        <Image
+                            src="/icons/teamA.svg"
+                            alt="게시자"
+                            width={40}
+                            height={40}
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-xs font-bold text-font-200">
+                            게시자
+                        </span>
+                        <span className="text-sm font-bold text-font-100 sm:text-base">
+                            {arenaDetail?.creatorName ?? "게시자"}
+                        </span>
+                    </div>
                 </div>
             </div>
-
-            {/* 하단: 내용 */}
-            <div className="max-h-64 animate-fade-in-up overflow-y-auto rounded-xl bg-background-300 p-4 text-body text-font-100">
-                {arenaDetail?.description ?? "투기장 내용"}
+            <div className="h-[2px] bg-background-200" />
+            {/* 내용 영역 */}
+            <div className="relative animate-fade-in-up">
+                <div className="whitespace-pre-line text-sm text-font-100 sm:text-base">
+                    {arenaDetail?.description ??
+                        "투기장 내용을 불러오는 중입니다."}
+                </div>
             </div>
         </div>
     );
