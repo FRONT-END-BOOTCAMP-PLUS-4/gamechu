@@ -102,6 +102,7 @@ const config: Config = {
                 font: {
                     100: "#FFFFFF", // 기본 텍스트
                     200: "#C4C4C4", // placeholder
+                    300: "#a5a5a5", // 보조 텍스트
                 },
                 primary: {
                     purple: {
