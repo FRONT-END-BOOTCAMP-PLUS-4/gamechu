@@ -20,7 +20,7 @@ export default function ArenaPageHeader() {
                     </h1>
                 </div>
 
-                <p className="text-font-300 break-keep px-2 text-sm text-gray-400 sm:text-base">
+                <p className="break-keep px-2 text-sm text-gray-400 sm:text-base">
                     게임에 대한 열띤 토론의 장입니다. 자신의 의견을 피력하고
                     다른 게이머들과 논쟁을 벌여보세요. 토론에서 승리하여 최고의
                     평론가로 인정받으세요.

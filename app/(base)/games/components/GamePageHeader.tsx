@@ -17,7 +17,7 @@ export default function GamePageHeader() {
                         게임 탐색
                     </h1>
                 </div>
-                <p className="text-font-300 sm:text-md break-keep text-sm text-gray-400">
+                <p className="sm:text-md break-keep text-sm text-gray-400">
                     수많은 게임들 중 나에게 맞는 게임을 탐색하는 장입니다. 장르,
                     테마, 플랫폼 등의 필터와 리뷰순, 최신순, 별점순 정렬 기능을
                     사용해보세요. 또는 직접 제목 또는 개발사로 검색하실 수도

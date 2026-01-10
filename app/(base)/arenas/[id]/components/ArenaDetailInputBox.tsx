@@ -68,7 +68,7 @@ export default function ArenaDetailInputBox({
 Enter: 전송
 Shift + Enter: 줄바꿈`
                     }
-                    className="placeholder:text-font-400 min-h-[110px] w-full resize-none bg-transparent p-4 text-font-100 outline-none"
+                    className="min-h-[110px] w-full resize-none bg-transparent p-4 text-font-100 outline-none placeholder:text-font-200"
                     disabled={disabled || isSendCountZero}
                     maxLength={maxLength}
                 />
@@ -78,7 +78,7 @@ Shift + Enter: 줄바꿈`
                     {/* 상태 정보 영역 */}
                     <div className="flex gap-4 font-bold tracking-tight sm:text-xs">
                         <div className="flex items-center gap-2 text-[10px] sm:text-xs">
-                            <span className="text-font-400 uppercase opacity-50">
+                            <span className="uppercase text-font-100 opacity-50">
                                 Length
                             </span>
                             <span
@@ -88,28 +88,22 @@ Shift + Enter: 줄바꿈`
                                         : "text-font-200"
                                 }
                             >
-                                {currentLength}{" "}
-                                <span className="text-font-400 font-normal">
-                                    / {maxLength}
-                                </span>
+                                {currentLength} <span>/ {maxLength}</span>
                             </span>
                         </div>
                         <div className="h-3 w-[1px] self-center bg-white/10" />
                         <div className="flex items-center gap-2 text-[10px] sm:text-xs">
-                            <span className="text-font-400 uppercase opacity-50">
+                            <span className="uppercase text-font-200 opacity-50">
                                 Limit
                             </span>
                             <span
                                 className={
                                     isSendCountZero
-                                        ? "text-red-500"
+                                        ? "text-red-400"
                                         : "text-font-200"
                                 }
                             >
-                                {remainingSends}{" "}
-                                <span className="text-font-400 font-normal">
-                                    / {totalSends}
-                                </span>
+                                {remainingSends} <span>/ {totalSends}</span>
                             </span>
                         </div>
                     </div>
