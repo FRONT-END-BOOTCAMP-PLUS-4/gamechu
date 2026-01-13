@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
         if (!memberId) {
             return NextResponse.json(
-                { error: "멤버가 아닙니다." },
+                { error: "로그인이 필요합니다." },
                 { status: 401 }
             );
         }
@@ -58,9 +58,23 @@ export async function PATCH(req: NextRequest) {
         const body = await req.json();
         const { arenaId, votedTo } = body;
 
-        if (!arenaId || !memberId || !votedTo) {
+        if (!arenaId) {
             return NextResponse.json(
-                { message: "잘못된 요청입니다." },
+                { error: "투기장을 찾을 수 없습니다." },
+                { status: 400 }
+            );
+        }
+
+        if (!memberId) {
+            return NextResponse.json(
+                { error: "로그인이 필요합니다." },
+                { status: 401 }
+            );
+        }
+
+        if (!votedTo) {
+            return NextResponse.json(
+                { error: "투표한 인원을 찾을 수 없습니다." },
                 { status: 400 }
             );
         }

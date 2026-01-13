@@ -58,8 +58,16 @@ export default function ArenaDetailVote() {
     const handleVote = async (votedTo: string | null) => {
         if (!arenaDetail?.id || !votedTo || loading) return;
         setPersistentError("");
-        await submitVote(arenaDetail.id, votedTo, existingVote);
-        refetchVoteData();
+        try {
+            await submitVote(arenaDetail.id, votedTo, existingVote);
+            refetchVoteData();
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setPersistentError(err.message);
+            } else {
+                setPersistentError("알 수 없는 오류가 발생했습니다.");
+            }
+        }
     };
 
     return (
