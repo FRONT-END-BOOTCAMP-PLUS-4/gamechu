@@ -6,12 +6,13 @@ import {
 import { ChattingFilter } from "@/backend/chatting/domain/repositories/filters/ChattingFilter";
 
 import { Chatting, Prisma, PrismaClient } from "@/prisma/generated";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaChattingRepository implements ChattingRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = prisma;
     }
     private getWhereClause(filter: ChattingFilter): Prisma.ChattingWhereInput {
         const { arenaId, memberId } = filter;

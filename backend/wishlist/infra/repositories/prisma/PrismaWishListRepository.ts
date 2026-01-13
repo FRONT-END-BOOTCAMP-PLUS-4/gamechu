@@ -4,39 +4,14 @@ import { WishListRepository } from "../../../domain/repositories/WishListReposit
 import { WishlistFilter } from "../../../domain/filters/WishlistFilter"; // Uncomment if needed
 import { Prisma } from "@/prisma/generated";
 import { CreateWishlistInput } from "../../../domain/repositories/WishListRepository";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaWishListRepository implements WishListRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = prisma;
     }
-
-    // async findAll(memberId: string): Promise<Wishlist[]> {
-    //     return this.prisma.wishlist.findMany({
-    //         where: { memberId },
-    //         include: {
-    //             game: {
-    //                 include: {
-    //                     gamePlatforms: {
-    //                         include: { platform: true },
-    //                         take: 1,
-    //                     },
-    //                     reviews: {
-    //                         include: { member: true },
-    //                     },
-    //                 },
-    //             },
-    //             member: true,
-    //         },
-    //     });
-    // }
-
-    // async count(memberId: string): Promise<number> {
-    //     return this.prisma.wishlist.count({
-    //         where: { memberId },
-    //     });
-    // }
 
     async findById(memberId: string, gameId: number): Promise<Wishlist | null> {
         return this.prisma.wishlist.findFirst({

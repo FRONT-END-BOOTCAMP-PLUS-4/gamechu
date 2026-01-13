@@ -4,6 +4,7 @@ import {
     CreatePreferredPlatformInput,
 } from "@/backend/preferred-platform/domain/repositories/PreferredPlatformRepository";
 import { PrismaClient, PreferredPlatform } from "@/prisma/generated";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaPreferredPlatformRepository
     implements PreferredPlatformRepository
@@ -11,34 +12,9 @@ export class PrismaPreferredPlatformRepository
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = prisma;
     }
 
-    // async savePreferredPlatforms(memberId: string, platformIds: number[]): Promise<void> {
-    //     await this.prisma.preferredPlatform.deleteMany({ where: { memberId } });
-
-    //     if (platformIds.length === 0) return;
-
-    //     await this.prisma.preferredPlatform.createMany({
-    //         data: platformIds.map((platformId) => ({
-    //             memberId,
-    //             platformId,
-    //         })),
-    //     });
-    // }
-
-    // async save(memberId: string, platformIds: number[]): Promise<void> {
-    //     await this.prisma.preferredPlatform.deleteMany({ where: { memberId } });
-
-    //     if (platformIds.length === 0) return;
-
-    //     await this.prisma.preferredPlatform.createMany({
-    //         data: platformIds.map((platformId) => ({
-    //             memberId,
-    //             platformId,
-    //         })),
-    //     });
-    // }
     async save(
         platform: CreatePreferredPlatformInput
     ): Promise<PreferredPlatform> {

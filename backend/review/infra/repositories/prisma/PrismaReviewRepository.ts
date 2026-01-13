@@ -4,12 +4,17 @@ import { CreateReviewDto } from "@/backend/review/application/usecase/dto/Create
 import { UpdateReviewDto } from "@/backend/review/application/usecase/dto/UpdateReviewDto";
 import { ReviewDto } from "@/backend/review/application/usecase/dto/ReviewDto";
 import { ReviewByMembersDto } from "@/backend/review/application/usecase/dto/ReviewByMembersDto";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export class PrismaReviewRepository implements ReviewRepository {
+    private prisma: PrismaClient;
+
+    constructor() {
+        this.prisma = prisma;
+    }
+
     async findByGameId(gameId: number): Promise<ReviewDto[]> {
-        const reviews = await prisma.review.findMany({
+        const reviews = await this.prisma.review.findMany({
             where: { gameId },
             include: {
                 member: {
@@ -26,7 +31,7 @@ export class PrismaReviewRepository implements ReviewRepository {
     }
 
     async findByMemberId(memberId: string): Promise<ReviewByMembersDto[]> {
-        const reviews = await prisma.review.findMany({
+        const reviews = await this.prisma.review.findMany({
             where: { memberId },
             orderBy: { createdAt: "desc" },
             include: {
@@ -52,7 +57,7 @@ export class PrismaReviewRepository implements ReviewRepository {
     }
 
     async create(memberId: string, dto: CreateReviewDto): Promise<ReviewDto> {
-        const review = await prisma.review.create({
+        const review = await this.prisma.review.create({
             data: {
                 memberId,
                 gameId: dto.gameId,
@@ -64,7 +69,7 @@ export class PrismaReviewRepository implements ReviewRepository {
     }
 
     async update(reviewId: number, dto: UpdateReviewDto): Promise<ReviewDto> {
-        const review = await prisma.review.update({
+        const review = await this.prisma.review.update({
             where: { id: reviewId },
             data: {
                 content: dto.content,
@@ -76,7 +81,7 @@ export class PrismaReviewRepository implements ReviewRepository {
     }
 
     async findById(reviewId: number): Promise<ReviewDto | null> {
-        const review = await prisma.review.findUnique({
+        const review = await this.prisma.review.findUnique({
             where: { id: reviewId },
         });
         return review ? this.toDto(review) : null;
@@ -84,11 +89,11 @@ export class PrismaReviewRepository implements ReviewRepository {
 
     async delete(reviewId: number): Promise<void> {
         try {
-            await prisma.reviewLike.deleteMany({
+            await this.prisma.reviewLike.deleteMany({
                 where: { reviewId },
             });
 
-            await prisma.review.delete({
+            await this.prisma.review.delete({
                 where: { id: reviewId },
             });
         } catch (err) {
@@ -100,7 +105,7 @@ export class PrismaReviewRepository implements ReviewRepository {
     async findAllByGameIds(
         gameIds: number[]
     ): Promise<{ gameId: number; rating: number; memberScore: number }[]> {
-        const reviews = await prisma.review.findMany({
+        const reviews = await this.prisma.review.findMany({
             where: {
                 gameId: { in: gameIds },
             },

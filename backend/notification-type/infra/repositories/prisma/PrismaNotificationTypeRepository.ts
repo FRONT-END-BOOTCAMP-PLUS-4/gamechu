@@ -3,6 +3,7 @@ import {
     NotificationTypeRepository,
 } from "@/backend/notification-type/domain/repositories/NotificationTypeRepository";
 import { NotificationType, PrismaClient } from "@/prisma/generated";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaNotificationTypeRepository
     implements NotificationTypeRepository
@@ -10,7 +11,7 @@ export class PrismaNotificationTypeRepository
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = prisma;
     }
 
     async count(): Promise<number> {

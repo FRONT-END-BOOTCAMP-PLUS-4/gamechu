@@ -6,12 +6,13 @@ import {
 import { Arena, Prisma, PrismaClient } from "@/prisma/generated";
 import { ArenaStatus } from "@/types/arena-status";
 import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilter";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaArenaRepository implements ArenaRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+    this.prisma = prisma;
     }
 
     private getWhereClause(filter: ArenaFilter): Prisma.ArenaWhereInput {
