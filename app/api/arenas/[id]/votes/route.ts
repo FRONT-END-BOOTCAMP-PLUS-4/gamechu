@@ -19,6 +19,13 @@ export async function GET(request: Request, { params }: RequestParams) {
     const url = new URL(request.url);
     const votedTo: string = url.searchParams.get("votedTo") ?? "";
     const mine: boolean = url.searchParams.get("mine") === "true";
+    if (mine && !memberId) {
+        return NextResponse.json({
+            votes: [],
+            totalCount: 0,
+            message: "비로그인 상태입니다.",
+        });
+    }
     if (isNaN(arenaId)) {
         return NextResponse.json(
             { error: "유효하지 않은 투기장 ID입니다." },
