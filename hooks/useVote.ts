@@ -66,18 +66,20 @@ export function useVote({ arenaId, votedTo, mine }: GetVoteParams) {
             });
 
             const data = await res.json();
-
             if (!res.ok) {
-                throw new Error(data.message || "투표에 실패했습니다.");
+                const serverMessage =
+                    data.message || data.error || "투표에 실패했습니다.";
+                throw new Error(serverMessage);
             }
 
-            // 성공 후 처리 (필요하다면 콜백 등 추가 가능)
+            return data;
         } catch (err: unknown) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("알 수 없는 오류가 발생했습니다.");
-            }
+            const errorMessage =
+                err instanceof Error
+                    ? err.message
+                    : "알 수 없는 오류가 발생했습니다.";
+            setError(errorMessage);
+            throw new Error(errorMessage);
         } finally {
             setLoading(false);
         }
