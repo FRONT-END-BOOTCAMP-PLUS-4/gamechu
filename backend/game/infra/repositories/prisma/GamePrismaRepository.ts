@@ -3,6 +3,7 @@ import { GameRepository } from "@/backend/game/domain/repositories/GameRepositor
 import { Game, Platform } from "@/prisma/generated";
 import { GetGameDetailDto } from "@/backend/game/application/usecase/dto/GetGameDetailDto";
 import { GameFilter } from "@/backend/game/domain/repositories/filters/GameFilter";
+import { prisma } from "@/lib/prisma";
 
 export type GameCard = Game & {
     gamePlatforms: {
@@ -11,7 +12,11 @@ export type GameCard = Game & {
 };
 
 export class GamePrismaRepository implements GameRepository {
-    private prisma = new PrismaClient();
+    private prisma: PrismaClient;
+
+    constructor() {
+        this.prisma = prisma;
+    }
 
     private getWhereClause(filter: GameFilter): Prisma.GameWhereInput {
         const { genreId, themeId, platformId, keyword } = filter;

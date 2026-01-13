@@ -4,6 +4,7 @@ import {
     CreateNotificationRecordInput,
     NotificationRecordRepository,
 } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaNotificationRecordRepository
     implements NotificationRecordRepository
@@ -11,7 +12,7 @@ export class PrismaNotificationRecordRepository
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = prisma;
     }
 
     private getWhereClause(

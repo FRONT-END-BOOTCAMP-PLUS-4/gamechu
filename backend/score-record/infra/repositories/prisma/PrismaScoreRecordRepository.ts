@@ -7,12 +7,13 @@ import { ScoreRecordFilter } from "@/backend/score-record/domain/repositories/fi
 
 import { ScoreRecordDto } from "@/backend/score-record/application/usecase/dto/ScoreRecordDto";
 import { CreateScoreRecordDto } from "@/backend/score-record/application/usecase/dto/CreateScoreRecordDto";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaScoreRecordRepository implements ScoreRecordRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = prisma;
     }
 
     private getWhereClause(

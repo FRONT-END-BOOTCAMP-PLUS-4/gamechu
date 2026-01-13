@@ -4,12 +4,13 @@ import {
     ScorePolicyRepository,
 } from "@/backend/score-policy/domain/repositories/ScorePolicyRepository";
 import { ScorePolicy, PrismaClient } from "@/prisma/generated";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaScorePolicyRepository implements ScorePolicyRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = prisma;
     }
 
     async count(): Promise<number> {

@@ -1,12 +1,14 @@
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { Vote, Prisma, PrismaClient } from "@/prisma/generated";
 import { VoteFilter } from "@/backend/vote/domain/repositories/filters/VoteFilter";
+import { prisma } from "@/lib/prisma";
+
 type VoteWithoutId = Omit<Vote, "id">;
 export class PrismaVoteRepository implements VoteRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = prisma;
     }
 
     private getWhereClause(filter: VoteFilter): Prisma.VoteWhereInput {

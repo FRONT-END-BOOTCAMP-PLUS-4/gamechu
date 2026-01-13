@@ -1,12 +1,13 @@
 // backend/genre/infra/repositories/prisma/PrismaGenreRepository.ts
 import { PrismaClient, Genre } from "@/prisma/generated";
 import { GenreRepository } from "@/backend/genre/domain/repositories/GenreRepository";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaGenreRepository implements GenreRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = prisma;
     }
 
     async findAll(): Promise<Genre[]> {
