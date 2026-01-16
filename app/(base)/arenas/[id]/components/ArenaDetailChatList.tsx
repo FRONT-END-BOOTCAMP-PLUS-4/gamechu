@@ -14,9 +14,9 @@ function ArenaDetailChatListComponent(
     const arenaDetail = useArenaStore((state) => state.arenaData);
 
     return (
-        <div className="custom-scroll mb-4 max-h-[550px] flex-1 overflow-y-auto pr-2">
+        <div className="custom-scroll max-h-[550px] flex-1 overflow-y-auto pr-2">
             {chats.length === 0 ? (
-                <p className="text-font-300 mt-4 text-center">
+                <p className="mt-4 text-center text-font-300">
                     {arenaDetail?.status === 3
                         ? "채팅이 아직 없습니다. 토론을 시작해보세요!"
                         : "채팅이 없습니다."}
@@ -100,7 +100,7 @@ function ArenaDetailChatListComponent(
                                     </div>
 
                                     {/* 시간 표시 */}
-                                    <span className="text-font-300 mb-1 shrink-0 text-[10px]">
+                                    <span className="mb-1 shrink-0 text-[10px] text-font-300">
                                         {new Date(
                                             chat.createdAt
                                         ).toLocaleTimeString("ko-KR", {
