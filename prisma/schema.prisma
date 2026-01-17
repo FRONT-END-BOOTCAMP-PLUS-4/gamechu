@@ -10,7 +10,7 @@ datasource db {
 
 model Member {
   id                  String               @id @default(uuid())
-  nickname            String
+  nickname            String               @unique @db.VarChar(8)
   email               String               @unique
   password            String
   imageUrl            String               @map("image_url")
@@ -106,7 +106,7 @@ model Chatting {
   id        Int      @id @default(autoincrement())
   memberId  String   @map("member_id")
   arenaId   Int      @map("arena_id")
-  content   String
+  content   String   @db.VarChar(200)
   createdAt DateTime @default(now()) @map("created_at")
   arena     Arena    @relation(fields: [arenaId], references: [id])
   member    Member   @relation(fields: [memberId], references: [id])
