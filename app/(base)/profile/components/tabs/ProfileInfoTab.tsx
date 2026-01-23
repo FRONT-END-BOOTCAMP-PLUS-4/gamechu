@@ -39,7 +39,7 @@ export default function ProfileInfoTab(props: Props) {
 
     return (
         <div className="flex w-full flex-col gap-8 rounded-xl bg-background-400 p-6 shadow">
-            <h2 className="text-body text-lg font-semibold">프로필 정보</h2>
+            <h2 className="text-lg font-semibold">프로필 정보</h2>
 
             <div className="flex flex-col gap-6">
                 {/* 프로필 이미지 */}
