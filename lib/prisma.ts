@@ -11,7 +11,7 @@ export const prisma: PrismaClient =
     new PrismaClient({
         log:
             process.env.NODE_ENV === "development"
-                ? ["query", "error", "warn"]
+                ? ["error", "warn"] // 개발 환경에서 필요한 플래그 설정
                 : ["error"],
     });
 
