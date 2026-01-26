@@ -83,10 +83,14 @@ export default function GamePage() {
         const fetchGames = async () => {
             setLoading(true);
             const params = new URLSearchParams();
-            if (selectedTag)
-                params.append(selectedTag.type, selectedTag.id.toString());
-            if (selectedPlatformId)
-                params.append("platform", selectedPlatformId.toString());
+            if (selectedTag) {
+                const key =
+                    selectedTag.type === "genre" ? "genreId" : "themeId";
+                params.append(key, selectedTag.id.toString());
+            }
+            if (selectedPlatformId) {
+                params.append("platformId", selectedPlatformId.toString());
+            }
             if (debounceKeyword) params.append("keyword", debounceKeyword);
             if (sortBy) params.append("sort", sortBy);
             params.append("page", currentPage.toString());
