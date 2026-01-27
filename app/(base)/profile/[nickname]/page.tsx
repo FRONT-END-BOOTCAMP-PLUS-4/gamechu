@@ -7,6 +7,7 @@ import ProfileSidebar from "./components/ProfileSidebar";
 import ProfileReviewTab from "../components/tabs/ProfileReviewTab";
 import ProfileArenaTab from "../components/tabs/ProfileArenaTab";
 import { useLoadingStore } from "@/stores/loadingStore";
+import { useRouter } from "next/navigation";
 
 type Review = {
     id: number;
@@ -24,6 +25,8 @@ export default function ProfilePage({
 }: {
     params: Promise<{ nickname: string }>;
 }) {
+    const router = useRouter();
+
     const { nickname: routeNickname } = use(params);
     const { setLoading } = useLoadingStore();
     const [activeTab, setActiveTab] = useState("reviews");
@@ -44,6 +47,13 @@ export default function ProfilePage({
             const profileRes = await fetch(
                 `/api/member/profile/${routeNickname}`
             );
+
+            // ❌ 닉네임 없는 경우
+            if (!profileRes.ok) {
+                router.replace("/not-found");
+                return;
+            }
+
             const profile = await profileRes.json();
 
             setNickname(profile.nickname);
@@ -63,7 +73,7 @@ export default function ProfilePage({
         } finally {
             setLoading(false);
         }
-    }, [routeNickname, setLoading]);
+    }, [routeNickname, setLoading, router]);
 
     useEffect(() => {
         fetchProfileData();
