@@ -5,11 +5,9 @@ import Image from "next/image";
 
 interface Props {
     reviewCount: number;
-    wishlistCount: number;
     nickname: string;
     imageUrl: string;
     score: number;
-    createdAt: string;
 }
 
 export default function ProfileSummaryCard({

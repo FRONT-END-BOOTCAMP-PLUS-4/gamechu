@@ -5,19 +5,9 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import ProfileSummaryCard from "./components/ProfileSummaryCard";
 import ProfileTierCard from "./components/ProfileTierCard";
 import ProfileSidebar from "./components/ProfileSidebar";
-import ProfileReviewTab from "./components/tabs/ProfileReviewTab";
-import ProfileArenaTab from "./components/tabs/ProfileArenaTab";
+import ProfileReviewTab from "../components/tabs/ProfileReviewTab";
+import ProfileArenaTab from "../components/tabs/ProfileArenaTab";
 import { useLoadingStore } from "@/stores/loadingStore";
-
-type WishlistGame = {
-    id: number;
-    title: string;
-    developer: string;
-    thumbnail: string;
-    platform: string;
-    expertRating: number;
-    reviewCount: number;
-};
 
 type Review = {
     id: number;
@@ -30,38 +20,16 @@ type Review = {
     imageUrl: string | null;
 };
 
-type WishlistPageData = {
-    wishlists: WishlistGame[];
-    currentPage: number;
-    pages: number[];
-    endPage: number;
-    totalCount: number;
-};
-
 export default function ProfilePage() {
     const { setLoading } = useLoadingStore();
     const [activeTab, setActiveTab] = useState("reviews");
     const [reviewCount, setReviewCount] = useState(0);
-    const [wishlistPageData, setWishlistPageData] = useState<WishlistPageData>({
-        wishlists: [],
-        currentPage: 1,
-        pages: [],
-        endPage: 1,
-        totalCount: 0,
-    });
 
     const [nickname, setNickname] = useState("");
     const [imageUrl, setImageUrl] = useState("/icons/arena.svg");
     const [score, setScore] = useState(0);
-    const [createdAt, setCreatedAt] = useState("");
     const [reviews, setReviews] = useState<Review[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
-
-    const fetchWishlistPage = async (page: number) => {
-        const res = await fetch(`/api/member/wishlists?page=${page}`);
-        const data = await res.json();
-        setWishlistPageData(data);
-    };
 
     const fetchProfileData = useCallback(async () => {
         const id = await getAuthUserId();
@@ -83,8 +51,6 @@ export default function ProfilePage() {
             setNickname(profile.nickname);
             setImageUrl(profile.imageUrl);
             setScore(profile.score);
-            setCreatedAt(profile.createdAt.slice(0, 10));
-            await fetchWishlistPage(1); // ✅ 1페이지 위시리스트 호출
 
             setIsLoaded(true);
         } catch (err) {
@@ -104,11 +70,9 @@ export default function ProfilePage() {
             <div className="mb-10 flex flex-col items-center gap-4 md:flex-row md:items-start md:gap-10">
                 <ProfileSummaryCard
                     reviewCount={reviewCount}
-                    wishlistCount={wishlistPageData.totalCount}
                     nickname={nickname}
                     imageUrl={imageUrl}
                     score={score}
-                    createdAt={createdAt}
                 />
                 <ProfileTierCard score={score} />
             </div>
