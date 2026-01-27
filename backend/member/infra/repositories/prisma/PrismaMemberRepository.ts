@@ -90,11 +90,11 @@ export class PrismaMemberRepository implements MemberRepository {
         return member?.lastAttendedDate ?? null;
     }
 
-    // async findByNickname(nickname: string): Promise<Member | null> {
-    //     return this.prisma.member.findFirst({
-    //         where: { nickname },
-    //     });
-    // }
+    async findByNickname(nickname: string): Promise<Member | null> {
+        return this.prisma.member.findFirst({
+            where: { nickname },
+        });
+    }
 
     async updateLastAttendedDate(memberId: string, date: Date): Promise<void> {
         await this.prisma.member.update({

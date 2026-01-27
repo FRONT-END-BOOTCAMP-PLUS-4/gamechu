@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, use } from "react";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import ProfileSummaryCard from "./components/ProfileSummaryCard";
 import ProfileTierCard from "./components/ProfileTierCard";
@@ -20,7 +20,12 @@ type Review = {
     imageUrl: string | null;
 };
 
-export default function ProfilePage() {
+export default function ProfilePage({
+    params,
+}: {
+    params: Promise<{ nickname: string }>;
+}) {
+    const { nickname: routeNickname } = use(params);
     const { setLoading } = useLoadingStore();
     const [activeTab, setActiveTab] = useState("reviews");
     const [reviewCount, setReviewCount] = useState(0);
@@ -40,7 +45,7 @@ export default function ProfilePage() {
         try {
             const [reviewRes, profileRes] = await Promise.all([
                 fetch("/api/reviews/member"),
-                fetch("/api/member/profile"),
+                fetch(`/api/member/profile/${routeNickname}`),
             ]);
 
             const reviews = await reviewRes.json();
@@ -58,7 +63,7 @@ export default function ProfilePage() {
         } finally {
             setLoading(false);
         }
-    }, [setLoading]);
+    }, [routeNickname, setLoading]);
 
     useEffect(() => {
         fetchProfileData();
