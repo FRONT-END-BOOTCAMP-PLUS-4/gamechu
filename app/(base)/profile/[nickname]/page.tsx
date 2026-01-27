@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback, use } from "react";
-import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import ProfileSummaryCard from "./components/ProfileSummaryCard";
 import ProfileTierCard from "./components/ProfileTierCard";
 import ProfileSidebar from "./components/ProfileSidebar";
@@ -31,31 +30,32 @@ export default function ProfilePage({
     const [reviewCount, setReviewCount] = useState(0);
 
     const [nickname, setNickname] = useState("");
+
     const [imageUrl, setImageUrl] = useState("/icons/arena.svg");
     const [score, setScore] = useState(0);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const fetchProfileData = useCallback(async () => {
-        const id = await getAuthUserId();
-        if (!id) return;
-
         setLoading(true);
 
         try {
-            const [reviewRes, profileRes] = await Promise.all([
-                fetch("/api/reviews/member"),
-                fetch(`/api/member/profile/${routeNickname}`),
-            ]);
-
-            const reviews = await reviewRes.json();
+            // 1️⃣ 먼저 프로필 조회 (닉네임 기준)
+            const profileRes = await fetch(
+                `/api/member/profile/${routeNickname}`
+            );
             const profile = await profileRes.json();
 
-            setReviews(reviews);
-            setReviewCount(reviews.length);
             setNickname(profile.nickname);
             setImageUrl(profile.imageUrl);
             setScore(profile.score);
+
+            // 2️⃣ memberId로 리뷰 조회
+            const reviewRes = await fetch(`/api/reviews/member/${profile.id}`);
+            const reviews = await reviewRes.json();
+
+            setReviews(reviews);
+            setReviewCount(reviews.length);
 
             setIsLoaded(true);
         } catch (err) {
