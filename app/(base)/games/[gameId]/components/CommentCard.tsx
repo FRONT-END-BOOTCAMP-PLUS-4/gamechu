@@ -176,9 +176,17 @@ export default function CommentCard({
                     {/* 닉네임, 티어, 날짜 */}
                     <div className="flex flex-1 flex-col">
                         <div className="flex items-center gap-2">
-                            <span className="truncate text-sm font-semibold text-font-100 lg:text-base">
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    router.push(
+                                        `/profile/${encodeURIComponent(nickname)}`
+                                    )
+                                }
+                                className="max-w-fit truncate text-left text-sm font-semibold text-font-100 hover:underline lg:text-base"
+                            >
                                 {nickname}
-                            </span>
+                            </button>
                             <TierBadge score={score} />
                         </div>
                         <span className="max-w-[100px] truncate text-caption text-font-200">
