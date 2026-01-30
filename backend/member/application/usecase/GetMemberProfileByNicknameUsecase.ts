@@ -14,13 +14,8 @@ export class GetMemberProfileByNicknameUsecase {
         return new MemberProfileByNicknameResponseDto(
             member.id,
             member.nickname,
-            member.password,
-            member.email,
             member.imageUrl,
-            member.birthDate.toISOString(),
-            member.isMale,
-            member.score,
-            member.createdAt.toISOString()
+            member.score
         );
     }
 }
