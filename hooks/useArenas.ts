@@ -6,6 +6,7 @@ type FetchArenasParams = {
     status: number;
     mine: boolean;
     pageSize: number;
+    targetMemberId?: string; // ⭐ 추가
 };
 
 export default function useFetchArenas({
@@ -13,6 +14,7 @@ export default function useFetchArenas({
     status,
     mine = false,
     pageSize = 10,
+    targetMemberId,
 }: FetchArenasParams) {
     const [arenaListDto, setArenaListDto] = useState<ArenaListDto | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -21,16 +23,22 @@ export default function useFetchArenas({
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const query = new URLSearchParams({
+                const params = new URLSearchParams({
                     currentPage: currentPage.toString(),
-                    mine: mine.toString(),
                     pageSize: pageSize.toString(),
                     ...(status !== undefined
                         ? { status: status.toString() }
                         : {}),
-                }).toString();
+                });
 
-                const res = await fetch(`/api/arenas?${query}`);
+                // ⭐ 타 사용자 조회가 우선
+                if (targetMemberId) {
+                    params.set("memberId", targetMemberId);
+                } else {
+                    params.set("mine", mine.toString());
+                }
+
+                const res = await fetch(`/api/arenas?${params.toString()}`);
                 const json = await res.json();
                 setArenaListDto(json);
             } catch (error: unknown) {
@@ -41,7 +49,7 @@ export default function useFetchArenas({
         };
 
         fetchData();
-    }, [currentPage, status, mine, pageSize]);
+    }, [currentPage, status, mine, pageSize, targetMemberId]);
 
     return { arenaListDto, setArenaListDto, loading, error };
 }
