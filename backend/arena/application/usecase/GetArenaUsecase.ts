@@ -30,14 +30,26 @@ export class GetArenaUsecase {
             const pageSize: number = getArenaDto.pageSize;
             const currentPage: number =
                 getArenaDto.queryString.currentPage || 1;
-            const memberId: string = getArenaDto.memberId || "";
+            const viewerMemberId: string | null = getArenaDto.memberId;
             const offset: number = (currentPage - 1) * pageSize;
             const limit: number = pageSize;
+
+            /**
+             * ✅ 핵심 수정 부분
+             *
+             * 우선순위:
+             * 1. 타 사용자 조회 (targetMemberId)
+             * 2. mine === true → 로그인 유저
+             * 3. 그 외 → 전체 조회
+             */
+            const filterMemberId: string | null =
+                getArenaDto.queryString.targetMemberId ??
+                (getArenaDto.queryString.mine ? viewerMemberId : null);
 
             // data query
             const filter = new ArenaFilter(
                 getArenaDto.queryString.status,
-                getArenaDto.queryString.mine ? memberId : null,
+                filterMemberId,
                 getArenaDto.sortField,
                 getArenaDto.ascending,
                 offset,
@@ -45,6 +57,7 @@ export class GetArenaUsecase {
             );
 
             const arenas: Arena[] = await this.arenaRepository.findAll(filter);
+
             const arenaDto: ArenaDto[] = await Promise.all(
                 arenas.map(async (arena) => {
                     const creator: Member | null =
@@ -53,6 +66,7 @@ export class GetArenaUsecase {
                         await this.memberRepository.findById(
                             arena.challengerId || ""
                         );
+
                     const {
                         debateEndDate,
                         voteEndDate,
@@ -66,6 +80,7 @@ export class GetArenaUsecase {
                     );
                     const voteTotalCount: number =
                         await this.voteRepository.count(totalFilter);
+
                     const leftFilter: VoteFilter = new VoteFilter(
                         arena.id,
                         null,
@@ -73,8 +88,10 @@ export class GetArenaUsecase {
                     );
                     const voteLeftCount: number =
                         await this.voteRepository.count(leftFilter);
+
                     const voteRightCount: number =
                         voteTotalCount - voteLeftCount;
+
                     const leftPercent: number =
                         voteTotalCount === 0
                             ? 0
@@ -87,6 +104,7 @@ export class GetArenaUsecase {
                             : Math.round(
                                   (voteRightCount / voteTotalCount) * 100
                               );
+
                     return {
                         id: arena.id,
                         creatorId: arena.creatorId,
@@ -111,15 +129,18 @@ export class GetArenaUsecase {
                             ? challenger.imageUrl
                             : null,
                         challengerScore: challenger ? challenger.score : null,
+
                         voteCount: voteTotalCount,
                         leftCount: voteLeftCount,
                         rightCount: voteRightCount,
-                        leftPercent: leftPercent,
-                        rightPercent: rightPercent,
+                        leftPercent,
+                        rightPercent,
                     };
                 })
             );
+
             const totalCount: number = await this.arenaRepository.count(filter);
+
             const startPage =
                 Math.floor((currentPage - 1) / pageSize) * pageSize + 1;
             const endPage = Math.ceil(totalCount / pageSize);
@@ -128,14 +149,13 @@ export class GetArenaUsecase {
                 (_, i) => i + startPage
             ).filter((pageNumber) => pageNumber <= endPage);
 
-            const arenaListDto: ArenaListDto = {
+            return {
                 arenas: arenaDto,
                 totalCount,
                 currentPage,
                 pages,
                 endPage,
             };
-            return arenaListDto;
         } catch (error) {
             console.error("Error retrieving arenas", error);
             throw new Error("Error retrieving arenas");

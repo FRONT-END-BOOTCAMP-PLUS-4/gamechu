@@ -12,7 +12,7 @@ export class PrismaArenaRepository implements ArenaRepository {
     private prisma: PrismaClient;
 
     constructor() {
-    this.prisma = prisma;
+        this.prisma = prisma;
     }
 
     private getWhereClause(filter: ArenaFilter): Prisma.ArenaWhereInput {

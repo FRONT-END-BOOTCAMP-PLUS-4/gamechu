@@ -5,7 +5,7 @@ import ProfileSummaryCard from "./components/ProfileSummaryCard";
 import ProfileTierCard from "./components/ProfileTierCard";
 import ProfileSidebar from "./components/ProfileSidebar";
 import ProfileReviewTab from "../components/tabs/ProfileReviewTab";
-import ProfileArenaTab from "../components/tabs/ProfileArenaTab";
+import ProfileArenaTab from "./components/tab/ProfileArenaTab";
 import { useLoadingStore } from "@/stores/loadingStore";
 import { useRouter } from "next/navigation";
 
@@ -33,6 +33,7 @@ export default function ProfilePage({
     const [reviewCount, setReviewCount] = useState(0);
 
     const [nickname, setNickname] = useState("");
+    const [memberId, setMemberId] = useState<string | null>(null);
 
     const [imageUrl, setImageUrl] = useState("/icons/arena.svg");
     const [score, setScore] = useState(0);
@@ -59,6 +60,7 @@ export default function ProfilePage({
             setNickname(profile.nickname);
             setImageUrl(profile.imageUrl);
             setScore(profile.score);
+            setMemberId(profile.id); // ⭐ 추가
 
             // 2️⃣ memberId로 리뷰 조회
             const reviewRes = await fetch(`/api/reviews/member/${profile.id}`);
@@ -105,7 +107,9 @@ export default function ProfilePage({
                         <ProfileReviewTab reviews={reviews} />
                     )}
 
-                    {activeTab === "arena" && isLoaded && <ProfileArenaTab />}
+                    {activeTab === "arena" && isLoaded && memberId && (
+                        <ProfileArenaTab memberId={memberId} />
+                    )}
                 </div>
             </div>
         </section>

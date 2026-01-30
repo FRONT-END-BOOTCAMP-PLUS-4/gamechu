@@ -4,6 +4,7 @@ export class GetArenaDto {
             currentPage: number;
             status: number;
             mine: boolean;
+            targetMemberId?: string; // 👈 추가 (타 유저용)
         },
         public memberId: string | null,
         public pageSize: number,
