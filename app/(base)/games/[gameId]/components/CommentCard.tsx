@@ -5,11 +5,12 @@ import Image from "next/image";
 import Button from "@/app/components/Button";
 import Lottie from "lottie-react";
 import Like from "@/public/like.json";
-import TierBadge from "@/app/components/TierBadge";
+
 import Toast from "@/app/components/Toast";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, MoreVertical } from "lucide-react";
+import UserProfileComponent from "@/app/components/UserProfileComponent";
 
 interface CommentCardProps {
     id: number;
@@ -161,50 +162,38 @@ export default function CommentCard({
         <div className="relative min-h-[100px] w-full space-y-4 rounded-[8px] border border-line-100 border-opacity-50 bg-background-200 p-4 pb-12">
             {/* 유저 정보 */}
             <div className="flex items-start justify-between">
-                <div className="flex w-full items-start gap-2">
-                    {/* 프로필 이미지 */}
-                    <div className="h-[44px] w-[44px] flex-shrink-0 overflow-hidden rounded-full border border-line-100">
-                        <Image
-                            src={profileImage}
-                            alt="profile"
-                            width={44}
-                            height={44}
-                            className="h-full w-full object-cover"
-                            unoptimized
+                {/* 왼쪽 영역 */}
+                <div className="flex flex-col gap-1">
+                    {/* 프로필 + 닉네임 */}
+                    <div className="flex items-center gap-2">
+                        <UserProfileComponent
+                            profileImage={profileImage}
+                            nickname={nickname}
+                            score={score}
+                            bottomSlot={
+                                <span className="max-w-[100px] truncate text-caption text-font-200">
+                                    {date}
+                                </span>
+                            }
                         />
                     </div>
-                    {/* 닉네임, 티어, 날짜 */}
-                    <div className="flex flex-1 flex-col">
-                        <div className="flex items-center gap-2">
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    router.push(
-                                        `/profile/${encodeURIComponent(nickname)}`
-                                    )
-                                }
-                                className="max-w-fit truncate text-left text-sm font-semibold text-font-100 hover:underline lg:text-base"
-                            >
-                                {nickname}
-                            </button>
-                            <TierBadge score={score} />
-                        </div>
-                        <span className="max-w-[100px] truncate text-caption text-font-200">
-                            {date}
-                        </span>
-                    </div>
+                </div>
+
+                {/* 오른쪽 영역 */}
+                <div className="flex items-center gap-2">
                     {/* 평점 */}
-                    <div className="flex flex-shrink-0 items-center gap-2 rounded-full bg-background-300 px-4 py-2">
+                    <div className="flex items-center gap-2 rounded-full bg-background-300 px-4 py-2">
                         <Image
                             src="/icons/empty-purple-star.svg"
                             alt="star"
                             width={18}
                             height={18}
                         />
-                        <span className="whitespace-nowrap text-sm font-bold text-font-100">
+                        <span className="text-sm font-bold text-font-100">
                             {rating.toFixed(1)}
                         </span>
                     </div>
+
                     {/* 메뉴 */}
                     {viewerId === memberId && (
                         <div className="relative" ref={menuRef}>
@@ -214,6 +203,7 @@ export default function CommentCard({
                             >
                                 <MoreVertical size={20} />
                             </button>
+
                             {showMenu && (
                                 <div className="absolute right-0 top-full z-30 flex min-w-[80px] flex-col gap-2 rounded-lg border border-line-100 bg-background-100 p-3 shadow-xl">
                                     <Button
