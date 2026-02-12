@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { cn } from "@/utils/tailwindUtil";
+import { ChevronDown } from "lucide-react";
 
 type TagType = "genre" | "theme";
 
@@ -26,13 +27,25 @@ interface GameFilterProps {
     platforms: FilterItem[];
 }
 
+const tagNameMap: Record<string, string> = {
+    "4X (explore, expand, exploit, and exterminate)": "4X Strategy",
+    "Point-and-click": "Point & Click",
+    "Role-playing (RPG)": "RPG",
+    Shooter: "FPS & Shooter",
+    "Real Time Strategy (RTS)": "RTS",
+    "Turn-based strategy (TBS)": "TBS",
+    "Hack and slash/Beat 'em up": "Hack & Slash",
+    Music: "Rhythm & Music",
+    "PC (Microsoft Windows)": "PC",
+};
+
 export default function GameFilter({
     selectedTag,
     setSelectedTag,
     selectedPlatformId,
     setSelectedPlatformId,
-    genres,
-    themes,
+    genres = [],
+    themes = [],
     platforms = [],
 }: GameFilterProps) {
     const [isGenreExpanded, setIsGenreExpanded] = useState(false);
@@ -51,15 +64,19 @@ export default function GameFilter({
         : platforms.slice(0, 10);
 
     return (
-        <div className="custom-scroll max-h-full w-[300px] space-y-4 overflow-y-auto rounded-xl bg-background-300 p-5 shadow-sm">
+        <div className="custom-scroll max-h-full w-[300px] space-y-8 overflow-y-auto rounded-xl border border-white/5 bg-background-300 p-5 shadow-sm">
             {/* 장르 및 테마 */}
             <div>
-                <h2 className="mb-3 text-h2 font-semibold">장르 및 테마</h2>
+                <h2 className="mb-4 text-base font-bold tracking-tight">
+                    장르 및 테마
+                </h2>
                 <div className="grid grid-cols-2 gap-2">
                     {displayedTags.map((tag) => {
                         const isSelected =
                             selectedTag?.id === tag.id &&
                             selectedTag?.type === tag.type;
+
+                        const displayName = tagNameMap[tag.name] || tag.name;
 
                         return (
                             <button
@@ -67,40 +84,50 @@ export default function GameFilter({
                                 onClick={() =>
                                     setSelectedTag(isSelected ? undefined : tag)
                                 }
+                                title={tag.name}
                                 className={cn(
-                                    "rounded-md px-3 py-1 text-sm font-medium transition-colors duration-150",
+                                    "flex items-center justify-center truncate rounded-lg border px-2 py-2 text-[12px] font-medium transition-all duration-200",
                                     isSelected
-                                        ? "bg-primary-purple-300 text-white"
-                                        : "text-font-200 hover:bg-primary-purple-100"
+                                        ? "border-primary-purple-300 bg-primary-purple-300 text-white shadow-md shadow-primary-purple-300/20"
+                                        : "border-line-100/10 bg-background-100 text-font-200 hover:border-primary-purple-200/50 hover:text-font-100"
                                 )}
                             >
-                                {tag.name}
+                                <span className="truncate">{displayName}</span>
                             </button>
                         );
                     })}
                 </div>
 
                 {genreAndTheme.length > 20 && (
-                    <div className="mt-3 flex justify-center">
-                        <button
-                            className="flex items-center gap-1 rounded-md px-3 py-1 font-medium text-primary-purple-200 transition hover:bg-background-200"
-                            onClick={() => setIsGenreExpanded((prev) => !prev)}
-                        >
-                            {isGenreExpanded ? "접기" : "더보기"}
-                            <span className="text-xs">
-                                {isGenreExpanded ? "▲" : "▼"}
-                            </span>
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => setIsGenreExpanded((prev) => !prev)}
+                        className="mt-4 flex w-full items-center justify-center gap-2 rounded-md border border-line-100/20 py-1.5 text-xs font-bold uppercase tracking-wider text-font-300 transition-all hover:border-line-100/40 hover:bg-white/5 hover:text-font-100 active:scale-[0.95]"
+                    >
+                        {isGenreExpanded ? "접기" : "더 보기"}
+                        <ChevronDown
+                            size={14}
+                            className={cn(
+                                "text-font-400 transition-transform duration-300 ease-in-out",
+                                isGenreExpanded ? "rotate-180" : "rotate-0"
+                            )}
+                        />
+                    </button>
                 )}
             </div>
 
+            <hr className="border-white/5" />
+
             {/* 플랫폼 */}
             <div>
-                <h2 className="mb-3 text-h2 font-semibold">플랫폼</h2>
-                <div className="flex flex-col gap-2">
+                <h2 className="mb-4 text-base font-bold tracking-tight">
+                    플랫폼
+                </h2>
+                <div className="grid grid-cols-2 gap-2">
                     {displayedPlatforms.map((platform) => {
                         const isSelected = selectedPlatformId === platform.id;
+                        const displayName =
+                            tagNameMap[platform.name] || platform.name;
+
                         return (
                             <button
                                 key={platform.id}
@@ -109,33 +136,27 @@ export default function GameFilter({
                                         isSelected ? undefined : platform.id
                                     )
                                 }
+                                title={platform.name}
                                 className={cn(
-                                    "rounded-md px-3 py-1 text-sm font-medium transition-colors duration-150",
+                                    "flex items-center justify-center truncate rounded-lg border px-2 py-2 text-[12px] font-medium transition-all duration-200",
                                     isSelected
-                                        ? "bg-primary-purple-300 text-white"
-                                        : "text-font-200 hover:bg-primary-purple-100"
+                                        ? "border-primary-purple-300 bg-primary-purple-300 text-white shadow-md shadow-primary-purple-300/20"
+                                        : "border-line-100/10 bg-background-100 text-font-200 hover:border-primary-purple-200/50 hover:text-font-100"
                                 )}
                             >
-                                {platform.name}
+                                <span className="truncate">{displayName}</span>
                             </button>
                         );
                     })}
                 </div>
 
                 {platforms.length > 10 && (
-                    <div className="mt-3 flex justify-center">
-                        <button
-                            className="flex items-center gap-1 rounded-md px-3 py-1 text-sm font-medium text-primary-purple-200 transition hover:bg-background-200"
-                            onClick={() =>
-                                setIsPlatformExpanded((prev) => !prev)
-                            }
-                        >
-                            {isPlatformExpanded ? "접기" : "더보기"}
-                            <span className="text-xs">
-                                {isPlatformExpanded ? "▲" : "▼"}
-                            </span>
-                        </button>
-                    </div>
+                    <button
+                        className="mt-4 flex w-full items-center justify-center gap-1 rounded-md py-2 text-xs font-semibold text-primary-purple-200 transition hover:bg-white/5"
+                        onClick={() => setIsPlatformExpanded((prev) => !prev)}
+                    >
+                        {isPlatformExpanded ? "접기 ▲" : "더보기 ▼"}
+                    </button>
                 )}
             </div>
         </div>
