@@ -1,6 +1,6 @@
 "use client";
 
-// import Button from "@/app/components/Button";
+import { cn } from "@/utils/tailwindUtil";
 
 interface SortOption {
     label: string;
@@ -19,34 +19,28 @@ const options: SortOption[] = [
 ];
 
 export default function GameSort({ current, onChange }: Props) {
-    const selectedOption =
-        "bg-primary-purple-200 text-font-100 hover:bg-primary-purple-300";
-    const unselectedOption =
-        "bg-background-400 text-font-100 border border-line-100 hover:border-primary-purple-200";
-
     return (
-        <div className="flex w-full gap-2 sm:w-auto sm:gap-4">
-            {options.map((option) => (
-                // TODO: Button component에 반응형 적용
-                <button
-                    key={option.value}
-                    className={`inline-flex h-10 flex-1 items-center justify-center gap-1 rounded-md px-2 py-1 text-button text-sm font-medium transition duration-200 sm:flex-none sm:px-4 sm:py-2 ${
-                        current === option.value
-                            ? selectedOption
-                            : unselectedOption
-                    }`}
-                    onClick={() => onChange(option.value)}
-                >
-                    {option.label}
-                </button>
-                // <Button
-                //     key={option.value}
-                //     label={option.label}
-                //     size="small"
-                //     type={current === option.value ? "purple" : "black"}
-                //     onClick={() => onChange(option.value)}
-                // />
-            ))}
+        <div className="flex flex-1 items-center gap-1 rounded-xl border border-white/5 bg-background-300/50 p-1 shadow-inner sm:flex-none">
+            {options.map((option) => {
+                const isSelected = current === option.value;
+
+                return (
+                    <button
+                        key={option.value}
+                        onClick={() => onChange(option.value)}
+                        className={cn(
+                            "relative flex h-9 flex-1 items-center justify-center rounded-lg px-2 text-xs font-bold transition-all duration-300 sm:px-8 sm:text-sm",
+                            isSelected
+                                ? "bg-primary-purple-300 text-white shadow-md shadow-primary-purple-300/20"
+                                : "text-font-300 hover:bg-white/5 hover:text-font-100"
+                        )}
+                    >
+                        <span className="truncate whitespace-nowrap">
+                            {option.label}
+                        </span>
+                    </button>
+                );
+            })}
         </div>
     );
 }
