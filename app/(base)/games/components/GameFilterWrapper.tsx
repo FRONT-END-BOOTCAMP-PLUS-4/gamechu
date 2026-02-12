@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import GameFilter from "./GameFilter";
+import { X } from "lucide-react";
 
 interface GameFilterWrapperProps {
     genres: { id: number; name: string }[];
@@ -26,10 +27,8 @@ export default function GameFilterWrapper(props: GameFilterWrapperProps) {
         };
 
         window.addEventListener("resize", handleResize);
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, [props, props.onClose]);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [props.onClose]);
 
     return (
         <div className="relative">
@@ -40,20 +39,36 @@ export default function GameFilterWrapper(props: GameFilterWrapperProps) {
 
             {/* 필터 Drawer, 애니메이션 적용 */}
             <div
-                className={`fixed inset-0 z-50 flex rounded-lg bg-black bg-opacity-50 transition-opacity duration-300 ${props.isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                className={`fixed inset-0 z-50 flex bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+                    props.isOpen
+                        ? "pointer-events-auto opacity-100"
+                        : "pointer-events-none opacity-0"
+                }`}
                 onClick={() => props.onClose()}
             >
                 <div
-                    className={`h-full transform bg-background-100 p-5 shadow-lg transition-transform duration-300 ${props.isOpen ? "translate-x-0" : "-translate-x-full"}`}
+                    className={`flex h-full w-[320px] transform flex-col bg-background-300 shadow-2xl transition-transform duration-300 ${
+                        props.isOpen ? "translate-x-0" : "-translate-x-full"
+                    }`}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <button
-                        className="mb-4 text-right text-primary-purple-200"
-                        onClick={() => props.onClose()}
-                    >
-                        닫기 ✕
-                    </button>
-                    <GameFilter {...props} />
+                    <div className="flex items-center justify-between border-b border-white/5 p-5">
+                        <span className="text-xl font-bold text-font-100">
+                            게임 필터
+                        </span>
+                        <button
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-font-200 transition hover:bg-white/10"
+                            onClick={() => props.onClose()}
+                        >
+                            <X size={18} />
+                        </button>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto overflow-x-hidden">
+                        <div className="p-2">
+                            <GameFilter {...props} />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
