@@ -163,22 +163,21 @@ export default function CommentCard({
             {/* 유저 정보 */}
             <div className="flex items-start justify-between">
                 {/* 왼쪽 영역 */}
-                <div className="flex flex-col gap-1">
-                    {/* 프로필 + 닉네임 */}
-                    <div className="flex items-center gap-2">
-                        <UserProfileComponent
-                            profileImage={profileImage}
-                            nickname={nickname}
-                            score={score}
-                            bottomSlot={
-                                <span className="max-w-[100px] truncate text-caption text-font-200">
-                                    {date}
-                                </span>
-                            }
-                        />
+                <div className="flex items-start gap-2">
+                    {/* 프로필 컴포넌트 */}
+                    <UserProfileComponent
+                        profileImage={profileImage}
+                        nickname={nickname}
+                        score={score}
+                    />
+
+                    {/* 👇 날짜를 같은 수직라인에 위치 */}
+                    <div className="absolute left-[69px] top-[46px]">
+                        <span className="text-caption leading-none text-font-200">
+                            {date}
+                        </span>
                     </div>
                 </div>
-
                 {/* 오른쪽 영역 */}
                 <div className="flex items-center gap-2">
                     {/* 평점 */}

@@ -4,22 +4,17 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TierBadge from "@/app/components/TierBadge";
-import { ReactNode } from "react";
 
 interface UserProfileComponentProps {
     profileImage: string;
     nickname: string;
     score?: number;
-    upperSlot?: ReactNode;
-    bottomSlot?: ReactNode;
 }
 
 export default function UserProfileComponent({
     profileImage,
     nickname,
     score,
-    upperSlot,
-    bottomSlot,
 }: UserProfileComponentProps) {
     const router = useRouter();
 
@@ -39,9 +34,6 @@ export default function UserProfileComponent({
 
             {/* 텍스트 컬럼 */}
             <div className="flex flex-col">
-                {/* 👆 Upper Slot */}
-                {upperSlot}
-
                 {/* 닉네임 + 티어 */}
                 <div className="flex items-center gap-2">
                     <button
@@ -58,9 +50,6 @@ export default function UserProfileComponent({
 
                     {typeof score === "number" && <TierBadge score={score} />}
                 </div>
-
-                {/* 👇 Bottom Slot */}
-                {bottomSlot}
             </div>
         </div>
     );
