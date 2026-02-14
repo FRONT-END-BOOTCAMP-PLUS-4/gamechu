@@ -22,72 +22,71 @@ export default function GameCard({
     reviewCount,
 }: GameCardProps) {
     const router = useRouter();
-    const handleClick = () => {
-        router.push(`/games/${id}`);
-    };
+    const handleClick = () => router.push(`/games/${id}`);
+
     const thumbnailSrc =
         !thumbnail || !thumbnail.trim()
             ? "/icons/default-thumbnail.svg"
-            : thumbnail.startsWith("http")
-              ? thumbnail
-              : thumbnail.startsWith("//")
-                ? `https:${thumbnail}`
-                : thumbnail;
+            : thumbnail.startsWith("//")
+              ? `https:${thumbnail}`
+              : thumbnail;
+
     return (
         <div
             onClick={handleClick}
-            className="box-border flex w-full cursor-pointer flex-col overflow-hidden rounded-[6px] border border-[1px] border-line-200 border-opacity-50 bg-background-100 transition-all duration-100 hover:border-[2px] hover:border-primary-purple-200"
+            className="group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-background-300 transition-all duration-300 hover:-translate-y-0.5 hover:bg-background-200"
         >
-            {/* 이미지 영역: TODO: 모바일에서 사진 크기 조정 */}
-
-            <div className="min-lg:aspect-square relative aspect-[284/384] w-full">
+            {/* 이미지 영역 */}
+            <div className="relative aspect-[3/4] w-full overflow-hidden">
                 <Image
                     src={thumbnailSrc}
                     alt={title}
                     fill
                     className="object-cover"
-                    sizes="(min-width:1024px) 33vw, (min-width:820px) 50vw, 100vw"
-                    priority={false}
+                    sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
                 />
 
                 {/* 플랫폼 태그 */}
-                <div className="absolute right-2 top-2 rounded-[4px] border border-background-300 bg-background-100 p-1 text-caption text-font-100 opacity-90">
+                <div className="absolute left-2 top-2 rounded-md bg-black/60 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md">
                     {platform}
                 </div>
             </div>
 
             {/* 콘텐츠 영역 */}
-            <div className="relative flex w-full flex-col justify-between gap-2 px-4 py-3">
-                {/* 제목 */}
-
-                <h2 className="line-clamp-2 h-[3.2rem] text-h3 font-semibold text-font-100">
+            <div className="flex flex-col gap-2 p-3 sm:p-4">
+                <h2 className="line-clamp-1 text-sm font-bold text-font-100 transition-colors group-hover:text-primary-purple-200 sm:text-base">
                     {title}
                 </h2>
 
-                <div className="mt-auto flex items-center justify-between">
-                    {/* 개발자 */}
-                    <span className="line-clamp-1 text-caption text-font-200">
+                <div className="flex items-center justify-between">
+                    <span className="line-clamp-1 text-[11px] text-font-300 sm:text-xs">
                         {developer}
                     </span>
+                </div>
 
-                    {/* 별점 */}
-                    <div className="flex h-[25px] items-center">
+                {/* 별점 */}
+                <div className="mt-1 flex items-center justify-between border-t border-white/5 pt-2">
+                    <div className="flex items-center gap-1">
                         <Image
                             src="/icons/review.svg"
-                            alt="star"
-                            width={16}
-                            height={16}
+                            alt="reviews"
+                            width={14}
+                            height={14}
+                            className="opacity-70"
                         />
-                        <span className="text-regular ml-1 mr-2">
+                        <span className="text-[11px] text-font-200">
                             {reviewCount}
                         </span>
+                    </div>
+
+                    <div className="flex items-center gap-1 rounded-lg bg-primary-purple-300/10 px-2 py-0.5">
                         <Image
                             src="/icons/empty-purple-star.svg"
-                            alt="star"
-                            width={16}
-                            height={16}
+                            alt="rating"
+                            width={12}
+                            height={12}
                         />
-                        <span className="text-regular ml-1 text-font-100">
+                        <span className="text-[12px] font-bold text-primary-purple-100">
                             {(expertRating ?? 0).toFixed(1)}
                         </span>
                     </div>
