@@ -70,7 +70,7 @@ export default function GameFilter({
                 <h2 className="mb-4 text-base font-bold tracking-tight">
                     장르 및 테마
                 </h2>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-wrap gap-2">
                     {displayedTags.map((tag) => {
                         const isSelected =
                             selectedTag?.id === tag.id &&
@@ -86,13 +86,13 @@ export default function GameFilter({
                                 }
                                 title={tag.name}
                                 className={cn(
-                                    "flex items-center justify-center truncate rounded-lg border px-2 py-2 text-[12px] font-medium transition-all duration-200",
+                                    "inline-flex items-center justify-center rounded-lg border px-3 py-1.5 text-[13px] font-medium transition-all duration-200",
                                     isSelected
                                         ? "border-primary-purple-300 bg-primary-purple-300 text-white shadow-md shadow-primary-purple-300/20"
                                         : "border-line-100/10 bg-background-100 text-font-200 hover:border-primary-purple-200/50 hover:text-font-100"
                                 )}
                             >
-                                <span className="truncate">{displayName}</span>
+                                {displayName}
                             </button>
                         );
                     })}
@@ -122,7 +122,7 @@ export default function GameFilter({
                 <h2 className="mb-4 text-base font-bold tracking-tight">
                     플랫폼
                 </h2>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-wrap gap-2">
                     {displayedPlatforms.map((platform) => {
                         const isSelected = selectedPlatformId === platform.id;
                         const displayName =
@@ -136,15 +136,14 @@ export default function GameFilter({
                                         isSelected ? undefined : platform.id
                                     )
                                 }
-                                title={platform.name}
                                 className={cn(
-                                    "flex items-center justify-center truncate rounded-lg border px-2 py-2 text-[12px] font-medium transition-all duration-200",
+                                    "inline-flex items-center justify-center rounded-lg border px-3 py-1.5 text-[13px] font-medium transition-all duration-200",
                                     isSelected
                                         ? "border-primary-purple-300 bg-primary-purple-300 text-white shadow-md shadow-primary-purple-300/20"
                                         : "border-line-100/10 bg-background-100 text-font-200 hover:border-primary-purple-200/50 hover:text-font-100"
                                 )}
                             >
-                                <span className="truncate">{displayName}</span>
+                                {displayName}
                             </button>
                         );
                     })}
@@ -155,7 +154,7 @@ export default function GameFilter({
                         className="mt-4 flex w-full items-center justify-center gap-1 rounded-md py-2 text-xs font-semibold text-primary-purple-200 transition hover:bg-white/5"
                         onClick={() => setIsPlatformExpanded((prev) => !prev)}
                     >
-                        {isPlatformExpanded ? "접기 ▲" : "더보기 ▼"}
+                        {isPlatformExpanded ? "접기 ▲" : "플랫폼 더보기 ▼"}
                     </button>
                 )}
             </div>
