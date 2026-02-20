@@ -1,43 +1,68 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { cn } from "@/utils/tailwindUtil";
+import { Search, X } from "lucide-react";
 
 interface SearchBarProps {
-    keyword: string;
-    setKeyword: (value: string) => void;
+    onSearch: (value: string) => void;
 }
 
-export default function SearchBar({ keyword, setKeyword }: SearchBarProps) {
+export default function SearchBar({ onSearch }: SearchBarProps) {
+    const [localKeyword, setLocalKeyword] = useState("");
     const [isFocused, setIsFocused] = useState(false);
 
+    const handleSearch = () => {
+        onSearch(localKeyword.trim());
+    };
+
+    const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleSearch();
+        }
+    };
+
+    const handleClear = () => {
+        setLocalKeyword("");
+        onSearch("");
+    };
+
     return (
-        <div className="gap-1s flex w-full items-center sm:max-w-[32ch]">
+        <div className="flex w-full items-center sm:max-w-[320px]">
             <div
                 className={cn(
-                    "relative h-10 w-full overflow-hidden rounded-[4px] border transition",
-                    isFocused ? "border-primary-purple-200" : "border-line-200"
+                    "relative flex h-11 w-full items-center overflow-hidden rounded-xl border transition-all duration-300",
+                    isFocused
+                        ? "border-primary-purple-200 bg-background-200"
+                        : "border-white/5 bg-background-300/90"
                 )}
             >
-                <div className="absolute left-2 top-1/2 -translate-y-1/2">
-                    <Image
-                        src="/icons/search.svg"
-                        alt="검색"
-                        width={20}
-                        height={20}
-                    />
-                </div>
+                <button
+                    onClick={handleSearch}
+                    className="text-font-400 ml-3 flex items-center justify-center transition-colors hover:text-primary-purple-100"
+                >
+                    <Search size={18} />
+                </button>
 
                 <input
                     type="text"
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                    placeholder="영문으로 제목 혹은 개발사를 입력하세요"
+                    value={localKeyword}
+                    onChange={(e) => setLocalKeyword(e.target.value)}
+                    onKeyDown={onKeyDown}
+                    placeholder="제목 또는 개발사 검색 (영문)"
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    className="font-small h-full w-full rounded-[4px] bg-background-100 pl-8 pr-3 text-font-100 placeholder-font-200 outline-none"
+                    className="placeholder-font-400 h-full w-full bg-transparent px-3 text-[14px] font-medium text-font-100 outline-none"
                 />
+
+                {localKeyword && (
+                    <button
+                        onClick={handleClear}
+                        className="text-font-400 mr-2 flex h-6 w-6 items-center justify-center rounded-full transition-all hover:bg-white/10 hover:text-font-100"
+                    >
+                        <X size={14} />
+                    </button>
+                )}
             </div>
         </div>
     );
