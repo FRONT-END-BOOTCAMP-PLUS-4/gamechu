@@ -4,11 +4,11 @@ import React, { useEffect, useState } from "react";
 import GameCardList from "./components/GameCardList";
 import SearchBar from "./components/SearchBar";
 import Pager from "@/app/components/Pager";
-import { useDebounce } from "@/utils/UseDebounce";
 import GameSort from "./components/GameSort";
 import { useLoadingStore } from "@/stores/loadingStore";
 import GamePageHeader from "./components/GamePageHeader";
 import GameFilterWrapper from "./components/GameFilterWrapper";
+import { Filter } from "lucide-react";
 
 interface GameCard {
     id: number;
@@ -28,7 +28,7 @@ interface OptionItem {
 export default function GamePage() {
     const { setLoading } = useLoadingStore();
     const [filterIsOpen, setFilterIsOpen] = useState(false);
-    const itemsPerPage = 6;
+    const itemsPerPage = 10;
     const [games, setGames] = useState<GameCard[]>([]);
     const [totalItems, setTotalItems] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +41,6 @@ export default function GamePage() {
     const [genres, setGenres] = useState<OptionItem[]>([]);
     const [themes, setThemes] = useState<OptionItem[]>([]);
     const [platforms, setPlatforms] = useState<OptionItem[]>([]);
-    const [keyword, setKeyword] = useState("");
     const [sortBy, setSortBy] = useState<"popular" | "rating" | "latest">(
         "popular"
     );
@@ -52,14 +51,13 @@ export default function GamePage() {
         themes.length > 0 &&
         Array.isArray(platforms) &&
         platforms.length > 0;
-
-    const debounceKeyword = useDebounce(keyword, 250);
+    const [searchQuery, setSearchQuery] = useState("");
     const endPage = Math.ceil(totalItems / itemsPerPage);
     const pages = Array.from({ length: endPage }, (_, i) => i + 1);
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [selectedTag, selectedPlatformId, debounceKeyword, sortBy]);
+    }, [selectedTag, selectedPlatformId, searchQuery, sortBy]);
 
     useEffect(() => {
         const fetchFilters = async () => {
@@ -91,7 +89,7 @@ export default function GamePage() {
             if (selectedPlatformId) {
                 params.append("platformId", selectedPlatformId.toString());
             }
-            if (debounceKeyword) params.append("keyword", debounceKeyword);
+            if (searchQuery) params.append("keyword", searchQuery);
             if (sortBy) params.append("sort", sortBy);
             params.append("page", currentPage.toString());
             params.append("size", itemsPerPage.toString());
@@ -126,7 +124,7 @@ export default function GamePage() {
             controller.abort();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedTag, selectedPlatformId, debounceKeyword, sortBy, currentPage]);
+    }, [selectedTag, selectedPlatformId, searchQuery, sortBy, currentPage]);
 
     // 필터 사이드바가 열린 상태에서 메인 화면 스크롤 방지
     useEffect(() => {
@@ -145,17 +143,29 @@ export default function GamePage() {
         <div className="custom-scroll min-h-screen w-full space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
             <GamePageHeader />
             <div className="flex flex-wrap-reverse items-center justify-between gap-4 px-6 sm:gap-6">
-                <div className="flex w-full flex-shrink-0 gap-2 sm:w-auto sm:gap-4">
-                    {/* 모바일 전용 토글 버튼 */}
+                <div className="flex w-full min-w-0 items-center gap-2 sm:w-auto">
+                    {/* 필터 버튼 */}
                     <button
-                        className="h-10 flex-shrink-0 justify-center rounded-md bg-primary-blue-200 px-4 py-2 text-button text-sm font-medium text-font-100 text-white xl:hidden"
+                        className="group flex flex-shrink-0 items-center justify-center gap-2 rounded-xl border border-white/5 bg-background-300/50 p-1 px-5 transition-all hover:bg-white/5 active:scale-95 xl:hidden"
                         onClick={() => setFilterIsOpen(true)}
                     >
-                        필터
+                        <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary-blue-200/20 text-primary-blue-100 transition-colors group-hover:bg-primary-blue-200/30">
+                            <Filter
+                                size={16}
+                                className="transition-transform duration-300"
+                            />
+                        </div>
+                        <span className="text-[13px] font-bold tracking-wide text-font-200 group-hover:text-font-100">
+                            게임 필터
+                        </span>
                     </button>
+
+                    {/* GameSort 컴포넌트 */}
                     <GameSort current={sortBy} onChange={setSortBy} />
                 </div>
-                <SearchBar keyword={keyword} setKeyword={setKeyword} />
+
+                {/* 검색창 */}
+                <SearchBar onSearch={(val) => setSearchQuery(val)} />
             </div>
 
             <div className="flex w-full items-start gap-0 px-6 xl:gap-8">
