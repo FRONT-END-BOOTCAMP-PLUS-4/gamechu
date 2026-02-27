@@ -1,0 +1,24 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Question mark -->
+  <text x="100" y="44" text-anchor="middle" font-size="32" font-weight="bold" fill="#94A3B8">?</text>
+
+  <!-- Left grip -->
+  <path d="M 52 125 Q 42 128 38 142 Q 35 156 46 163 Q 58 169 67 161 Q 75 153 73 139 Q 71 126 62 123 Z" fill="#94A3B8"/>
+
+  <!-- Right grip (perfect mirror: x → 200-x) -->
+  <path d="M 148 125 Q 158 128 162 142 Q 165 156 154 163 Q 142 169 133 161 Q 125 153 127 139 Q 129 126 138 123 Z" fill="#94A3B8"/>
+
+  <!-- Controller body (on top to merge seamlessly) -->
+  <rect x="32" y="58" width="136" height="78" rx="38" fill="#94A3B8"/>
+
+  <!-- D-pad horizontal -->
+  <rect x="54" y="91" width="32" height="10" rx="4" fill="#E2E8F0"/>
+  <!-- D-pad vertical -->
+  <rect x="65" y="80" width="10" height="32" rx="4" fill="#E2E8F0"/>
+
+  <!-- Face buttons -->
+  <circle cx="132" cy="85" r="7" fill="#E2E8F0"/>
+  <circle cx="149" cy="97" r="7" fill="#E2E8F0"/>
+  <circle cx="115" cy="97" r="7" fill="#E2E8F0"/>
+  <circle cx="132" cy="109" r="7" fill="#E2E8F0"/>
+</svg>
