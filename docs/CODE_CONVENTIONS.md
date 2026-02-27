@@ -293,33 +293,17 @@ e.g. [API/#35] 글 작성 API 연동
 
 ### Issue template
 
-```
-Title: [<type>]: summary
+> 템플릿 파일: `.github/ISSUE_TEMPLATE/feature_request.md`
 
-## 어떤 기능인가요?
-> description
-
-## 작업 상세 내용
-- [ ] todo
-
-## 참고자료(선택)
-
-Assignee: select yourself
-```
+| Field     | How to set                                        |
+| --------- | ------------------------------------------------- |
+| Assignees | 본인을 선택                                       |
+| Labels    | 이슈 타입에 맞는 라벨 선택 (e.g. `docs`, `feat`)  |
+| Projects  | `Gamechu` 프로젝트 선택                            |
 
 ### PR template
 
-```
-Title: [<type>/#<issue>]: summary
+> 템플릿 파일: `.github/PULL_REQUEST_TEMPLATE.md`
 
-## ✨ 작업 개요
-## ✅ 상세 내용
-- [ ] what files changed, what features added/modified
-## 📸 스크린샷 (선택)
-## 🧪 확인 사항
-- [ ] 정상적으로 동작하는지 직접 테스트해봤나요?
-- [ ] 기능 추가/수정 후 UI나 비즈니스 로직에 영향은 없나요?
-- [ ] PR 리뷰어가 중점적으로 확인하면 좋을 부분은?
-## 🙏 기타 참고 사항
-close #
-```
+> **PR의 Assignees, Labels, Projects는 연결된 Issue와 동일하게 설정한다.**
+> PR 본문만 실제 작업 내용에 맞게 작성하되, 메타 필드는 Issue에서 그대로 가져온다.
