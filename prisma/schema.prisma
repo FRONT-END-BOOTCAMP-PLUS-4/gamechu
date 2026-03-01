@@ -99,6 +99,10 @@ model Arena {
   chattings    Chatting[]
   votes        Vote[]
 
+  @@index([creatorId])
+  @@index([challengerId])
+  @@index([status])
+  @@index([startDate])
   @@map("arenas")
 }
 
@@ -122,6 +126,9 @@ model Vote {
   arena    Arena  @relation(fields: [arenaId], references: [id])
   member   Member @relation(fields: [memberId], references: [id])
 
+  @@index([arenaId])
+  @@index([memberId])
+  @@index([votedTo])
   @@map("votes")
 }
 
