@@ -1,13 +1,13 @@
 # Arena API Refactor — Context
 
-**Last Updated: 2026-03-01 (Session 3)**
+**Last Updated: 2026-03-01 (Session 5)**
 **Branch: `refactor/#230`**
 
 ---
 
 ## Key Files
 
-### Modified (unstaged)
+### Modified (committed)
 | File | Role | Changes |
 |------|------|---------|
 | `app/api/arenas/[id]/route.ts` | Arena PATCH/DELETE API | 캐시 무효화 추가 (ArenaCacheService import + invalidateArenaCache 호출) |
@@ -20,7 +20,7 @@
 | `lib/cacheKey.ts` | 캐시 키 생성 | arena 캐시 키 함수 추가 (nullish coalescing 적용) |
 | `prisma/schema.prisma` | DB 스키마 | Arena/Vote 인덱스 추가 |
 
-### New (untracked)
+### New (committed)
 | File | Role |
 |------|------|
 | `backend/arena/infra/cache/ArenaCacheService.ts` | Arena Redis 캐시 서비스 (SCAN 기반 패턴 삭제) |
@@ -103,15 +103,14 @@ API → UseCase → Cache check
 
 ## Remaining Work
 
-### All Tasks Complete — Ready to Commit
-1. ~~**Prisma 마이그레이션 생성**~~ ✅ — `0_init/migration.sql`에 이미 포함, DB "Already in sync"
-2. ~~**수동 API 테스트**~~ ✅ — 리스트/상세 조회 모두 정상 확인 (2026-03-02)
-   - 리스트: 정상/빈결과/필터 모두 200 OK
-   - 상세: 존재(200)/미존재(404)/잘못된ID(400) 모두 정상
-   - 캐시/투표수 정밀 테스트는 스킵 (Turbopack 오버헤드, redis-cli 미설치)
-3. **커밋 필요** — 모든 변경사항 unstaged 상태
-   - `git add` 대상: 수정 9개 파일 + 신규 3개 디렉토리
-   - 삭제: `prisma/migrations/20250513005936_init_tables/` (0_init으로 대체)
+### All Tasks Complete — PR 생성 완료 ✅
+- **Commit 1** `e52bc62`: Arena API 리팩토링 코드 변경 (13 files, +504/-189)
+- **Commit 2** `97acda5`: 개발 문서 추가
+- **Commit 3** `a0ab242`: npm audit fix + Next.js 15.5.12 버전 정렬
+- **PR #256**: https://github.com/FRONT-END-BOOTCAMP-PLUS-4/gamechu/pull/256
+  - Base: `dev`, Head: `refactor/#230`
+  - Assignees: `wojin57`, Labels: `fix`, `refactor`
+  - Projects: 수동 설정 필요 (토큰 `read:project` scope 부재)
 
 ### Nice to Have (별도 이슈)
 - 투표 API에 캐시 무효화 추가 (현재 투표 후 TTL 동안 stale)
@@ -148,6 +147,11 @@ API → UseCase → Cache check
 - 원인: Turbopack 내부 worker 과부하 (dev 전용, 프로덕션 영향 없음)
 - 대응: 요청 간 간격을 두거나, 서버 재시작으로 해결
 
-### 커밋 상태
-- 여전히 **모든 변경사항 unstaged** — 커밋 대기 중
-- Docker Redis 설정은 코드 변경 없음 (인프라만)
+### 커밋 상태 (Session 4에서 완료)
+- **3개 커밋 생성 완료** — working tree clean
+  - `e52bc62` 코드 리팩토링
+  - `97acda5` 개발 문서
+  - `97530cd` npm audit fix + Next.js 15.5.7→15.5.12 업그레이드
+- `npm audit fix`가 Next.js를 15.5.11로 올렸으나 `@next/swc` 15.5.11은 npm에 미존재
+  - 해결: `npm install next@15.5.12`로 swc 15.5.12와 정렬
+- **다음 단계**: `dev` 브랜치로 PR 생성
