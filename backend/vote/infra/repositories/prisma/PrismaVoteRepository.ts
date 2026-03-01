@@ -35,6 +35,44 @@ export class PrismaVoteRepository implements VoteRepository {
 
         return count;
     }
+
+    async countByArenaIds(
+        arenaIds: number[]
+    ): Promise<
+        Array<{
+            arenaId: number;
+            totalCount: number;
+            leftCount: number;
+            rightCount: number;
+        }>
+    > {
+        // RAW SQL 쿼리로 한 번에 모든 arena의 vote count 계산
+        const results = await this.prisma.$queryRaw<
+            Array<{
+                arenaId: number;
+                totalCount: bigint;
+                leftCount: bigint;
+                rightCount: bigint;
+            }>
+        >`
+            SELECT
+                v.arena_id::INTEGER AS "arenaId",
+                COUNT(*)::INTEGER AS "totalCount",
+                SUM(CASE WHEN v.voted_to = a.creator_id THEN 1 ELSE 0 END)::INTEGER AS "leftCount",
+                SUM(CASE WHEN v.voted_to != a.creator_id THEN 1 ELSE 0 END)::INTEGER AS "rightCount"
+            FROM votes v
+            JOIN arenas a ON v.arena_id = a.id
+            WHERE v.arena_id IN (${Prisma.join(arenaIds)})
+            GROUP BY v.arena_id
+        `;
+
+        return results.map((row) => ({
+            arenaId: row.arenaId,
+            totalCount: Number(row.totalCount),
+            leftCount: Number(row.leftCount),
+            rightCount: Number(row.rightCount),
+        }));
+    }
     async findAll(filter: VoteFilter): Promise<Vote[]> {
         const data = await this.prisma.vote.findMany({
             where: this.getWhereClause(filter),

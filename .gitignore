@@ -43,6 +43,9 @@ next-env.d.ts
 # prisma
 /prisma/generated
 
+# local-only dev files (server credentials, test logs)
+dev/local/
+
 # claude code
 .claude/settings.local.json
 .claude/tsc-cache/

@@ -1,14 +1,14 @@
 -- CreateTable
 CREATE TABLE "members" (
     "id" TEXT NOT NULL,
-    "nickname" TEXT NOT NULL,
+    "nickname" VARCHAR(8) NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "image_url" TEXT NOT NULL,
     "birth_date" TIMESTAMP(3) NOT NULL,
     "isMale" BOOLEAN NOT NULL,
     "score" INTEGER NOT NULL DEFAULT 500,
-    "is_attended" BOOLEAN NOT NULL DEFAULT false,
+    "last_attended_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
 
@@ -17,11 +17,11 @@ CREATE TABLE "members" (
 
 -- CreateTable
 CREATE TABLE "games" (
-    "id" SERIAL NOT NULL,
+    "id" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
-    "developer" TEXT NOT NULL,
-    "thumbnail" TEXT NOT NULL,
-    "release_date" TIMESTAMP(3) NOT NULL,
+    "developer" TEXT,
+    "thumbnail" TEXT,
+    "release_date" TIMESTAMP(3),
 
     CONSTRAINT "games_pkey" PRIMARY KEY ("id")
 );
@@ -61,7 +61,7 @@ CREATE TABLE "review_likes" (
 CREATE TABLE "arenas" (
     "id" SERIAL NOT NULL,
     "creator_id" TEXT NOT NULL,
-    "challenger_id" TEXT NOT NULL,
+    "challenger_id" TEXT,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "status" INTEGER NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE "chattings" (
     "id" SERIAL NOT NULL,
     "member_id" TEXT NOT NULL,
     "arena_id" INTEGER NOT NULL,
-    "content" TEXT NOT NULL,
+    "content" VARCHAR(200) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "chattings_pkey" PRIMARY KEY ("id")
@@ -128,6 +128,7 @@ CREATE TABLE "score_records" (
     "member_id" TEXT NOT NULL,
     "policy_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "actualScore" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "score_records_pkey" PRIMARY KEY ("id")
 );
@@ -211,7 +212,31 @@ CREATE TABLE "game_themes" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "members_nickname_key" ON "members"("nickname");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "members_email_key" ON "members"("email");
+
+-- CreateIndex
+CREATE INDEX "arenas_creator_id_idx" ON "arenas"("creator_id");
+
+-- CreateIndex
+CREATE INDEX "arenas_challenger_id_idx" ON "arenas"("challenger_id");
+
+-- CreateIndex
+CREATE INDEX "arenas_status_idx" ON "arenas"("status");
+
+-- CreateIndex
+CREATE INDEX "arenas_start_date_idx" ON "arenas"("start_date");
+
+-- CreateIndex
+CREATE INDEX "votes_arena_id_idx" ON "votes"("arena_id");
+
+-- CreateIndex
+CREATE INDEX "votes_member_id_idx" ON "votes"("member_id");
+
+-- CreateIndex
+CREATE INDEX "votes_voted_to_idx" ON "votes"("voted_to");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "platforms_name_key" ON "platforms"("name");
@@ -223,16 +248,16 @@ CREATE UNIQUE INDEX "genres_name_key" ON "genres"("name");
 CREATE UNIQUE INDEX "themes_name_key" ON "themes"("name");
 
 -- AddForeignKey
-ALTER TABLE "wishlists" ADD CONSTRAINT "wishlists_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "wishlists" ADD CONSTRAINT "wishlists_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "games"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "wishlists" ADD CONSTRAINT "wishlists_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "reviews" ADD CONSTRAINT "reviews_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "games"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "review_likes" ADD CONSTRAINT "review_likes_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -241,22 +266,22 @@ ALTER TABLE "review_likes" ADD CONSTRAINT "review_likes_member_id_fkey" FOREIGN 
 ALTER TABLE "review_likes" ADD CONSTRAINT "review_likes_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "reviews"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "arenas" ADD CONSTRAINT "arenas_challenger_id_fkey" FOREIGN KEY ("challenger_id") REFERENCES "members"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "arenas" ADD CONSTRAINT "arenas_creator_id_fkey" FOREIGN KEY ("creator_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "arenas" ADD CONSTRAINT "arenas_challenger_id_fkey" FOREIGN KEY ("challenger_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "chattings" ADD CONSTRAINT "chattings_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "chattings" ADD CONSTRAINT "chattings_arena_id_fkey" FOREIGN KEY ("arena_id") REFERENCES "arenas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "votes" ADD CONSTRAINT "votes_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "chattings" ADD CONSTRAINT "chattings_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "votes" ADD CONSTRAINT "votes_arena_id_fkey" FOREIGN KEY ("arena_id") REFERENCES "arenas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "votes" ADD CONSTRAINT "votes_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "notification_records" ADD CONSTRAINT "notification_records_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -277,10 +302,10 @@ ALTER TABLE "preferred_platforms" ADD CONSTRAINT "preferred_platforms_member_id_
 ALTER TABLE "preferred_platforms" ADD CONSTRAINT "preferred_platforms_platform_id_fkey" FOREIGN KEY ("platform_id") REFERENCES "platforms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "preferred_genres" ADD CONSTRAINT "preferred_genres_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "preferred_genres" ADD CONSTRAINT "preferred_genres_genre_id_fkey" FOREIGN KEY ("genre_id") REFERENCES "genres"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "preferred_genres" ADD CONSTRAINT "preferred_genres_genre_id_fkey" FOREIGN KEY ("genre_id") REFERENCES "genres"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "preferred_genres" ADD CONSTRAINT "preferred_genres_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "preferred_themes" ADD CONSTRAINT "preferred_themes_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -305,3 +330,4 @@ ALTER TABLE "game_themes" ADD CONSTRAINT "game_themes_game_id_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "game_themes" ADD CONSTRAINT "game_themes_theme_id_fkey" FOREIGN KEY ("theme_id") REFERENCES "themes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+

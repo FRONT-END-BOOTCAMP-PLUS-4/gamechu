@@ -13,6 +13,7 @@ import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/reposi
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { Arena } from "@/prisma/generated";
 import { NextRequest, NextResponse } from "next/server";
+import { ArenaCacheService } from "@/backend/arena/infra/cache/ArenaCacheService";
 
 type RequestParams = {
     params: Promise<{
@@ -121,6 +122,11 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
         if (status === 5) {
             await endArenaUsecase.execute(arenaId);
         }
+
+        // 캐시 무효화
+        const cacheService = new ArenaCacheService();
+        await cacheService.invalidateArenaCache(arenaId);
+
         return NextResponse.json({ success: true });
     } catch (error: unknown) {
         console.error("Error updating arenas:", error);
@@ -176,6 +182,11 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         await endArenaUsecase.execute(arenaId);
         // endArenaUsecase에서 점수 돌려준 후 delete 실행
         await deleteArenaUsecase.execute(arenaId);
+
+        // 캐시 무효화
+        const cacheService = new ArenaCacheService();
+        await cacheService.invalidateArenaCache(arenaId);
+
         return NextResponse.json(
             { message: "투기장 삭제 성공" },
             { status: 200 }

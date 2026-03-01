@@ -1,12 +1,20 @@
 // infra/repositories/PrismaArenaRepository.ts
 import {
     ArenaRepository,
+    ArenaWithRelations,
     CreateArenaInput,
 } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { Arena, Prisma, PrismaClient } from "@/prisma/generated";
 import { ArenaStatus } from "@/types/arena-status";
 import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilter";
 import { prisma } from "@/lib/prisma";
+
+const arenaRelationSelect = {
+    id: true,
+    nickname: true,
+    imageUrl: true,
+    score: true,
+} as const;
 
 export class PrismaArenaRepository implements ArenaRepository {
     private prisma: PrismaClient;
@@ -36,7 +44,7 @@ export class PrismaArenaRepository implements ArenaRepository {
 
         return count;
     }
-    async findAll(filter: ArenaFilter): Promise<Arena[]> {
+    async findAll(filter: ArenaFilter): Promise<ArenaWithRelations[]> {
         const { sortField, ascending, offset, limit } = filter;
         const orderBy = sortField
             ? {
@@ -49,6 +57,14 @@ export class PrismaArenaRepository implements ArenaRepository {
             skip: offset,
             take: limit,
             orderBy,
+            include: {
+                creator: {
+                    select: arenaRelationSelect,
+                },
+                challenger: {
+                    select: arenaRelationSelect,
+                },
+            },
         });
 
         return data;
@@ -79,32 +95,23 @@ export class PrismaArenaRepository implements ArenaRepository {
         await this.prisma.arena.delete({ where: { id } });
     }
 
-    async getArenaById(arenaId: number): Promise<Arena> {
+    async getArenaById(arenaId: number): Promise<ArenaWithRelations> {
         const arena = await this.prisma.arena.findUnique({
             where: { id: arenaId },
-            select: {
-                id: true,
-                creatorId: true,
-                challengerId: true,
-                title: true,
-                description: true,
-                startDate: true,
-                status: true,
+            include: {
+                creator: {
+                    select: arenaRelationSelect,
+                },
+                challenger: {
+                    select: arenaRelationSelect,
+                },
             },
         });
 
         if (!arena) {
             throw new Error("Arena not found");
         }
-        return {
-            id: arena.id,
-            creatorId: arena.creatorId,
-            challengerId: arena?.challengerId ?? null,
-            title: arena.title,
-            description: arena.description,
-            startDate: arena.startDate,
-            status: arena.status as ArenaStatus,
-        };
+        return arena;
     }
     async updateStatus(arenaId: number, status: ArenaStatus): Promise<void> {
         await this.prisma.arena.update({
@@ -123,32 +130,6 @@ export class PrismaArenaRepository implements ArenaRepository {
                 challengerId,
                 status,
             },
-        });
-    }
-    async getList(): Promise<Arena[]> {
-        const arenas = await this.prisma.arena.findMany({
-            select: {
-                id: true,
-                creatorId: true,
-                challengerId: true,
-                title: true,
-                description: true,
-                startDate: true,
-                status: true,
-                creator: { select: { nickname: true } }, // creator relation 이름에 맞게 바꿔야 함
-                challenger: { select: { nickname: true } }, // challenger relation 이름에 맞게 바꿔야 함
-            },
-        });
-        return arenas.map((arena) => {
-            return {
-                id: arena.id,
-                creatorId: arena.creatorId,
-                challengerId: arena.challengerId ?? null,
-                title: arena.title,
-                description: arena.description,
-                status: arena.status as ArenaStatus,
-                startDate: arena.startDate,
-            };
         });
     }
 }
