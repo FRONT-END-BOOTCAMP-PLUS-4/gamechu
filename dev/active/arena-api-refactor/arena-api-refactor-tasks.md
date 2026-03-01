@@ -1,6 +1,6 @@
 # Arena API Refactor — Task Checklist
 
-**Last Updated: 2026-03-01 (Session 3)**
+**Last Updated: 2026-03-01 (Session 4)**
 **Branch: `refactor/#230`**
 
 ---
@@ -77,7 +77,8 @@
 | 3. 타입 안전성 | ✅ Done | 2/2 |
 | 4. 코드 정리 | ✅ Done | 3/3 |
 | 5. 검증 | ✅ Done | 3/3 |
-| **Total** | | **11/11** |
+| 6. 커밋 & 보안 | ✅ Done | 4/4 |
+| **Total** | | **15/15** |
 
 ---
 
@@ -87,12 +88,24 @@
   - `Number(null)` → `0` → 빈 arenas 반환
   - 수정: `Number(url.searchParams.get("pageSize")) || 10`
 
+## Phase 6: 커밋 & 보안 (Session 4)
+
+- [x] **6-1** 코드 변경 커밋 `[S]`
+  - Commit `e52bc62`: 13 files, +504/-189
+- [x] **6-2** 개발 문서 커밋 `[S]`
+  - Commit `97acda5`: context, plan, tasks 3개 파일
+- [x] **6-3** npm audit fix — 보안 취약점 4건 수정 `[S]`
+  - tar (high), minimatch (high), ajv (moderate), markdown-it (moderate)
+- [x] **6-4** Next.js / @next/swc 버전 불일치 해소 `[S]`
+  - `npm audit fix`가 next를 15.5.11로 올렸으나 `@next/swc@15.5.11`은 npm에 미존재
+  - `next@15.5.12`로 업그레이드하여 swc 15.5.12와 정렬
+  - Commit `97530cd` (6-3과 함께 amend)
+
 ## Next Steps
 
-1. **All tasks complete** — ready to commit
-   - All changes are currently unstaged
-   - New untracked files: `backend/arena/infra/cache/`, `dev/active/`, `prisma/migrations/0_init/`
-   - Prisma migration already in sync — no additional migration needed
-2. **Docker Redis** 로컬 환경 구축 완료 — 코드 변경 없음
-   - `docker start gamechu-redis` / `docker stop gamechu-redis`
-   - `docker exec -it gamechu-redis redis-cli -a $REDIS_PASSWORD`
+1. ~~**PR 생성** → `dev` 브랜치 대상~~ ✅ **PR #256 생성 완료**
+   - URL: https://github.com/FRONT-END-BOOTCAMP-PLUS-4/gamechu/pull/256
+   - Assignees: `wojin57`, Labels: `fix`, `refactor`
+   - Projects: GitHub 웹에서 `Gamechu` 프로젝트 수동 연결 필요 (`read:project` scope 부재)
+2. **PR 리뷰 대기** → 팀원 승인 후 `dev`에 rebase merge
+3. **별도 이슈 생성 필요**: pageSize 기본값 0 버그 (`app/api/arenas/route.ts:24`)
