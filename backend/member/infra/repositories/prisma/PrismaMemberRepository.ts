@@ -91,7 +91,7 @@ export class PrismaMemberRepository implements MemberRepository {
     }
 
     async findByNickname(nickname: string): Promise<Member | null> {
-        return this.prisma.member.findFirst({
+        return this.prisma.member.findUnique({
             where: { nickname },
         });
     }
