@@ -1,1 +1,43 @@
+#!/bin/sh
+
+# ─── Secret scan (fast — runs before build) ───────────────
+echo "🔒 Scanning staged files for secrets..."
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+SECRET_FOUND=0
+
+for FILE in $STAGED_FILES; do
+    # Block any .env file from being committed
+    if echo "$FILE" | grep -qE "^\.env"; then
+        echo "ERROR: Attempting to commit .env file: $FILE"
+        echo "  → Remove from staging: git reset HEAD $FILE"
+        SECRET_FOUND=1
+    fi
+
+    # Block docs/server/ from being committed
+    if echo "$FILE" | grep -qE "^docs/server/"; then
+        echo "ERROR: Attempting to commit server secret docs: $FILE"
+        echo "  → This directory is gitignored. Check .gitignore."
+        SECRET_FOUND=1
+    fi
+
+    # Scan staged content for high-confidence secret patterns
+    if git show ":$FILE" 2>/dev/null | grep -qE \
+        "(NEXTAUTH_SECRET|DATABASE_URL|REDIS_PASSWORD|TWITCH_CLIENT_SECRET|JWT_SECRET)\s*=\s*['\"]?[A-Za-z0-9+/=_-]{8,}"; then
+        echo "ERROR: Possible secret value found in: $FILE"
+        echo "  → Secret values must not be committed."
+        SECRET_FOUND=1
+    fi
+done
+
+if [ "$SECRET_FOUND" -eq 1 ]; then
+    echo ""
+    echo "❌ Pre-commit blocked: potential secret exposure detected."
+    echo "Fix the issues above, then try again."
+    exit 1
+fi
+
+echo "✅ Secret scan passed."
+
+# ─── Build check ──────────────────────────────────────────
 npm run build

@@ -1,11 +1,11 @@
-# Routing and Controllers - Best Practices
+# Routing and API Route Handlers - Best Practices
 
-Complete guide to clean route definitions and controller patterns.
+Complete guide to clean Next.js API route definitions and handler patterns for GameChu.
 
 ## Table of Contents
 
-- [Routes: Routing Only](#routes-routing-only)
-- [BaseController Pattern](#basecontroller-pattern)
+- [API Routes: Handler Only](#api-routes-handler-only)
+- [Route Handler Pattern](#route-handler-pattern)
 - [Good Examples](#good-examples)
 - [Anti-Patterns](#anti-patterns)
 - [Refactoring Guide](#refactoring-guide)
@@ -14,599 +14,304 @@ Complete guide to clean route definitions and controller patterns.
 
 ---
 
-## Routes: Routing Only
+## API Routes: Handler Only
 
 ### The Golden Rule
 
-**Routes should ONLY:**
-- ✅ Define route paths
-- ✅ Register middleware
-- ✅ Delegate to controllers
+**Route handlers should ONLY:**
+- ✅ Parse request params/query/body
+- ✅ Check authentication (getAuthUserId)
+- ✅ Instantiate repositories + usecases
+- ✅ Delegate to usecases
+- ✅ Return NextResponse
 
-**Routes should NEVER:**
+**Route handlers should NEVER:**
 - ❌ Contain business logic
-- ❌ Access database directly
-- ❌ Implement validation logic (use Zod + controller)
+- ❌ Access database directly (Prisma calls)
+- ❌ Implement complex validation logic
 - ❌ Format complex responses
-- ❌ Handle complex error scenarios
+- ❌ Handle complex error scenarios inline
 
-### Clean Route Pattern
+### Clean Route Handler Pattern
 
 ```typescript
-// routes/userRoutes.ts
-import { Router } from 'express';
-import { UserController } from '../controllers/UserController';
-import { SSOMiddlewareClient } from '../middleware/SSOMiddleware';
-import { auditMiddleware } from '../middleware/auditMiddleware';
+// app/api/users/route.ts
+import { NextResponse } from "next/server";
+import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { PrismaUserRepository } from "@/backend/user/infra/repositories/prisma/PrismaUserRepository";
+import { GetUsersUsecase } from "@/backend/user/application/usecase/GetUsersUsecase";
 
-const router = Router();
-const controller = new UserController();
+// ✅ CLEAN: Parse → Auth → Instantiate → Delegate → Respond
+export async function GET(request: Request) {
+    try {
+        const memberId = await getAuthUserId();
+        const url = new URL(request.url);
+        const page = Number(url.searchParams.get("page") || 1);
 
-// ✅ CLEAN: Route definition only
-router.get('/:id',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.getUser(req, res)
-);
+        const userRepository = new PrismaUserRepository();
+        const getUsersUsecase = new GetUsersUsecase(userRepository);
 
-router.post('/',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.createUser(req, res)
-);
-
-router.put('/:id',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.updateUser(req, res)
-);
-
-export default router;
+        const result = await getUsersUsecase.execute({ page, memberId });
+        return NextResponse.json(result);
+    } catch (error: unknown) {
+        console.error("Error fetching users:", error);
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { message: error.message },
+                { status: 400 }
+            );
+        }
+        return NextResponse.json(
+            { message: "알 수 없는 오류 발생" },
+            { status: 500 }
+        );
+    }
+}
 ```
 
 **Key Points:**
-- Each route: method, path, middleware chain, controller delegation
-- No try-catch needed (controller handles errors)
+- Each handler: parse, auth, instantiate, delegate, respond
+- No DI container — repos instantiated inline per request
+- try-catch wraps entire handler body
 - Clean, readable, maintainable
-- Easy to see all endpoints at a glance
 
 ---
 
-## BaseController Pattern
+## Route Handler Pattern
 
-### Why BaseController?
+### Next.js App Router Conventions
 
-**Benefits:**
-- Consistent error handling across all controllers
-- Automatic Sentry integration
-- Standardized response formats
-- Reusable helper methods
-- Performance tracking utilities
-- Logging and breadcrumb helpers
-
-### BaseController Pattern (Template)
-
-**File:** `/email/src/controllers/BaseController.ts`
+**File:** `app/api/[feature]/route.ts` — collection endpoints (GET list, POST create)
+**File:** `app/api/[feature]/[id]/route.ts` — item endpoints (GET one, PATCH update, DELETE)
 
 ```typescript
-import * as Sentry from '@sentry/node';
-import { Response } from 'express';
+// app/api/arenas/route.ts — collection
+export async function GET(request: Request) { /* list */ }
+export async function POST(request: Request) { /* create */ }
 
-export abstract class BaseController {
-    /**
-     * Handle errors with Sentry integration
-     */
-    protected handleError(
-        error: unknown,
-        res: Response,
-        context: string,
-        statusCode = 500
-    ): void {
-        Sentry.withScope((scope) => {
-            scope.setTag('controller', this.constructor.name);
-            scope.setTag('operation', context);
-            scope.setUser({ id: res.locals?.claims?.userId });
+// app/api/arenas/[id]/route.ts — item
+export async function GET(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
+    /* get single */
+}
 
-            if (error instanceof Error) {
-                scope.setContext('error_details', {
-                    message: error.message,
-                    stack: error.stack,
-                });
-            }
+export async function PATCH(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
+    /* update */
+}
 
-            Sentry.captureException(error);
-        });
-
-        res.status(statusCode).json({
-            success: false,
-            error: {
-                message: error instanceof Error ? error.message : 'An error occurred',
-                code: statusCode,
-            },
-        });
-    }
-
-    /**
-     * Handle success responses
-     */
-    protected handleSuccess<T>(
-        res: Response,
-        data: T,
-        message?: string,
-        statusCode = 200
-    ): void {
-        res.status(statusCode).json({
-            success: true,
-            message,
-            data,
-        });
-    }
-
-    /**
-     * Performance tracking wrapper
-     */
-    protected async withTransaction<T>(
-        name: string,
-        operation: string,
-        callback: () => Promise<T>
-    ): Promise<T> {
-        return await Sentry.startSpan(
-            { name, op: operation },
-            callback
-        );
-    }
-
-    /**
-     * Validate required fields
-     */
-    protected validateRequest(
-        required: string[],
-        actual: Record<string, any>,
-        res: Response
-    ): boolean {
-        const missing = required.filter((field) => !actual[field]);
-
-        if (missing.length > 0) {
-            Sentry.captureMessage(
-                `Missing required fields: ${missing.join(', ')}`,
-                'warning'
-            );
-
-            res.status(400).json({
-                success: false,
-                error: {
-                    message: 'Missing required fields',
-                    code: 'VALIDATION_ERROR',
-                    details: { missing },
-                },
-            });
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Logging helpers
-     */
-    protected logInfo(message: string, context?: Record<string, any>): void {
-        Sentry.addBreadcrumb({
-            category: this.constructor.name,
-            message,
-            level: 'info',
-            data: context,
-        });
-    }
-
-    protected logWarning(message: string, context?: Record<string, any>): void {
-        Sentry.captureMessage(message, {
-            level: 'warning',
-            tags: { controller: this.constructor.name },
-            extra: context,
-        });
-    }
-
-    /**
-     * Add Sentry breadcrumb
-     */
-    protected addBreadcrumb(
-        message: string,
-        category: string,
-        data?: Record<string, any>
-    ): void {
-        Sentry.addBreadcrumb({ message, category, level: 'info', data });
-    }
-
-    /**
-     * Capture custom metric
-     */
-    protected captureMetric(name: string, value: number, unit: string): void {
-        Sentry.metrics.gauge(name, value, { unit });
-    }
+export async function DELETE(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
+    /* delete */
 }
 ```
 
-### Using BaseController
+### Request Parsing
 
 ```typescript
-// controllers/UserController.ts
-import { Request, Response } from 'express';
-import { BaseController } from './BaseController';
-import { UserService } from '../services/userService';
-import { createUserSchema } from '../validators/userSchemas';
+// Query parameters
+const url = new URL(request.url);
+const page = Number(url.searchParams.get("page") || 1);
+const status = url.searchParams.get("status");
 
-export class UserController extends BaseController {
-    private userService: UserService;
+// Request body (POST/PATCH)
+const body = await request.json();
 
-    constructor() {
-        super();
-        this.userService = new UserService();
-    }
-
-    async getUser(req: Request, res: Response): Promise<void> {
-        try {
-            this.addBreadcrumb('Fetching user', 'user_controller', { userId: req.params.id });
-
-            const user = await this.userService.findById(req.params.id);
-
-            if (!user) {
-                return this.handleError(
-                    new Error('User not found'),
-                    res,
-                    'getUser',
-                    404
-                );
-            }
-
-            this.handleSuccess(res, user);
-        } catch (error) {
-            this.handleError(error, res, 'getUser');
-        }
-    }
-
-    async createUser(req: Request, res: Response): Promise<void> {
-        try {
-            // Validate input
-            const validated = createUserSchema.parse(req.body);
-
-            // Track performance
-            const user = await this.withTransaction(
-                'user.create',
-                'db.query',
-                () => this.userService.create(validated)
-            );
-
-            this.handleSuccess(res, user, 'User created successfully', 201);
-        } catch (error) {
-            this.handleError(error, res, 'createUser');
-        }
-    }
-
-    async updateUser(req: Request, res: Response): Promise<void> {
-        try {
-            const validated = updateUserSchema.parse(req.body);
-            const user = await this.userService.update(req.params.id, validated);
-            this.handleSuccess(res, user, 'User updated');
-        } catch (error) {
-            this.handleError(error, res, 'updateUser');
-        }
-    }
-}
+// Dynamic route params (Next.js 15: params is Promise)
+const { id } = await params;
 ```
-
-**Benefits:**
-- Consistent error handling
-- Automatic Sentry integration
-- Performance tracking
-- Clean, readable code
-- Easy to test
 
 ---
 
 ## Good Examples
 
-### Example 1: Email Notification Routes (Excellent ✅)
+### Example 1: Arena List Route (Excellent ✅)
 
-**File:** `/email/src/routes/notificationRoutes.ts`
+**File:** `app/api/arenas/route.ts`
 
 ```typescript
-import { Router } from 'express';
-import { NotificationController } from '../controllers/NotificationController';
-import { SSOMiddlewareClient } from '../middleware/SSOMiddleware';
+export async function GET(request: Request) {
+    try {
+        const memberId = await getAuthUserId();
+        const url = new URL(request.url);
+        const currentPage = Number(url.searchParams.get("currentPage") || 1);
+        const status = Number(url.searchParams.get("status"));
+        const pageSize = Number(url.searchParams.get("pageSize")!);
 
-const router = Router();
-const controller = new NotificationController();
+        const arenaRepository = new PrismaArenaRepository();
+        const memberRepository = new PrismaMemberRepository();
+        const voteRepository = new PrismaVoteRepository();
 
-// ✅ EXCELLENT: Clean delegation
-router.get('/',
-    SSOMiddlewareClient.verifyLoginStatus,
-    async (req, res) => controller.getNotifications(req, res)
-);
+        const getArenaUsecase = new GetArenaUsecase(
+            arenaRepository, memberRepository, voteRepository
+        );
 
-router.post('/',
-    SSOMiddlewareClient.verifyLoginStatus,
-    async (req, res) => controller.createNotification(req, res)
-);
-
-router.put('/:id/read',
-    SSOMiddlewareClient.verifyLoginStatus,
-    async (req, res) => controller.markAsRead(req, res)
-);
-
-export default router;
+        const dto = new GetArenaDto({ currentPage, status }, memberId, pageSize);
+        const result = await getArenaUsecase.execute(dto);
+        return NextResponse.json(result);
+    } catch (error: unknown) {
+        // unified error handling
+    }
+}
 ```
 
 **What Makes This Excellent:**
-- Zero business logic in routes
-- Clear middleware chain
-- Consistent pattern
-- Easy to understand
-
-### Example 2: Proxy Routes with Validation (Good ✅)
-
-**File:** `/form/src/routes/proxyRoutes.ts`
-
-```typescript
-import { z } from 'zod';
-
-const createProxySchema = z.object({
-    originalUserID: z.string().min(1),
-    proxyUserID: z.string().min(1),
-    startsAt: z.string().datetime(),
-    expiresAt: z.string().datetime(),
-});
-
-router.post('/',
-    SSOMiddlewareClient.verifyLoginStatus,
-    async (req, res) => {
-        try {
-            const validated = createProxySchema.parse(req.body);
-            const proxy = await proxyService.createProxyRelationship(validated);
-            res.status(201).json({ success: true, data: proxy });
-        } catch (error) {
-            handler.handleException(res, error);
-        }
-    }
-);
-```
-
-**What Makes This Good:**
-- Zod validation
-- Delegates to service
-- Proper HTTP status codes
-- Error handling
-
-**Could Be Better:**
-- Move validation to controller
-- Use BaseController
+- Zero business logic in route handler
+- Repositories instantiated and injected into usecase
+- DTO encapsulates input parameters
+- Usecase does all the work
 
 ---
 
 ## Anti-Patterns
 
-### Anti-Pattern 1: Business Logic in Routes (Bad ❌)
-
-**File:** `/form/src/routes/responseRoutes.ts` (actual production code)
+### Anti-Pattern 1: Business Logic in Route Handler (Bad ❌)
 
 ```typescript
-// ❌ ANTI-PATTERN: 200+ lines of business logic in route
-router.post('/:formID/submit', async (req: Request, res: Response) => {
+// ❌ ANTI-PATTERN: Business logic in route handler
+export async function POST(request: Request) {
     try {
-        const username = res.locals.claims.preferred_username;
-        const responses = req.body.responses;
-        const stepInstanceId = req.body.stepInstanceId;
+        const body = await request.json();
+        const memberId = await getAuthUserId();
 
-        // ❌ Permission checking in route
-        const userId = await userProfileService.getProfileByEmail(username).then(p => p.id);
-        const canComplete = await permissionService.canCompleteStep(userId, stepInstanceId);
-        if (!canComplete) {
-            return res.status(403).json({ error: 'No permission' });
+        // ❌ Permission checking in handler
+        const member = await prismaClient.member.findUnique({ where: { id: memberId } });
+        if (member?.score < 100) {
+            return NextResponse.json({ error: "점수 부족" }, { status: 403 });
         }
 
-        // ❌ Workflow logic in route
-        const { createWorkflowEngine, CompleteStepCommand } = require('../workflow/core/WorkflowEngineV3');
-        const engine = await createWorkflowEngine();
-        const command = new CompleteStepCommand(
-            stepInstanceId,
-            userId,
-            responses,
-            additionalContext
-        );
-        const events = await engine.executeCommand(command);
-
-        // ❌ Impersonation handling in route
-        if (res.locals.isImpersonating) {
-            impersonationContextStore.storeContext(stepInstanceId, {
-                originalUserId: res.locals.originalUserId,
-                effectiveUserId: userId,
-            });
-        }
-
-        // ❌ Response processing in route
-        const post = await PrismaService.main.post.findUnique({
-            where: { id: postData.id },
-            include: { comments: true },
+        // ❌ Database operations directly in handler
+        const arena = await prismaClient.arena.create({
+            data: {
+                title: body.title,
+                creatorId: memberId,
+                status: 1,
+            },
         });
 
-        // ❌ Permission check in route
-        await checkPostPermissions(post, userId);
+        // ❌ More business logic...
+        await prismaClient.notification.create({
+            data: { targetId: memberId, type: "ARENA_CREATED" },
+        });
 
-        // ... 100+ more lines of business logic
-
-        res.json({ success: true, data: result });
-    } catch (e) {
-        handler.handleException(res, e);
+        return NextResponse.json(arena, { status: 201 });
+    } catch (error) {
+        return NextResponse.json({ error: "실패" }, { status: 500 });
     }
-});
+}
 ```
 
-**Why This Is Terrible:**
-- 200+ lines of business logic
+**Why This Is Bad:**
+- Business logic mixed into route handler
 - Hard to test (requires HTTP mocking)
 - Hard to reuse (tied to route)
-- Mixed responsibilities
-- Difficult to debug
-- Performance tracking difficult
+- Direct Prisma calls (skips repository abstraction)
 
 ### How to Refactor (Step-by-Step)
 
-**Step 1: Create Controller**
+**Step 1: Create Usecase**
 
 ```typescript
-// controllers/PostController.ts
-export class PostController extends BaseController {
-    private postService: PostService;
+// backend/arena/application/usecase/CreateArenaUsecase.ts
+export class CreateArenaUsecase {
+    constructor(
+        private arenaRepository: ArenaRepository,
+        private memberRepository: MemberRepository,
+    ) {}
 
-    constructor() {
-        super();
-        this.postService = new PostService();
-    }
-
-    async createPost(req: Request, res: Response): Promise<void> {
-        try {
-            const validated = createPostSchema.parse({
-                ...req.body,
-            });
-
-            const result = await this.postService.createPost(
-                validated,
-                res.locals.userId
-            );
-
-            this.handleSuccess(res, result, 'Post created successfully');
-        } catch (error) {
-            this.handleError(error, res, 'createPost');
-        }
-    }
-}
-```
-
-**Step 2: Create Service**
-
-```typescript
-// services/postService.ts
-export class PostService {
-    async createPost(
-        data: CreatePostDTO,
-        userId: string
-    ): Promise<PostResult> {
+    async execute(dto: CreateArenaDto): Promise<Arena> {
         // Permission check
-        const canCreate = await permissionService.canCreatePost(userId);
-        if (!canCreate) {
-            throw new ForbiddenError('No permission to create post');
+        const member = await this.memberRepository.findById(dto.memberId);
+        if (!member || member.score < 100) {
+            throw new Error("투기장 생성 권한이 없습니다.");
         }
 
-        // Execute workflow
-        const engine = await createWorkflowEngine();
-        const command = new CompleteStepCommand(/* ... */);
-        const events = await engine.executeCommand(command);
-
-        // Handle impersonation if needed
-        if (context.isImpersonating) {
-            await this.handleImpersonation(data.stepInstanceId, context);
-        }
-
-        // Synchronize roles
-        await this.synchronizeRoles(events, userId);
-
-        return { events, success: true };
-    }
-
-    private async handleImpersonation(stepInstanceId: number, context: any) {
-        impersonationContextStore.storeContext(stepInstanceId, {
-            originalUserId: context.originalUserId,
-            effectiveUserId: context.effectiveUserId,
+        // Create arena
+        return await this.arenaRepository.save({
+            title: dto.title,
+            creatorId: dto.memberId,
         });
     }
-
-    private async synchronizeRoles(events: WorkflowEvent[], userId: string) {
-        // Role synchronization logic
-    }
 }
 ```
 
-**Step 3: Update Route**
+**Step 2: Update Route Handler**
 
 ```typescript
-// routes/postRoutes.ts
-import { PostController } from '../controllers/PostController';
+// app/api/arenas/route.ts
+export async function POST(request: Request) {
+    try {
+        const memberId = await getAuthUserId();
+        const body = await request.json();
 
-const router = Router();
-const controller = new PostController();
+        const arenaRepository = new PrismaArenaRepository();
+        const memberRepository = new PrismaMemberRepository();
+        const createArenaUsecase = new CreateArenaUsecase(
+            arenaRepository, memberRepository
+        );
 
-// ✅ CLEAN: Just routing
-router.post('/',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.createPost(req, res)
-);
+        const dto = new CreateArenaDto({ title: body.title }, memberId);
+        const result = await createArenaUsecase.execute(dto);
+        return NextResponse.json(result, { status: 201 });
+    } catch (error: unknown) {
+        // unified error handling
+    }
+}
 ```
 
 **Result:**
-- Route: 8 lines (was 200+)
-- Controller: 25 lines (request handling)
-- Service: 50 lines (business logic)
+- Route handler: ~15 lines (parse + delegate)
+- Usecase: ~20 lines (business logic)
 - Testable, reusable, maintainable!
 
 ---
 
 ## Error Handling
 
-### Controller Error Handling
+### Unified Error Pattern
 
 ```typescript
-async createUser(req: Request, res: Response): Promise<void> {
-    try {
-        const result = await this.userService.create(req.body);
-        this.handleSuccess(res, result, 'User created', 201);
-    } catch (error) {
-        // BaseController.handleError automatically:
-        // - Captures to Sentry with context
-        // - Sets appropriate status code
-        // - Returns formatted error response
-        this.handleError(error, res, 'createUser');
+catch (error: unknown) {
+    console.error("Error message:", error);
+    if (error instanceof Error) {
+        return NextResponse.json(
+            { message: error.message || "fallback message" },
+            { status: 400 }
+        );
     }
+    return NextResponse.json(
+        { message: "알 수 없는 오류 발생" },
+        { status: 500 }
+    );
 }
 ```
 
 ### Custom Error Status Codes
 
 ```typescript
-async getUser(req: Request, res: Response): Promise<void> {
-    try {
-        const user = await this.userService.findById(req.params.id);
-
-        if (!user) {
-            // Custom 404 status
-            return this.handleError(
-                new Error('User not found'),
-                res,
-                'getUser',
-                404  // Custom status code
-            );
-        }
-
-        this.handleSuccess(res, user);
-    } catch (error) {
-        this.handleError(error, res, 'getUser');
-    }
+// In usecase — throw with specific message
+if (!arena) {
+    throw new Error("투기장을 찾을 수 없습니다."); // handled as 400
 }
-```
 
-### Validation Errors
-
-```typescript
-async createUser(req: Request, res: Response): Promise<void> {
-    try {
-        const validated = createUserSchema.parse(req.body);
-        const user = await this.userService.create(validated);
-        this.handleSuccess(res, user, 'User created', 201);
-    } catch (error) {
-        // Zod errors get 400 status
-        if (error instanceof z.ZodError) {
-            return this.handleError(error, res, 'createUser', 400);
-        }
-        this.handleError(error, res, 'createUser');
+// In route handler — check error types for specific status codes
+catch (error: unknown) {
+    if (error instanceof NotFoundError) {
+        return NextResponse.json({ message: error.message }, { status: 404 });
     }
+    if (error instanceof ForbiddenError) {
+        return NextResponse.json({ message: error.message }, { status: 403 });
+    }
+    // fallback
 }
 ```
 
@@ -618,132 +323,65 @@ async createUser(req: Request, res: Response): Promise<void> {
 
 | Code | Use Case | Example |
 |------|----------|---------|
-| 200 | Success (GET, PUT) | User retrieved, Updated |
-| 201 | Created (POST) | User created |
-| 204 | No Content (DELETE) | User deleted |
+| 200 | Success (GET, PATCH) | Arena retrieved, Updated |
+| 201 | Created (POST) | Arena created |
+| 204 | No Content (DELETE) | Arena deleted |
 | 400 | Bad Request | Invalid input data |
 | 401 | Unauthorized | Not authenticated |
-| 403 | Forbidden | No permission |
+| 403 | Forbidden | No permission / insufficient score |
 | 404 | Not Found | Resource doesn't exist |
-| 409 | Conflict | Duplicate resource |
-| 422 | Unprocessable Entity | Validation failed |
 | 500 | Internal Server Error | Unexpected error |
-
-### Usage Examples
-
-```typescript
-// 200 - Success (default)
-this.handleSuccess(res, user);
-
-// 201 - Created
-this.handleSuccess(res, user, 'Created', 201);
-
-// 400 - Bad Request
-this.handleError(error, res, 'operation', 400);
-
-// 404 - Not Found
-this.handleError(new Error('Not found'), res, 'operation', 404);
-
-// 403 - Forbidden
-this.handleError(new ForbiddenError('No permission'), res, 'operation', 403);
-```
 
 ---
 
 ## Refactoring Guide
 
-### Identify Routes Needing Refactoring
+### Identify Handlers Needing Refactoring
 
 **Red Flags:**
-- Route file > 100 lines
-- Multiple try-catch blocks in one route
-- Direct database access (Prisma calls)
+- Route handler > 50 lines
+- Direct `prismaClient` calls in handler
 - Complex business logic (if statements, loops)
-- Permission checks in routes
-
-**Check your routes:**
-```bash
-# Find large route files
-wc -l form/src/routes/*.ts | sort -n
-
-# Find routes with Prisma usage
-grep -r "PrismaService" form/src/routes/
-```
+- Permission checks in handler
 
 ### Refactoring Process
 
-**1. Extract to Controller:**
+**1. Extract to Usecase:**
 ```typescript
-// Before: Route with logic
-router.post('/action', async (req, res) => {
-    try {
-        // 50 lines of logic
-    } catch (e) {
-        handler.handleException(res, e);
-    }
-});
+// Before: Handler with logic
+export async function POST(request: Request) {
+    const body = await request.json();
+    // 50 lines of logic
+    return NextResponse.json(result);
+}
 
-// After: Clean route
-router.post('/action', (req, res) => controller.performAction(req, res));
+// After: Clean handler
+export async function POST(request: Request) {
+    const body = await request.json();
+    const memberId = await getAuthUserId();
 
-// New controller method
-async performAction(req: Request, res: Response): Promise<void> {
-    try {
-        const result = await this.service.performAction(req.body);
-        this.handleSuccess(res, result);
-    } catch (error) {
-        this.handleError(error, res, 'performAction');
-    }
+    const repo = new PrismaFeatureRepository();
+    const usecase = new CreateFeatureUsecase(repo);
+    const result = await usecase.execute(new CreateFeatureDto(body, memberId));
+
+    return NextResponse.json(result, { status: 201 });
 }
 ```
 
-**2. Extract to Service:**
+**2. Extract Repository if direct Prisma calls exist:**
 ```typescript
-// Controller stays thin
-async performAction(req: Request, res: Response): Promise<void> {
-    try {
-        const validated = actionSchema.parse(req.body);
-        const result = await this.actionService.execute(validated);
-        this.handleSuccess(res, result);
-    } catch (error) {
-        this.handleError(error, res, 'performAction');
-    }
+// Domain interface
+export interface FeatureRepository {
+    findById(id: number): Promise<Feature | null>;
+    save(data: CreateFeatureInput): Promise<Feature>;
 }
 
-// Service contains business logic
-export class ActionService {
-    async execute(data: ActionDTO): Promise<Result> {
-        // All business logic here
-        // Permission checks
-        // Database operations
-        // Complex transformations
-        return result;
-    }
-}
-```
+// Prisma implementation
+export class PrismaFeatureRepository implements FeatureRepository {
+    private prisma = prismaClient;
 
-**3. Add Repository (if needed):**
-```typescript
-// Service calls repository
-export class ActionService {
-    constructor(private actionRepository: ActionRepository) {}
-
-    async execute(data: ActionDTO): Promise<Result> {
-        // Business logic
-        const entity = await this.actionRepository.findById(data.id);
-        // More logic
-        return await this.actionRepository.update(data.id, changes);
-    }
-}
-
-// Repository handles data access
-export class ActionRepository {
-    async findById(id: number): Promise<Entity | null> {
-        return PrismaService.main.entity.findUnique({ where: { id } });
-    }
-
-    async update(id: number, data: Partial<Entity>): Promise<Entity> {
-        return PrismaService.main.entity.update({ where: { id }, data });
+    async findById(id: number): Promise<Feature | null> {
+        return this.prisma.feature.findUnique({ where: { id } });
     }
 }
 ```
@@ -752,5 +390,5 @@ export class ActionRepository {
 
 **Related Files:**
 - [SKILL.md](SKILL.md) - Main guide
-- [services-and-repositories.md](services-and-repositories.md) - Service layer details
-- [complete-examples.md](complete-examples.md) - Full refactoring examples
+- [services-and-repositories.md](services-and-repositories.md) - Usecase and repository details
+- [complete-examples.md](complete-examples.md) - Full feature examples

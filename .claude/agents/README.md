@@ -159,7 +159,7 @@ cp showcase/.claude/agents/agent-name.md \\
 **Step 2: Verify (optional)**
 ```bash
 # Check for hardcoded paths
-grep -n "~/git/\|/root/git/\|/Users/" your-project/.claude/agents/agent-name.md
+grep -n "/root/\|/Users/" your-project/.claude/agents/agent-name.md
 ```
 
 **Step 3: Use it**
@@ -224,11 +224,10 @@ That's it! Agents work immediately.
 
 **When integrating agents for a user:**
 
-1. **Read [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)**
-2. **Just copy the .md file** - agents are standalone
+1. **Just copy the .md file** - agents are standalone
 3. **Check for hardcoded paths:**
    ```bash
-   grep "~/git/\|/root/" agent-name.md
+   grep "/root/\|/Users/" agent-name.md
    ```
 4. **Update paths if found** to `$CLAUDE_PROJECT_DIR` or `.`
 5. **For auth agents:** Ask if they use JWT cookie auth first
@@ -285,7 +284,7 @@ grep "~/\|/root/\|/Users/" .claude/agents/[agent-name].md
 
 **Fix:**
 ```bash
-sed -i 's|~/git/.*project|$CLAUDE_PROJECT_DIR|g' .claude/agents/[agent-name].md
+sed -i 's|/absolute/path/to/project|.|g' .claude/agents/[agent-name].md
 ```
 
 ---
@@ -297,4 +296,4 @@ sed -i 's|~/git/.*project|$CLAUDE_PROJECT_DIR|g' .claude/agents/[agent-name].md
 3. **Ask Claude to use them** - "Use [agent] to [task]"
 4. **Create your own** - Follow the pattern for your specific needs
 
-**Questions?** See [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)
+**Questions?** See `CLAUDE.md` for project setup and architecture overview.

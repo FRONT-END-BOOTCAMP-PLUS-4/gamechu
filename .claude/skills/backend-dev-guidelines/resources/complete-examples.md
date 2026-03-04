@@ -1,317 +1,188 @@
 # Complete Examples - Full Working Code
 
-Real-world examples showing complete implementation patterns.
+Real-world examples showing complete implementation patterns based on GameChu's architecture.
 
 ## Table of Contents
 
-- [Complete Controller Example](#complete-controller-example)
-- [Complete Service with DI](#complete-service-with-di)
-- [Complete Route File](#complete-route-file)
-- [Complete Repository](#complete-repository)
+- [Complete Route Handler Example](#complete-route-handler-example)
+- [Complete Usecase Example](#complete-usecase-example)
+- [Complete Repository Example](#complete-repository-example)
 - [Refactoring Example: Bad to Good](#refactoring-example-bad-to-good)
 - [End-to-End Feature Example](#end-to-end-feature-example)
 
 ---
 
-## Complete Controller Example
+## Complete Route Handler Example
 
-### UserController (Following All Best Practices)
+### Arena Routes (Following All Best Practices)
 
 ```typescript
-// controllers/UserController.ts
-import { Request, Response } from 'express';
-import { BaseController } from './BaseController';
-import { UserService } from '../services/userService';
-import { createUserSchema, updateUserSchema } from '../validators/userSchemas';
-import { z } from 'zod';
+// app/api/arenas/route.ts
+import { NextResponse } from "next/server";
+import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
+import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
+import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
+import { GetArenaUsecase } from "@/backend/arena/application/usecase/GetArenaUsecase";
+import { GetArenaDto } from "@/backend/arena/application/usecase/dto/GetArenaDto";
 
-export class UserController extends BaseController {
-    private userService: UserService;
+export async function GET(request: Request) {
+    try {
+        const memberId = await getAuthUserId();
+        const url = new URL(request.url);
+        const currentPage = Number(url.searchParams.get("currentPage") || 1);
+        const status = Number(url.searchParams.get("status"));
+        const pageSize = Number(url.searchParams.get("pageSize")!);
 
-    constructor() {
-        super();
-        this.userService = new UserService();
-    }
+        const arenaRepository = new PrismaArenaRepository();
+        const memberRepository = new PrismaMemberRepository();
+        const voteRepository = new PrismaVoteRepository();
 
-    async getUser(req: Request, res: Response): Promise<void> {
-        try {
-            this.addBreadcrumb('Fetching user', 'user_controller', {
-                userId: req.params.id,
-            });
+        const getArenaUsecase = new GetArenaUsecase(
+            arenaRepository, memberRepository, voteRepository
+        );
 
-            const user = await this.withTransaction(
-                'user.get',
-                'db.query',
-                () => this.userService.findById(req.params.id)
+        const dto = new GetArenaDto(
+            { currentPage, status },
+            memberId,
+            pageSize
+        );
+
+        const result = await getArenaUsecase.execute(dto);
+        return NextResponse.json(result);
+    } catch (error: unknown) {
+        console.error("Error fetching arenas:", error);
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { message: error.message || "투기장 조회 실패" },
+                { status: 400 }
             );
-
-            if (!user) {
-                return this.handleError(
-                    new Error('User not found'),
-                    res,
-                    'getUser',
-                    404
-                );
-            }
-
-            this.handleSuccess(res, user);
-        } catch (error) {
-            this.handleError(error, res, 'getUser');
         }
-    }
-
-    async listUsers(req: Request, res: Response): Promise<void> {
-        try {
-            const users = await this.userService.getAll();
-            this.handleSuccess(res, users);
-        } catch (error) {
-            this.handleError(error, res, 'listUsers');
-        }
-    }
-
-    async createUser(req: Request, res: Response): Promise<void> {
-        try {
-            // Validate input with Zod
-            const validated = createUserSchema.parse(req.body);
-
-            // Track performance
-            const user = await this.withTransaction(
-                'user.create',
-                'db.mutation',
-                () => this.userService.create(validated)
-            );
-
-            this.handleSuccess(res, user, 'User created successfully', 201);
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                return this.handleError(error, res, 'createUser', 400);
-            }
-            this.handleError(error, res, 'createUser');
-        }
-    }
-
-    async updateUser(req: Request, res: Response): Promise<void> {
-        try {
-            const validated = updateUserSchema.parse(req.body);
-
-            const user = await this.userService.update(
-                req.params.id,
-                validated
-            );
-
-            this.handleSuccess(res, user, 'User updated');
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                return this.handleError(error, res, 'updateUser', 400);
-            }
-            this.handleError(error, res, 'updateUser');
-        }
-    }
-
-    async deleteUser(req: Request, res: Response): Promise<void> {
-        try {
-            await this.userService.delete(req.params.id);
-            this.handleSuccess(res, null, 'User deleted', 204);
-        } catch (error) {
-            this.handleError(error, res, 'deleteUser');
-        }
+        return NextResponse.json(
+            { message: "알 수 없는 오류 발생" },
+            { status: 500 }
+        );
     }
 }
 ```
 
 ---
 
-## Complete Service with DI
+## Complete Usecase Example
 
-### UserService
+### GetArenaUsecase
 
 ```typescript
-// services/userService.ts
-import { UserRepository } from '../repositories/UserRepository';
-import { ConflictError, NotFoundError, ValidationError } from '../types/errors';
-import type { CreateUserDTO, UpdateUserDTO, User } from '../types/user.types';
+// backend/arena/application/usecase/GetArenaUsecase.ts
+import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
+import { MemberRepository } from "@/backend/member/domain/repositories/MemberRepository";
+import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
+import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilter";
+import { GetArenaDto } from "./dto/GetArenaDto";
+import { ArenaListDto } from "./dto/ArenaListDto";
 
-export class UserService {
-    private userRepository: UserRepository;
+export class GetArenaUsecase {
+    constructor(
+        private arenaRepository: ArenaRepository,
+        private memberRepository: MemberRepository,
+        private voteRepository: VoteRepository,
+    ) {}
 
-    constructor(userRepository?: UserRepository) {
-        this.userRepository = userRepository || new UserRepository();
-    }
-
-    async findById(id: string): Promise<User | null> {
-        return await this.userRepository.findById(id);
-    }
-
-    async getAll(): Promise<User[]> {
-        return await this.userRepository.findActive();
-    }
-
-    async create(data: CreateUserDTO): Promise<User> {
-        // Business rule: validate age
-        if (data.age < 18) {
-            throw new ValidationError('User must be 18 or older');
-        }
-
-        // Business rule: check email uniqueness
-        const existing = await this.userRepository.findByEmail(data.email);
-        if (existing) {
-            throw new ConflictError('Email already in use');
-        }
-
-        // Create user with profile
-        return await this.userRepository.create({
-            email: data.email,
-            profile: {
-                create: {
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    age: data.age,
-                },
-            },
+    async execute(dto: GetArenaDto): Promise<ArenaListDto> {
+        const filter = new ArenaFilter({
+            status: dto.queryString.status,
+            memberId: dto.queryString.targetMemberId,
+            page: dto.queryString.currentPage,
+            pageSize: dto.pageSize,
         });
-    }
 
-    async update(id: string, data: UpdateUserDTO): Promise<User> {
-        // Check exists
-        const existing = await this.userRepository.findById(id);
-        if (!existing) {
-            throw new NotFoundError('User not found');
-        }
+        const [arenas, totalCount] = await Promise.all([
+            this.arenaRepository.findAll(filter),
+            this.arenaRepository.count(filter),
+        ]);
 
-        // Business rule: email uniqueness if changing
-        if (data.email && data.email !== existing.email) {
-            const emailTaken = await this.userRepository.findByEmail(data.email);
-            if (emailTaken) {
-                throw new ConflictError('Email already in use');
-            }
-        }
+        const endPage = Math.ceil(totalCount / dto.pageSize);
 
-        return await this.userRepository.update(id, data);
-    }
-
-    async delete(id: string): Promise<void> {
-        const existing = await this.userRepository.findById(id);
-        if (!existing) {
-            throw new NotFoundError('User not found');
-        }
-
-        await this.userRepository.delete(id);
+        return new ArenaListDto(
+            arenas,
+            dto.queryString.currentPage,
+            Array.from({ length: endPage }, (_, i) => i + 1),
+            endPage
+        );
     }
 }
 ```
 
 ---
 
-## Complete Route File
+## Complete Repository Example
 
-### userRoutes.ts
+### Domain Interface + Prisma Implementation
 
 ```typescript
-// routes/userRoutes.ts
-import { Router } from 'express';
-import { UserController } from '../controllers/UserController';
-import { SSOMiddlewareClient } from '../middleware/SSOMiddleware';
-import { auditMiddleware } from '../middleware/auditMiddleware';
+// backend/arena/domain/repositories/ArenaRepository.ts
+import { ArenaFilter } from "./filters/ArenaFilter";
+import type { Arena } from "@/prisma/generated";
 
-const router = Router();
-const controller = new UserController();
-
-// GET /users - List all users
-router.get('/',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.listUsers(req, res)
-);
-
-// GET /users/:id - Get single user
-router.get('/:id',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.getUser(req, res)
-);
-
-// POST /users - Create user
-router.post('/',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.createUser(req, res)
-);
-
-// PUT /users/:id - Update user
-router.put('/:id',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.updateUser(req, res)
-);
-
-// DELETE /users/:id - Delete user
-router.delete('/:id',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.deleteUser(req, res)
-);
-
-export default router;
+export interface ArenaRepository {
+    count(filter: ArenaFilter): Promise<number>;
+    findAll(filter: ArenaFilter): Promise<Arena[]>;
+    findById(id: number): Promise<Arena | null>;
+    save(arena: CreateArenaInput): Promise<Arena>;
+    update(id: number, data: Partial<Arena>): Promise<Arena>;
+    delete(id: number): Promise<void>;
+}
 ```
 
----
-
-## Complete Repository
-
-### UserRepository
-
 ```typescript
-// repositories/UserRepository.ts
-import { PrismaService } from '@project-lifecycle-portal/database';
-import type { User, Prisma } from '@prisma/client';
+// backend/arena/infra/repositories/prisma/PrismaArenaRepository.ts
+import { prismaClient } from "@/lib/prisma";
+import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
+import { ArenaFilter } from "@/backend/arena/domain/repositories/filters/ArenaFilter";
+import type { Arena } from "@/prisma/generated";
 
-export class UserRepository {
-    async findById(id: string): Promise<User | null> {
-        return PrismaService.main.user.findUnique({
+export class PrismaArenaRepository implements ArenaRepository {
+    private prisma = prismaClient;
+
+    async findById(id: number): Promise<Arena | null> {
+        return this.prisma.arena.findUnique({
             where: { id },
-            include: { profile: true },
+            include: { creator: true },
         });
     }
 
-    async findByEmail(email: string): Promise<User | null> {
-        return PrismaService.main.user.findUnique({
-            where: { email },
-            include: { profile: true },
+    async findAll(filter: ArenaFilter): Promise<Arena[]> {
+        return this.prisma.arena.findMany({
+            where: filter.toWhereClause(),
+            skip: filter.offset,
+            take: filter.pageSize,
+            orderBy: { createdAt: "desc" },
+            include: { creator: true },
         });
     }
 
-    async findActive(): Promise<User[]> {
-        return PrismaService.main.user.findMany({
-            where: { isActive: true },
-            include: { profile: true },
-            orderBy: { createdAt: 'desc' },
+    async count(filter: ArenaFilter): Promise<number> {
+        return this.prisma.arena.count({
+            where: filter.toWhereClause(),
         });
     }
 
-    async create(data: Prisma.UserCreateInput): Promise<User> {
-        return PrismaService.main.user.create({
+    async save(data: CreateArenaInput): Promise<Arena> {
+        return this.prisma.arena.create({
             data,
-            include: { profile: true },
+            include: { creator: true },
         });
     }
 
-    async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
-        return PrismaService.main.user.update({
+    async update(id: number, data: Partial<Arena>): Promise<Arena> {
+        return this.prisma.arena.update({
             where: { id },
             data,
-            include: { profile: true },
         });
     }
 
-    async delete(id: string): Promise<User> {
-        // Soft delete
-        return PrismaService.main.user.update({
-            where: { id },
-            data: {
-                isActive: false,
-                deletedAt: new Date(),
-            },
-        });
+    async delete(id: number): Promise<void> {
+        await this.prisma.arena.delete({ where: { id } });
     }
 }
 ```
@@ -320,313 +191,215 @@ export class UserRepository {
 
 ## Refactoring Example: Bad to Good
 
-### BEFORE: Business Logic in Routes ❌
+### BEFORE: Business Logic in Route Handler ❌
 
 ```typescript
-// routes/postRoutes.ts (BAD - 200+ lines)
-router.post('/posts', async (req, res) => {
+// app/api/arenas/route.ts (BAD - 80+ lines)
+export async function POST(request: Request) {
     try {
-        const username = res.locals.claims.preferred_username;
-        const responses = req.body.responses;
-        const stepInstanceId = req.body.stepInstanceId;
+        const body = await request.json();
+        const memberId = await getAuthUserId();
 
-        // ❌ Permission check in route
-        const userId = await userProfileService.getProfileByEmail(username).then(p => p.id);
-        const canComplete = await permissionService.canCompleteStep(userId, stepInstanceId);
-        if (!canComplete) {
-            return res.status(403).json({ error: 'No permission' });
+        // ❌ Permission check in handler
+        const member = await prismaClient.member.findUnique({
+            where: { id: memberId },
+        });
+        if (!member || member.score < 100) {
+            return NextResponse.json(
+                { error: "점수 부족" },
+                { status: 403 }
+            );
         }
 
-        // ❌ Business logic in route
-        const post = await postRepository.create({
-            title: req.body.title,
-            content: req.body.content,
-            authorId: userId
+        // ❌ Business logic in handler
+        const arena = await prismaClient.arena.create({
+            data: {
+                title: body.title,
+                description: body.description,
+                creatorId: memberId,
+                status: 1,
+            },
         });
 
-        // ❌ More business logic...
-        if (res.locals.isImpersonating) {
-            impersonationContextStore.storeContext(...);
-        }
+        // ❌ Side effects in handler
+        await prismaClient.notification.create({
+            data: { memberId, type: "ARENA_CREATED", arenaId: arena.id },
+        });
 
-        // ... 100+ more lines
-
-        res.json({ success: true, data: result });
+        // ... more lines
+        return NextResponse.json(arena, { status: 201 });
     } catch (e) {
-        handler.handleException(res, e);
-    }
-});
-```
-
-### AFTER: Clean Separation ✅
-
-**1. Clean Route:**
-```typescript
-// routes/postRoutes.ts
-import { PostController } from '../controllers/PostController';
-
-const router = Router();
-const controller = new PostController();
-
-// ✅ CLEAN: 8 lines total!
-router.post('/',
-    SSOMiddlewareClient.verifyLoginStatus,
-    auditMiddleware,
-    async (req, res) => controller.createPost(req, res)
-);
-
-export default router;
-```
-
-**2. Controller:**
-```typescript
-// controllers/PostController.ts
-export class PostController extends BaseController {
-    private postService: PostService;
-
-    constructor() {
-        super();
-        this.postService = new PostService();
-    }
-
-    async createPost(req: Request, res: Response): Promise<void> {
-        try {
-            const validated = createPostSchema.parse({
-                ...req.body,
-            });
-
-            const result = await this.postService.createPost(
-                validated,
-                res.locals.userId
-            );
-
-            this.handleSuccess(res, result, 'Post created successfully');
-        } catch (error) {
-            this.handleError(error, res, 'createPost');
-        }
+        return NextResponse.json({ error: "실패" }, { status: 500 });
     }
 }
 ```
 
-**3. Service:**
+### AFTER: Clean Separation ✅
+
+**1. Clean Route Handler:**
 ```typescript
-// services/postService.ts
-export class PostService {
-    async createPost(
-        data: CreatePostDTO,
-        userId: string
-    ): Promise<SubmissionResult> {
-        // Permission check
-        const canComplete = await permissionService.canCompleteStep(
-            userId,
-            data.stepInstanceId
-        );
-
-        if (!canComplete) {
-            throw new ForbiddenError('No permission to complete step');
+// app/api/arenas/route.ts
+export async function POST(request: Request) {
+    try {
+        const memberId = await getAuthUserId();
+        if (!memberId) {
+            return NextResponse.json(
+                { message: "로그인이 필요합니다." },
+                { status: 401 }
+            );
         }
 
-        // Execute workflow
-        const engine = await createWorkflowEngine();
-        const command = new CompleteStepCommand(
-            data.stepInstanceId,
-            userId,
-            data.responses
+        const body = await request.json();
+        const arenaRepository = new PrismaArenaRepository();
+        const memberRepository = new PrismaMemberRepository();
+        const createArenaUsecase = new CreateArenaUsecase(
+            arenaRepository, memberRepository
         );
-        const events = await engine.executeCommand(command);
 
-        // Handle impersonation
-        if (context.isImpersonating) {
-            await this.handleImpersonation(data.stepInstanceId, context);
-        }
-
-        return { events, success: true };
+        const dto = new CreateArenaDto(body, memberId);
+        const result = await createArenaUsecase.execute(dto);
+        return NextResponse.json(result, { status: 201 });
+    } catch (error: unknown) {
+        // unified error handling
     }
+}
+```
 
-    private async handleImpersonation(stepInstanceId: number, context: any) {
-        impersonationContextStore.storeContext(stepInstanceId, {
-            originalUserId: context.originalUserId,
-            effectiveUserId: context.effectiveUserId,
+**2. Usecase:**
+```typescript
+// backend/arena/application/usecase/CreateArenaUsecase.ts
+export class CreateArenaUsecase {
+    constructor(
+        private arenaRepository: ArenaRepository,
+        private memberRepository: MemberRepository,
+    ) {}
+
+    async execute(dto: CreateArenaDto): Promise<Arena> {
+        const member = await this.memberRepository.findById(dto.memberId);
+        if (!member || member.score < 100) {
+            throw new Error("투기장 생성을 위한 점수가 부족합니다.");
+        }
+
+        return await this.arenaRepository.save({
+            title: dto.title,
+            description: dto.description,
+            creatorId: dto.memberId,
         });
     }
 }
 ```
 
 **Result:**
-- Route: 8 lines (was 200+)
-- Controller: 25 lines
-- Service: 40 lines
+- Route handler: ~20 lines (parse + delegate)
+- Usecase: ~15 lines (business logic)
 - **Testable, maintainable, reusable!**
 
 ---
 
 ## End-to-End Feature Example
 
-### Complete User Management Feature
+### Complete Feature Module (Arena Pattern)
 
-**1. Types:**
+**1. DTO:**
 ```typescript
-// types/user.types.ts
-export interface User {
-    id: string;
-    email: string;
-    isActive: boolean;
-    profile?: UserProfile;
-}
+// backend/arena/application/usecase/dto/CreateArenaDto.ts
+export class CreateArenaDto {
+    public title: string;
+    public description: string;
+    public memberId: string;
 
-export interface CreateUserDTO {
-    email: string;
-    firstName: string;
-    lastName: string;
-    age: number;
-}
-
-export interface UpdateUserDTO {
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-}
-```
-
-**2. Validators:**
-```typescript
-// validators/userSchemas.ts
-import { z } from 'zod';
-
-export const createUserSchema = z.object({
-    email: z.string().email(),
-    firstName: z.string().min(1).max(100),
-    lastName: z.string().min(1).max(100),
-    age: z.number().int().min(18).max(120),
-});
-
-export const updateUserSchema = z.object({
-    email: z.string().email().optional(),
-    firstName: z.string().min(1).max(100).optional(),
-    lastName: z.string().min(1).max(100).optional(),
-});
-```
-
-**3. Repository:**
-```typescript
-// repositories/UserRepository.ts
-export class UserRepository {
-    async findById(id: string): Promise<User | null> {
-        return PrismaService.main.user.findUnique({
-            where: { id },
-            include: { profile: true },
-        });
-    }
-
-    async create(data: Prisma.UserCreateInput): Promise<User> {
-        return PrismaService.main.user.create({
-            data,
-            include: { profile: true },
-        });
+    constructor(body: { title: string; description: string }, memberId: string) {
+        this.title = body.title;
+        this.description = body.description;
+        this.memberId = memberId;
     }
 }
 ```
 
-**4. Service:**
+**2. Domain Repository Interface:**
 ```typescript
-// services/userService.ts
-export class UserService {
-    private userRepository: UserRepository;
+// backend/arena/domain/repositories/ArenaRepository.ts
+export interface ArenaRepository {
+    findById(id: number): Promise<Arena | null>;
+    findAll(filter: ArenaFilter): Promise<Arena[]>;
+    count(filter: ArenaFilter): Promise<number>;
+    save(data: CreateArenaInput): Promise<Arena>;
+}
+```
 
-    constructor() {
-        this.userRepository = new UserRepository();
+**3. Prisma Implementation:**
+```typescript
+// backend/arena/infra/repositories/prisma/PrismaArenaRepository.ts
+export class PrismaArenaRepository implements ArenaRepository {
+    private prisma = prismaClient;
+
+    async findById(id: number): Promise<Arena | null> {
+        return this.prisma.arena.findUnique({ where: { id } });
     }
 
-    async create(data: CreateUserDTO): Promise<User> {
-        const existing = await this.userRepository.findByEmail(data.email);
-        if (existing) {
-            throw new ConflictError('Email already exists');
-        }
-
-        return await this.userRepository.create({
-            email: data.email,
-            profile: {
-                create: {
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    age: data.age,
-                },
-            },
-        });
+    async save(data: CreateArenaInput): Promise<Arena> {
+        return this.prisma.arena.create({ data });
     }
 }
 ```
 
-**5. Controller:**
+**4. Usecase:**
 ```typescript
-// controllers/UserController.ts
-export class UserController extends BaseController {
-    private userService: UserService;
+// backend/arena/application/usecase/CreateArenaUsecase.ts
+export class CreateArenaUsecase {
+    constructor(
+        private arenaRepository: ArenaRepository,
+        private memberRepository: MemberRepository,
+    ) {}
 
-    constructor() {
-        super();
-        this.userService = new UserService();
-    }
-
-    async createUser(req: Request, res: Response): Promise<void> {
-        try {
-            const validated = createUserSchema.parse(req.body);
-            const user = await this.userService.create(validated);
-            this.handleSuccess(res, user, 'User created', 201);
-        } catch (error) {
-            this.handleError(error, res, 'createUser');
-        }
+    async execute(dto: CreateArenaDto): Promise<Arena> {
+        // Business rules here
+        return await this.arenaRepository.save({ ... });
     }
 }
 ```
 
-**6. Routes:**
+**5. Route Handler:**
 ```typescript
-// routes/userRoutes.ts
-const router = Router();
-const controller = new UserController();
+// app/api/arenas/route.ts
+export async function POST(request: Request) {
+    try {
+        const memberId = await getAuthUserId();
+        const body = await request.json();
 
-router.post('/',
-    SSOMiddlewareClient.verifyLoginStatus,
-    async (req, res) => controller.createUser(req, res)
-);
+        const arenaRepo = new PrismaArenaRepository();
+        const memberRepo = new PrismaMemberRepository();
+        const usecase = new CreateArenaUsecase(arenaRepo, memberRepo);
 
-export default router;
-```
-
-**7. Register in app.ts:**
-```typescript
-// app.ts
-import userRoutes from './routes/userRoutes';
-
-app.use('/api/users', userRoutes);
+        const result = await usecase.execute(new CreateArenaDto(body, memberId));
+        return NextResponse.json(result, { status: 201 });
+    } catch (error: unknown) {
+        // unified error handling
+    }
+}
 ```
 
 **Complete Request Flow:**
 ```
-POST /api/users
+POST /api/arenas
   ↓
-userRoutes matches /
+Next.js matches app/api/arenas/route.ts POST handler
   ↓
-SSOMiddleware authenticates
+Handler parses body, gets auth user ID
   ↓
-controller.createUser called
+Repositories instantiated inline
   ↓
-Validates with Zod
+Usecase instantiated with repos
   ↓
-userService.create called
+DTO created from request data
   ↓
-Checks business rules
+usecase.execute(dto) — business logic runs
   ↓
-userRepository.create called
+Repository performs Prisma operation
   ↓
-Prisma creates user
+Result flows back to handler
   ↓
-Returns up the chain
-  ↓
-Controller formats response
-  ↓
-200/201 sent to client
+NextResponse.json(result, { status: 201 })
 ```
 
 ---

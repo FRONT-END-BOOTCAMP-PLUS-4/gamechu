@@ -1,209 +1,253 @@
-# Middleware Guide - Express Middleware Patterns
+# Middleware Guide - Next.js Middleware & Auth Patterns
 
-Complete guide to creating and using middleware in backend microservices.
+Complete guide to middleware and authentication patterns in GameChu's Next.js backend.
 
 ## Table of Contents
 
-- [Authentication Middleware](#authentication-middleware)
-- [Audit Middleware with AsyncLocalStorage](#audit-middleware-with-asynclocalstorage)
-- [Error Boundary Middleware](#error-boundary-middleware)
-- [Validation Middleware](#validation-middleware)
-- [Composable Middleware](#composable-middleware)
-- [Middleware Ordering](#middleware-ordering)
+- [Next.js Middleware](#nextjs-middleware)
+- [Authentication with NextAuth.js](#authentication-with-nextauthjs)
+- [Auth Helper Pattern](#auth-helper-pattern)
+- [Error Handling Patterns](#error-handling-patterns)
+- [Composable Patterns](#composable-patterns)
 
 ---
 
-## Authentication Middleware
+## Next.js Middleware
 
-### SSOMiddleware Pattern
+### Route-Level Middleware (`middleware.ts`)
 
-**File:** `/form/src/middleware/SSOMiddleware.ts`
+Next.js middleware runs before route handlers for matching paths:
 
 ```typescript
-export class SSOMiddlewareClient {
-    static verifyLoginStatus(req: Request, res: Response, next: NextFunction): void {
-        const token = req.cookies.refresh_token;
+// middleware.ts (project root)
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-        if (!token) {
-            return res.status(401).json({ error: 'Not authenticated' });
+export function middleware(request: NextRequest) {
+    // Runs before matched route handlers
+    // Can redirect, rewrite, or add headers
+    return NextResponse.next();
+}
+
+export const config = {
+    matcher: ["/api/protected/:path*"],
+};
+```
+
+**Note:** GameChu primarily handles auth per-handler with `getAuthUserId()` rather than via global middleware.
+
+---
+
+## Authentication with NextAuth.js
+
+### NextAuth Configuration
+
+**File:** `lib/auth/authOptions.ts`
+
+GameChu uses NextAuth.js v4 with Credentials provider + JWT sessions:
+
+```typescript
+// lib/auth/authOptions.ts
+import { AuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+export const authOptions: AuthOptions = {
+    providers: [
+        CredentialsProvider({
+            // Credentials configuration
+        }),
+    ],
+    session: {
+        strategy: "jwt",
+    },
+    callbacks: {
+        async jwt({ token, user }) {
+            // Add user ID to token
+            if (user) {
+                token.id = user.id;
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            // Add user ID to session
+            session.user.id = token.id;
+            return session;
+        },
+    },
+};
+```
+
+### Auth API Route
+
+```typescript
+// app/api/auth/[...nextauth]/route.ts
+import NextAuth from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
+```
+
+---
+
+## Auth Helper Pattern
+
+### Server-Side Auth Helper
+
+**File:** `utils/GetAuthUserId.server.ts`
+
+```typescript
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+
+export async function getAuthUserId(): Promise<string | null> {
+    const session = await getServerSession(authOptions);
+    return session?.user?.id ?? null;
+}
+```
+
+### Usage in Route Handlers
+
+```typescript
+// ✅ Standard auth check pattern
+export async function GET(request: Request) {
+    try {
+        const memberId = await getAuthUserId();
+
+        // Optional auth: allow unauthenticated access
+        // (memberId can be null)
+
+        // Required auth: reject unauthenticated
+        if (!memberId) {
+            return NextResponse.json(
+                { message: "로그인이 필요합니다." },
+                { status: 401 }
+            );
         }
 
-        try {
-            const decoded = jwt.verify(token, config.tokens.jwt);
-            res.locals.claims = decoded;
-            res.locals.effectiveUserId = decoded.sub;
-            next();
-        } catch (error) {
-            res.status(401).json({ error: 'Invalid token' });
-        }
+        // ... proceed with authenticated request
+    } catch (error: unknown) {
+        // error handling
     }
 }
 ```
 
----
+### Client-Side Auth Helper
 
-## Audit Middleware with AsyncLocalStorage
-
-### Excellent Pattern from Blog API
-
-**File:** `/form/src/middleware/auditMiddleware.ts`
+**File:** `utils/GetAuthUserId.client.ts`
 
 ```typescript
-import { AsyncLocalStorage } from 'async_hooks';
+import { useSession } from "next-auth/react";
 
-export interface AuditContext {
-    userId: string;
-    userName?: string;
-    impersonatedBy?: string;
-    sessionId?: string;
-    timestamp: Date;
-    requestId: string;
-}
-
-export const auditContextStorage = new AsyncLocalStorage<AuditContext>();
-
-export function auditMiddleware(req: Request, res: Response, next: NextFunction): void {
-    const context: AuditContext = {
-        userId: res.locals.effectiveUserId || 'anonymous',
-        userName: res.locals.claims?.preferred_username,
-        impersonatedBy: res.locals.isImpersonating ? res.locals.originalUserId : undefined,
-        timestamp: new Date(),
-        requestId: req.id || uuidv4(),
-    };
-
-    auditContextStorage.run(context, () => {
-        next();
-    });
-}
-
-// Getter for current context
-export function getAuditContext(): AuditContext | null {
-    return auditContextStorage.getStore() || null;
-}
-```
-
-**Benefits:**
-- Context propagates through entire request
-- No need to pass context through every function
-- Automatically available in services, repositories
-- Type-safe context access
-
-**Usage in Services:**
-```typescript
-import { getAuditContext } from '../middleware/auditMiddleware';
-
-async function someOperation() {
-    const context = getAuditContext();
-    console.log('Operation by:', context?.userId);
+export function useAuthUserId(): string | null {
+    const { data: session } = useSession();
+    return session?.user?.id ?? null;
 }
 ```
 
 ---
 
-## Error Boundary Middleware
+## Error Handling Patterns
 
-### Comprehensive Error Handler
+### Unified Error Response
 
-**File:** `/form/src/middleware/errorBoundary.ts`
+Every route handler follows the same error pattern:
 
 ```typescript
-export function errorBoundary(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-): void {
-    // Determine status code
-    const statusCode = getStatusCodeForError(error);
+catch (error: unknown) {
+    console.error("Error message:", error);
+    if (error instanceof Error) {
+        return NextResponse.json(
+            { message: error.message || "fallback message" },
+            { status: 400 }
+        );
+    }
+    return NextResponse.json(
+        { message: "알 수 없는 오류 발생" },
+        { status: 500 }
+    );
+}
+```
 
-    // Capture to Sentry
-    Sentry.withScope((scope) => {
-        scope.setLevel(statusCode >= 500 ? 'error' : 'warning');
-        scope.setTag('error_type', error.name);
-        scope.setContext('error_details', {
-            message: error.message,
-            stack: error.stack,
-        });
-        Sentry.captureException(error);
-    });
+### Custom Error Classes (Optional)
 
-    // User-friendly response
-    res.status(statusCode).json({
-        success: false,
-        error: {
-            message: getUserFriendlyMessage(error),
-            code: error.name,
-        },
-        requestId: Sentry.getCurrentScope().getPropagationContext().traceId,
-    });
+```typescript
+// types/errors.ts
+export class AppError extends Error {
+    constructor(
+        message: string,
+        public statusCode: number = 400,
+    ) {
+        super(message);
+        this.name = this.constructor.name;
+    }
 }
 
-// Async wrapper
-export function asyncErrorWrapper(
-    handler: (req: Request, res: Response, next: NextFunction) => Promise<any>
-) {
-    return async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            await handler(req, res, next);
-        } catch (error) {
-            next(error);
-        }
-    };
+export class NotFoundError extends AppError {
+    constructor(message: string) { super(message, 404); }
+}
+
+export class ForbiddenError extends AppError {
+    constructor(message: string) { super(message, 403); }
+}
+
+// Usage in catch block
+catch (error: unknown) {
+    if (error instanceof AppError) {
+        return NextResponse.json(
+            { message: error.message },
+            { status: error.statusCode }
+        );
+    }
+    // fallback
 }
 ```
 
 ---
 
-## Composable Middleware
+## Composable Patterns
 
-### withAuthAndAudit Pattern
+### Auth Guard Helper
 
 ```typescript
-export function withAuthAndAudit(...authMiddleware: any[]) {
-    return [
-        ...authMiddleware,
-        auditMiddleware,
-    ];
+// utils/apiHelpers.ts
+import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { NextResponse } from "next/server";
+
+export async function requireAuth(): Promise<string> {
+    const memberId = await getAuthUserId();
+    if (!memberId) {
+        throw new Error("로그인이 필요합니다.");
+    }
+    return memberId;
+}
+```
+
+### Response Helpers
+
+```typescript
+// utils/apiHelpers.ts
+export function successResponse<T>(data: T, status = 200) {
+    return NextResponse.json(data, { status });
+}
+
+export function errorResponse(message: string, status = 400) {
+    return NextResponse.json({ message }, { status });
 }
 
 // Usage
-router.post('/:formID/submit',
-    ...withAuthAndAudit(SSOMiddlewareClient.verifyLoginStatus),
-    async (req, res) => controller.submit(req, res)
-);
+export async function GET(request: Request) {
+    try {
+        const result = await usecase.execute(dto);
+        return successResponse(result);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return errorResponse(error.message);
+        }
+        return errorResponse("알 수 없는 오류 발생", 500);
+    }
+}
 ```
-
----
-
-## Middleware Ordering
-
-### Critical Order (Must Follow)
-
-```typescript
-// 1. Sentry request handler (FIRST)
-app.use(Sentry.Handlers.requestHandler());
-
-// 2. Body parsing
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// 3. Cookie parsing
-app.use(cookieParser());
-
-// 4. Auth initialization
-app.use(SSOMiddleware.initialize());
-
-// 5. Routes registered here
-app.use('/api/users', userRoutes);
-
-// 6. Error handler (AFTER routes)
-app.use(errorBoundary);
-
-// 7. Sentry error handler (LAST)
-app.use(Sentry.Handlers.errorHandler());
-```
-
-**Rule:** Error handlers MUST be registered AFTER all routes!
 
 ---
 
