@@ -1,6 +1,6 @@
 # Claude Setup Update — Task Checklist
 
-Last Updated: 2026-03-04
+Last Updated: 2026-03-04 (Session 2)
 
 ---
 
@@ -85,3 +85,21 @@ Last Updated: 2026-03-04
 | Phase 8 | Cleanup (4 files deleted) | ✅ 완료 |
 
 **All tasks complete.** ✅
+
+---
+
+## Phase 9: Legacy Reference Audit ✅ (Session 2에서 추가)
+
+- [x] **9.1** `agents/auth-route-tester.md` — MUI, Docker MySQL, PM2 참조 제거 → NextAuth.js, Prisma `$queryRaw`
+- [x] **9.2** `agents/plan-reviewer.md` — Keycloak 예시 → NextAuth.js OAuth
+- [x] **9.3** `backend-dev-guidelines/configuration.md` — UnifiedConfig/Keycloak → Next.js env 패턴 전면 재작성
+- [x] **9.4** `skill-developer/SKILL.md` — Express 참조 → Next.js 패턴
+- [x] **9.5** `skill-developer/PATTERNS_LIBRARY.md` — Express router → Next.js route handler
+- [x] **9.6** `skill-developer/TRIGGER_TYPES.md` — Express router → Next.js route handler
+- [ ] **9.7** `skills/README.md` — Express/MUI 참조 다수 (이번 PR 범위 제외, 별도 처리 필요)
+
+## Git Workflow (Session 2)
+
+- [x] **G.1** GitHub Issue #257 생성
+- [x] **G.2** `chore/#257` 브랜치 생성 + 커밋 2건
+- [x] **G.3** PR #258 생성 (dev 대상)
