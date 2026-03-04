@@ -29,18 +29,17 @@
             "type": "domain",
             "enforcement": "suggest",
             "priority": "high",
-            "description": "Backend development patterns for Node.js/Express/TypeScript",
+            "description": "Backend development patterns for Next.js API routes + Clean Architecture with Prisma",
             "promptTriggers": {
                 "keywords": [
                     "backend",
                     "backend development",
-                    "microservice",
-                    "controller",
+                    "usecase",
+                    "use case",
                     "service",
                     "repository",
                     "route",
                     "routing",
-                    "express",
                     "API",
                     "endpoint",
                     "middleware",
@@ -48,10 +47,9 @@
                     "Zod",
                     "Prisma",
                     "database access",
-                    "BaseController",
-                    "dependency injection",
-                    "unifiedConfig",
-                    "configuration"
+                    "Redis",
+                    "cache",
+                    "clean architecture"
                 ],
                 "intentPatterns": [
                     "(create|add|implement|build).*?(route|endpoint|API|controller|service|repository)",
@@ -166,42 +164,6 @@
                     "export.*?(GET|POST|PUT|DELETE|PATCH)"
                 ]
             }
-        },
-        "error-tracking": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "Sentry error tracking and performance monitoring patterns",
-            "promptTriggers": {
-                "keywords": [
-                    "error handling",
-                    "exception",
-                    "sentry",
-                    "error tracking",
-                    "captureException",
-                    "monitoring",
-                    "performance tracking"
-                ],
-                "intentPatterns": [
-                    "(add|create|implement|setup).*?(error handling|sentry|error tracking)",
-                    "(fix|handle|catch).*?(error|exception)",
-                    "(how to|best practice).*?(error|sentry|monitoring)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "**/instrument.ts",
-                    "**/sentry*.ts",
-                    "**/*Controller.ts",
-                    "**/*Service.ts"
-                ],
-                "contentPatterns": [
-                    "@sentry",
-                    "Sentry\\.",
-                    "captureException",
-                    "captureMessage"
-                ]
-            }
         }
     },
     "notes": {
@@ -217,7 +179,7 @@
             "low": "Optional - Trigger only for explicit matches"
         },
         "customization": {
-            "pathPatterns": "Adjust to match your project structure (blog-api, auth-service, etc.)",
+            "pathPatterns": "Adjust to match your project structure (app/api/, backend/, etc.)",
             "keywords": "Add domain-specific terms relevant to your project",
             "intentPatterns": "Use regex for flexible user intent matching"
         }
