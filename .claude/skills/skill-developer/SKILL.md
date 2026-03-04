@@ -94,9 +94,8 @@ Defines:
 - Comprehensive documentation
 
 **Examples:**
-- `backend-dev-guidelines` - Node.js/Express/TypeScript patterns
-- `frontend-dev-guidelines` - React/TypeScript best practices
-- `error-tracking` - Sentry integration guidance
+- `backend-dev-guidelines` - Next.js API route + Clean Architecture patterns
+- `frontend-dev-guidelines` - Next.js App Router / TailwindCSS / Zustand patterns
 
 **When to Use:**
 - Complex systems requiring deep knowledge

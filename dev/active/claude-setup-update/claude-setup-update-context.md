@@ -1,6 +1,6 @@
 # Claude Setup Update — Context
 
-Last Updated: 2026-03-04
+Last Updated: 2026-03-04 (Session 2)
 
 ---
 
@@ -66,6 +66,36 @@ Last Updated: 2026-03-04
 
 - `docs/CODE_CONVENTIONS.md`: drift 검사 대상 (수정은 범위 밖)
 - 모든 Phase 완료 — 더 이상 의존성 없음
+
+---
+
+## Git & PR Status
+
+- **Branch**: `chore/#257` (2 commits, pushed to remote)
+  - `1459362` — 메인 커밋: 31파일, +1947/-4157
+  - `55a5813` — 잔여 레거시 참조 제거: 6파일, +85/-255
+- **Issue**: #257 (all tasks checked)
+- **PR**: #258 → `dev` (open, 리뷰 대기)
+- **Remaining on `skills/README.md`**: Express/MUI 레거시 참조 남아있음 (의도적으로 이번 PR에서 제외)
+
+---
+
+## Session 2 Key Actions
+
+1. GitHub Issue #257 생성 및 전체 태스크 체크
+2. 첫 커밋 `1459362`: Phase 0–8 전체 변경사항
+3. `chore/#257` 브랜치 분리 후 `dev` → `origin/dev` 리셋
+4. PR #258 생성 (`.github/PULL_REQUEST_TEMPLATE.md` 형식 적용)
+5. 레거시 참조 감사: `git grep -i 'Express|Keycloak|MUI'` 로 잔여 참조 발견
+6. 두 번째 커밋 `55a5813`: 6파일 추가 수정
+   - `auth-route-tester.md`: MUI, Docker MySQL, PM2 → NextAuth.js, Prisma `$queryRaw`
+   - `plan-reviewer.md`: Keycloak → NextAuth.js OAuth 예시
+   - `configuration.md`: UnifiedConfig/Keycloak → Next.js env 패턴 전면 재작성
+   - `skill-developer/` 3파일: Express router → Next.js route handler 패턴
+
+### 의도적으로 남긴 레거시 참조
+- `styling-guide.md` — MUI anti-pattern 예시 (의도적)
+- `skills/README.md` — 별도 업데이트 필요 (이번 PR 범위에서 제외)
 
 ---
 
