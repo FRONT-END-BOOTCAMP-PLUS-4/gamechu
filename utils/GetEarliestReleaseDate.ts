@@ -1,11 +1,11 @@
 export function getEarliestReleaseDate(game: {
-    involved_companies: {
+    involved_companies?: {
         developer: boolean;
         company: { name: string } | null;
     }[];
-    release_dates: { date: number }[] | null;
-    releaseDate: Date | null;
-    developer: string | null;
+    release_dates?: { date: number }[] | null;
+    releaseDate?: Date | null;
+    developer?: string | null;
 }): Date | null {
     if (!game.release_dates?.length) return null;
 

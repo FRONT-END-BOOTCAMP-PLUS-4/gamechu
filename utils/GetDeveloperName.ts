@@ -1,11 +1,11 @@
 export function getDeveloperName(game: {
-    involved_companies: {
+    involved_companies?: {
         developer: boolean;
         company: { name: string } | null;
     }[];
-    release_dates: { date: number }[] | null;
-    releaseDate: Date | null;
-    developer: string | null;
+    release_dates?: { date: number }[] | null;
+    releaseDate?: Date | null;
+    developer?: string | null;
 }): string | null {
     if (!game.involved_companies?.length) return null;
 

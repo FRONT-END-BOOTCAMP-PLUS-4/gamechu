@@ -240,6 +240,7 @@ model GamePlatform {
   game       Game     @relation(fields: [gameId], references: [id])
   platform   Platform @relation(fields: [platformId], references: [id])
 
+  @@unique([gameId, platformId])
   @@map("game_platforms")
 }
 
@@ -250,6 +251,7 @@ model GameGenre {
   game    Game  @relation(fields: [gameId], references: [id])
   genre   Genre @relation(fields: [genreId], references: [id])
 
+  @@unique([gameId, genreId])
   @@map("game_genres")
 }
 
@@ -260,5 +262,6 @@ model GameTheme {
   game    Game  @relation(fields: [gameId], references: [id])
   theme   Theme @relation(fields: [themeId], references: [id])
 
+  @@unique([gameId, themeId])
   @@map("game_themes")
 }
