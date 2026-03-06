@@ -1,6 +1,6 @@
 # Claude Setup Update — Task Checklist
 
-Last Updated: 2026-03-04 (Session 2)
+Last Updated: 2026-03-07 (Session 3)
 
 ---
 
@@ -98,8 +98,16 @@ Last Updated: 2026-03-04 (Session 2)
 - [x] **9.6** `skill-developer/TRIGGER_TYPES.md` — Express router → Next.js route handler
 - [ ] **9.7** `skills/README.md` — Express/MUI 참조 다수 (이번 PR 범위 제외, 별도 처리 필요)
 
-## Git Workflow (Session 2)
+## Phase 10: dev-docs 태스크 GitHub 워크플로 통합 + rebase 예외 규칙 (Session 3)
+
+- [x] **10.1** `.claude/commands/dev-docs.md` — 태스크 브레이크다운에 GitHub 워크플로 필수 적용 (이슈 → 브랜치 → 커밋 → 리베이스 → PR)
+- [x] **10.2** `.claude/commands/dev-docs.md` + `docs/CODE_CONVENTIONS.md` — Claude 설정 브랜치 의존 시 rebase 예외 규칙 추가
+
+---
+
+## Git Workflow (Session 2-3)
 
 - [x] **G.1** GitHub Issue #257 생성
 - [x] **G.2** `chore/#257` 브랜치 생성 + 커밋 2건
 - [x] **G.3** PR #258 생성 (dev 대상)
+- [x] **G.4** Session 3 커밋: dev-docs 워크플로 통합 + rebase 예외

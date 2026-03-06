@@ -37,6 +37,15 @@ You are an elite strategic planning specialist. Create a comprehensive, actionab
     - Include clear acceptance criteria for each task
     - Specify dependencies between tasks
     - Estimate effort levels (S/M/L/XL)
+    - **Each task MUST follow the GitHub workflow** defined in `docs/CODE_CONVENTIONS.md` "Git & Collaboration" section:
+        1. Create a GitHub Issue for the task
+        2. Create a branch from `dev` using `<type>/#<issue-number>` naming
+        3. Work and commit with `[<type>/#<issue-number>] message` format
+        4. Before push: rebase onto latest `dev`
+        5. Create PR targeting `dev`, linking the issue with `close #<issue-number>`
+    - **Rebase exception**: If the current branch depends on a previous unmerged branch that only contains Claude-related settings (e.g., `.claude/`, skill files, `CLAUDE.md`), skip rebasing onto `dev`. The assignee will handle the merge order manually. Example: `chore/#259` depends on Claude command updates from `chore/#257` (not yet merged into `dev`) — no rebase needed.
+    - Group small, tightly coupled sub-tasks under a single issue/branch when they cannot be meaningfully reviewed independently
+    - In `[task-name]-tasks.md`, include the Git workflow steps (issue, branch, PR) as checklist items for each task
 
 6. **Create task management structure**:
     - Create directory: `dev/active/[task-name]/` (relative to project root)
