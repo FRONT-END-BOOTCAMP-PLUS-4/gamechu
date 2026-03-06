@@ -16,8 +16,9 @@ export async function getTwitchAccessToken(): Promise<string> {
     });
 
     if (!tokenRes.ok) {
+        const errorText = await tokenRes.text();
         throw new Error(
-            `Failed to get Twitch token: ${tokenRes.status} - ${tokenRes.text}`
+            `Failed to get Twitch token: ${tokenRes.status} - ${errorText}`
         );
     }
 
