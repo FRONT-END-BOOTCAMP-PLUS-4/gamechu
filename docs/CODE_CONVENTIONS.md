@@ -284,6 +284,7 @@ e.g. [API/#35] 글 작성 API 연동
 2. Create issue -> create branch from issue
 3. Work on branch -> commit
 4. Before push: switch to `dev`, pull latest, switch back, `git rebase dev`
+   - **Exception**: If the current branch depends on a previous unmerged branch that only contains Claude-related settings (`.claude/`, skill files, `CLAUDE.md`), skip rebasing onto `dev`. The assignee will handle the merge order manually. (e.g., `chore/#259` depends on `chore/#257` which updated Claude commands — no rebase needed)
 5. Resolve conflicts if any, then push
 6. If `dev` changed after your branch (other PRs merged), rebase and `--force` push
 7. Create PR: branch -> `dev`

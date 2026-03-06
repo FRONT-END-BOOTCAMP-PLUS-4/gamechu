@@ -1,206 +1,88 @@
-# Configuration Management - UnifiedConfig Pattern
+# Configuration Management - Next.js Environment Variables
 
-Complete guide to managing configuration in backend microservices.
+Guide to managing configuration in GameChu's Next.js backend.
 
 ## Table of Contents
 
-- [UnifiedConfig Overview](#unifiedconfig-overview)
-- [NEVER Use process.env Directly](#never-use-processenv-directly)
-- [Configuration Structure](#configuration-structure)
-- [Environment-Specific Configs](#environment-specific-configs)
+- [Environment Variables Overview](#environment-variables-overview)
+- [Access Patterns](#access-patterns)
+- [Environment Files](#environment-files)
 - [Secrets Management](#secrets-management)
-- [Migration Guide](#migration-guide)
 
 ---
 
-## UnifiedConfig Overview
+## Environment Variables Overview
 
-### Why UnifiedConfig?
+Next.js has built-in support for environment variables via `.env*` files. Variables are available on the server side via `process.env`.
 
-**Problems with process.env:**
-- ❌ No type safety
-- ❌ No validation
-- ❌ Hard to test
-- ❌ Scattered throughout code
-- ❌ No default values
-- ❌ Runtime errors for typos
+### Key Variable Categories (GameChu)
 
-**Benefits of unifiedConfig:**
-- ✅ Type-safe configuration
-- ✅ Single source of truth
-- ✅ Validated at startup
-- ✅ Easy to test with mocks
-- ✅ Clear structure
-- ✅ Fallback to environment variables
+- **Database**: PostgreSQL connection string
+- **Auth**: NextAuth.js URL and secret
+- **Redis**: Redis connection URL
+- **External APIs**: Twitch/IGDB credentials
+
+**Important:** Only variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Never prefix secrets with `NEXT_PUBLIC_`.
+
+Refer to `.env` or `.env.local` for actual variable names and values.
 
 ---
 
-## NEVER Use process.env Directly
+## Access Patterns
 
-### The Rule
+### Server-side (API Routes, Use Cases)
 
 ```typescript
-// ❌ NEVER DO THIS
-const timeout = parseInt(process.env.TIMEOUT_MS || '5000');
-const dbHost = process.env.DB_HOST || 'localhost';
-
-// ✅ ALWAYS DO THIS
-import { config } from './config/unifiedConfig';
-const timeout = config.timeouts.default;
-const dbHost = config.database.host;
+// ✅ Direct access in server-side code
+const databaseUrl = process.env.DATABASE_URL;
 ```
 
-### Why This Matters
+### Singleton Clients
 
-**Example of problems:**
+GameChu centralizes client creation in `lib/` singletons:
+
 ```typescript
-// Typo in environment variable name
-const host = process.env.DB_HSOT; // undefined! No error!
+// lib/prisma.ts — Prisma client singleton
+import { PrismaClient } from '@/prisma/generated';
 
-// Type safety
-const port = process.env.PORT; // string! Need parseInt
-const timeout = parseInt(process.env.TIMEOUT); // NaN if not set!
+const prisma = globalThis.prisma ?? new PrismaClient();
+if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+export default prisma;
 ```
 
-**With unifiedConfig:**
 ```typescript
-const port = config.server.port; // number, guaranteed
-const timeout = config.timeouts.default; // number, with fallback
+// lib/redis.ts — Redis client singleton
+import Redis from 'ioredis';
+
+const redis = new Redis(process.env.REDIS_URL);
+export default redis;
+```
+
+```typescript
+// lib/auth/authOptions.ts — NextAuth configuration
+// Reads auth-related env vars internally
+```
+
+### Client-side (React Components)
+
+```typescript
+// ✅ Only NEXT_PUBLIC_ vars available
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+// ❌ NEVER — server secrets not available in browser
+const secret = process.env.NEXTAUTH_SECRET; // undefined!
 ```
 
 ---
 
-## Configuration Structure
+## Environment Files
 
-### UnifiedConfig Interface
+### File Precedence (highest → lowest)
 
-```typescript
-export interface UnifiedConfig {
-    database: {
-        host: string;
-        port: number;
-        username: string;
-        password: string;
-        database: string;
-    };
-    server: {
-        port: number;
-        sessionSecret: string;
-    };
-    tokens: {
-        jwt: string;
-        inactivity: string;
-        internal: string;
-    };
-    keycloak: {
-        realm: string;
-        client: string;
-        baseUrl: string;
-        secret: string;
-    };
-    aws: {
-        region: string;
-        emailQueueUrl: string;
-        accessKeyId: string;
-        secretAccessKey: string;
-    };
-    sentry: {
-        dsn: string;
-        environment: string;
-        tracesSampleRate: number;
-    };
-    // ... more sections
-}
-```
+1. `.env.local` — Local overrides, secrets
+2. `.env` — Base configuration
 
-### Implementation Pattern
-
-**File:** `/blog-api/src/config/unifiedConfig.ts`
-
-```typescript
-import * as fs from 'fs';
-import * as path from 'path';
-import * as ini from 'ini';
-
-const configPath = path.join(__dirname, '../../config.ini');
-const iniConfig = ini.parse(fs.readFileSync(configPath, 'utf-8'));
-
-export const config: UnifiedConfig = {
-    database: {
-        host: iniConfig.database?.host || process.env.DB_HOST || 'localhost',
-        port: parseInt(iniConfig.database?.port || process.env.DB_PORT || '3306'),
-        username: iniConfig.database?.username || process.env.DB_USER || 'root',
-        password: iniConfig.database?.password || process.env.DB_PASSWORD || '',
-        database: iniConfig.database?.database || process.env.DB_NAME || 'blog_dev',
-    },
-    server: {
-        port: parseInt(iniConfig.server?.port || process.env.PORT || '3002'),
-        sessionSecret: iniConfig.server?.sessionSecret || process.env.SESSION_SECRET || 'dev-secret',
-    },
-    // ... more configuration
-};
-
-// Validate critical config
-if (!config.tokens.jwt) {
-    throw new Error('JWT secret not configured!');
-}
-```
-
-**Key Points:**
-- Read from config.ini first
-- Fallback to process.env
-- Default values for development
-- Validation at startup
-- Type-safe access
-
----
-
-## Environment-Specific Configs
-
-### config.ini Structure
-
-```ini
-[database]
-host = localhost
-port = 3306
-username = root
-password = password1
-database = blog_dev
-
-[server]
-port = 3002
-sessionSecret = your-secret-here
-
-[tokens]
-jwt = your-jwt-secret
-inactivity = 30m
-internal = internal-api-token
-
-[keycloak]
-realm = myapp
-client = myapp-client
-baseUrl = http://localhost:8080
-secret = keycloak-client-secret
-
-[sentry]
-dsn = https://your-sentry-dsn
-environment = development
-tracesSampleRate = 0.1
-```
-
-### Environment Overrides
-
-```bash
-# .env file (optional overrides)
-DB_HOST=production-db.example.com
-DB_PASSWORD=secure-password
-PORT=80
-```
-
-**Precedence:**
-1. config.ini (highest priority)
-2. process.env variables
-3. Hard-coded defaults (lowest priority)
+Both files are gitignored (`.gitignore` has `.env*` rule). Each developer maintains their own copies locally.
 
 ---
 
@@ -208,68 +90,26 @@ PORT=80
 
 ### DO NOT Commit Secrets
 
-```gitignore
-# .gitignore
-config.ini
-.env
-sentry.ini
-*.pem
-*.key
-```
+All `.env*` files are gitignored. The pre-commit hook also blocks staging of `.env*` files and `docs/server/`.
 
-### Use Environment Variables in Production
+### Validation
+
+Check required variables at startup in critical singletons:
 
 ```typescript
-// Development: config.ini
-// Production: Environment variables
-
-export const config: UnifiedConfig = {
-    database: {
-        password: process.env.DB_PASSWORD || iniConfig.database?.password || '',
-    },
-    tokens: {
-        jwt: process.env.JWT_SECRET || iniConfig.tokens?.jwt || '',
-    },
-};
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL is not configured');
+}
 ```
 
----
+### Production
 
-## Migration Guide
-
-### Find All process.env Usage
-
-```bash
-grep -r "process.env" blog-api/src/ --include="*.ts" | wc -l
-```
-
-### Migration Example
-
-**Before:**
-```typescript
-// Scattered throughout code
-const timeout = parseInt(process.env.OPENID_HTTP_TIMEOUT_MS || '15000');
-const keycloakUrl = process.env.KEYCLOAK_BASE_URL;
-const jwtSecret = process.env.JWT_SECRET;
-```
-
-**After:**
-```typescript
-import { config } from './config/unifiedConfig';
-
-const timeout = config.keycloak.timeout;
-const keycloakUrl = config.keycloak.baseUrl;
-const jwtSecret = config.tokens.jwt;
-```
-
-**Benefits:**
-- Type-safe
-- Centralized
-- Easy to test
-- Validated at startup
+Set environment variables directly on the server. See `docs/server/SERVER_REFERENCE.md` for details (gitignored).
 
 ---
 
 **Related Files:**
 - [SKILL.md](SKILL.md)
-- [testing-guide.md](testing-guide.md)
+- `lib/prisma.ts` — Prisma singleton
+- `lib/redis.ts` — Redis singleton
+- `lib/auth/authOptions.ts` — NextAuth config

@@ -1,13 +1,12 @@
 # Async Patterns and Error Handling
 
-Complete guide to async/await patterns and custom error handling.
+Complete guide to async/await patterns and error handling in GameChu's Next.js backend.
 
 ## Table of Contents
 
 - [Async/Await Best Practices](#asyncawait-best-practices)
 - [Promise Error Handling](#promise-error-handling)
 - [Custom Error Types](#custom-error-types)
-- [asyncErrorWrapper Utility](#asyncerrorwrapper-utility)
 - [Error Propagation](#error-propagation)
 - [Common Async Pitfalls](#common-async-pitfalls)
 
@@ -15,23 +14,32 @@ Complete guide to async/await patterns and custom error handling.
 
 ## Async/Await Best Practices
 
-### Always Use Try-Catch
+### Always Use Try-Catch in Route Handlers
 
 ```typescript
 // ❌ NEVER: Unhandled async errors
-async function fetchData() {
-    const data = await database.query(); // If throws, unhandled!
-    return data;
+export async function GET(request: Request) {
+    const data = await usecase.execute(dto); // If throws, unhandled!
+    return NextResponse.json(data);
 }
 
 // ✅ ALWAYS: Wrap in try-catch
-async function fetchData() {
+export async function GET(request: Request) {
     try {
-        const data = await database.query();
-        return data;
-    } catch (error) {
-        Sentry.captureException(error);
-        throw error;
+        const data = await usecase.execute(dto);
+        return NextResponse.json(data);
+    } catch (error: unknown) {
+        console.error("Error:", error);
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { message: error.message },
+                { status: 400 }
+            );
+        }
+        return NextResponse.json(
+            { message: "알 수 없는 오류 발생" },
+            { status: 500 }
+        );
     }
 }
 ```
@@ -44,9 +52,7 @@ function processData() {
     return fetchData()
         .then(data => transform(data))
         .then(transformed => save(transformed))
-        .catch(error => {
-            console.error(error);
-        });
+        .catch(error => console.error(error));
 }
 
 // ✅ PREFER: Async/await
@@ -56,7 +62,7 @@ async function processData() {
         const transformed = await transform(data);
         return await save(transformed);
     } catch (error) {
-        Sentry.captureException(error);
+        console.error(error);
         throw error;
     }
 }
@@ -71,29 +77,26 @@ async function processData() {
 ```typescript
 // ✅ Handle errors in Promise.all
 try {
-    const [users, profiles, settings] = await Promise.all([
-        userService.getAll(),
-        profileService.getAll(),
-        settingsService.getAll(),
+    const [arenas, members, votes] = await Promise.all([
+        arenaRepository.findAll(filter),
+        memberRepository.findActive(),
+        voteRepository.countByArena(arenaId),
     ]);
 } catch (error) {
     // One failure fails all
-    Sentry.captureException(error);
+    console.error("Parallel operation failed:", error);
     throw error;
 }
 
 // ✅ Handle errors individually with Promise.allSettled
 const results = await Promise.allSettled([
-    userService.getAll(),
-    profileService.getAll(),
-    settingsService.getAll(),
+    arenaRepository.findAll(filter),
+    memberRepository.findActive(),
 ]);
 
 results.forEach((result, index) => {
     if (result.status === 'rejected') {
-        Sentry.captureException(result.reason, {
-            tags: { operation: ['users', 'profiles', 'settings'][index] }
-        });
+        console.error(`Operation ${index} failed:`, result.reason);
     }
 });
 ```
@@ -105,109 +108,61 @@ results.forEach((result, index) => {
 ### Define Custom Errors
 
 ```typescript
-// Base error class
+// types/errors.ts
 export class AppError extends Error {
     constructor(
         message: string,
-        public code: string,
-        public statusCode: number,
-        public isOperational: boolean = true
+        public statusCode: number = 400,
     ) {
         super(message);
         this.name = this.constructor.name;
-        Error.captureStackTrace(this, this.constructor);
-    }
-}
-
-// Specific error types
-export class ValidationError extends AppError {
-    constructor(message: string) {
-        super(message, 'VALIDATION_ERROR', 400);
     }
 }
 
 export class NotFoundError extends AppError {
-    constructor(message: string) {
-        super(message, 'NOT_FOUND', 404);
-    }
+    constructor(message: string) { super(message, 404); }
 }
 
 export class ForbiddenError extends AppError {
-    constructor(message: string) {
-        super(message, 'FORBIDDEN', 403);
-    }
+    constructor(message: string) { super(message, 403); }
 }
 
 export class ConflictError extends AppError {
-    constructor(message: string) {
-        super(message, 'CONFLICT', 409);
-    }
+    constructor(message: string) { super(message, 409); }
 }
 ```
 
 ### Usage
 
 ```typescript
-// Throw specific errors
-if (!user) {
-    throw new NotFoundError('User not found');
+// In usecase — throw specific errors
+if (!arena) {
+    throw new NotFoundError("투기장을 찾을 수 없습니다.");
 }
 
-if (user.age < 18) {
-    throw new ValidationError('User must be 18+');
+if (member.score < 100) {
+    throw new ForbiddenError("점수가 부족합니다.");
 }
 
-// Error boundary handles them
-function errorBoundary(error, req, res, next) {
+// In route handler — catch and respond
+catch (error: unknown) {
     if (error instanceof AppError) {
-        return res.status(error.statusCode).json({
-            error: {
-                message: error.message,
-                code: error.code
-            }
-        });
+        return NextResponse.json(
+            { message: error.message },
+            { status: error.statusCode }
+        );
     }
-
-    // Unknown error
-    Sentry.captureException(error);
-    res.status(500).json({ error: { message: 'Internal server error' } });
+    if (error instanceof Error) {
+        return NextResponse.json(
+            { message: error.message },
+            { status: 400 }
+        );
+    }
+    return NextResponse.json(
+        { message: "알 수 없는 오류 발생" },
+        { status: 500 }
+    );
 }
-```
-
----
-
-## asyncErrorWrapper Utility
-
-### Pattern
-
-```typescript
-export function asyncErrorWrapper(
-    handler: (req: Request, res: Response, next: NextFunction) => Promise<any>
-) {
-    return async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            await handler(req, res, next);
-        } catch (error) {
-            next(error);
-        }
-    };
-}
-```
-
-### Usage
-
-```typescript
-// Without wrapper - error can be unhandled
-router.get('/users', async (req, res) => {
-    const users = await userService.getAll(); // If throws, unhandled!
-    res.json(users);
-});
-
-// With wrapper - errors caught
-router.get('/users', asyncErrorWrapper(async (req, res) => {
-    const users = await userService.getAll();
-    res.json(users);
-}));
 ```
 
 ---
@@ -218,30 +173,33 @@ router.get('/users', asyncErrorWrapper(async (req, res) => {
 
 ```typescript
 // ✅ Propagate errors up the stack
-async function repositoryMethod() {
-    try {
-        return await PrismaService.main.user.findMany();
-    } catch (error) {
-        Sentry.captureException(error, { tags: { layer: 'repository' } });
-        throw error; // Propagate to service
-    }
+
+// Repository — let Prisma errors bubble up
+async findById(id: number): Promise<Arena | null> {
+    return this.prisma.arena.findUnique({ where: { id } });
+    // Prisma errors propagate naturally
 }
 
-async function serviceMethod() {
-    try {
-        return await repositoryMethod();
-    } catch (error) {
-        Sentry.captureException(error, { tags: { layer: 'service' } });
-        throw error; // Propagate to controller
+// Usecase — throw business errors, let others propagate
+async execute(dto: GetArenaDto): Promise<Arena> {
+    const arena = await this.arenaRepository.findById(dto.arenaId);
+    if (!arena) {
+        throw new NotFoundError("투기장을 찾을 수 없습니다.");
     }
+    return arena;
 }
 
-async function controllerMethod(req, res) {
+// Route handler — final catch-all
+export async function GET(request: Request, { params }) {
     try {
-        const result = await serviceMethod();
-        res.json(result);
-    } catch (error) {
-        this.handleError(error, res, 'controllerMethod'); // Final handler
+        const { id } = await params;
+        // ...
+        const result = await usecase.execute(dto);
+        return NextResponse.json(result);
+    } catch (error: unknown) {
+        // Final handler — all errors caught here
+        console.error("Error:", error);
+        // Return appropriate response
     }
 }
 ```
@@ -254,54 +212,50 @@ async function controllerMethod(req, res) {
 
 ```typescript
 // ❌ NEVER: Fire and forget
-async function processRequest(req, res) {
-    sendEmail(user.email); // Fires async, errors unhandled!
-    res.json({ success: true });
+export async function POST(request: Request) {
+    const result = await usecase.execute(dto);
+    sendNotification(result); // Fires async, errors unhandled!
+    return NextResponse.json(result);
 }
 
 // ✅ ALWAYS: Await or handle
-async function processRequest(req, res) {
-    try {
-        await sendEmail(user.email);
-        res.json({ success: true });
-    } catch (error) {
-        Sentry.captureException(error);
-        res.status(500).json({ error: 'Failed to send email' });
-    }
+export async function POST(request: Request) {
+    const result = await usecase.execute(dto);
+    await sendNotification(result);
+    return NextResponse.json(result);
 }
 
-// ✅ OR: Intentional background task
-async function processRequest(req, res) {
-    sendEmail(user.email).catch(error => {
-        Sentry.captureException(error);
+// ✅ OR: Intentional background task with error handling
+export async function POST(request: Request) {
+    const result = await usecase.execute(dto);
+    sendNotification(result).catch(error => {
+        console.error("Notification failed:", error);
     });
-    res.json({ success: true });
+    return NextResponse.json(result);
 }
 ```
 
-### Unhandled Rejections
+### Missing Await
 
 ```typescript
-// ✅ Global handler for unhandled rejections
-process.on('unhandledRejection', (reason, promise) => {
-    Sentry.captureException(reason, {
-        tags: { type: 'unhandled_rejection' }
-    });
-    console.error('Unhandled Rejection:', reason);
-});
+// ❌ BAD: Missing await on async function
+export async function DELETE(request: Request, { params }) {
+    const { id } = await params;
+    usecase.execute(id); // Missing await!
+    return NextResponse.json({ message: "삭제 완료" });
+}
 
-process.on('uncaughtException', (error) => {
-    Sentry.captureException(error, {
-        tags: { type: 'uncaught_exception' }
-    });
-    console.error('Uncaught Exception:', error);
-    process.exit(1);
-});
+// ✅ GOOD
+export async function DELETE(request: Request, { params }) {
+    const { id } = await params;
+    await usecase.execute(id);
+    return NextResponse.json({ message: "삭제 완료" });
+}
 ```
 
 ---
 
 **Related Files:**
 - [SKILL.md](SKILL.md)
-- [sentry-and-monitoring.md](sentry-and-monitoring.md)
+- [routing-and-controllers.md](routing-and-controllers.md)
 - [complete-examples.md](complete-examples.md)
