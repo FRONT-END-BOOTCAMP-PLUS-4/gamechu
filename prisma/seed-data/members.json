@@ -1,0 +1,74 @@
+[
+  {
+    "id": "36f1c136-590a-4c20-8a7d-647a88338531",
+    "nickname": "test2",
+    "email": "test2@naver.com",
+    "password": "$2b$10$5m31A.V509BI6kFkloaHJeSn4Kgfa6NJ/J8jTCRznwWm2MTJYrUNO",
+    "imageUrl": "/icons/arena.svg",
+    "birthDate": "2000-02-02T00:00:00",
+    "isMale": false,
+    "score": 3005,
+    "lastAttendedDate": "2026-01-30T07:58:26.418",
+    "createdAt": "2025-10-16T09:20:08.809"
+  },
+  {
+    "id": "c5a98ef5-3150-4aaf-b385-af215af3aa2e",
+    "nickname": "Roast",
+    "email": "roastt1@naver.com",
+    "password": "$2b$10$AKu8RTfg7EP.2ScBE1mHA.oGj4ccTJKkuZg8brNokdbGnqyl7lX06",
+    "imageUrl": "/icons/arena.svg",
+    "birthDate": "2000-02-18T00:00:00",
+    "isMale": true,
+    "score": 7890,
+    "lastAttendedDate": "2026-03-02T15:06:08.042",
+    "createdAt": "2025-10-10T09:00:24.229"
+  },
+  {
+    "id": "249d9e5d-fec0-41e1-b918-c2c6b531b32a",
+    "nickname": "건강박수짝짝",
+    "email": "ggbs@ggbs.com",
+    "password": "$2b$10$lAQMBTAlHalj9OedTu8ex.Ckdv03XyLdsRPNFxMDsv/QFD6rkyjDy",
+    "imageUrl": "/icons/arena.svg",
+    "birthDate": "2025-12-14T00:00:00",
+    "isMale": true,
+    "score": 865,
+    "lastAttendedDate": "2026-01-13T13:38:21.977",
+    "createdAt": "2025-12-14T14:10:55.56"
+  },
+  {
+    "id": "32834eec-21c2-4722-926f-fb99ba9e25a9",
+    "nickname": "친절한이웃스파이",
+    "email": "woni011420@gmail.com",
+    "password": "$2b$10$q2fMI2DT8FtImiY6Db9yOOx54Sck.3n5yrMjYMsdNdw8PS2UnlASS",
+    "imageUrl": "/icons/arena.svg",
+    "birthDate": "1999-01-14T00:00:00",
+    "isMale": false,
+    "score": 870,
+    "lastAttendedDate": "2026-03-03T07:30:37.167",
+    "createdAt": "2025-10-10T11:59:33.462"
+  },
+  {
+    "id": "03a05aac-a2de-4e5b-ada7-fabc465bf7d2",
+    "nickname": "테스트1",
+    "email": "test1@naver.com",
+    "password": "$2b$10$Z8AdgieApejsmamAnmiQHek29nRZKQuOnKvIE8nEvquFau.GkUUby",
+    "imageUrl": "/icons/arena.svg",
+    "birthDate": "2000-01-01T00:00:00",
+    "isMale": true,
+    "score": 830,
+    "lastAttendedDate": "2026-03-03T08:27:11.328",
+    "createdAt": "2025-10-16T09:14:10.01"
+  },
+  {
+    "id": "725d52db-501d-41ff-980e-fb26d6a5338b",
+    "nickname": "입체기동장치",
+    "email": "Eren2000@naver.com",
+    "password": "$2b$10$XGjkkz0nXMMpIaZzI.XKY.ZRQEz1ZVzpfF.49hfG9Axhqq3BMurlq",
+    "imageUrl": "/icons/arena.svg",
+    "birthDate": "1850-01-01T00:00:00",
+    "isMale": true,
+    "score": 1945,
+    "lastAttendedDate": "2026-03-05T04:14:32.329",
+    "createdAt": "2026-01-08T08:36:41.08"
+  }
+]

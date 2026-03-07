@@ -241,10 +241,10 @@ prisma\.                         # prisma.something
 \.update\(
 \.delete\(
 
-# Controllers/Routes
+# API Routes
 export class.*Controller         # Controller classes
-router\.                         # Express router
-app\.(get|post|put|delete|patch) # Express app routes
+export.*function.*(GET|POST|PUT|DELETE|PATCH)  # Next.js route handlers
+NextResponse                     # Next.js response usage
 
 # Error Handling
 try\s*\{                        # Try blocks
