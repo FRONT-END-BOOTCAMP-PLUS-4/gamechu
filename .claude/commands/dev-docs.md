@@ -51,63 +51,42 @@ You are an elite strategic planning specialist. Create a comprehensive, actionab
     - Create directory: `dev/active/[task-name]/` (relative to project root)
     - Generate three files:
         - `[task-name]-plan.md` - The comprehensive plan
-        - `[task-name]-context.md` - Key files, decisions, dependencies
-        - `[task-name]-tasks.md` - Checklist format for tracking progress
+        - `[task-name]-context.md` - Key files, decisions, dependencies. Exclude Git Workflow checking here, too.
+        - `[task-name]-tasks.md` - Checklist format for tracking progress. Exclude Git Workflow here.
     - Include "Last Updated: YYYY-MM-DD" in each file
 
-7. **Include Git & GitHub Workflow Section** at the end of `[task-name]-plan.md`:
-   Determine the appropriate `<type>` from the task (feat/fix/refactor/docs/chore).
-   Append a "## Git & GitHub Workflow" section with copy-paste-ready commands.
+7. **Execute Git workflow (plan phase only)**:
+   After the plan files are created and verified, execute the following steps:
 
-    > **참조 문서**:
-    >
-    > - 이슈 body → `.github/ISSUE_TEMPLATE/feature_request.md` 형식을 따른다
-    > - PR body → `.github/PULL_REQUEST_TEMPLATE.md` 형식을 따른다
-    > - 브랜치 네이밍, 커밋 컨벤션, 워크플로 → `docs/CODE_CONVENTIONS.md` "Git & Collaboration" 섹션을 따른다
-
-    ### 이슈 생성
+    **a. Create GitHub Issue**
 
     ```bash
     gh issue create \
       --title "[<type>]: <task summary in Korean>" \
-      --body "$(cat .github/ISSUE_TEMPLATE/feature_request.md | sed '1,/^---$/d; /^---$/d')" \
+      --body "<plan executive summary + key tasks>" \
       --label "<type>" \
       --assignee "@me"
     ```
 
-    > ⚠️ `--body`의 템플릿 플레이스홀더를 실제 내용으로 채운 뒤 실행한다.
-    > 실행 후 GitHub이 반환하는 이슈 번호(예: #263)를 확인하고,
-    > 아래 `<issue-number>` 자리에 해당 번호를 대입하세요.
+    > Determine `<type>` from the task context (feat/fix/refactor/docs/chore).
+    > Use the plan's executive summary and task list as the issue body.
+    > Fill in using `.github/ISSUE_TEMPLATE/feature_request.md` format.
+    > Note the returned issue number (e.g., #263) for use below.
 
-    ### 브랜치 생성 & 커밋 & Push
-
-    > `docs/CODE_CONVENTIONS.md`의 "Git & Collaboration" 섹션을 참조하여
-    > 브랜치 네이밍(`<type>/#<issue-number>`), 커밋 메시지(`[<type>/#<issue-number>] 메시지`),
-    > Push 전 리베이스 절차를 따른다.
+    **b. Create branch and commit plan docs**
 
     ```bash
-    # 브랜치 생성
     git checkout dev && git pull origin dev
     git checkout -b <type>/#<issue-number>
-
-    # Push 전 리베이스
-    git checkout dev && git pull origin dev
-    git checkout <type>/#<issue-number>
-    git rebase dev
-    git push origin <type>/#<issue-number>
+    git add dev/active/[task-name]/
+    git commit -m "[<type>/#<issue-number>] <task-name> 계획 수립"
     ```
 
-    ### PR 생성
+    > Do NOT push yet — push happens at finalize time after all tasks are complete.
 
-    ```bash
-    gh pr create --base dev \
-      --title "[<type>/#<issue-number>] <summary>" \
-      --body "$(cat .github/PULL_REQUEST_TEMPLATE.md)" \
-      --assignee "@me" --label "<type>"
-    ```
-
-    > ⚠️ `--body`의 템플릿 플레이스홀더를 실제 작업 내용으로 채운 뒤 실행한다.
-    > PR의 Assignees, Labels, Projects는 연결된 Issue와 동일하게 설정한다.
+    **c. Record issue/branch info in task docs**
+    - Add the issue number and branch name to `[task-name]-context.md`
+    - This ensures continuity across context resets
 
 ## Quality Standards
 
@@ -124,4 +103,4 @@ You are an elite strategic planning specialist. Create a comprehensive, actionab
 - Reference `TROUBLESHOOTING.md` for common issues to avoid (if exists)
 - Use `dev/README.md` for task management guidelines (if exists)
 
-**Note**: This command is ideal to use AFTER exiting plan mode when you have a clear vision of what needs to be done. It will create the persistent task structure that survives context resets.
+**Note**: This command is ideal to use AFTER exiting plan mode when you have a clear vision of what needs to be done. It creates the persistent task structure, a GitHub issue, and a working branch — ready for task execution. After all tasks are complete, use `/dev-docs-finalize` to push and create the PR.
