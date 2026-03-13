@@ -2,8 +2,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { EmailCheckUsecase } from "@/backend/member/application/usecase/EmailCheckUsecase";
+import {
+    RateLimiter,
+    getClientIp,
+    rateLimitResponse,
+} from "@/lib/RateLimiter";
+
+const emailCheckLimiter = new RateLimiter("email-check", 60_000, 10);
 
 export async function GET(req: NextRequest) {
+    const ip = getClientIp(req);
+    const rateLimit = await emailCheckLimiter.check(ip);
+    if (!rateLimit.allowed) {
+        return rateLimitResponse(rateLimit.retryAfterMs);
+    }
+
     const { searchParams } = new URL(req.url);
     const email = searchParams.get("email");
 

@@ -65,7 +65,7 @@ Rate limit 초과 시:
 ```
 
 - HTTP Status: `429 Too Many Requests`
-- Headers: `Retry-After: <seconds>`
+- Headers: `Retry-After: <seconds>`, `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
 
 ---
 
@@ -101,7 +101,6 @@ export class RateLimiter {
             const pipeline = redis.pipeline();
             pipeline.zremrangebyscore(redisKey, 0, windowStart);
             pipeline.zcard(redisKey);
-            pipeline.zadd(redisKey, now, `${now}-${Math.random()}`);
             pipeline.pexpire(redisKey, this.windowMs);
 
             const results = await pipeline.exec();
@@ -120,8 +119,15 @@ export class RateLimiter {
                     oldestTimestamp + this.windowMs - now,
                     0
                 );
+                console.warn(
+                    `[RateLimiter] ${this.prefix} limit exceeded for ${key}`
+                );
                 return { allowed: false, remaining: 0, retryAfterMs };
             }
+
+            // 허용된 경우에만 요청 기록 (초과 시 ZADD 생략 → 무한 lockout 방지)
+            await redis.zadd(redisKey, now, `${now}-${crypto.randomUUID()}`);
+            await redis.pexpire(redisKey, this.windowMs);
 
             return {
                 allowed: true,
@@ -152,8 +158,10 @@ export function getClientIp(req: NextRequest): string {
 
 export function rateLimitResponse(
     retryAfterMs: number,
-    message?: string
+    message?: string,
+    limit?: number
 ): NextResponse {
+    const retryAfterSec = Math.ceil(retryAfterMs / 1000);
     return NextResponse.json(
         {
             message:
@@ -161,7 +169,16 @@ export function rateLimitResponse(
         },
         {
             status: 429,
-            headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) },
+            headers: {
+                "Retry-After": String(retryAfterSec),
+                ...(limit != null && {
+                    "X-RateLimit-Limit": String(limit),
+                    "X-RateLimit-Remaining": "0",
+                    "X-RateLimit-Reset": String(
+                        Math.ceil((Date.now() + retryAfterMs) / 1000)
+                    ),
+                }),
+            },
         }
     );
 }
@@ -170,9 +187,10 @@ export function rateLimitResponse(
 **설계 결정 사항:**
 
 - **왜 sorted set인가**: Fixed window는 경계에서 burst 허용. Sliding window는 어느 시점에서든 정확한 제한 보장.
-- **왜 `Math.random()` suffix인가**: 동일 밀리초에 여러 요청이 들어올 때 sorted set member 충돌 방지.
+- **왜 `crypto.randomUUID()` suffix인가**: 동일 밀리초에 여러 요청이 들어올 때 sorted set member 충돌 방지. `Math.random()`보다 충돌 확률이 낮고 Node.js에서 기본 제공.
 - **Graceful degradation**: Redis 에러 시 `allowed: true` 반환 — availability > security.
-- **초과 시 zadd**: Pipeline atomic 실행으로 조건부 삽입은 복잡도만 증가. TTL로 자연 만료됨.
+- **초과 시 zadd 생략**: 초과된 클라이언트가 계속 요청하면 ZADD가 window를 연장시켜 무한 lockout 상태가 될 수 있으므로, 초과 시에는 기록하지 않음. Pipeline에서 ZADD를 분리하여 허용된 경우에만 실행.
+- **Rate limit 초과 로깅**: `console.warn`으로 IP와 prefix를 기록하여 brute-force 시도 모니터링 가능.
 
 ### 2. 각 라우트 적용 방식
 
@@ -189,7 +207,10 @@ import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
 const handler = NextAuth(authOptions);
 const loginLimiter = new RateLimiter("login", 60_000, 10);
 
-async function rateLimitedPost(req: NextRequest) {
+async function rateLimitedPost(
+    req: NextRequest,
+    context: { params: Promise<{ nextauth: string[] }> }
+) {
     const ip = getClientIp(req);
     const result = await loginLimiter.check(ip);
     if (!result.allowed) {
@@ -198,7 +219,7 @@ async function rateLimitedPost(req: NextRequest) {
             "로그인 시도가 너무 많습니다. 잠시 후 다시 시도해주세요."
         );
     }
-    return handler(req, { params: Promise.resolve({}) });
+    return handler(req, context);
 }
 
 export { handler as GET, rateLimitedPost as POST };
@@ -263,7 +284,8 @@ export async function GET(req: NextRequest) {
 | Redis 다운 시 rate limit 우회                    | Medium   | Graceful degradation — 에러 시 요청 허용 (availability 우선)                            |
 | IP 스푸핑                                        | Low      | Nginx가 `X-Forwarded-For`를 덮어쓰도록 설정하면 해결                                    |
 | Shared IP (NAT) false positive                   | Low      | 10회/분은 일반 사용에 충분한 여유                                                       |
-| `NextAuth handler` 호출 시 context 매개변수      | Medium   | `handler(req, { params: Promise.resolve({}) })` — Next.js 15 App Router 시그니처 확인 필요 |
+| NextAuth POST는 login 외 signout 등도 포함       | Low      | 모든 POST action에 동일 limit 적용 — signout은 고빈도가 아니므로 무해. 필요 시 `nextauth[0]`로 분기 가능 |
+| 프론트엔드 429 응답 미처리                         | Medium   | NextAuth `signIn()`이 비표준 429를 받을 때 동작 확인 필요. 회원가입/이메일 체크 폼도 429 에러 메시지 표시 검증 |
 
 ### Nginx 설정 추가 필요 (프로덕션 배포 전)
 
