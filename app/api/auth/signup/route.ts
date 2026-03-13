@@ -2,8 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { SignUpUsecase } from "@/backend/member/application/usecase/SignUpUsecase";
 import { SignUpRequestDto } from "@/backend/member/application/usecase/dto/SignUpRequestDto";
+import {
+    RateLimiter,
+    getClientIp,
+    rateLimitResponse,
+} from "@/lib/RateLimiter";
+
+const signupLimiter = new RateLimiter("signup", 3_600_000, 5);
 
 export async function POST(req: NextRequest) {
+    const ip = getClientIp(req);
+    const rateLimit = await signupLimiter.check(ip);
+    if (!rateLimit.allowed) {
+        return rateLimitResponse(
+            rateLimit.retryAfterMs,
+            "회원가입 요청이 너무 많습니다. 잠시 후 다시 시도해주세요."
+        );
+    }
+
     try {
         const { nickname, email, password, birthDate, gender } =
             await req.json();
