@@ -2,6 +2,22 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Docker - Start Redis",
+            "type": "shell",
+            "command": "docker",
+            "args": ["start", "gamechu-redis"],
+            "isBackground": true,
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "dedicated",
+                "close": true
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
             "label": "SSH Tunnel - GameChu DB",
             "type": "shell",
             "command": "ssh",
