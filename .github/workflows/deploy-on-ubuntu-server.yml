@@ -19,15 +19,16 @@ jobs:
 
     # 두번째 단계: 테스트
     test:
+        needs: build
         runs-on: [self-hosted, gamechu-server]
 
         steps:
             - name: Test Next.js Project
-              run: echo "Test Next.js Project"
+              run: /home/gamechu/www/gamechu/next-app-test.sh
 
     # 세번째 단계: 배포
     deploy:
-        needs: build
+        needs: [build, test]
         runs-on: [self-hosted, gamechu-server]
 
         steps:

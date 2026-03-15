@@ -5,15 +5,16 @@ import { CreateReviewUsecase } from "@/backend/review/application/usecase/Create
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 
-const repository = new PrismaReviewRepository();
-const usecase = new CreateReviewUsecase(repository);
-
 export async function POST(req: NextRequest) {
     const memberId = await getAuthUserId();
 
     if (!memberId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    const repository = new PrismaReviewRepository();
+    const usecase = new CreateReviewUsecase(repository);
+
     const body = await req.json();
     const result = await usecase.execute(memberId, body);
     return NextResponse.json(result);
