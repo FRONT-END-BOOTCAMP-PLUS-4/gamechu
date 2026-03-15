@@ -1,6 +1,6 @@
 # Testing Setup — Context
 
-> Last Updated: 2026-03-14
+> Last Updated: 2026-03-15 (session 4 — Phase H patterns added)
 
 ---
 
@@ -20,7 +20,180 @@
 
 ---
 
-## Key Architecture Facts for Testing
+## Current Implementation State
+
+**All phases complete except remaining E hooks + coverage check + PR.**
+
+**Test count: 69 tests passing across 25 test files (target was ≥ 55).**
+
+### What was built this session
+
+#### Infrastructure (Phase A)
+- Installed: `vitest@4.1.0`, `@vitejs/plugin-react@6.0.1`, `@testing-library/react@16.3.2`, `@testing-library/user-event@14.6.1`, `@testing-library/jest-dom@6.9.1`, `jsdom@28.1.0`
+- `vitest.config.ts` at project root
+- `tests/setup.ts` with jest-dom + afterEach cleanup
+- Scripts added to `package.json`: `test`, `test:watch`, `test:coverage`, `lint`, `format`
+
+#### Mock Repositories (Phase B)
+All in `tests/mocks/`:
+- `MockArenaRepository.ts`
+- `MockMemberRepository.ts`
+- `MockScoreRecordRepository.ts`
+- `MockReviewRepository.ts`
+- `MockVoteRepository.ts`
+
+Each exports a factory function (not a class): `MockArenaRepository()` returns a plain object with all interface methods set to `vi.fn()`.
+
+#### Usecase Tests (Phase C — 25 tests)
+- `backend/member/application/usecase/__tests__/LoginUsecase.test.ts` — 3 tests (uses `bcryptjs.hash` to create real hashed passwords in test data)
+- `backend/member/application/usecase/__tests__/SignUpUsecase.test.ts` — 2 tests
+- `backend/member/application/usecase/__tests__/EmailCheckUsecase.test.ts` — 2 tests
+- `backend/arena/application/usecase/__tests__/CreateArenaUsecase.test.ts` — 2 tests
+- `backend/arena/application/usecase/__tests__/EndArenaUsecase.test.ts` — 3 tests
+- `backend/arena/application/usecase/__tests__/UpdateArenaStatusUsecase.test.ts` — 3 tests
+- `backend/score-policy/application/usecase/__tests__/ApplyArenaScoreUsecase.test.ts` — 4 tests (WIN/DRAW/JOIN/CANCEL)
+- `backend/score-policy/application/usecase/__tests__/ApplyReviewScoreUsecase.test.ts` — 5 tests (LIKE <20, LIKE ≥20, UNLIKE, DELETE 10 likes, DELETE 25 likes)
+- `backend/score-policy/application/usecase/__tests__/ApplyAttendanceScoreUsecase.test.ts` — 3 tests (new day, same day, null)
+- `backend/review/application/usecase/__tests__/CreateReviewUsecase.test.ts` — 2 tests
+- `backend/review/application/usecase/__tests__/UpdateReviewUsecase.test.ts` — 1 test
+- `backend/review/application/usecase/__tests__/DeleteReviewUsecase.test.ts` — 2 tests
+- `backend/vote/application/usecase/__tests__/CreateVoteUsecase.test.ts` — 5 tests
+- `backend/vote/application/usecase/__tests__/UpdateVoteUsecase.test.ts` — 2 tests
+
+#### Zustand Store Tests (Phase D — 12 tests)
+- `stores/__tests__/AuthStore.test.ts` — 3 tests
+- `stores/__tests__/loadingStore.test.ts` — 3 tests
+- `stores/__tests__/modalStore.test.ts` — 3 tests
+- `stores/__tests__/useArenaStore.test.ts` — 3 tests
+
+Pattern: `useXxxStore.setState({...})` to reset between tests (no `renderHook` needed — tests call `useXxxStore.getState()` directly).
+
+#### Hook Tests (Phase E — 5 tests)
+- `hooks/__tests__/useArenas.test.ts` — 5 tests
+
+Remaining hooks not yet written: `useArenaList`, `useVote`, `useVoteList`, `useArenaAutoStatus`, `useArenaAutoStatusDetail`.
+
+#### API Route Tests (Phase G — 15 tests)
+- `app/api/arenas/__tests__/route.test.ts` — 3 tests
+- `app/api/auth/signup/__tests__/route.test.ts` — 2 tests
+- `app/api/games/__tests__/route.test.ts` — 1 test
+- `app/api/member/arenas/__tests__/route.test.ts` — 2 tests
+- `app/api/member/arenas/[id]/__tests__/route.test.ts` — 3 tests
+- `app/api/member/games/[gameId]/reviews/__tests__/route.test.ts` — 2 tests
+
+#### CI Update (Phase F)
+- `.github/workflows/deploy-on-ubuntu-server.yml`: `test` job now runs `/home/gamechu/www/gamechu/next-app-test.sh` (shell script on server, not `npm test` directly), has `needs: build`; `deploy` now `needs: [build, test]`
+
+---
+
+## Key Decisions Made This Session
+
+### 1. jsdom via docblock, not environmentMatchGlobs
+
+The `environmentMatchGlobs` in `vitest.config.ts` was set to `["hooks/**", "jsdom"]` and `["stores/**", "jsdom"]`, but these globs did NOT match the test files at `hooks/__tests__/useArenas.test.ts`. Rather than fixing the glob (which would require `"hooks/__tests__/**"`), the hook test file uses a docblock:
+
+```ts
+// @vitest-environment jsdom
+```
+
+Store tests work without jsdom (Zustand `getState()` doesn't need browser globals). Only hook tests using `renderHook` require jsdom.
+
+**The `environmentMatchGlobs` in `vitest.config.ts` still references `hooks/**` and `stores/**` but is effectively unused — the docblock takes precedence for hooks. This is fine.**
+
+### 2. Vitest 4.x requires `function`/`class` syntax for constructor mocks
+
+Vitest 4.x enforces that `vi.fn()` mocks used as `new` constructors (i.e., `new PrismaXxxRepository()`) must use `function` keyword or `class` syntax in their implementation. Arrow functions silently break `new`.
+
+**Correct:**
+```ts
+vi.mock("@/backend/.../PrismaArenaRepository", () => ({
+    PrismaArenaRepository: vi.fn(function () {
+        this.findById = vi.fn().mockResolvedValue({ ... });
+    }),
+}));
+```
+
+**Wrong (arrow function — silently fails in Vitest 4.x):**
+```ts
+vi.mock("@/backend/.../PrismaArenaRepository", () => ({
+    PrismaArenaRepository: vi.fn().mockImplementation(() => ({ findById: vi.fn() })),
+}));
+```
+
+### 3. EndArenaUsecase takes ApplyArenaScoreUsecase directly, not MockArenaRepository
+
+`EndArenaUsecase` constructor: `(arenaRepository, applyArenaScoreUsecase, voteRepository)`. The `applyArenaScoreUsecase` is passed as an inline mock `{ execute: vi.fn() }`, NOT via the `MockArenaRepository` factory (it's not a repository — it's a usecase).
+
+### 4. reviews/route.ts was refactored (G6 prerequisite)
+
+`app/api/member/games/[gameId]/reviews/route.ts` had module-scope instantiation:
+```ts
+const repository = new PrismaReviewRepository();  // module scope
+const usecase = new CreateReviewUsecase(repository);
+```
+
+This was moved inside the `POST` handler body so `vi.mock()` can intercept it. Without this refactor, the mock is applied AFTER the module is evaluated, so the original class runs.
+
+### 5. Score usecases use real ScorePolicy (no mock needed)
+
+`ApplyArenaScoreUsecase`, `ApplyReviewScoreUsecase`, `ApplyAttendanceScoreUsecase` all take a `ScorePolicy` instance. Rather than mocking it, tests use `new ScorePolicy()` directly — it's a pure class with no external dependencies. This gives better regression coverage.
+
+---
+
+## Files Modified This Session
+
+| File | Change |
+|------|--------|
+| `package.json` | Added `test`, `test:watch`, `test:coverage`, `lint`, `format` scripts |
+| `vitest.config.ts` | Created (new file) |
+| `tests/setup.ts` | Created (new file) |
+| `tests/mocks/MockArenaRepository.ts` | Created (new file) |
+| `tests/mocks/MockMemberRepository.ts` | Created (new file) |
+| `tests/mocks/MockScoreRecordRepository.ts` | Created (new file) |
+| `tests/mocks/MockReviewRepository.ts` | Created (new file) |
+| `tests/mocks/MockVoteRepository.ts` | Created (new file) |
+| `backend/member/application/usecase/__tests__/LoginUsecase.test.ts` | Created (new file) |
+| `backend/member/application/usecase/__tests__/SignUpUsecase.test.ts` | Created (new file) |
+| `backend/member/application/usecase/__tests__/EmailCheckUsecase.test.ts` | Created (new file) |
+| `backend/arena/application/usecase/__tests__/CreateArenaUsecase.test.ts` | Created (new file) |
+| `backend/arena/application/usecase/__tests__/EndArenaUsecase.test.ts` | Created (new file) |
+| `backend/arena/application/usecase/__tests__/UpdateArenaStatusUsecase.test.ts` | Created (new file) |
+| `backend/score-policy/application/usecase/__tests__/ApplyArenaScoreUsecase.test.ts` | Created (new file) |
+| `backend/score-policy/application/usecase/__tests__/ApplyReviewScoreUsecase.test.ts` | Created (new file) |
+| `backend/score-policy/application/usecase/__tests__/ApplyAttendanceScoreUsecase.test.ts` | Created (new file) |
+| `backend/review/application/usecase/__tests__/CreateReviewUsecase.test.ts` | Created (new file) |
+| `backend/review/application/usecase/__tests__/UpdateReviewUsecase.test.ts` | Created (new file) |
+| `backend/review/application/usecase/__tests__/DeleteReviewUsecase.test.ts` | Created (new file) |
+| `backend/vote/application/usecase/__tests__/CreateVoteUsecase.test.ts` | Created (new file) |
+| `backend/vote/application/usecase/__tests__/UpdateVoteUsecase.test.ts` | Created (new file) |
+| `stores/__tests__/AuthStore.test.ts` | Created (new file) |
+| `stores/__tests__/loadingStore.test.ts` | Created (new file) |
+| `stores/__tests__/modalStore.test.ts` | Created (new file) |
+| `stores/__tests__/useArenaStore.test.ts` | Created (new file) |
+| `hooks/__tests__/useArenas.test.ts` | Created (new file, `// @vitest-environment jsdom` docblock) |
+| `app/api/arenas/__tests__/route.test.ts` | Created (new file) |
+| `app/api/auth/signup/__tests__/route.test.ts` | Created (new file) |
+| `app/api/games/__tests__/route.test.ts` | Created (new file) |
+| `app/api/member/arenas/__tests__/route.test.ts` | Created (new file) |
+| `app/api/member/arenas/[id]/__tests__/route.test.ts` | Created (new file) |
+| `app/api/member/games/[gameId]/reviews/__tests__/route.test.ts` | Created (new file) |
+| `app/api/member/games/[gameId]/reviews/route.ts` | **Refactored**: moved `repository`/`usecase` from module scope into `POST` handler body |
+| `.github/workflows/deploy-on-ubuntu-server.yml` | `test` job: `echo` → `/home/gamechu/www/gamechu/next-app-test.sh`, added `needs: build`; `deploy`: `needs: [build, test]` |
+
+---
+
+## Next Immediate Steps
+
+1. **Optional**: Write remaining hook tests (`useArenaList`, `useVote`, `useVoteList`) — straightforward same pattern as `useArenas`
+2. **Optional**: Write timer-based hook tests (`useArenaAutoStatus`, `useArenaAutoStatusDetail`) — requires `vi.useFakeTimers()` pattern, more complex
+3. **Verify coverage**: `npm run test:coverage` — check ≥ 60% on usecases, ≥ 40% on routes
+4. **Commit**: `git add` all new files, commit with message like `[feat/#264] vitest 설정 및 69개 테스트 작성`
+5. **PR**: Open PR `feat/#264` → `dev` following `docs/CODE_CONVENTIONS.md` GitHub workflow
+6. **Verify CI**: After merge, confirm `test` job runs on next push to `main`
+
+---
+
+## Architecture Facts for Testing
 
 ### Usecases are constructor-injected (easy to unit test)
 ```ts
@@ -34,46 +207,64 @@ class CreateArenaUsecase {
 
 ### Zustand stores use `create()` with a reset pattern
 ```ts
-// Reset between tests:
+// Reset between tests (call BEFORE each test, not after):
 useAuthStore.setState({ user: null })
+// Access state without renderHook:
+useAuthStore.getState().setUser({ id: "u1" })
+expect(useAuthStore.getState().user).toEqual({ id: "u1" })
 ```
 
 ### Hooks use raw fetch
 ```ts
-// All 8 hooks follow this pattern:
+// All hooks follow this pattern:
 const res = await fetch(`/api/...`)
 ```
-→ Mock with `vi.stubGlobal("fetch", vi.fn())`
+→ Mock with `vi.stubGlobal("fetch", vi.fn())` in `beforeEach`. `vi.unstubAllGlobals()` in afterEach (already in `tests/setup.ts`).
+
+### Hook tests require jsdom
+Add docblock at top of file:
+```ts
+// @vitest-environment jsdom
+```
+
+### Vitest 4.x constructor mock syntax
+```ts
+// For classes used with `new` in the route handler:
+vi.mock("@/path/to/PrismaXxx", () => ({
+    PrismaXxx: vi.fn(function () {
+        this.methodA = vi.fn().mockResolvedValue(...);
+    }),
+}));
+```
+
+### Score policyIds (from ScorePolicy.ts)
+| Action | Delta | PolicyId |
+|--------|-------|----------|
+| Arena JOIN | -100 | 4 |
+| Arena WIN | +190 | 5 |
+| Arena DRAW | +100 | 6 |
+| Arena CANCEL | +100 | 7 |
+| Review LIKE (< 20 likes) | +5 | 3 |
+| Review UNLIKE | -5 | 8 |
+| Review DELETE | -min(likes×5, 100) | 2 |
+| Attendance | +5 | 1 |
 
 ---
 
-## Critical Paths
+## Key Architecture Facts for Testing
 
-| File | Role |
-|------|------|
-| `vitest.config.ts` | Test runner config (root) |
-| `tests/setup.ts` | Global test setup (jest-dom + cleanup) |
-| `tests/mocks/` | Shared mock factory functions |
-| `backend/**/usecase/__tests__/*.test.ts` | Usecase unit tests |
-| `stores/__tests__/*.test.ts` | Zustand store tests |
-| `hooks/__tests__/*.test.ts` | Hook tests |
-
----
-
-## Vitest Config Key Decisions
+### Vitest Config Key Decisions
 
 | Decision | Choice | Reason |
 |----------|--------|--------|
 | Test runner | Vitest (not Jest) | Native ESM, Vite-compatible, faster, works with Next.js 15 |
 | Default environment | `node` | Usecases are pure Node — no browser APIs needed |
-| Hook/store environment | `jsdom` via `environmentMatchGlobs: ["hooks/__tests__/**", "stores/__tests__/**"]` | React hooks + Zustand need browser globals — globs match test file paths, must be explicit subdirectory paths |
+| Hook environment | `// @vitest-environment jsdom` docblock | Simpler than glob matching which didn't work reliably |
 | `@/` alias | Manually set in `resolve.alias` | tsconfig aliases not auto-applied by Vitest |
 | React plugin | `@vitejs/plugin-react` | JSX transform for `@testing-library/react` |
-| Coverage provider | `v8` | Built into Node, no extra install |
+| ScorePolicy | Real instance, not mock | Pure class with no external deps — better coverage |
 
----
-
-## Packages to Install
+### Packages to Install
 
 ```bash
 npm install -D vitest @vitejs/plugin-react @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom
@@ -83,53 +274,71 @@ Do NOT install `@types/testing-library__jest-dom` — deprecated, ships type con
 
 ---
 
-## Usecase Target List (Phase C)
+## Phase H — Test Expansion Patterns
 
-Priority 1 — Auth (3):
-- `backend/member/application/usecase/LoginUsecase.ts`
-- `backend/member/application/usecase/SignUpUsecase.ts`
-- `backend/member/application/usecase/EmailCheckUsecase.ts`
+### H1: Mocking ArenaCacheService (not injected)
 
-Priority 2 — Arena (3):
-- `backend/arena/application/usecase/CreateArenaUsecase.ts`
-- `backend/arena/application/usecase/EndArenaUsecase.ts`
-- `backend/arena/application/usecase/UpdateArenaStatusUsecase.ts`
+`GetArenaDetailUsecase` instantiates `ArenaCacheService` inside its constructor — it is NOT passed in. Mock at module scope:
 
-Priority 3 — Score (3):
-- `backend/score-policy/application/usecase/ApplyArenaScoreUsecase.ts`
-- `backend/score-policy/application/usecase/ApplyReviewScoreUsecase.ts`
-- `backend/score-policy/application/usecase/ApplyAttendanceScoreUsecase.ts`
+```ts
+vi.mock("@/backend/arena/infra/cache/ArenaCacheService", () => ({
+    ArenaCacheService: vi.fn(function () {
+        this.getArenaDetailCache = vi.fn().mockResolvedValue(null); // default: miss
+        this.setArenaDetailCache = vi.fn().mockResolvedValue(undefined);
+    }),
+}));
+```
 
-Priority 4 — Review + Vote (5):
-- `backend/review/application/usecase/CreateReviewUsecase.ts`
-- `backend/review/application/usecase/UpdateReviewUsecase.ts`
-- `backend/review/application/usecase/DeleteReviewUsecase.ts`
-- `backend/vote/application/usecase/CreateVoteUsecase.ts`
-- `backend/vote/application/usecase/UpdateVoteUsecase.ts`
+For cache hit test: `vi.mocked(ArenaCacheService).mock.instances[0].getArenaDetailCache.mockResolvedValueOnce(cachedData)` — or reset the mock in `beforeEach` and override per test.
 
----
+`voteRepository.countByArenaIds` returns an array: `[{ arenaId, totalCount, leftCount, rightCount }]`. Mock it returning `[]` to trigger the zero-vote path.
 
-## Store Target List (Phase D)
+### H2: MockReviewLikeRepository
 
-- `stores/AuthStore.ts` → 2 actions: `setUser`, `clearUser`
-- `stores/loadingStore.ts`
-- `stores/modalStore.ts`
-- `stores/useArenaStore.ts` → 2 actions: `setArenaData`, `clearArenaData`
+Add `tests/mocks/MockReviewLikeRepository.ts`:
+```ts
+export function MockReviewLikeRepository() {
+    return {
+        isLiked: vi.fn(),
+        count: vi.fn(),
+        like: vi.fn(),
+        unlike: vi.fn(),
+    };
+}
+```
 
----
+`ToggleReviewLikeUsecase` takes `(likeRepo, reviewRepo, applyReviewScoreUsecase)`. Pass inline `{ execute: vi.fn() }` for the usecase (same pattern as `EndArenaUsecase`).
 
-## Hook Target List (Phase E)
+### H4: PATCH route — params pattern
 
-- `hooks/useArenas.ts` — main arena list fetch
-- `hooks/useArenaList.ts` — profile arena list fetch
-- `hooks/useVote.ts` — single vote fetch
-- `hooks/useVoteList.ts` — vote list fetch
-- `hooks/useArenaAutoStatus.ts` — status auto-update
-- `hooks/useArenaAutoStatusDetail.ts` — detail auto-update
+Same as G5 DELETE — `params` must be `Promise.resolve({ id: "1" })`:
+```ts
+const res = await PATCH(
+    new Request("http://localhost/api/member/arenas/1", {
+        method: "PATCH",
+        body: JSON.stringify({ description: "updated" }),
+    }),
+    { params: Promise.resolve({ id: "1" }) }
+);
+```
 
-Deferred:
-- `hooks/useArenaSocket.ts` — requires socket.io-client mock
-- `hooks/useArenaChatManagement.ts` — requires socket.io-client mock
+Body validation fires before auth — test 400 without needing auth mock.
+
+### H5: attend route mock pattern
+
+`ApplyAttendanceScoreUsecase` takes `(ScorePolicy, MemberRepository, ScoreRecordRepository)`. All three are instantiated inside the route handler. Mock all three Prisma repos:
+
+```ts
+vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
+    PrismaMemberRepository: vi.fn(function () {
+        this.getLastAttendedDate = vi.fn().mockResolvedValue(null);
+        this.incrementScore = vi.fn().mockResolvedValue(undefined);
+        this.updateLastAttendedDate = vi.fn().mockResolvedValue(undefined);
+    }),
+}));
+```
+
+`ScorePolicy` is a pure class — use the real instance (no mock needed, same as score usecase tests).
 
 ---
 
@@ -141,38 +350,28 @@ Deferred:
 
 ---
 
-## API Route Test Target List (Phase G)
+## API Route Test Notes
 
-These tests import handlers directly and pass a native `Request` object — no running server needed.
-The usecase layer is mocked via `vi.mock()`.
+Routes tested by importing handler + calling with native `Request`. Usecase layer is fully mocked. No DB/server needed.
 
-Key mock needed in all route tests:
-```ts
-vi.mock("@/utils/GetAuthUserId.server", () => ({
-    getAuthUserId: vi.fn().mockResolvedValue("test-user-id"),
-}))
+| Route | Notes |
+|-------|-------|
+| `GET /api/arenas` | Mocks `GetArenaUsecase`, `PrismaArenaRepository`, `PrismaMemberRepository`, `PrismaVoteRepository` |
+| `POST /api/auth/signup` | Also mocks `@/lib/redis` (RateLimiter uses redis at module scope) |
+| `GET /api/games` | Mocks `@/lib/redis` (top-level import causes ECONNREFUSED) |
+| `POST /api/member/arenas` | Mocks `PrismaMemberRepository.findById` returning `{ score: 200 }` (score gate) |
+| `DELETE /api/member/arenas/[id]` | `params` must be `Promise.resolve({ id: "1" })` (Next.js 15 awaits params) |
+| `POST /api/member/games/[gameId]/reviews` | Route was refactored (G6 prerequisite) — instantiation now inside handler |
+
+---
+
+## Uncommitted Changes
+
+All new files are **uncommitted**. Run:
+```bash
+git status  # verify all new files shown as untracked
+git add vitest.config.ts tests/ backend/**/__tests__/ stores/__tests__/ hooks/__tests__/ app/api/**/__tests__/ app/api/member/games/ .github/workflows/ package.json
+git commit -m "[feat/#264] vitest 설정 및 69개 테스트 작성 (Phase A-G 완료)"
 ```
 
-Routes:
-- `app/api/arenas/route.ts` — GET (includes §2.2 pageSize=0 regression check)
-- `app/api/auth/signup/route.ts` — POST
-- `app/api/games/route.ts` — GET
-- `app/api/member/arenas/route.ts` — POST (auth required)
-- `app/api/member/arenas/[id]/route.ts` — DELETE (ownership check)
-- `app/api/member/games/[gameId]/reviews/route.ts` — POST (validation)
-
-## Test Type Decision Summary
-
-| Type | In this task? | Reason |
-|------|-------------|--------|
-| Unit (usecase, store, hook) | ✅ Phase C/D/E | Pure logic, no infra needed |
-| API Route (mocked usecase) | ✅ Phase G | `Request` object importable, no server |
-| Integration (Prisma + real DB) | ❌ Deferred | Needs test DB, Docker, CI service containers |
-| E2E (Playwright) | ❌ §4.4 | Depends on this task completing |
-| Performance (k6) | ❌ Premature | Low traffic, wrong tool for this task |
-| Security SAST | ❌ §7.2 | Belongs in lint step |
-| Security DAST | ❌ §2.3 | Needs running server |
-
-## Prisma Path Note
-
-Project uses `@/prisma/generated` (not `@prisma/client`). Usecases do NOT import Prisma directly — they use repository interfaces. Therefore, **no Prisma mocking is needed for Phase C usecase tests**. Prisma mocking becomes relevant only for integration tests (API route layer) — deferred.
+Then create PR `feat/#264` → `dev`.
