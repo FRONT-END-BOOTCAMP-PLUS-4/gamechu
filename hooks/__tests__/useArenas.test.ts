@@ -19,7 +19,7 @@ describe("useFetchArenas", () => {
     it("returns arenaListDto on successful fetch", async () => {
         vi.mocked(fetch).mockResolvedValue({
             json: () => Promise.resolve(mockArenaListDto),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() =>
             useFetchArenas({ status: 1, mine: false, pageSize: 10 })
@@ -49,7 +49,7 @@ describe("useFetchArenas", () => {
     it("loading starts true and ends false", async () => {
         vi.mocked(fetch).mockResolvedValue({
             json: () => Promise.resolve(mockArenaListDto),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() =>
             useFetchArenas({ status: 0, mine: false, pageSize: 10 })
@@ -62,7 +62,7 @@ describe("useFetchArenas", () => {
     it("builds correct URL params with status, mine, pageSize", async () => {
         vi.mocked(fetch).mockResolvedValue({
             json: () => Promise.resolve(mockArenaListDto),
-        } as any);
+        } as unknown as Response);
 
         renderHook(() =>
             useFetchArenas({ status: 2, mine: true, pageSize: 20, currentPage: 2 })
@@ -87,7 +87,7 @@ describe("useFetchArenas", () => {
     it("uses memberId param when targetMemberId is provided", async () => {
         vi.mocked(fetch).mockResolvedValue({
             json: () => Promise.resolve(mockArenaListDto),
-        } as any);
+        } as unknown as Response);
 
         renderHook(() =>
             useFetchArenas({

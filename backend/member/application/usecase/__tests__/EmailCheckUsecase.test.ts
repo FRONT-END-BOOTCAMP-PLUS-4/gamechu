@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { EmailCheckUsecase } from "../EmailCheckUsecase";
 import { MockMemberRepository } from "@/tests/mocks/MockMemberRepository";
+import { Member } from "@/prisma/generated";
 
 describe("EmailCheckUsecase", () => {
     it("available: findByEmail returns null → isDuplicate false", async () => {
@@ -18,7 +19,7 @@ describe("EmailCheckUsecase", () => {
         vi.mocked(repo.findByEmail).mockResolvedValue({
             id: "member-1",
             email: "taken@example.com",
-        } as any);
+        } as unknown as Member);
 
         const usecase = new EmailCheckUsecase(repo);
         const result = await usecase.execute("taken@example.com");

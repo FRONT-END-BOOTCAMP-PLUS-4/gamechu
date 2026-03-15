@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import useArenaStore from "../useArenaStore";
+import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 
 const mockArenaData = {
     id: 1,
     title: "Test Arena",
-} as any;
+} as unknown as ArenaDetailDto;
 
 describe("useArenaStore", () => {
     beforeEach(() => {

@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { CreateReviewUsecase } from "../CreateReviewUsecase";
 import { MockReviewRepository } from "@/tests/mocks/MockReviewRepository";
+import { ReviewDto } from "../dto/ReviewDto";
+import { ReviewByMembersDto } from "../dto/ReviewByMembersDto";
 
 const mockReviewDto = {
     id: 1,
@@ -15,7 +17,7 @@ const mockReviewDto = {
     isLiked: false,
     createdAt: new Date(),
     updatedAt: new Date(),
-} as any;
+} as unknown as ReviewDto;
 
 describe("CreateReviewUsecase", () => {
     it("happy path: new review for game creates review", async () => {
@@ -41,7 +43,7 @@ describe("CreateReviewUsecase", () => {
     it("error: duplicate review for same game throws", async () => {
         const repo = MockReviewRepository();
         vi.mocked(repo.findByMemberId).mockResolvedValue([
-            { gameId: 10, id: 99, memberId: "m1" } as any,
+            { gameId: 10, id: 99, memberId: "m1" } as unknown as ReviewByMembersDto,
         ]);
 
         const usecase = new CreateReviewUsecase(repo);

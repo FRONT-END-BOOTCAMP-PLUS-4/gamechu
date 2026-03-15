@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { LoginUsecase } from "../LoginUsecase";
 import { MockMemberRepository } from "@/tests/mocks/MockMemberRepository";
 import { hash } from "bcryptjs";
+import { Member } from "@/prisma/generated";
 
 describe("LoginUsecase", () => {
     it("happy path: valid credentials returns LoginResponseDto", async () => {
@@ -18,7 +19,7 @@ describe("LoginUsecase", () => {
             score: 0,
             lastAttendedDate: null,
             createdAt: new Date(),
-        } as any);
+        } as unknown as Member);
 
         const usecase = new LoginUsecase(repo);
         const result = await usecase.execute({
@@ -44,7 +45,7 @@ describe("LoginUsecase", () => {
             score: 0,
             lastAttendedDate: null,
             createdAt: new Date(),
-        } as any);
+        } as unknown as Member);
 
         const usecase = new LoginUsecase(repo);
         const result = await usecase.execute({

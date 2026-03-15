@@ -15,11 +15,11 @@ describe("useVoteList", () => {
             .mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve(mockVote1),
-            } as any)
+            } as unknown as Response)
             .mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve(mockVote2),
-            } as any);
+            } as unknown as Response);
 
         const { result } = renderHook(() =>
             useVoteList({ arenaIds: [1, 2] })
@@ -44,7 +44,7 @@ describe("useVoteList", () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: false,
             json: () => Promise.resolve({}),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() =>
             useVoteList({ arenaIds: [1] })
@@ -60,7 +60,7 @@ describe("useVoteList", () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
             json: () => Promise.resolve({ votes: [] }),
-        } as any);
+        } as unknown as Response);
 
         renderHook(() => useVoteList({ arenaIds: [10, 20] }));
 
