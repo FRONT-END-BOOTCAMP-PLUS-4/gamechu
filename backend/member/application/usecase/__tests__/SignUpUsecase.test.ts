@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { SignUpUsecase } from "../SignUpUsecase";
 import { MockMemberRepository } from "@/tests/mocks/MockMemberRepository";
+import { Member } from "@/prisma/generated";
+import { SignUpRequestDto } from "../dto/SignUpRequestDto";
 
 const mockMember = {
     id: "new-member-id",
@@ -13,7 +15,7 @@ const mockMember = {
     score: 0,
     lastAttendedDate: null,
     createdAt: new Date(),
-} as any;
+} as unknown as Member;
 
 describe("SignUpUsecase", () => {
     it("happy path: new email creates member", async () => {
@@ -28,7 +30,7 @@ describe("SignUpUsecase", () => {
             password: "password123",
             birthDate: "1990-01-01",
             gender: "M",
-        } as any);
+        } as unknown as SignUpRequestDto);
 
         expect(repo.create).toHaveBeenCalledOnce();
         expect(result.email).toBe("new@example.com");
@@ -46,7 +48,7 @@ describe("SignUpUsecase", () => {
                 password: "password123",
                 birthDate: "1990-01-01",
                 gender: "M",
-            } as any)
+            } as unknown as SignUpRequestDto)
         ).rejects.toThrow("이미 존재하는 이메일입니다.");
     });
 });

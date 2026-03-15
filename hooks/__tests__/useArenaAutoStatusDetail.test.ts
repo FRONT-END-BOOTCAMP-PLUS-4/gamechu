@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useArenaAutoStatusDetail } from "../useArenaAutoStatusDetail";
 import useArenaStore from "@/stores/useArenaStore";
+import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 
 const makeArenaData = (overrides: object) => ({
     id: 1,
@@ -31,7 +32,7 @@ describe("useArenaAutoStatusDetail", () => {
     it("calls PATCH immediately for past startDate (status 2 → 3)", async () => {
         const pastDate = new Date(Date.now() - 10_000).toISOString();
         useArenaStore.setState({
-            arenaData: makeArenaData({ id: 1, status: 2, startDate: pastDate }) as any,
+            arenaData: makeArenaData({ id: 1, status: 2, startDate: pastDate }) as unknown as ArenaDetailDto,
         });
 
         renderHook(() => useArenaAutoStatusDetail({}));
@@ -49,7 +50,7 @@ describe("useArenaAutoStatusDetail", () => {
     it("fires PATCH after delay for future startDate (status 2)", async () => {
         const futureDate = new Date(Date.now() + 5_000).toISOString();
         useArenaStore.setState({
-            arenaData: makeArenaData({ id: 2, status: 2, startDate: futureDate }) as any,
+            arenaData: makeArenaData({ id: 2, status: 2, startDate: futureDate }) as unknown as ArenaDetailDto,
         });
 
         renderHook(() => useArenaAutoStatusDetail({}));
@@ -87,7 +88,7 @@ describe("useArenaAutoStatusDetail", () => {
                 status: 1,
                 startDate: pastDate,
                 challengerId: null,
-            }) as any,
+            }) as unknown as ArenaDetailDto,
         });
 
         renderHook(() => useArenaAutoStatusDetail({}));
@@ -106,7 +107,7 @@ describe("useArenaAutoStatusDetail", () => {
         const pastDate = new Date(Date.now() - 10_000).toISOString();
         const onStatusUpdate = vi.fn();
         useArenaStore.setState({
-            arenaData: makeArenaData({ id: 4, status: 2, startDate: pastDate }) as any,
+            arenaData: makeArenaData({ id: 4, status: 2, startDate: pastDate }) as unknown as ArenaDetailDto,
         });
 
         renderHook(() => useArenaAutoStatusDetail({ onStatusUpdate }));
@@ -121,7 +122,7 @@ describe("useArenaAutoStatusDetail", () => {
     it("clears timer on unmount", async () => {
         const futureDate = new Date(Date.now() + 10_000).toISOString();
         useArenaStore.setState({
-            arenaData: makeArenaData({ id: 5, status: 2, startDate: futureDate }) as any,
+            arenaData: makeArenaData({ id: 5, status: 2, startDate: futureDate }) as unknown as ArenaDetailDto,
         });
 
         const { unmount } = renderHook(() => useArenaAutoStatusDetail({}));

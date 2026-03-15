@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { UpdateArenaStatusUsecase } from "../UpdateArenaStatusUsecase";
 import { MockArenaRepository } from "@/tests/mocks/MockArenaRepository";
+import { Arena } from "@/prisma/generated";
+import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
 
 function makeApplyArenaScoreMock() {
     return { execute: vi.fn().mockResolvedValue(undefined) };
@@ -16,14 +18,14 @@ describe("UpdateArenaStatusUsecase", () => {
             creatorId: "creator-1",
             challengerId: null,
             status: 1,
-        } as any);
+        } as unknown as Arena);
         vi.mocked(arenaRepo.updateChallengerAndStatus).mockResolvedValue(
             undefined
         );
 
         const usecase = new UpdateArenaStatusUsecase(
             arenaRepo,
-            applyScore as any
+            applyScore as unknown as ApplyArenaScoreUsecase
         );
         await usecase.execute({
             arenaId: 1,
@@ -51,12 +53,12 @@ describe("UpdateArenaStatusUsecase", () => {
             creatorId: "creator-1",
             challengerId: "challenger-1",
             status: 2,
-        } as any);
+        } as unknown as Arena);
         vi.mocked(arenaRepo.updateStatus).mockResolvedValue(undefined);
 
         const usecase = new UpdateArenaStatusUsecase(
             arenaRepo,
-            applyScore as any
+            applyScore as unknown as ApplyArenaScoreUsecase
         );
         await usecase.execute({ arenaId: 1, status: 3 });
 
@@ -72,7 +74,7 @@ describe("UpdateArenaStatusUsecase", () => {
 
         const usecase = new UpdateArenaStatusUsecase(
             arenaRepo,
-            applyScore as any
+            applyScore as unknown as ApplyArenaScoreUsecase
         );
         await expect(
             usecase.execute({ arenaId: 999, status: 3 })

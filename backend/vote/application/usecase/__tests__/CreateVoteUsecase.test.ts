@@ -2,20 +2,21 @@ import { describe, it, expect, vi } from "vitest";
 import { CreateVoteUsecase } from "../CreateVoteUsecase";
 import { MockVoteRepository } from "@/tests/mocks/MockVoteRepository";
 import { MockArenaRepository } from "@/tests/mocks/MockArenaRepository";
+import { Arena, Vote } from "@/prisma/generated";
 
 const arena = {
     id: 1,
     creatorId: "creator-1",
     challengerId: "challenger-1",
     status: 4,
-} as any;
+} as unknown as Arena;
 
 const savedVote = {
     id: 10,
     arenaId: 1,
     memberId: "voter-1",
     votedTo: "creator-1",
-} as any;
+} as unknown as Vote;
 
 describe("CreateVoteUsecase", () => {
     it("happy path: valid vote is saved and returned", async () => {

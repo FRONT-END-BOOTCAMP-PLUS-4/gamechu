@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { CreateArenaUsecase } from "../CreateArenaUsecase";
 import { MockArenaRepository } from "@/tests/mocks/MockArenaRepository";
 import { CreateArenaDto } from "../dto/CreateArenaDto";
+import { Arena } from "@/prisma/generated";
 
 const mockArena = {
     id: 1,
@@ -11,7 +12,7 @@ const mockArena = {
     description: "Test Description",
     status: 1,
     startDate: new Date("2026-04-01"),
-} as any;
+} as unknown as Arena;
 
 describe("CreateArenaUsecase", () => {
     it("saves arena with status 1 and challengerId null", async () => {

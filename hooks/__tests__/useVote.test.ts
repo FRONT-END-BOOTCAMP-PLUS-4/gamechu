@@ -13,7 +13,7 @@ describe("useVote", () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
             json: () => Promise.resolve(mockVoteData),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() =>
             useVote({ arenaId: 1, mine: false })
@@ -30,7 +30,7 @@ describe("useVote", () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
             json: () => Promise.resolve(mockVoteData),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() =>
             useVote({ arenaId: 1, mine: true })
@@ -46,7 +46,7 @@ describe("useVote", () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
             json: () => Promise.resolve(mockVoteData),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() =>
             useVote({ arenaId: 1, mine: false })
@@ -61,7 +61,7 @@ describe("useVote", () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: false,
             json: () => Promise.resolve({}),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() =>
             useVote({ arenaId: 1, mine: false })
@@ -77,11 +77,11 @@ describe("useVote", () => {
             .mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve({ votes: [] }),
-            } as any)
+            } as unknown as Response)
             .mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve({ success: true }),
-            } as any);
+            } as unknown as Response);
 
         const { result } = renderHook(() =>
             useVote({ arenaId: 1, mine: true })
@@ -104,11 +104,11 @@ describe("useVote", () => {
             .mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve({ votes: [] }),
-            } as any)
+            } as unknown as Response)
             .mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve({ success: true }),
-            } as any);
+            } as unknown as Response);
 
         const { result } = renderHook(() =>
             useVote({ arenaId: 1, mine: true })

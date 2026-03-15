@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { UpdateReviewUsecase } from "../UpdateReviewUsecase";
 import { MockReviewRepository } from "@/tests/mocks/MockReviewRepository";
+import { ReviewDto } from "../dto/ReviewDto";
 
 describe("UpdateReviewUsecase", () => {
     it("delegates to repository.update with correct args", async () => {
@@ -9,7 +10,7 @@ describe("UpdateReviewUsecase", () => {
             id: 1,
             content: "Updated content",
             rating: 4,
-        } as any;
+        } as unknown as ReviewDto;
         vi.mocked(repo.update).mockResolvedValue(updatedDto);
 
         const usecase = new UpdateReviewUsecase(repo);

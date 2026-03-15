@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { EndArenaUsecase } from "../EndArenaUsecase";
 import { MockArenaRepository } from "@/tests/mocks/MockArenaRepository";
 import { MockVoteRepository } from "@/tests/mocks/MockVoteRepository";
+import { Arena } from "@/prisma/generated";
+import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
 
 function makeApplyArenaScoreMock() {
     return { execute: vi.fn().mockResolvedValue(undefined) };
@@ -21,7 +23,7 @@ describe("EndArenaUsecase", () => {
             creatorId,
             challengerId,
             status: 4,
-        } as any);
+        } as unknown as Arena);
         // creatorId gets more votes
         vi.mocked(voteRepo.count)
             .mockResolvedValueOnce(10) // leftVotes (creator)
@@ -29,7 +31,7 @@ describe("EndArenaUsecase", () => {
 
         const usecase = new EndArenaUsecase(
             arenaRepo,
-            applyScore as any,
+            applyScore as unknown as ApplyArenaScoreUsecase,
             voteRepo
         );
         await usecase.execute(1);
@@ -50,14 +52,14 @@ describe("EndArenaUsecase", () => {
             creatorId,
             challengerId,
             status: 4,
-        } as any);
+        } as unknown as Arena);
         vi.mocked(voteRepo.count)
             .mockResolvedValueOnce(5)
             .mockResolvedValueOnce(5);
 
         const usecase = new EndArenaUsecase(
             arenaRepo,
-            applyScore as any,
+            applyScore as unknown as ApplyArenaScoreUsecase,
             voteRepo
         );
         await usecase.execute(1);
@@ -78,12 +80,12 @@ describe("EndArenaUsecase", () => {
             creatorId,
             challengerId: null,
             status: 1,
-        } as any);
+        } as unknown as Arena);
         vi.mocked(voteRepo.count).mockResolvedValue(0);
 
         const usecase = new EndArenaUsecase(
             arenaRepo,
-            applyScore as any,
+            applyScore as unknown as ApplyArenaScoreUsecase,
             voteRepo
         );
         await usecase.execute(1);

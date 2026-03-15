@@ -1,13 +1,16 @@
 import { describe, it, expect, vi } from "vitest";
 import { DeleteReviewUsecase } from "../DeleteReviewUsecase";
 import { MockReviewRepository } from "@/tests/mocks/MockReviewRepository";
+import { ReviewDto } from "../dto/ReviewDto";
+import { ReviewLikeRepository } from "@/backend/review-like/domain/repositories/ReviewLikeRepository";
+import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
 
 function makeApplyReviewScoreMock() {
     return { execute: vi.fn().mockResolvedValue(undefined) };
 }
 
 function makeLikeRepo(likeCount: number) {
-    return { count: vi.fn().mockResolvedValue(likeCount) } as any;
+    return { count: vi.fn().mockResolvedValue(likeCount) } as unknown as ReviewLikeRepository;
 }
 
 describe("DeleteReviewUsecase", () => {
@@ -19,13 +22,13 @@ describe("DeleteReviewUsecase", () => {
         vi.mocked(repo.findById).mockResolvedValue({
             id: 1,
             memberId: "m1",
-        } as any);
+        } as unknown as ReviewDto);
         vi.mocked(repo.delete).mockResolvedValue(undefined);
 
         const usecase = new DeleteReviewUsecase(
             repo,
             likeRepo,
-            applyScore as any
+            applyScore as unknown as ApplyReviewScoreUsecase
         );
         await usecase.execute(1);
 
@@ -47,7 +50,7 @@ describe("DeleteReviewUsecase", () => {
         const usecase = new DeleteReviewUsecase(
             repo,
             likeRepo,
-            applyScore as any
+            applyScore as unknown as ApplyReviewScoreUsecase
         );
         await expect(usecase.execute(999)).rejects.toThrow("리뷰가 존재하지 않음");
     });

@@ -13,7 +13,7 @@ describe("useArenaList", () => {
     it("returns arenaList on successful fetch", async () => {
         vi.mocked(fetch).mockResolvedValue({
             json: () => Promise.resolve({ success: true, data: mockData }),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() => useArenaList());
 
@@ -27,7 +27,7 @@ describe("useArenaList", () => {
     it("sets empty array when response success is false", async () => {
         vi.mocked(fetch).mockResolvedValue({
             json: () => Promise.resolve({ success: false }),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() => useArenaList());
         await waitFor(() => expect(result.current.loading).toBe(false));
@@ -38,7 +38,7 @@ describe("useArenaList", () => {
     it("sets empty array when response data is not an array", async () => {
         vi.mocked(fetch).mockResolvedValue({
             json: () => Promise.resolve({ success: true, data: null }),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() => useArenaList());
         await waitFor(() => expect(result.current.loading).toBe(false));
@@ -59,7 +59,7 @@ describe("useArenaList", () => {
     it("loading starts true and ends false", async () => {
         vi.mocked(fetch).mockResolvedValue({
             json: () => Promise.resolve({ success: true, data: [] }),
-        } as any);
+        } as unknown as Response);
 
         const { result } = renderHook(() => useArenaList());
         expect(result.current.loading).toBe(true);

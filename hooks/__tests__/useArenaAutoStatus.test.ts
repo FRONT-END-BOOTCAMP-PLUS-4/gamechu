@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useArenaAutoStatus } from "../useArenaAutoStatus";
+import { ArenaDto } from "@/backend/arena/application/usecase/dto/ArenaDto";
 
 const makeArena = (overrides: object) => ({
     id: 1,
@@ -31,7 +32,7 @@ describe("useArenaAutoStatus", () => {
 
         renderHook(() =>
             useArenaAutoStatus({
-                arenaList: [makeArena({ id: 1, status: 2, startDate: pastDate })] as any,
+                arenaList: [makeArena({ id: 1, status: 2, startDate: pastDate })] as unknown as ArenaDto[],
             })
         );
 
@@ -50,7 +51,7 @@ describe("useArenaAutoStatus", () => {
 
         renderHook(() =>
             useArenaAutoStatus({
-                arenaList: [makeArena({ id: 2, status: 2, startDate: futureDate })] as any,
+                arenaList: [makeArena({ id: 2, status: 2, startDate: futureDate })] as unknown as ArenaDto[],
             })
         );
 
@@ -74,7 +75,7 @@ describe("useArenaAutoStatus", () => {
             useArenaAutoStatus({
                 arenaList: [
                     makeArena({ id: 3, status: 1, startDate: pastDate, challengerId: null }),
-                ] as any,
+                ] as unknown as ArenaDto[],
             })
         );
 
@@ -95,7 +96,7 @@ describe("useArenaAutoStatus", () => {
             useArenaAutoStatus({
                 arenaList: [
                     makeArena({ id: 4, status: 1, startDate: pastDate, challengerId: "challenger" }),
-                ] as any,
+                ] as unknown as ArenaDto[],
             })
         );
 
@@ -112,7 +113,7 @@ describe("useArenaAutoStatus", () => {
 
         renderHook(() =>
             useArenaAutoStatus({
-                arenaList: [makeArena({ id: 5, status: 2, startDate: pastDate })] as any,
+                arenaList: [makeArena({ id: 5, status: 2, startDate: pastDate })] as unknown as ArenaDto[],
                 onStatusUpdate,
             })
         );
@@ -129,7 +130,7 @@ describe("useArenaAutoStatus", () => {
 
         const { unmount } = renderHook(() =>
             useArenaAutoStatus({
-                arenaList: [makeArena({ id: 6, status: 2, startDate: futureDate })] as any,
+                arenaList: [makeArena({ id: 6, status: 2, startDate: futureDate })] as unknown as ArenaDto[],
             })
         );
 
