@@ -1,6 +1,6 @@
 # Testing Setup — Tasks
 
-> Last Updated: 2026-03-15 (session 4 — Phase H expansion tasks added; sessions 1-3 complete at 99 tests)
+> Last Updated: 2026-03-15 (session 6 — Phase H complete; 116 tests passing across 35 files; all phases A–H complete)
 
 ---
 
@@ -146,7 +146,7 @@
 
 ### H1: GetArenaDetailUsecase
 
-- [ ] `backend/arena/application/usecase/__tests__/GetArenaDetailUsecase.test.ts`
+- [x] `backend/arena/application/usecase/__tests__/GetArenaDetailUsecase.test.ts`
     - **Prerequisite**: `ArenaCacheService` is NOT constructor-injected — must `vi.mock("@/backend/arena/infra/cache/ArenaCacheService", ...)` using Vitest 4.x `function` syntax
     - Cache hit: `getArenaDetailCache` returns cached value → result returned immediately, no repo calls, `setArenaDetailCache` NOT called
     - Cache miss: `getArenaDetailCache` returns `null` → `getArenaById` called, result built + `setArenaDetailCache` called
@@ -156,8 +156,8 @@
 
 ### H2: ToggleReviewLikeUsecase
 
-- [ ] Create `tests/mocks/MockReviewLikeRepository.ts` — `isLiked`, `count`, `like`, `unlike` as `vi.fn()`
-- [ ] `backend/review-like/application/usecase/__tests__/ToggleReviewLikeUsecase.test.ts`
+- [x] Create `tests/mocks/MockReviewLikeRepository.ts` — `isLiked`, `count`, `like`, `unlike` as `vi.fn()`
+- [x] `backend/review-like/application/usecase/__tests__/ToggleReviewLikeUsecase.test.ts`
     - Like path: `isLiked` returns `false` → `like` called, `applyReviewScoreUsecase.execute` called with `action: "LIKE"`, returns `{ liked: true }`
     - Unlike path: `isLiked` returns `true` → `unlike` called, `applyReviewScoreUsecase.execute` called with `action: "UNLIKE"`, returns `{ liked: false }`
     - Not found: `reviewRepo.findById` returns `null` → throws `"리뷰 없음"`
@@ -165,14 +165,14 @@
 
 ### H3: UpdateArenaUsecase
 
-- [ ] `backend/arena/application/usecase/__tests__/UpdateArenaUsecase.test.ts`
+- [x] `backend/arena/application/usecase/__tests__/UpdateArenaUsecase.test.ts`
     - Not found: `findById` returns `null` → throws `"Arena not found"`
     - Status update: `findById` returns arena + `updateArenaDto.status` is set → `arena.status` mutated, `update` called with modified arena
     - No status in dto: `updateArenaDto.status` is `undefined` → `arena.status` unchanged, `update` still called
 
 ### H4: PATCH `/api/member/arenas/[id]` (extend G5)
 
-- [ ] Add to `app/api/member/arenas/[id]/__tests__/route.test.ts`:
+- [x] Add to `app/api/member/arenas/[id]/__tests__/route.test.ts`:
     - 400 when body has none of `description`, `challengerId`, `startDate`
     - 401 when `getAuthUserId` returns null
     - 200 on valid body (any one of the three fields present)
@@ -180,7 +180,7 @@
 
 ### H5: POST `/api/member/attend`
 
-- [ ] `app/api/member/attend/__tests__/route.test.ts`
+- [x] `app/api/member/attend/__tests__/route.test.ts`
     - 401 when not authenticated
     - 200 on valid request — verify response shape `{ success: true, attendedDate: string | null }`
     - `attendedDate` is `null` when `getLastAttendedDate` returns `null`
@@ -189,7 +189,7 @@
 
 ### H6: GET `/api/auth/email-check` (optional, low effort)
 
-- [ ] `app/api/auth/email-check/__tests__/route.test.ts`
+- [x] `app/api/auth/email-check/__tests__/route.test.ts`
     - 200 with available response when email not taken
     - 200 with taken response when email exists
     - Check if route imports `@/lib/redis` at module scope — if yes, mock it (same as games route)
@@ -207,11 +207,12 @@
 
 ## Acceptance Criteria
 
-- [x] `npm test` exits 0 with ≥ 55 passing tests → **96 passing as of session 3**
+- [x] `npm test` exits 0 with ≥ 55 passing tests → **116 passing (35 files)**
 - [x] `npm run test:coverage` shows ≥ 60% line coverage on `backend/**/usecase/*.ts` → all ≥ 88%, most 100%
-- [x] `npm run test:coverage` shows ≥ 40% line coverage on Phase G API route files → lowest is 65.38% (after adding PATCH tests to G5)
+- [x] `npm run test:coverage` shows ≥ 40% line coverage on Phase G API route files → lowest is 65.38%
 - [x] `npm run lint` runs without script-not-found error
 - [x] CI `test` job no longer uses `echo`
 - [x] No new manual testing required to verify usecase/route regressions
 
 ---
+

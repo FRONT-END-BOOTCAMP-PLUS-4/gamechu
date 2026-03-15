@@ -5,10 +5,8 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
 }));
 
 vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function () {
-        this.findById = vi
-            .fn()
-            .mockResolvedValue({ id: "test-user-id", score: 200 });
+    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+        this.findById = vi.fn().mockResolvedValue({ id: "test-user-id", score: 200 });
     }),
 }));
 
@@ -25,7 +23,7 @@ const mockArena = {
 };
 
 vi.mock("@/backend/arena/application/usecase/CreateArenaUsecase", () => ({
-    CreateArenaUsecase: vi.fn(function () {
+    CreateArenaUsecase: vi.fn(function (this: Record<string, unknown>) {
         this.execute = vi.fn().mockResolvedValue(mockArena);
     }),
 }));

@@ -5,7 +5,7 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
 }));
 
 vi.mock("@/backend/arena/infra/repositories/prisma/PrismaArenaRepository", () => ({
-    PrismaArenaRepository: vi.fn(function () {
+    PrismaArenaRepository: vi.fn(function (this: Record<string, unknown>) {
         this.findById = vi.fn().mockResolvedValue({
             id: 1,
             creatorId: "owner-id",
@@ -18,13 +18,13 @@ vi.mock("@/backend/arena/infra/repositories/prisma/PrismaArenaRepository", () =>
 }));
 
 vi.mock("@/backend/arena/application/usecase/DeleteArenaUsecase", () => ({
-    DeleteArenaUsecase: vi.fn(function () {
+    DeleteArenaUsecase: vi.fn(function (this: Record<string, unknown>) {
         this.execute = vi.fn().mockResolvedValue(undefined);
     }),
 }));
 
 vi.mock("@/backend/arena/application/usecase/UpdateArenaUsecase", () => ({
-    UpdateArenaUsecase: vi.fn(function () {
+    UpdateArenaUsecase: vi.fn(function (this: Record<string, unknown>) {
         this.execute = vi.fn().mockResolvedValue(undefined);
     }),
 }));

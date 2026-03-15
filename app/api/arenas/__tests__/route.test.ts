@@ -13,7 +13,7 @@ const mockArenaListDto = {
 };
 
 vi.mock("@/backend/arena/application/usecase/GetArenaUsecase", () => ({
-    GetArenaUsecase: vi.fn(function () {
+    GetArenaUsecase: vi.fn(function (this: Record<string, unknown>) {
         this.execute = vi.fn().mockResolvedValue(mockArenaListDto);
     }),
 }));

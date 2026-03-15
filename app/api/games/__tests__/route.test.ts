@@ -11,18 +11,14 @@ vi.mock("@/lib/redis", () => ({
 const mockGames = [{ id: 1, title: "Game 1" }];
 
 vi.mock("@/backend/game/application/usecase/GetFilteredGamesUsecase", () => ({
-    GetFilteredGamesUsecase: vi.fn(function () {
-        this.execute = vi
-            .fn()
-            .mockResolvedValue({ data: mockGames, totalCount: 1 });
+    GetFilteredGamesUsecase: vi.fn(function (this: Record<string, unknown>) {
+        this.execute = vi.fn().mockResolvedValue({ data: mockGames, totalCount: 1 });
     }),
 }));
 
 vi.mock("@/backend/game/application/usecase/GetGameMetaDataUsecase", () => ({
-    GetGameMetaDataUsecase: vi.fn(function () {
-        this.execute = vi
-            .fn()
-            .mockResolvedValue({ genres: [], themes: [], platforms: [] });
+    GetGameMetaDataUsecase: vi.fn(function (this: Record<string, unknown>) {
+        this.execute = vi.fn().mockResolvedValue({ genres: [], themes: [], platforms: [] });
     }),
 }));
 
