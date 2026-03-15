@@ -1,6 +1,6 @@
 # Testing Setup — Context
 
-> Last Updated: 2026-03-15 (session 4 — Phase H patterns added)
+> Last Updated: 2026-03-15 (session 6 — Phase H complete; 116 tests across 35 files; this-annotation fixes applied; READY FOR PR)
 
 ---
 
@@ -22,9 +22,7 @@
 
 ## Current Implementation State
 
-**All phases complete except remaining E hooks + coverage check + PR.**
-
-**Test count: 69 tests passing across 25 test files (target was ≥ 55).**
+**All phases complete (A–H). 116 tests passing across 35 files. READY FOR PR.**
 
 ### What was built this session
 
@@ -68,10 +66,13 @@ Each exports a factory function (not a class): `MockArenaRepository()` returns a
 
 Pattern: `useXxxStore.setState({...})` to reset between tests (no `renderHook` needed — tests call `useXxxStore.getState()` directly).
 
-#### Hook Tests (Phase E — 5 tests)
-- `hooks/__tests__/useArenas.test.ts` — 5 tests
-
-Remaining hooks not yet written: `useArenaList`, `useVote`, `useVoteList`, `useArenaAutoStatus`, `useArenaAutoStatusDetail`.
+#### Hook Tests (Phase E — 34 tests)
+- `hooks/__tests__/useArenas.test.ts` — 6 tests
+- `hooks/__tests__/useArenaList.test.ts` — 5 tests
+- `hooks/__tests__/useVote.test.ts` — 7 tests
+- `hooks/__tests__/useVoteList.test.ts` — 4 tests
+- `hooks/__tests__/useArenaAutoStatus.test.ts` — 6 tests (fake timers + unmount cleanup)
+- `hooks/__tests__/useArenaAutoStatusDetail.test.ts` — 6 tests (same timer pattern, Zustand-driven)
 
 #### API Route Tests (Phase G — 15 tests)
 - `app/api/arenas/__tests__/route.test.ts` — 3 tests
@@ -171,6 +172,11 @@ This was moved inside the `POST` handler body so `vi.mock()` can intercept it. W
 | `stores/__tests__/modalStore.test.ts` | Created (new file) |
 | `stores/__tests__/useArenaStore.test.ts` | Created (new file) |
 | `hooks/__tests__/useArenas.test.ts` | Created (new file, `// @vitest-environment jsdom` docblock) |
+| `hooks/__tests__/useArenaList.test.ts` | Created (new file) |
+| `hooks/__tests__/useVote.test.ts` | Created (new file) |
+| `hooks/__tests__/useVoteList.test.ts` | Created (new file) |
+| `hooks/__tests__/useArenaAutoStatus.test.ts` | Created (new file, fake timers + unmount) |
+| `hooks/__tests__/useArenaAutoStatusDetail.test.ts` | Created (new file, same timer pattern) |
 | `app/api/arenas/__tests__/route.test.ts` | Created (new file) |
 | `app/api/auth/signup/__tests__/route.test.ts` | Created (new file) |
 | `app/api/games/__tests__/route.test.ts` | Created (new file) |
@@ -184,12 +190,37 @@ This was moved inside the `POST` handler body so `vi.mock()` can intercept it. W
 
 ## Next Immediate Steps
 
-1. **Optional**: Write remaining hook tests (`useArenaList`, `useVote`, `useVoteList`) — straightforward same pattern as `useArenas`
-2. **Optional**: Write timer-based hook tests (`useArenaAutoStatus`, `useArenaAutoStatusDetail`) — requires `vi.useFakeTimers()` pattern, more complex
-3. **Verify coverage**: `npm run test:coverage` — check ≥ 60% on usecases, ≥ 40% on routes
-4. **Commit**: `git add` all new files, commit with message like `[feat/#264] vitest 설정 및 69개 테스트 작성`
-5. **PR**: Open PR `feat/#264` → `dev` following `docs/CODE_CONVENTIONS.md` GitHub workflow
-6. **Verify CI**: After merge, confirm `test` job runs on next push to `main`
+1. **PR**: Open PR `feat/#264` → `dev` following `docs/CODE_CONVENTIONS.md` GitHub workflow (this is the only remaining step)
+2. **Verify CI**: After merge, confirm `test` job runs on next push and calls `/home/gamechu/www/gamechu/next-app-test.sh`
+
+
+---
+
+## Code Review Findings (session 5)
+
+> Source: full diff review of `feat/#264`. All issues are post-merge backlog — none block the PR.
+
+### 🟡 Potential flakiness
+- **`ApplyAttendanceScoreUsecase.test.ts`**: uses `new Date()` to compute yesterday — can fail at UTC midnight. Fix: use fixed dates (`new Date("2026-01-01")`) instead of `new Date()`.
+
+### 🟡 Missing test paths
+- **All API routes**: input validation untested (missing fields, wrong types, invalid JSON). Highest priority.
+- **All usecases**: repository/DB error paths almost entirely absent. Add at least one `mockRejectedValue` case per usecase.
+- **`GET /api/games`**: only 1 test (happy path). Redis cache is mocked but never asserted. No filter/pagination tests.
+- **`POST /api/auth/signup`**: Redis rate limiting is mocked but its invocation is never verified.
+- **`useVoteList`**: no test for partial fetch failure (one arena succeeds, another fails).
+
+### 🟢 Minor style
+- `useArenas.test.ts` lines 72–85: four separate `expect(fetch).toHaveBeenCalledWith(stringContaining(...))` calls for one fetch — consolidate into `stringMatching(/param1.*param2/s)`.
+- `useArenaList.test.ts` line 16: `as unknown as Response` double-cast is harmless but loose.
+- `POST /api/auth/signup` test re-imports and reconfigures the mock mid-test — consider lifting to top-level `vi.mock`.
+
+### Exemplary files (reference quality for Phase H)
+- `EndArenaUsecase.test.ts` — score delegation + all outcome branches
+- `ApplyArenaScoreUsecase.test.ts` / `ApplyReviewScoreUsecase.test.ts` — exhaustive threshold testing
+- `CreateVoteUsecase.test.ts` — all business rule validations
+- `DELETE /api/member/arenas/[id]` tests — authorization (owner vs non-owner) pattern
+- `useArenaAutoStatus.test.ts` — fake timers + `act()` + unmount cleanup
 
 ---
 
@@ -365,13 +396,12 @@ Routes tested by importing handler + calling with native `Request`. Usecase laye
 
 ---
 
-## Uncommitted Changes
+## Committed State
 
-All new files are **uncommitted**. Run:
-```bash
-git status  # verify all new files shown as untracked
-git add vitest.config.ts tests/ backend/**/__tests__/ stores/__tests__/ hooks/__tests__/ app/api/**/__tests__/ app/api/member/games/ .github/workflows/ package.json
-git commit -m "[feat/#264] vitest 설정 및 69개 테스트 작성 (Phase A-G 완료)"
-```
+All files committed to `feat/#264`. Commits:
+- `0df22a6` — testing-setup 계획 수립
+- `25da608` — 테스트 인프라 구축 및 99개 테스트 작성
+- `554e521` — 테스트 파일 any 타입을 명시적 타입으로 교체
+- (session 6) — Phase H 테스트 추가 및 this 타입 어노테이션 적용
 
-Then create PR `feat/#264` → `dev`.
+**Next action**: `/archive-task` after PR is merged.

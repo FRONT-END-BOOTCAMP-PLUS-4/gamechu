@@ -16,7 +16,7 @@ vi.mock("@/lib/redis", () => ({
 }));
 
 vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function () {
+    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
         this.findByEmail = vi.fn().mockResolvedValue(null);
         this.create = vi.fn().mockResolvedValue({
             id: "new-user-id",

@@ -6,7 +6,7 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
 }));
 
 vi.mock("@/backend/review/infra/repositories/prisma/PrismaReviewRepository", () => ({
-    PrismaReviewRepository: vi.fn(function () {
+    PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
         this.findByMemberId = vi.fn().mockResolvedValue([]);
         this.create = vi.fn().mockResolvedValue({
             id: 1,
@@ -19,7 +19,7 @@ vi.mock("@/backend/review/infra/repositories/prisma/PrismaReviewRepository", () 
 }));
 
 vi.mock("@/backend/review/application/usecase/CreateReviewUsecase", () => ({
-    CreateReviewUsecase: vi.fn(function () {
+    CreateReviewUsecase: vi.fn(function (this: Record<string, unknown>) {
         this.execute = vi.fn().mockResolvedValue({
             id: 1,
             gameId: 10,
