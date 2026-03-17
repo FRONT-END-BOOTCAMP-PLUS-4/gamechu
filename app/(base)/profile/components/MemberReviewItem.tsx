@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
+import { ReadOnlyReview } from "@/app/(base)/games/[gameId]/components/lexical/ReadOnlyReview";
 
 export interface MemberReviewItemProps {
     id: number;
@@ -18,36 +19,7 @@ export interface MemberReviewItemProps {
 export default function MemberReviewItem(review: MemberReviewItemProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isOverflowing, setIsOverflowing] = useState(false);
-    const contentRef = useRef<HTMLParagraphElement>(null);
-
-    // ✅ 리뷰 HTML 안의 <img>에 alt 자동 부여
-    const processedContent = useMemo(() => {
-        if (!review.content) return "";
-
-        try {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(review.content, "text/html");
-            const imgs = doc.querySelectorAll("img");
-
-            const defaultAltBase = `${review.gameTitle} 관련 리뷰 이미지`;
-
-            imgs.forEach((img, idx) => {
-                if (!img.hasAttribute("alt")) {
-                    img.setAttribute(
-                        "alt",
-                        imgs.length === 1
-                            ? defaultAltBase
-                            : `${defaultAltBase} ${idx + 1}`
-                    );
-                }
-            });
-
-            return doc.body.innerHTML;
-        } catch {
-            // 파싱 실패 시 원본 그대로
-            return review.content;
-        }
-    }, [review.content, review.gameTitle]);
+    const contentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const el = contentRef.current;
@@ -61,7 +33,7 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
         checkOverflow();
         window.addEventListener("resize", checkOverflow);
         return () => window.removeEventListener("resize", checkOverflow);
-    }, [processedContent]); // ✅ 실제 렌더되는 HTML 기준으로 체크
+    }, [review.content]);
 
     return (
         <li className="relative flex gap-4 rounded-lg bg-background-200 p-4 shadow">
@@ -110,14 +82,15 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                     </div>
                 </div>
 
-                {/* 리뷰 내용 (HTML 렌더 + img alt 채워진 상태) */}
-                <p
+                {/* 리뷰 내용 */}
+                <div
                     ref={contentRef}
                     className={`text-sm text-font-200 ${
                         isExpanded ? "" : "line-clamp-1"
                     }`}
-                    dangerouslySetInnerHTML={{ __html: processedContent }}
-                />
+                >
+                    <ReadOnlyReview content={review.content} />
+                </div>
 
                 {/* '펼쳐보기' 토글 */}
                 {isOverflowing && (

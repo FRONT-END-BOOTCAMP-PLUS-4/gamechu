@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, MoreVertical } from "lucide-react";
 import UserProfileComponent from "@/app/components/UserProfileComponent";
+import { ReadOnlyReview } from "./lexical/ReadOnlyReview";
 
 interface CommentCardProps {
     id: number;
@@ -235,9 +236,10 @@ export default function CommentCard({
                         opacity: expanded ? 1 : 0.9,
                     }}
                     transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="prose overflow-hidden text-sm text-font-100 lg:text-body"
-                    dangerouslySetInnerHTML={{ __html: comment }}
-                />
+                    className="overflow-hidden text-sm text-font-100 lg:text-body"
+                >
+                    <ReadOnlyReview content={comment} />
+                </motion.div>
                 {/* 흐림 효과 (그라데이션): 넘칠 때(isOverflowing)이면서 접혀있을 때만 표시 */}
                 <AnimatePresence>
                     {isOverflowing && !expanded && (
