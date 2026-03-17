@@ -39,5 +39,8 @@ fi
 
 echo "✅ Secret scan passed."
 
+# ─── Lint check ───────────────────────────────────────────
+npm run lint
+
 # ─── Build check ──────────────────────────────────────────
 npm run build

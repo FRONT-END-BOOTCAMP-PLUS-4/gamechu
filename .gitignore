@@ -53,3 +53,8 @@ docs/server/
 .claude/settings.local.json
 .claude/tsc-cache/
 .claude/hooks/node_modules/
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/

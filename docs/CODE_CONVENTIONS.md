@@ -68,6 +68,7 @@ export class ArenaFilter {
 ```typescript
 import { Arena } from "@/prisma/generated";
 import { ArenaFilter } from "./filters/ArenaFilters";
+import { UpdateArenaDto } from "../usecase/dto/UpdateArenaDto";
 
 export type CreateArenaInput = Omit<Arena, "id">;
 
@@ -76,7 +77,7 @@ export interface ArenaRepository {
     findAll(filter: ArenaFilter): Promise<Arena[]>; // Find by filter with pagination
     findById(id: number): Promise<Arena | null>; // Find single by ID
     save(arena: CreateArenaInput): Promise<Arena>; // Create
-    update(arena: Arena): Promise<Arena>; // Update
+    update(arena: UpdateArenaDto): Promise<Arena>; // Update
     deleteAll(filter: ArenaFilter): Promise<void>; // Bulk delete (only if needed)
     deleteById(id: number): Promise<void>; // Delete by ID
 }
@@ -84,9 +85,13 @@ export interface ArenaRepository {
 
 ### PrismaRepository implementation
 
-- Accept `PrismaClient` or instantiate internally
+- Import the shared Prisma singleton — do NOT instantiate `new PrismaClient()` directly
 - Extract `getWhereClause(filter)` for reuse across `count`, `findAll`, etc.
 - Use spread + conditional for optional filter fields
+
+```typescript
+import prisma from "@/lib/prisma";
+```
 
 ```typescript
 private getWhereClause(filter: ArenaFilter): Prisma.ArenaWhereInput {
@@ -135,6 +140,7 @@ export class ArenaDto {
 export class ArenaListDto {
     constructor(
         public arenas: ArenaDto[],
+        public totalCount: number,
         public currentPage: number,
         public pages: number[],
         public endPage: number
@@ -220,12 +226,32 @@ export async function GET(request: Request, { params }: RequestParams) {
 }
 ```
 
+### Instance creation
+
+**Always instantiate repositories and use cases inside the handler function** — never at module level. Module-level instances share state across requests and can cause stale connection issues.
+
+```typescript
+// ❌ Module level — breaks between requests
+const repo = new PrismaArenaRepository();
+const usecase = new GetArenaListUsecase(repo);
+
+export async function GET(request: Request) { ... }
+
+// ✅ Per-request — instantiate inside handler
+export async function GET(request: Request) {
+    const repo = new PrismaArenaRepository();
+    const usecase = new GetArenaListUsecase(repo);
+    // ...
+}
+```
+
 ### Structure per HTTP method
 
 1. **GET**: Parse query params -> validate auth if needed -> instantiate repos & usecase -> execute -> return JSON
 2. **POST**: Validate body -> validate auth -> build CreateDto -> execute usecase -> return `201`
 3. **PATCH**: Parse params + body -> validate auth + ownership -> build UpdateDto -> execute usecase -> return JSON
-4. **DELETE**: Parse params -> validate existence -> validate auth + ownership -> execute usecase -> return `200`
+4. **PUT**: Parse params + body -> validate auth + ownership -> build UpdateDto -> execute usecase -> return JSON
+5. **DELETE**: Parse params -> validate existence -> validate auth + ownership -> execute usecase -> return `200`
 
 ### Error handling (unified)
 
@@ -406,6 +432,113 @@ import { cleanup } from "@testing-library/react";
 
 afterEach(() => cleanup());
 ```
+
+---
+
+## E2E Testing (Playwright)
+
+> Framework: **Playwright** (`@playwright/test`)
+> Config: `playwright.config.ts` (root)
+> Run: `npm run test:e2e`
+
+### Purpose
+
+E2E tests catch issues that unit tests cannot: broken routes, hydration errors, missing UI elements, and API crashes in the real Next.js runtime. They are **not** a replacement for unit tests — they sit on top as a regression safety net.
+
+| Layer | Tool | When | Role |
+| ----- | ---- | ---- | ---- |
+| Unit | Vitest | Every commit (pre-commit hook) | Business logic correctness |
+| E2E | Playwright | Every PR (CI) | Route health, page rendering, API status |
+
+### File location & naming
+
+- All spec files live in `e2e/` at the project root
+- Name: `kebab-case.spec.ts`
+
+```
+e2e/
+  smoke.spec.ts        # Homepage load + zero console errors
+  auth.spec.ts         # Login page form fields
+  games.spec.ts        # Games page renders without 500/404
+  arenas.spec.ts       # Arenas page renders without 500/404
+  api-health.spec.ts   # Key API routes respond (not 500)
+```
+
+### Config
+
+`playwright.config.ts` starts the dev server automatically when not in CI:
+
+```typescript
+export default defineConfig({
+    testDir: "./e2e",
+    use: {
+        baseURL: process.env.BASE_URL ?? "http://localhost:3000",
+        headless: true,
+    },
+    timeout: 30_000,
+    reporter: process.env.CI ? "list" : "html",
+    webServer: {
+        command: "npm run dev",
+        url: "http://localhost:3000",
+        reuseExistingServer: !process.env.CI, // reuse local dev server
+        timeout: 120_000,
+    },
+});
+```
+
+### Examples
+
+**Page rendering** — verify page loads without error and key elements are visible:
+
+```typescript
+import { test, expect } from "@playwright/test";
+
+test("/log-in 페이지 폼 렌더링", async ({ page }) => {
+    await page.goto("/log-in");
+
+    await expect(page.locator("input[type='email'], input[name='email']")).toBeVisible();
+    await expect(page.locator("input[type='password']")).toBeVisible();
+});
+```
+
+**Console error detection** — assert zero console errors on page load:
+
+```typescript
+test("홈페이지 로드 및 콘솔 에러 없음", async ({ page }) => {
+    const consoleErrors: string[] = [];
+    page.on("console", (msg) => {
+        if (msg.type() === "error") consoleErrors.push(msg.text());
+    });
+
+    await page.goto("/");
+
+    await expect(page).toHaveTitle(/.+/);
+    expect(consoleErrors).toHaveLength(0);
+});
+```
+
+**API health check** — use `request` fixture to call API routes directly (no browser needed):
+
+```typescript
+test("GET /api/games — 500 아님", async ({ request }) => {
+    const response = await request.get("/api/games");
+    expect(response.status()).not.toBe(500);
+});
+```
+
+### Scope
+
+**Write E2E tests for:**
+
+- Smoke: homepage loads, title present, no console errors
+- Page rendering: route returns 2xx, critical UI visible (form fields, list containers)
+- API health: key endpoints do not return 500
+
+**Do NOT write E2E tests for:**
+
+- Authenticated flows requiring a real session (NextAuth sessions can't be easily seeded in CI without a live DB)
+- Business logic — that belongs in Vitest unit tests
+- Visual regression — there is no baseline snapshot setup
 
 ---
 

@@ -4,7 +4,6 @@ import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaReposi
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 import { MemberRepository } from "@/backend/member/domain/repositories/MemberRepository";
 import { ArenaStatus } from "@/types/arena-status";
-import { VoteFilter } from "@/backend/vote/domain/repositories/filters/VoteFilter";
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { GetArenaDetailDto } from "./dto/GetArenaDetailDto";
 import { ArenaCacheService } from "@/backend/arena/infra/cache/ArenaCacheService";
