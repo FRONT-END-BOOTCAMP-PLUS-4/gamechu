@@ -6,7 +6,6 @@ import { ArenaListDto } from "./dto/ArenaListDto";
 import { ArenaFilter } from "../../domain/repositories/filters/ArenaFilter";
 import { ArenaDto } from "./dto/ArenaDto";
 import { GetArenaDates } from "@/utils/GetArenaDates";
-import { VoteFilter } from "@/backend/vote/domain/repositories/filters/VoteFilter";
 import { ArenaCacheService } from "@/backend/arena/infra/cache/ArenaCacheService";
 
 export class GetArenaUsecase {

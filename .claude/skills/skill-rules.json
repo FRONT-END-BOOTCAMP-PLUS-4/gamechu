@@ -130,6 +130,37 @@
                 ]
             }
         },
+        "browser-test": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Playwright E2E smoke tests and spec authoring for GameChu pages",
+            "promptTriggers": {
+                "keywords": [
+                    "E2E",
+                    "playwright",
+                    "smoke test",
+                    "browser test",
+                    "브라우저 테스트",
+                    "e2e test",
+                    "end-to-end",
+                    "test:e2e",
+                    "spec file",
+                    "e2e spec"
+                ],
+                "intentPatterns": [
+                    "(run|execute|실행).*?(E2E|playwright|smoke|browser)",
+                    "(write|create|add|작성).*?(spec|e2e|playwright)",
+                    "(test|check|verify).*?(page|browser|UI).*?(playwright|E2E)"
+                ]
+            },
+            "fileTriggers": {
+                "pathPatterns": [
+                    "e2e/**/*.spec.ts",
+                    "playwright.config.ts"
+                ]
+            }
+        },
         "route-tester": {
             "type": "domain",
             "enforcement": "suggest",
