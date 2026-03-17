@@ -45,7 +45,7 @@ You are an elite strategic planning specialist. Create a comprehensive, actionab
         5. Create PR targeting `dev`, linking the issue with `close #<issue-number>`
     - **Rebase exception**: If the current branch depends on a previous unmerged branch that only contains Claude-related settings (e.g., `.claude/`, skill files, `CLAUDE.md`), skip rebasing onto `dev`. The assignee will handle the merge order manually. Example: `chore/#259` depends on Claude command updates from `chore/#257` (not yet merged into `dev`) — no rebase needed.
     - Group small, tightly coupled sub-tasks under a single issue/branch when they cannot be meaningfully reviewed independently
-    - In `[task-name]-tasks.md`, include the Git workflow steps (issue, branch, PR) as checklist items for each task
+    - In all three `[task-name]-*.md` documents, NEVER include the Git workflow steps (issue, branch, PR) as checklist items for each task: use project memory instead, if needed.
 
 6. **Create task management structure**:
     - Create directory: `dev/active/[task-name]/` (relative to project root)
