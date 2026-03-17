@@ -1,6 +1,6 @@
 # Dev Tooling Setup — Context
 
-> Last Updated: 2026-03-18
+> Last Updated: 2026-03-18 (Session 2)
 
 ## GitHub Issue & Branch
 
@@ -162,3 +162,60 @@ claude mcp add playwright npx @playwright/mcp@latest
 ## Rebase Note
 
 `dev` 브랜치에서 직접 분기. Rebase exception 없음.
+
+---
+
+## Session 2 완료 사항 (2026-03-18)
+
+### docs/CODE_CONVENTIONS.md 업데이트
+`dev/code-conventions-audit.md` 감사 결과를 반영:
+- `update()` 인터페이스 시그니처 수정: `Arena` → `UpdateArenaDto` (+ import 추가)
+- Prisma 싱글톤 패턴 명시: `import prisma from "@/lib/prisma"` 예시 추가
+- `ListDto`에 `totalCount` 필드 추가
+- 핸들러 레벨 인스턴스화 필수 규칙 + `❌/✅` 예시 블록 추가
+- PUT 메서드 HTTP 구조 목록에 추가
+- **E2E Testing (Playwright) 섹션 신규 추가**: 목적, 파일 목록, config, 예시(3가지 패턴), 범위 가이드
+
+### CLAUDE.md Key Rules 섹션 추가
+- Prisma singleton, 핸들러 레벨 인스턴스화, 에러 응답 key 3가지 핵심 규칙 추가
+
+### Playwright MCP 등록 수정
+- 문제: `@playwright/mcp@stable` dist-tag 없음 → Failed to connect
+- 해결: `claude mcp remove playwright` → `claude mcp add playwright npx @playwright/mcp@latest`
+- 상태: `playwright: ✓ Connected` (0.0.68)
+
+### E2E 테스트 확장 (MCP 실사 검증 완료)
+커밋: `9b7122b`
+
+| 파일 | 추가 테스트 |
+|------|------------|
+| `smoke.spec.ts` | /log-in, /sign-up 콘솔 에러 없음 + `collectConsoleErrors` 헬퍼 추출 |
+| `auth.spec.ts` | /sign-up 단계 UI; 로그인 셀렉터 → accessible name 기반으로 개선 |
+| `games.spec.ts` | h1 "게임 탐색", 검색창(`getByRole("textbox", {name:...})`), 필터 버튼 |
+| `arenas.spec.ts` | h1 "토론 투기장", "도전장 작성하기" 버튼, /arenas/999999 안내 |
+| `api-health.spec.ts` | genres/platforms/themes 공개 + member/* 미인증 401 확인 |
+| `nav.spec.ts` | 홈 랜딩카드 → /games, /arenas 이동 (main 스코프로 헤더 링크 충돌 방지) |
+| `.gitignore` | `.playwright-mcp/` 추가 |
+
+**MCP 검증 결과**: 전 페이지 0 console errors. `/arenas` 페이지 note — DB 미연결 시 "로딩중..." 5개 표시 (정상).
+
+**nav.spec.ts 핵심 발견**: 헤더 nav에도 `link "투기장"`/`link "게임"`이 있어 strict-mode 위반 가능 → `page.locator("main").getByRole(...)` 으로 범위 제한 필수.
+
+### .playwright-mcp/ gitignore
+MCP 세션 콘솔 로그 자동 생성 디렉토리. `.gitignore` Playwright 섹션에 추가.
+
+---
+
+## 현재 상태: PR 준비 완료
+
+브랜치 `chore/#267`의 모든 작업 완료.
+
+**NEXT STEP**: PR 생성 `chore/#267` → `dev`
+
+```bash
+gh pr create --base dev --head chore/#267
+```
+
+**포함 커밋**:
+1. `1df5d17` — ESLint/Prettier 완성 + Playwright E2E 인프라 구축
+2. `9b7122b` — E2E 테스트 확장 및 셀렉터 검증

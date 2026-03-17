@@ -90,11 +90,43 @@
 
 ---
 
+### Phase 4: E2E 테스트 확장 + 문서화
+
+- [x] **T15** — E2E 테스트 확장 (커밋 `9b7122b`)
+    - smoke.spec.ts: /log-in, /sign-up 콘솔 에러 없음 + collectConsoleErrors 헬퍼
+    - auth.spec.ts: /sign-up 단계 UI; 로그인 셀렉터 accessible name으로 개선
+    - games.spec.ts: h1, 검색창(accessible name), 필터 버튼 추가
+    - arenas.spec.ts: h1, "도전장 작성하기" 버튼, /arenas/999999 추가
+    - api-health.spec.ts: genres/platforms/themes + member/\* 401 추가
+    - nav.spec.ts: 신규 — 홈 랜딩카드 클릭 네비게이션 (main 스코프 범위 제한)
+    - .gitignore: .playwright-mcp/ 추가
+    - Playwright MCP 실사 검증 완료 (전 페이지 0 console errors)
+    - Acceptance: ✅
+
+- [x] **T16** — docs/CODE_CONVENTIONS.md 업데이트
+    - update() 시그니처 수정 (UpdateArenaDto)
+    - Prisma 싱글톤 패턴 추가
+    - ListDto totalCount 추가
+    - 핸들러 레벨 인스턴스화 규칙 + 예시 추가
+    - PUT 메서드 추가
+    - E2E Testing 섹션 신규 추가
+    - Acceptance: ✅
+
+- [x] **T16b** — CLAUDE.md Key Rules 섹션 추가
+    - Acceptance: ✅
+
+- [x] **T16c** — Playwright MCP 등록 수정
+    - `@playwright/mcp@stable` → `@playwright/mcp@latest`
+    - Acceptance: ✅ Connected (0.0.68)
+
+---
+
 ### Phase 5: 검증
 
 - [x] **T17** — 전체 통합 검증
     - ✅ `npm run lint` 실행 성공 (오류 0, 경고 6)
     - ✅ `npm run format` 실행 가능
-    - ✅ `npm test` — 116개 테스트 통과, e2e 파일 제외 확인
-    - ✅ `npm run test:e2e` — 5개 spec 실행 확인
+    - ✅ `npm test` — 126개 테스트 통과, e2e 파일 제외 확인
+    - ✅ `npm run test:e2e` — spec 실행 확인 (webServer 자동 기동)
     - ✅ pre-commit hook lint → build 순서 설정됨
+    - ✅ `next build` 통과 (커밋 `9b7122b`)
