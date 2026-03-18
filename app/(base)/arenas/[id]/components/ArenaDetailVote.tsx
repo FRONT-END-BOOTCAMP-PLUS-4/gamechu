@@ -103,11 +103,12 @@ export default function ArenaDetailVote() {
                                 </div>
                             )}
                             <Image
-                                src="/icons/teamA.svg"
+                                src={arenaDetail?.creatorImageUrl || "/icons/teamA.svg"}
                                 alt="게시자"
                                 width={40}
                                 height={40}
-                                className="sm:h-16 sm:w-16"
+                                className="rounded-full object-cover sm:h-16 sm:w-16"
+                                unoptimized
                             />
                         </div>
                         <div className="flex flex-col items-center">
@@ -155,11 +156,12 @@ export default function ArenaDetailVote() {
                                 </div>
                             )}
                             <Image
-                                src="/icons/teamB.svg"
+                                src={arenaDetail?.challengerImageUrl || "/icons/teamB.svg"}
                                 alt="도전자"
                                 width={40}
                                 height={40}
-                                className="sm:h-16 sm:w-16"
+                                className="rounded-full object-cover sm:h-16 sm:w-16"
+                                unoptimized
                             />
                         </div>
                         <div className="flex flex-col items-center">

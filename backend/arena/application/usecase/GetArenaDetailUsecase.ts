@@ -45,8 +45,10 @@ export class GetArenaDetailUsecase {
         // creator와 challenger 정보는 이미 ArenaDetail에 포함되어 있음
         const creatorName = ArenaDetail.creator?.nickname || "";
         const creatorScore = ArenaDetail.creator?.score || 0;
+        const creatorImageUrl = ArenaDetail.creator?.imageUrl || "";
         const challengerName = ArenaDetail.challenger?.nickname || "";
         const challengerScore = ArenaDetail.challenger?.score || null;
+        const challengerImageUrl = ArenaDetail.challenger?.imageUrl || null;
 
         const startDate = ArenaDetail.startDate;
         const endChatting = new Date(startDate.getTime() + 30 * 60 * 1000);
@@ -79,9 +81,11 @@ export class GetArenaDetailUsecase {
             ArenaDetail.creatorId,
             creatorName,
             creatorScore,
+            creatorImageUrl,
             ArenaDetail.challengerId,
             challengerName,
             challengerScore,
+            challengerImageUrl,
             ArenaDetail.title,
             ArenaDetail.description,
             ArenaDetail.startDate,

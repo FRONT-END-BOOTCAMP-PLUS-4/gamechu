@@ -3,9 +3,9 @@ import { ChattingDto } from "@/backend/chatting/application/usecase/dto/Chatting
 import useArenaStore from "@/stores/useArenaStore";
 import Image from "next/image";
 
-interface ArenaChatListProps {
+type ArenaChatListProps = {
     chats: ChattingDto[];
-}
+};
 
 function ArenaDetailChatListComponent(
     { chats }: ArenaChatListProps,
@@ -60,10 +60,12 @@ function ArenaDetailChatListComponent(
                                         >
                                             {isCreator && (
                                                 <Image
-                                                    src="/icons/teamA.svg"
+                                                    src={arenaDetail?.creatorImageUrl || "/icons/teamA.svg"}
                                                     alt="Team A"
                                                     width={32}
                                                     height={32}
+                                                    className="rounded-full object-cover"
+                                                    unoptimized
                                                 />
                                             )}
                                             <span className="text-xs font-bold text-font-200">
@@ -73,10 +75,12 @@ function ArenaDetailChatListComponent(
                                             </span>
                                             {isChallenger && (
                                                 <Image
-                                                    src="/icons/teamB.svg"
+                                                    src={arenaDetail?.challengerImageUrl || "/icons/teamB.svg"}
                                                     alt="Team B"
                                                     width={32}
                                                     height={32}
+                                                    className="rounded-full object-cover"
+                                                    unoptimized
                                                 />
                                             )}
                                         </div>
