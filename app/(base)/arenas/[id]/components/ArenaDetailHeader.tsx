@@ -1,7 +1,7 @@
 "use client";
 
 import useArenaStore from "@/stores/useArenaStore";
-import Image from "next/image";
+import UserProfileComponent from "@/app/components/UserProfileComponent";
 
 export default function ArenaDetailHeader() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
@@ -17,23 +17,15 @@ export default function ArenaDetailHeader() {
                 </div>
 
                 {/* 게시자 */}
-                <div className="flex animate-fade-in items-center gap-4">
-                    <div className="flex shrink-0 items-center justify-center">
-                        <Image
-                            src="/icons/teamA.svg"
-                            alt="게시자"
-                            width={40}
-                            height={40}
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-xs font-bold text-font-200">
-                            게시자
-                        </span>
-                        <span className="text-sm font-bold text-font-100 sm:text-base">
-                            {arenaDetail?.creatorName ?? "게시자"}
-                        </span>
-                    </div>
+                <div className="flex animate-fade-in flex-col gap-1">
+                    <span className="text-xs font-bold text-font-200">
+                        게시자
+                    </span>
+                    <UserProfileComponent
+                        profileImage={arenaDetail?.creatorImageUrl || "/icons/teamA.svg"}
+                        nickname={arenaDetail?.creatorName ?? ""}
+                        score={arenaDetail?.creatorScore}
+                    />
                 </div>
             </div>
             <div className="h-[2px] bg-background-200" />
