@@ -59,14 +59,15 @@ function ArenaDetailChatListComponent(
                                             }`}
                                         >
                                             {isCreator && (
-                                                <Image
-                                                    src={arenaDetail?.creatorImageUrl || "/icons/teamA.svg"}
-                                                    alt="Team A"
-                                                    width={32}
-                                                    height={32}
-                                                    className="rounded-full object-cover"
-                                                    unoptimized
-                                                />
+                                                <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                                                    <Image
+                                                        src={arenaDetail?.creatorImageUrl || "/icons/teamA.svg"}
+                                                        alt="Team A"
+                                                        width={32}
+                                                        height={32}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                </div>
                                             )}
                                             <span className="text-xs font-bold text-font-200">
                                                 {isCreator
@@ -74,14 +75,15 @@ function ArenaDetailChatListComponent(
                                                     : arenaDetail?.challengerName}
                                             </span>
                                             {isChallenger && (
-                                                <Image
-                                                    src={arenaDetail?.challengerImageUrl || "/icons/teamB.svg"}
-                                                    alt="Team B"
-                                                    width={32}
-                                                    height={32}
-                                                    className="rounded-full object-cover"
-                                                    unoptimized
-                                                />
+                                                <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                                                    <Image
+                                                        src={arenaDetail?.challengerImageUrl || "/icons/teamB.svg"}
+                                                        alt="Team B"
+                                                        width={32}
+                                                        height={32}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                </div>
                                             )}
                                         </div>
                                     )}

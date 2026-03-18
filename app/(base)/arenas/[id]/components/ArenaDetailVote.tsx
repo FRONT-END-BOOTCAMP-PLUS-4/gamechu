@@ -102,14 +102,15 @@ export default function ArenaDetailVote() {
                                     ✓
                                 </div>
                             )}
-                            <Image
-                                src={arenaDetail?.creatorImageUrl || "/icons/teamA.svg"}
-                                alt="게시자"
-                                width={40}
-                                height={40}
-                                className="rounded-full object-cover sm:h-16 sm:w-16"
-                                unoptimized
-                            />
+                            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full sm:h-16 sm:w-16">
+                                <Image
+                                    src={arenaDetail?.creatorImageUrl || "/icons/teamA.svg"}
+                                    alt="게시자"
+                                    width={40}
+                                    height={40}
+                                    className="h-full w-full object-cover"
+                                />
+                            </div>
                         </div>
                         <div className="flex flex-col items-center">
                             <span className="mb-0 text-[10px] font-medium uppercase text-purple-400 opacity-80 sm:text-xs">
@@ -155,14 +156,15 @@ export default function ArenaDetailVote() {
                                     ✓
                                 </div>
                             )}
-                            <Image
-                                src={arenaDetail?.challengerImageUrl || "/icons/teamB.svg"}
-                                alt="도전자"
-                                width={40}
-                                height={40}
-                                className="rounded-full object-cover sm:h-16 sm:w-16"
-                                unoptimized
-                            />
+                            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full sm:h-16 sm:w-16">
+                                <Image
+                                    src={arenaDetail?.challengerImageUrl || "/icons/teamB.svg"}
+                                    alt="도전자"
+                                    width={40}
+                                    height={40}
+                                    className="h-full w-full object-cover"
+                                />
+                            </div>
                         </div>
                         <div className="flex flex-col items-center">
                             <span className="mb-0 text-[10px] font-medium uppercase text-blue-400 opacity-80 sm:text-xs">
