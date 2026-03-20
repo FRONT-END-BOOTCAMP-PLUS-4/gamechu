@@ -22,7 +22,9 @@ test("/games 페이지 검색창 렌더링", async ({ page }) => {
 });
 
 test("/games 페이지 게임 필터 버튼 렌더링", async ({ page }) => {
+    // xl:hidden 클래스로 1280px 미만에서만 표시
+    await page.setViewportSize({ width: 1024, height: 768 });
     await page.goto("/games");
 
-    await expect(page.getByText("게임 필터")).toBeVisible();
+    await expect(page.getByRole("button", { name: "게임 필터" })).toBeVisible();
 });

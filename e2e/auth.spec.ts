@@ -17,5 +17,5 @@ test("/sign-up 페이지 단계 UI 렌더링", async ({ page }) => {
     await expect(page.getByText(/1\/4 진행중/)).toBeVisible();
 
     // 진행 바 존재
-    await expect(page.locator(".bg-primary-purple-200")).toBeVisible();
+    await expect(page.locator("div.bg-primary-purple-200")).toBeVisible();
 });
