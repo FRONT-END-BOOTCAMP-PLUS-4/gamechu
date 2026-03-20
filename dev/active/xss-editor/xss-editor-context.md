@@ -1,8 +1,8 @@
 # XSS 에디터 개선 — 컨텍스트
 
-> Last Updated: 2026-03-17 (세션 3 — 자동화 테스트 추가)
+> Last Updated: 2026-03-21 (세션 6 — 추가 검토 반영)
 > Branch: `fix/#266`
-> **Status**: Phase 1 + Phase 2 + Phase 3 코드 완료. 수동 검증만 남음.
+> **Status**: Phase 1 + Phase 2 + Phase 3 코드 완료. Phase 4 (브라우저 검증 버그 수정) 진행 중. PR은 Phase 4 완료 후.
 
 ---
 
@@ -16,12 +16,22 @@
 
 ToolbarPlugin에 모든 서식 버튼 포함. Phase 1과 동시 구현됨.
 
-### 남은 작업 (수동)
+### 남은 작업
 
-1. **1-M**: 브라우저에서 에디터 동작 수동 검증
-2. **PR**: `fix/#266` → `dev` PR 생성
+1. **Phase 4 버그 수정** (B1-B8 — `xss-editor-tasks.md` Phase 4 참고)
+   - Medium 우선: B1 (별점 toast), B5 (ReadOnlyReview theme), B2 (글자 크기 커서)
+   - Low 우선: B3/B4/B6/B7/B8
+2. H1-H3, 리스트, 링크 저장 후 ReadOnlyReview 렌더링 확인 (인증 필요 — 미완)
+3. 모바일 툴바 overflow 확인
+4. **PR**: `fix/#266` → `dev` PR 생성 (Phase 4 완료 후)
+5. **E2E 테스트** — `e2e/game-detail.spec.ts` 신규 작성 (`xss-editor-tasks.md` Phase 5 참고)
+   - 5-A~G: 비인증 UI 검증 (페이지 구조, 게임 정보 카드, 리뷰 셀렉터, 에디터, CommentCard, 페이지네이션)
+   - 5-H: 인증 필요 항목 — auth fixture 설정 후 진행
+6. **링크 UX 개선** — 링크 버튼+팝업 → `AutoLinkPlugin` 자동 URL 변환으로 교체 검토 (`xss-editor-tasks.md` 2-G 참고)
+7. **이미지 이동/재배치** — Lexical DecoratorNode 드래그 앤 드롭 커스텀 구현 필요 (작업량 큼 → **보류**)
 
 > DB 마이그레이션 (1-I, 1-J) — 불필요로 판단, 스킵
+> 브라우저 수동 검증 (1-M) — 2026-03-20 완료 (아래 "브라우저 조사 결과" 참고)
 
 ---
 
@@ -181,3 +191,83 @@ npx tsx scripts/migrateReviewsToLexical.ts
 - `§2.3 XSS vulnerability` — 이 태스크의 핵심 취약점
 - `§3.4 XSS Protection` — §2.3의 상세 구현 (Lexical 마이그레이션으로 접근 변경됨)
 - `§7.2 Security Headers & Cookie Configuration` — CSP 헤더 관련 (부분 중복)
+
+---
+
+## 브라우저 조사 결과 (2026-03-20, 세션 4)
+
+> Playwright MCP로 `/games/115` 에디터 상세 조사. 스크린샷: `snapshots/editor-09` ~ `editor-14`.
+> 체크리스트 요약은 `xss-editor-tasks.md` — "브라우저 수동 검증 결과" 섹션 참고.
+
+### 버그 발견 상세 (이 이슈 내 Phase 4에서 수정)
+
+**[B1] 별점 0 상태로 등록 클릭 시 무반응** — Medium
+- 파일: `Comment.tsx:116`
+- 코드: `if (!editor || rating <= 0) return;` — toast 없이 조용히 return
+- 재현: 인증된 사용자가 텍스트만 작성하고 별점 미선택 후 등록 클릭 → 아무 피드백 없음
+- 참고: 미인증 경로(`!viewerId`)는 정상 작동 (toast → redirect). 인증된 상태에서만 silent fail.
+- 수정 방향: `rating <= 0` 시 toast "별점을 선택해주세요" 표시
+
+---
+
+**[B2] 글자 크기 드롭다운이 커서 위치에서 새 텍스트에 미적용** — Medium
+- 파일: `ToolbarPlugin.tsx:84-94`
+- 원인: `$patchStyleText(selection, { "font-size": "Npx" })` — 선택된(highlighted) 텍스트에만 적용. collapsed cursor 상태에서는 no-op.
+- 부작용: 드롭다운에 "24px"가 표시되지만 실제 텍스트는 16px. 이후 커서 이동 시 update listener가 현재 selection의 font-size("16px")를 읽어 드롭다운 값도 "16"으로 복원됨.
+- 재현: 에디터 클릭(커서만) → 드롭다운 24px 선택 → 타이핑 → 텍스트 크기 그대로 16px
+- 수정 방향: collapsed selection에서 크기 변경 시 `editor`의 pending style 메커니즘 활용 (또는 selection이 collapsed이면 paragraph 전체에 `$patchStyleText` 적용)
+
+---
+
+**[B3] 에디터 초기화 버튼 확인 다이얼로그 없음** — Low
+- 파일: `ToolbarPlugin.tsx:295-299`
+- 코드: `editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined)` — 즉시 실행
+- 재현: 긴 리뷰 작성 중 실수로 🗑️ 클릭 → 전체 내용 즉시 삭제
+- 수정 방향: `window.confirm("에디터 내용을 모두 삭제하시겠습니까?")` 추가
+
+---
+
+**[B4] 초기화 후 글자 크기 드롭다운 미리셋** — Low
+- 파일: `ToolbarPlugin.tsx:53-74`
+- 원인: `CLEAR_EDITOR_COMMAND` 후 editor가 비어 있어 range selection 없음 → `registerUpdateListener`에서 `$isRangeSelection` 실패 → 조기 return → `setFontSize()` 미호출 → 이전 값 유지
+- 재현: 24px 선택 → 초기화 클릭 → 드롭다운에 "24px" 유지됨
+- 수정 방향: 초기화 버튼 클릭 핸들러에서 `setFontSize("16")` 직접 호출
+
+---
+
+**[B5] ReadOnlyReview에 Lexical theme 없음** — Medium
+- 파일: `ReadOnlyReview.tsx:14-20`
+- 원인: `initialConfig`에 `theme` 미설정. Lexical은 theme 클래스를 JS로 DOM에 주입하므로, theme 없이는 heading/quote/link에 어떤 CSS 클래스도 추가되지 않음.
+- 현재 상태: `ContentEditable`에 `prose prose-sm` 적용 → `<strong>`, `<em>`, `<h1>` 등 기본 HTML 태그는 Tailwind prose가 처리 → **굵게는 정상 렌더링됨** (확인).
+- 불일치 항목: heading 크기(`text-2xl font-bold`), blockquote 스타일(`border-l-4 border-line-200`), link 색상(`text-primary-purple-200 underline`) — 쓰기 뷰와 다름.
+- 수정 방향: `Comment.tsx`의 `theme` 객체를 `sharedTheme.ts`로 분리해 두 곳에서 import
+
+---
+
+**[B6] 링크 팝업 취소 버튼 없음** — Low
+- 파일: `ToolbarPlugin.tsx:266-291`
+- 현재: Escape 키(`onKeyDown`)로만 닫을 수 있음. 버튼 UI에는 "확인"만 표시.
+- 수정 방향: "취소" 버튼 추가 (`setIsLinkInputVisible(false); setLinkUrl("")`)
+
+---
+
+**[B7] 빈 단락이 150px clip을 낭비해 불필요한 더보기 트리거** — Low
+- 파일: `CommentCard.tsx:73`
+- 원인: Lexical JSON에 저장된 빈 paragraph 노드가 DOM에서 line-height 높이를 차지 → 실질 텍스트가 짧아도 `scrollHeight > 150` 조건 충족 → 더보기 버튼 표시
+- 확인: `친절한이웃스파이` 리뷰 — 빈 단락 여러 개, 150px 클립에서 대부분 공백만 보임
+- 수정 방향: 더보기 임계값 상향 조정 또는 빈 단락을 JSON 저장 시 trim
+
+---
+
+**[B8] AbortError 미처리로 false-positive 콘솔 에러** — Low
+- 파일: `app/(base)/games/page.tsx:111-116`
+- 원인: Chromium에서 `AbortController.abort()` 후 fetch가 `TypeError: Failed to fetch`를 throw함 (`error.name`이 `"AbortError"`가 아님). 현재 코드는 `error.name === "AbortError"`만 체크.
+- 재현: `/games` → `/games/115` 빠른 내비게이션 → 콘솔에 `게임 데이터 요청 실패: TypeError: Failed to fetch`
+- 수정 방향:
+  ```ts
+  if (error instanceof Error && (error.name === "AbortError" || controller.signal.aborted)) {
+      console.log("요청 취소됨");
+  } else {
+      console.error("게임 데이터 요청 실패:", error);
+  }
+  ```
