@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 
-// 💡 필요한 의존성 직접 생성
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
@@ -12,25 +11,6 @@ import { UpdateReviewUsecase } from "@/backend/review/application/usecase/Update
 import { DeleteReviewUsecase } from "@/backend/review/application/usecase/DeleteReviewUsecase";
 import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
 
-// 의존성 주입
-const reviewRepo = new PrismaReviewRepository();
-const likeRepo = new PrismaReviewLikeRepository();
-const memberRepo = new PrismaMemberRepository();
-const scoreRecordRepo = new PrismaScoreRecordRepository();
-const scorePolicy = new ScorePolicy();
-const applyReviewScoreUsecase = new ApplyReviewScoreUsecase(
-    scorePolicy,
-    memberRepo,
-    scoreRecordRepo
-);
-
-const updateReviewUsecase = new UpdateReviewUsecase(reviewRepo);
-const deleteReviewUsecase = new DeleteReviewUsecase(
-    reviewRepo,
-    likeRepo,
-    applyReviewScoreUsecase
-);
-
 export async function PATCH(
     req: NextRequest,
     { params }: { params: Promise<{ reviewId: string }> }
@@ -39,6 +19,9 @@ export async function PATCH(
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    const reviewRepo = new PrismaReviewRepository();
+    const updateReviewUsecase = new UpdateReviewUsecase(reviewRepo);
 
     const reviewId = parseInt((await params).reviewId);
     const review = await reviewRepo.findById(reviewId);
@@ -58,8 +41,13 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const result = await updateReviewUsecase.execute(reviewId, body);
-    return NextResponse.json(result);
+    try {
+        const result = await updateReviewUsecase.execute(reviewId, body);
+        return NextResponse.json(result);
+    } catch (err) {
+        const message = err instanceof Error ? err.message : "잘못된 요청입니다.";
+        return NextResponse.json({ message }, { status: 400 });
+    }
 }
 
 export async function DELETE(
@@ -80,6 +68,22 @@ export async function DELETE(
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    const reviewRepo = new PrismaReviewRepository();
+    const likeRepo = new PrismaReviewLikeRepository();
+    const memberRepo = new PrismaMemberRepository();
+    const scoreRecordRepo = new PrismaScoreRecordRepository();
+    const scorePolicy = new ScorePolicy();
+    const applyReviewScoreUsecase = new ApplyReviewScoreUsecase(
+        scorePolicy,
+        memberRepo,
+        scoreRecordRepo
+    );
+    const deleteReviewUsecase = new DeleteReviewUsecase(
+        reviewRepo,
+        likeRepo,
+        applyReviewScoreUsecase
+    );
 
     const review = await reviewRepo.findById(reviewIdNum);
     if (!review) {

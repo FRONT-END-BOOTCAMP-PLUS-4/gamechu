@@ -16,6 +16,11 @@ export async function POST(req: NextRequest) {
     const usecase = new CreateReviewUsecase(repository);
 
     const body = await req.json();
-    const result = await usecase.execute(memberId, body);
-    return NextResponse.json(result);
+    try {
+        const result = await usecase.execute(memberId, body);
+        return NextResponse.json(result);
+    } catch (err) {
+        const message = err instanceof Error ? err.message : "잘못된 요청입니다.";
+        return NextResponse.json({ message }, { status: 400 });
+    }
 }

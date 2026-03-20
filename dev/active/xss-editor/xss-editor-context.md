@@ -1,8 +1,8 @@
 # XSS 에디터 개선 — 컨텍스트
 
-> Last Updated: 2026-03-17 (세션 2 — 구현 완료)
+> Last Updated: 2026-03-17 (세션 3 — 자동화 테스트 추가)
 > Branch: `fix/#266`
-> **Status**: Phase 1 + Phase 2 코드 구현 완료. DB 마이그레이션 및 수동 검증만 남음.
+> **Status**: Phase 1 + Phase 2 + Phase 3 코드 완료. 수동 검증만 남음.
 
 ---
 
@@ -116,8 +116,30 @@ const contentJson = JSON.stringify(editorRef.current.getEditorState().toJSON());
 
 ### 6. 테스트 현황
 
-- 전체: **126개 통과** (기존 99개 + 27개 신규)
-- 신규: CreateReviewUsecase 7개, UpdateReviewUsecase 6개 (10K자 포함)
+- 전체: **142개 통과** (기존 99개 + 43개 신규)
+- Phase 1+2 신규: CreateReviewUsecase 7개, UpdateReviewUsecase 6개 (10K자 포함)
+- Phase 3 신규: route POST +2, route PATCH/DELETE +8, ToolbarPlugin regex +6
+
+### 7. Phase 3 — 자동화 테스트 코드 변경
+
+**route 수정 (테스트 가능하도록)**
+
+- `reviews/route.ts` — POST try-catch 추가 (usecase throw → 500 아닌 400)
+- `reviews/[reviewId]/route.ts` — 모듈 스코프 인스턴스를 핸들러 내부로 이동 + PATCH try-catch 추가
+
+**자동화 가능/불가 분류**
+
+| 항목 | 자동화 |
+|------|--------|
+| non-JSON content → 400 | ✅ route 단위 테스트 |
+| 10K자 초과 → 400 | ✅ route 단위 테스트 |
+| PATCH 401/403/404/400/200 | ✅ route 단위 테스트 |
+| DELETE 401/404/200 | ✅ route 단위 테스트 |
+| `javascript:` 링크 거부 | ✅ regex 단위 테스트 |
+| 에디터 작성 → 저장 → 렌더링 | ❌ 실제 브라우저 필요 |
+| H1-H3/리스트/링크 렌더링 | ❌ 실제 브라우저 필요 |
+| 10K자 경고색 UI | ❌ 시각적 검증 |
+| 모바일 toolbar overflow | ❌ 뷰포트 레이아웃 |
 
 ---
 

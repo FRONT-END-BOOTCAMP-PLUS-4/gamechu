@@ -17,12 +17,6 @@ import { LinkNode, AutoLinkNode } from "@lexical/link";
 import { CodeNode, CodeHighlightNode } from "@lexical/code";
 import { PrismaClient } from "../prisma/generated";
 
-// ImageNode는 DecoratorNode이므로 headless 환경에서 별도 처리
-// createHeadlessEditor는 decorate()를 호출하지 않아 기본 직렬화만 수행
-class HeadlessImageNode {
-    static getType() { return "image"; }
-}
-
 const prisma = new PrismaClient();
 
 const nodes = [

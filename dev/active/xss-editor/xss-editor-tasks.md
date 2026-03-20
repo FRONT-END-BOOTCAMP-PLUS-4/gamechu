@@ -1,9 +1,9 @@
 # XSS 에디터 개선 — 태스크 체크리스트
 
-> Last Updated: 2026-03-17 (세션 2 — 코드 구현 완료)
+> Last Updated: 2026-03-17 (세션 3 — 자동화 테스트 추가)
 > Issue: `fix/#266`
 > **Approach**: TipTap → Lexical 마이그레이션
-> **Status**: Phase 1 + Phase 2 코드 완료. DB 마이그레이션 및 수동 검증 + PR 남음.
+> **Status**: Phase 1 + Phase 2 + Phase 3 코드 완료. 수동 검증 + PR 남음.
 
 ---
 
@@ -97,9 +97,9 @@
 ### 1-M. Phase 1 통합 검증 ⚠️ 수동 필요
 
 - [ ] 브라우저에서 Lexical 에디터 리뷰 작성 → 저장 → `ReadOnlyReview` 렌더링
-- [ ] curl로 API에 JSON 아닌 문자열 전송 → `400` 반환 확인
+- [x] curl로 API에 JSON 아닌 문자열 전송 → `400` 반환 확인 *(자동화: route 단위 테스트)*
 - [x] `next build` 성공
-- [x] 테스트 126개 통과
+- [x] 테스트 142개 통과
 
 ---
 
@@ -155,6 +155,38 @@
 - [ ] 모든 툴바 버튼 브라우저 동작 확인
 - [ ] H1-H3, 리스트, 링크 저장 후 ReadOnlyReview 렌더링
 - [ ] 10,000자 제한 경고색 동작 확인
-- [ ] 링크 `javascript:` 거부 확인
+- [x] 링크 `javascript:` 거부 확인 *(자동화: ToolbarPlugin regex 단위 테스트)*
 - [ ] 모바일 툴바 overflow 확인
 - [x] `next build` 성공
+
+---
+
+## Phase 3: 자동화 테스트
+
+### 3-A. Route 핸들러 try-catch 수정
+
+- [x] `reviews/route.ts` POST — try-catch 추가 (usecase throw → 400)
+- [x] `reviews/[reviewId]/route.ts` PATCH — try-catch 추가
+- [x] `reviews/[reviewId]/route.ts` — 모듈 스코프 인스턴스 → 핸들러 내부 이동 (vi.mock 동작)
+
+---
+
+### 3-B. Route 단위 테스트
+
+- [x] `reviews/__tests__/route.test.ts` 확장 — non-JSON → 400, 10K자 → 400 (+2)
+- [x] `reviews/[reviewId]/__tests__/route.test.ts` 신규 — PATCH 5개, DELETE 3개 (+8)
+
+---
+
+### 3-C. ToolbarPlugin 링크 검증 단위 테스트
+
+- [x] `lexical/plugins/__tests__/ToolbarPlugin.test.ts` 신규 — regex 6개 (`javascript:` 거부 포함)
+
+---
+
+### 3-D. 자동화 불가 항목 (수동 유지)
+
+- Lexical 에디터 실제 작성 → 저장 → 렌더링 (실제 브라우저 필요)
+- H1-H3, 리스트, 링크 서식 저장 후 렌더링
+- 10,000자 경고색 UI
+- 모바일 툴바 overflow (뷰포트 레이아웃)
