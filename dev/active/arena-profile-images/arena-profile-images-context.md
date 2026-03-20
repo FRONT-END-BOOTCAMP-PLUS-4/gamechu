@@ -1,6 +1,6 @@
 # Context: 투기장 상세 페이지 프로필 이미지 표시
 
-Last Updated: 2026-03-19 (UI 개선 완료 — 미커밋, PR 대기 중)
+Last Updated: 2026-03-20 (tsc 잔존 에러 수정 — 커밋 필요)
 
 ---
 
@@ -8,19 +8,24 @@ Last Updated: 2026-03-19 (UI 개선 완료 — 미커밋, PR 대기 중)
 
 - GitHub Issue: #269
 - Branch: `feat/#269`
-- 상태: **UI 개선 완료, 미커밋, push 및 PR 미생성**
+- PR: https://github.com/FRONT-END-BOOTCAMP-PLUS-4/gamechu/pull/270
+- 상태: **COMPLETED — push 및 PR 생성 완료**
 
 ## 커밋 이력
 
 1. `[feat/#269] arena-profile-images 계획 수립` — 계획 파일 3개
 2. `[feat/#269] 투기장 상세 페이지 A/B팀 아이콘을 프로필 이미지로 교체` — 실제 구현 (7개 파일)
+3. `[feat/#269] 헤더 인라인 구현 및 이미지 원형 처리 개선` — UI 개선 3개 파일
 
 ## 미커밋 변경사항 (commit 필요)
 
-아래 3개 파일이 수정되었으나 아직 커밋되지 않았음:
-- `app/(base)/arenas/[id]/components/ArenaDetailHeader.tsx`
-- `app/(base)/arenas/[id]/components/ArenaDetailChatList.tsx`
-- `app/(base)/arenas/[id]/components/ArenaDetailVote.tsx`
+아래 2개 파일이 수정되었으나 아직 커밋되지 않았음 (이번 작업과 무관한 기존 tsc 에러 수정):
+- `backend/arena/application/usecase/__tests__/UpdateArenaUsecase.test.ts`
+- `backend/review-like/application/usecase/__tests__/ToggleReviewLikeUsecase.test.ts`
+
+수정 내용:
+- `UpdateArenaUsecase.test.ts` — `makeArena()`에서 `gameId: 100` 제거 (`Arena` Prisma 타입에 해당 필드 없음)
+- `ToggleReviewLikeUsecase.test.ts` — `Review` 타입 → `ReviewDto` 타입으로 교체, 누락 필드 추가 (`nickname`, `imageUrl`, `score`, `likeCount`, `isLiked`)
 
 ---
 
@@ -130,9 +135,7 @@ public challengerImageUrl: string | null,  // challengerScore 다음
 
 ### 빌드 상태
 - `npm run build` 통과
-- 잔존 tsc 에러 2개는 이번 작업과 무관한 기존 테스트 파일 문제:
-  - `UpdateArenaUsecase.test.ts:14` — `gameId` 필드 없는 객체 리터럴
-  - `ToggleReviewLikeUsecase.test.ts:29,55` — `ReviewDto` 필드 누락
+- `npx tsc --noEmit` 에러 0개 (기존 잔존 tsc 에러 2개 모두 수정 완료)
 
 ---
 
