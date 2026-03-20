@@ -78,7 +78,10 @@ export default function Comment({
         },
     };
 
-    const handleEditorChange = (editorState: EditorState, editor: LexicalEditor) => {
+    const handleEditorChange = (
+        editorState: EditorState,
+        editor: LexicalEditor
+    ) => {
         editorRef.current = editor;
         editorState.read(() => {
             const text = $getRoot().getTextContent();
@@ -168,10 +171,10 @@ export default function Comment({
             <LexicalComposer initialConfig={editorConfig}>
                 {/* 상단 툴바 + 별점 + 버튼 */}
                 <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                         <ToolbarPlugin onImageUpload={handleImageUpload} />
                     </div>
-                    <div className="flex items-center gap-4 flex-shrink-0">
+                    <div className="flex flex-shrink-0 items-center gap-4">
                         <StarRating
                             value={rating}
                             variant="noText"
@@ -193,10 +196,10 @@ export default function Comment({
                 {/* 에디터 영역 */}
                 <RichTextPlugin
                     contentEditable={
-                        <ContentEditable className="w-full min-h-[218px] sm:min-h-[200px] bg-background-200 rounded-[8px] p-4 outline-none overflow-y-auto border border-line-200 focus:border-primary-purple-200 focus:border-2 prose prose-sm max-w-full break-words [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-md" />
+                        <ContentEditable className="prose prose-sm min-h-[218px] w-full max-w-full overflow-y-auto break-words rounded-[8px] border border-line-200 bg-background-200 p-4 outline-none focus:border-2 focus:border-primary-purple-200 sm:min-h-[200px] [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-md" />
                     }
                     placeholder={
-                        <div className="pointer-events-none absolute top-[100px] left-8 text-font-300 text-sm select-none">
+                        <div className="pointer-events-none absolute left-8 top-[100px] select-none text-sm text-font-300">
                             리뷰를 입력하세요...
                         </div>
                     }
