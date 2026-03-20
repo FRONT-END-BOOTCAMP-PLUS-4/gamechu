@@ -17,6 +17,7 @@ import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
 import { type LexicalEditor, type EditorState } from "lexical";
 import { $getRoot } from "lexical";
 import { sharedNodes } from "./lexical/nodes";
+import { sharedTheme } from "./lexical/sharedTheme";
 import { ToolbarPlugin } from "./lexical/plugins/ToolbarPlugin";
 import { ImagePlugin } from "./lexical/plugins/ImagePlugin";
 
@@ -57,25 +58,7 @@ export default function Comment({
         onError(error: Error) {
             console.error(error);
         },
-        theme: {
-            text: {
-                bold: "font-bold",
-                italic: "italic",
-                underline: "underline",
-                strikethrough: "line-through",
-            },
-            heading: {
-                h1: "text-2xl font-bold",
-                h2: "text-xl font-bold",
-                h3: "text-lg font-bold",
-            },
-            list: {
-                ul: "list-disc pl-5",
-                ol: "list-decimal pl-5",
-            },
-            quote: "border-l-4 border-line-200 pl-4 text-font-200",
-            link: "text-primary-purple-200 underline",
-        },
+        theme: sharedTheme,
     };
 
     const handleEditorChange = (
@@ -194,17 +177,19 @@ export default function Comment({
                 </div>
 
                 {/* 에디터 영역 */}
-                <RichTextPlugin
-                    contentEditable={
-                        <ContentEditable className="prose prose-sm min-h-[218px] w-full max-w-full overflow-y-auto break-words rounded-[8px] border border-line-200 bg-background-200 p-4 outline-none focus:border-2 focus:border-primary-purple-200 sm:min-h-[200px] [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-md" />
-                    }
-                    placeholder={
-                        <div className="pointer-events-none absolute left-8 top-[100px] select-none text-sm text-font-300">
-                            리뷰를 입력하세요...
-                        </div>
-                    }
-                    ErrorBoundary={LexicalErrorBoundary}
-                />
+                <div className="relative">
+                    <RichTextPlugin
+                        contentEditable={
+                            <ContentEditable className="prose prose-sm min-h-[218px] w-full max-w-full overflow-y-auto break-words rounded-[8px] border border-line-200 bg-background-200 p-4 outline-none focus:border-2 focus:border-primary-purple-200 sm:min-h-[200px] [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-md" />
+                        }
+                        placeholder={
+                            <div className="pointer-events-none absolute left-4 top-4 select-none text-sm text-font-300">
+                                리뷰를 입력하세요...
+                            </div>
+                        }
+                        ErrorBoundary={LexicalErrorBoundary}
+                    />
+                </div>
 
                 <HistoryPlugin />
                 <ListPlugin />

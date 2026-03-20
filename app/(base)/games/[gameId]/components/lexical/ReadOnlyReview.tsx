@@ -5,6 +5,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { sharedNodes } from "./nodes";
+import { sharedTheme } from "./sharedTheme";
 
 interface ReadOnlyReviewProps {
     content: string;
@@ -16,6 +17,7 @@ export function ReadOnlyReview({ content }: ReadOnlyReviewProps) {
         editorState: content,
         editable: false,
         nodes: sharedNodes,
+        theme: sharedTheme,
         onError: (e: Error) => console.error(e),
     };
 
