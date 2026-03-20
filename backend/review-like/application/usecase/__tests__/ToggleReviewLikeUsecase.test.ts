@@ -3,13 +3,13 @@ import { ToggleReviewLikeUsecase } from "../ToggleReviewLikeUsecase";
 import { MockReviewLikeRepository } from "@/tests/mocks/MockReviewLikeRepository";
 import { MockReviewRepository } from "@/tests/mocks/MockReviewRepository";
 import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
-import { Review } from "@/prisma/generated";
+import { ReviewDto } from "@/backend/review/application/usecase/dto/ReviewDto";
 
 function makeApplyReviewScoreMock() {
     return { execute: vi.fn().mockResolvedValue(undefined) };
 }
 
-const mockReview: Review = {
+const mockReview: ReviewDto = {
     id: 10,
     memberId: "author-1",
     gameId: 100,
@@ -17,6 +17,11 @@ const mockReview: Review = {
     rating: 5,
     createdAt: new Date(),
     updatedAt: new Date(),
+    nickname: "author",
+    imageUrl: null,
+    score: 0,
+    likeCount: 0,
+    isLiked: false,
 };
 
 describe("ToggleReviewLikeUsecase", () => {

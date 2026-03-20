@@ -11,7 +11,6 @@ const makeArena = (overrides: Partial<Arena> = {}): Arena => ({
     description: "desc",
     startDate: new Date("2026-04-01T10:00:00.000Z"),
     status: 1,
-    gameId: 100,
     ...overrides,
 });
 

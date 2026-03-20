@@ -1,6 +1,6 @@
 # Tasks: 투기장 상세 페이지 프로필 이미지 표시
 
-Last Updated: 2026-03-19 (UI 개선 완료 — 미커밋)
+Last Updated: 2026-03-20 (tsc 잔존 에러 수정 완료 — 커밋 필요)
 
 ---
 
@@ -57,9 +57,23 @@ Last Updated: 2026-03-19 (UI 개선 완료 — 미커밋)
 
 ---
 
+## Phase E — 잔존 tsc 에러 수정 (이번 작업과 무관한 기존 에러)
+
+### E-1. UpdateArenaUsecase.test.ts
+- ✅ `backend/arena/application/usecase/__tests__/UpdateArenaUsecase.test.ts` 수정
+  - `makeArena()`에서 `gameId: 100` 제거 — `Arena` Prisma 타입에 해당 필드 없음
+
+### E-2. ToggleReviewLikeUsecase.test.ts
+- ✅ `backend/review-like/application/usecase/__tests__/ToggleReviewLikeUsecase.test.ts` 수정
+  - `import { Review }` → `import { ReviewDto }` 교체
+  - `mockReview` 타입: `Review` → `ReviewDto`, 누락 필드 추가 (`nickname: "author"`, `imageUrl: null`, `score: 0`, `likeCount: 0`, `isLiked: false`)
+  - **원인**: `ReviewRepository.findById()`가 `ReviewDto | null` 반환 — `Review` (Prisma) 타입과 다름
+
+---
+
 ## Completion Checklist
 
-- ✅ TypeScript 컴파일 에러 없음 (`npx tsc --noEmit` 통과)
+- ✅ TypeScript 컴파일 에러 없음 (`npx tsc --noEmit` 에러 0개)
 - ✅ `teamA.svg`, `teamB.svg` 사용처 3개 컴포넌트에서 모두 fallback으로만 사용
 - ✅ Convention drift (`interface` → `type`) 수정 완료
 - ✅ 게시자/도전자 모두 null 케이스 처리 확인
@@ -67,16 +81,17 @@ Last Updated: 2026-03-19 (UI 개선 완료 — 미커밋)
 - ✅ 세로 이미지 원형 처리 — wrapper div `overflow-hidden rounded-full` 패턴 적용
 - ✅ `unoptimized` prop 제거 완료
 - ✅ 헤더 클릭 영역 분리 — 이미지/닉네임만 프로필 이동, 레이블/TierBadge 제외
+- ✅ PR #270 생성 완료
 
 ---
 
 ## 다음 단계
 
-1. **커밋**: 미커밋 파일 3개 커밋 필요
+1. **커밋**: 미커밋 테스트 파일 2개 커밋 후 PR에 push
    ```bash
-   git add "app/(base)/arenas/[id]/components/ArenaDetailHeader.tsx" \
-           "app/(base)/arenas/[id]/components/ArenaDetailChatList.tsx" \
-           "app/(base)/arenas/[id]/components/ArenaDetailVote.tsx"
-   git commit -m "[feat/#269] 헤더 인라인 구현 및 이미지 원형 처리 개선"
+   git add "backend/arena/application/usecase/__tests__/UpdateArenaUsecase.test.ts" \
+           "backend/review-like/application/usecase/__tests__/ToggleReviewLikeUsecase.test.ts"
+   git commit -m "[fix] UpdateArenaUsecase, ToggleReviewLikeUsecase 테스트 tsc 에러 수정"
+   git push origin feat/#269
    ```
-2. **PR 생성**: `/dev-docs-finalize` 실행하여 push + PR 생성
+2. **아카이브**: 작업 완료 후 `/archive-task` 실행
