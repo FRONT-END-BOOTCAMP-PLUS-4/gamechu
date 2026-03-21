@@ -109,11 +109,8 @@ export default function GamePage() {
                     setTotalItems(0);
                 }
             } catch (error) {
-                if (error instanceof Error && error.name === "AbortError") {
-                    console.log("요청 취소됨");
-                } else {
-                    console.error("게임 데이터 요청 실패:", error);
-                }
+                if (controller.signal.aborted) return;
+                console.error("게임 데이터 요청 실패:", error);
             } finally {
                 setLoading(false);
             }

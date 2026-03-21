@@ -486,6 +486,20 @@ export default defineConfig({
 });
 ```
 
+### Dev server lifecycle
+
+`reuseExistingServer: true` (local default) means:
+
+- If **no** dev server is running → Playwright starts one and **stops it** when tests finish.
+- If a dev server is **already running** → Playwright reuses it and leaves it running after tests.
+
+**Rule:** Do not run `npm run dev` before `npm run test:e2e`. Let Playwright manage the server lifecycle so it is automatically stopped after tests end. If a server is already running on port 3000, kill it first:
+
+```bash
+npx kill-port 3000
+npm run test:e2e
+```
+
 ### Examples
 
 **Page rendering** — verify page loads without error and key elements are visible:
@@ -539,6 +553,20 @@ test("GET /api/games — 500 아님", async ({ request }) => {
 - Authenticated flows requiring a real session (NextAuth sessions can't be easily seeded in CI without a live DB)
 - Business logic — that belongs in Vitest unit tests
 - Visual regression — there is no baseline snapshot setup
+
+---
+
+## Development Environment
+
+### File system access
+
+- **Only read/write files under the project root directory.** Never access `/tmp`, `/temp`, system directories, or any path outside the project.
+- If a new directory is needed (e.g., for scripts, temporary outputs), create it inside the project root.
+
+### Database access
+
+- **Do NOT access the database directly** (e.g., via Prisma `$queryRaw`, Prisma Studio, or psql).
+- If database inspection is needed, ask the user to run the query manually on the server and share the result.
 
 ---
 

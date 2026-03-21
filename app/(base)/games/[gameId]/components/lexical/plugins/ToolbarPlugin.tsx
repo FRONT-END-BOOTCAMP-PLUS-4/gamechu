@@ -15,7 +15,6 @@ import {
 } from "@lexical/list";
 import { $setBlocksType } from "@lexical/selection";
 import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
-import { TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { $patchStyleText, $getSelectionStyleValueForProperty } from "@lexical/selection";
 import {
     Bold,
@@ -28,13 +27,12 @@ import {
     List,
     ListOrdered,
     Quote,
-    Link,
     ImageIcon,
     Trash2,
     Undo,
     Redo,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const FONT_SIZES = ["12", "14", "16", "18", "20", "24", "32"] as const;
 
@@ -46,10 +44,6 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
     const [editor] = useLexicalComposerContext();
     const [activeFormats, setActiveFormats] = useState<Set<string>>(new Set());
     const [fontSize, setFontSize] = useState("16");
-    const [isLinkInputVisible, setIsLinkInputVisible] = useState(false);
-    const [linkUrl, setLinkUrl] = useState("");
-    const linkInputRef = useRef<HTMLInputElement>(null);
-
     useEffect(() => {
         return editor.registerUpdateListener(({ editorState }) => {
             editorState.read(() => {
@@ -73,19 +67,25 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
         });
     }, [editor]);
 
-    const handleLinkSubmit = useCallback(() => {
-        if (linkUrl && /^https?:\/\//.test(linkUrl)) {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkUrl);
-        }
-        setIsLinkInputVisible(false);
-        setLinkUrl("");
-    }, [editor, linkUrl]);
-
     const handleFontSizeChange = useCallback(
         (size: string) => {
+            setFontSize(size);
             editor.update(() => {
                 const selection = $getSelection();
-                if ($isRangeSelection(selection)) {
+                if (!$isRangeSelection(selection)) return;
+                if (selection.isCollapsed()) {
+                    const anchorNode = selection.anchor.getNode();
+                    const topElement = anchorNode.getTopLevelElement();
+                    if (topElement) {
+                        const fullSelection = topElement.select(
+                            0,
+                            topElement.getChildrenSize()
+                        );
+                        $patchStyleText(fullSelection, {
+                            "font-size": `${size}px`,
+                        });
+                    }
+                } else {
                     $patchStyleText(selection, { "font-size": `${size}px` });
                 }
             });
@@ -97,12 +97,15 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
         "flex items-center justify-center p-2 rounded hover:bg-primary-purple-100 transition cursor-pointer flex-shrink-0";
     const active = "bg-primary-purple-200 text-white";
 
+    const noFocus = (e: React.MouseEvent) => e.preventDefault();
+
     return (
         <div className="flex flex-col gap-2">
             {/* Row 1: text formatting */}
             <div className="flex flex-wrap items-center gap-1 overflow-x-auto whitespace-nowrap">
                 <button
                     aria-label="실행 취소"
+                    onMouseDown={noFocus}
                     onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
                     className={base}
                 >
@@ -110,6 +113,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 </button>
                 <button
                     aria-label="다시 실행"
+                    onMouseDown={noFocus}
                     onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
                     className={base}
                 >
@@ -120,6 +124,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
 
                 <button
                     aria-label="굵게"
+                    onMouseDown={noFocus}
                     onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
                     className={`${base} ${activeFormats.has("bold") ? active : ""}`}
                 >
@@ -127,6 +132,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 </button>
                 <button
                     aria-label="기울임"
+                    onMouseDown={noFocus}
                     onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}
                     className={`${base} ${activeFormats.has("italic") ? active : ""}`}
                 >
@@ -134,6 +140,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 </button>
                 <button
                     aria-label="밑줄"
+                    onMouseDown={noFocus}
                     onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")}
                     className={`${base} ${activeFormats.has("underline") ? active : ""}`}
                 >
@@ -141,6 +148,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 </button>
                 <button
                     aria-label="취소선"
+                    onMouseDown={noFocus}
                     onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")}
                     className={`${base} ${activeFormats.has("strikethrough") ? active : ""}`}
                 >
@@ -151,6 +159,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
 
                 <button
                     aria-label="제목 1"
+                    onMouseDown={noFocus}
                     onClick={() =>
                         editor.update(() => {
                             const selection = $getSelection();
@@ -165,6 +174,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 </button>
                 <button
                     aria-label="제목 2"
+                    onMouseDown={noFocus}
                     onClick={() =>
                         editor.update(() => {
                             const selection = $getSelection();
@@ -179,6 +189,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 </button>
                 <button
                     aria-label="제목 3"
+                    onMouseDown={noFocus}
                     onClick={() =>
                         editor.update(() => {
                             const selection = $getSelection();
@@ -193,6 +204,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 </button>
                 <button
                     aria-label="글머리 기호 목록"
+                    onMouseDown={noFocus}
                     onClick={() =>
                         editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)
                     }
@@ -202,6 +214,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 </button>
                 <button
                     aria-label="번호 매기기 목록"
+                    onMouseDown={noFocus}
                     onClick={() =>
                         editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)
                     }
@@ -211,6 +224,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 </button>
                 <button
                     aria-label="인용구"
+                    onMouseDown={noFocus}
                     onClick={() =>
                         editor.update(() => {
                             const selection = $getSelection();
@@ -244,6 +258,7 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 {/* Image Upload */}
                 <button
                     aria-label="사진 업로드"
+                    onMouseDown={noFocus}
                     onClick={onImageUpload}
                     className={`${base} gap-1.5 bg-background-200 px-3`}
                 >
@@ -251,49 +266,23 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                     <span className="text-sm font-medium">사진</span>
                 </button>
 
-                {/* Link */}
-                <div className="relative flex items-center">
-                    <button
-                        aria-label="링크 삽입"
-                        onClick={() => {
-                            setIsLinkInputVisible((v) => !v);
-                            setTimeout(() => linkInputRef.current?.focus(), 0);
-                        }}
-                        className={`${base} ${isLinkInputVisible ? active : ""}`}
-                    >
-                        <Link size={18} />
-                    </button>
-                    {isLinkInputVisible && (
-                        <div className="absolute left-0 top-full z-10 mt-1 flex gap-1">
-                            <input
-                                ref={linkInputRef}
-                                type="url"
-                                value={linkUrl}
-                                onChange={(e) => setLinkUrl(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") handleLinkSubmit();
-                                    if (e.key === "Escape") {
-                                        setIsLinkInputVisible(false);
-                                        setLinkUrl("");
-                                    }
-                                }}
-                                placeholder="https://"
-                                className="w-48 rounded border border-line-200 bg-background-100 px-2 py-1 text-sm"
-                            />
-                            <button
-                                onClick={handleLinkSubmit}
-                                className="rounded bg-primary-purple-200 px-2 py-1 text-sm text-white"
-                            >
-                                확인
-                            </button>
-                        </div>
-                    )}
-                </div>
-
                 {/* Clear */}
                 <button
                     aria-label="에디터 초기화"
-                    onClick={() => editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined)}
+                    onMouseDown={noFocus}
+                    onClick={() => {
+                        if (
+                            window.confirm(
+                                "에디터 내용을 모두 삭제하시겠습니까?"
+                            )
+                        ) {
+                            editor.dispatchCommand(
+                                CLEAR_EDITOR_COMMAND,
+                                undefined
+                            );
+                            setFontSize("16");
+                        }
+                    }}
                     className={`${base} ml-auto text-red-400 hover:bg-red-50`}
                 >
                     <Trash2 size={18} />

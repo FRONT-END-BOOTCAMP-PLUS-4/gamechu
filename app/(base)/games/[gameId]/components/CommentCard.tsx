@@ -70,7 +70,7 @@ export default function CommentCard({
 
         const observer = new ResizeObserver(() => {
             setContentHeight(el.scrollHeight);
-            setIsOverflowing(el.scrollHeight > 150);
+            setIsOverflowing(el.scrollHeight > 180);
         });
 
         observer.observe(el);
