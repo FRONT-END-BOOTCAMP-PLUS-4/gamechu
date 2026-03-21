@@ -38,6 +38,11 @@ export function ImagePlugin({ inputRef }: ImagePluginProps) {
         );
     }, [editor]);
 
+    // TODO: image inserted via this plugin is visible in the editor immediately,
+    // but after save+reload the image may not render correctly until a hard refresh.
+    // Likely cause: base64 src stored in Lexical JSON is read back fine, but
+    // ReadOnlyReview may need to register ImageNode or handle serialization edge cases.
+    // Needs investigation with an actual save→reload cycle.
     const handleFileChange = () => {
         const file = inputRef.current?.files?.[0];
         if (!file) return;

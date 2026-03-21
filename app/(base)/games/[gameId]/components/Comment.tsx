@@ -14,6 +14,10 @@ import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
+import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { HEADING } from "@lexical/markdown";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { type LexicalEditor, type EditorState } from "lexical";
 import { $getRoot } from "lexical";
 import { sharedNodes } from "./lexical/nodes";
@@ -31,6 +35,36 @@ interface CommentProps {
 
 const MAX_CHARS = 10_000;
 
+/** Sets editorRef on mount so handleSubmit works before any user interaction. */
+function EditorRefPlugin({
+    editorRef,
+}: {
+    editorRef: React.MutableRefObject<LexicalEditor | null>;
+}) {
+    const [editor] = useLexicalComposerContext();
+    React.useEffect(() => {
+        editorRef.current = editor;
+    }, [editor, editorRef]);
+    return null;
+}
+
+const URL_REGEX =
+    /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+
+const AUTOLINK_MATCHERS = [
+    (text: string) => {
+        const match = URL_REGEX.exec(text);
+        if (!match) return null;
+        const url = match[0];
+        return {
+            index: match.index,
+            length: url.length,
+            text: url,
+            url: url.startsWith("http") ? url : `https://${url}`,
+        };
+    },
+];
+
 export default function Comment({
     gameId,
     editingReviewId,
@@ -39,6 +73,9 @@ export default function Comment({
     viewerId,
 }: CommentProps) {
     const router = useRouter();
+    // TODO: rating not pre-populated in edit mode — user must re-select it.
+    // Fix: accept a `defaultRating` prop and pass it as initial useState value,
+    // then include the existing rating in the PATCH request body.
     const [rating, setRating] = useState(0);
     const [toast, setToast] = useState({
         show: false,
@@ -95,8 +132,20 @@ export default function Comment({
             return;
         }
 
+        if (rating <= 0) {
+            setToast({
+                show: true,
+                message: "별점을 선택해주세요",
+                status: "error",
+            });
+            setTimeout(() => {
+                setToast((prev) => ({ ...prev, show: false }));
+            }, 3000);
+            return;
+        }
+
         const editor = editorRef.current;
-        if (!editor || rating <= 0) return;
+        if (!editor) return;
 
         const contentJson = JSON.stringify(editor.getEditorState().toJSON());
         if (!contentJson.trim()) return;
@@ -195,8 +244,11 @@ export default function Comment({
                 <ListPlugin />
                 <LinkPlugin validateUrl={(url) => /^https?:\/\//.test(url)} />
                 <ClearEditorPlugin />
+                <AutoLinkPlugin matchers={AUTOLINK_MATCHERS} />
                 <OnChangePlugin onChange={handleEditorChange} />
                 <ImagePlugin inputRef={imageInputRef} />
+                <EditorRefPlugin editorRef={editorRef} />
+                <MarkdownShortcutPlugin transformers={[HEADING]} />
             </LexicalComposer>
 
             {/* 글자 수 표시 */}
