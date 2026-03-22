@@ -1,10 +1,12 @@
 import { DeleteArenaUsecase } from "@/backend/arena/application/usecase/DeleteArenaUsecase";
 import { UpdateArenaDto } from "@/backend/arena/application/usecase/dto/UpdateArenaDto";
+import { UpdateArenaSchema } from "@/backend/arena/application/usecase/dto/UpdateArenaDto";
 import { UpdateArenaUsecase } from "@/backend/arena/application/usecase/UpdateArenaUsecase";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
 import { Arena } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { validate, IdSchema } from "@/utils/validation";
 import { NextResponse } from "next/server";
 
 type RequestParams = {
@@ -17,22 +19,20 @@ type RequestParams = {
 export async function PATCH(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
-        const arenaId: number = Number(id);
+        const idValidated = validate(IdSchema, Number(id));
+        if (!idValidated.success) return idValidated.response;
+        const arenaId = idValidated.data;
 
         // body validation
         const body = await request.json();
-        if (!body.description && !body.challengerId && !body.startDate) {
-            return NextResponse.json(
-                { error: "변경된 내용을 찾을 수 없습니다." },
-                { status: 400 }
-            );
-        }
+        const validated = validate(UpdateArenaSchema, body);
+        if (!validated.success) return validated.response;
 
         // member validation
         const memberId: string | null = await getAuthUserId();
         if (!memberId) {
             return NextResponse.json(
-                { error: "투기장 변경 권한이 없습니다." },
+                { message: "투기장 변경 권한이 없습니다." },
                 { status: 401 }
             );
         }
@@ -43,9 +43,9 @@ export async function PATCH(request: Request, { params }: RequestParams) {
         );
         const updateArenaDto: UpdateArenaDto = {
             id: arenaId,
-            challengerId: body.challengerId,
-            description: body.description,
-            startDate: body.startDate,
+            challengerId: validated.data.challengerId,
+            description: validated.data.description,
+            startDate: validated.data.startDate ? new Date(validated.data.startDate) : undefined,
         };
 
         await updateArenaUsecase.execute(updateArenaDto);
@@ -72,7 +72,9 @@ export async function PATCH(request: Request, { params }: RequestParams) {
 export async function DELETE(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
-        const arenaId: number = Number(id);
+        const idValidated = validate(IdSchema, Number(id));
+        if (!idValidated.success) return idValidated.response;
+        const arenaId = idValidated.data;
 
         const arenaRepository: ArenaRepository = new PrismaArenaRepository();
         const deleteArenaUsecase: DeleteArenaUsecase = new DeleteArenaUsecase(
@@ -84,7 +86,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
 
         if (!arena) {
             return NextResponse.json(
-                { error: "투기장이 존재하지 않습니다." },
+                { message: "투기장이 존재하지 않습니다." },
                 { status: 404 }
             );
         }
@@ -96,7 +98,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
             (arena.creatorId !== memberId && arena.challengerId !== memberId)
         ) {
             return NextResponse.json(
-                { error: "투기장 삭제 권한이 없습니다." },
+                { message: "투기장 삭제 권한이 없습니다." },
                 { status: 401 }
             );
         }
