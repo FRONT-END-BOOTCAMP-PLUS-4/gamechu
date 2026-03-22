@@ -74,7 +74,15 @@ export async function DELETE(
     _: NextRequest,
     { params }: { params: Promise<{ gameId: string; reviewId: string }> }
 ) {
-    const { reviewId } = await params;
+    const { gameId, reviewId } = await params;
+
+    const gameIdResult = IdSchema.safeParse(gameId);
+    if (!gameIdResult.success) {
+        return NextResponse.json(
+            { message: "유효하지 않은 게임 ID입니다." },
+            { status: 400 }
+        );
+    }
 
     const reviewIdResult = IdSchema.safeParse(reviewId);
     if (!reviewIdResult.success) {
