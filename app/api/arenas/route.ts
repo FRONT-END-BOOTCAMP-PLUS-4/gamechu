@@ -1,5 +1,5 @@
 import { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
-import { GetArenaDto } from "@/backend/arena/application/usecase/dto/GetArenaDto";
+import { GetArenaDto, GetArenaSchema } from "@/backend/arena/application/usecase/dto/GetArenaDto";
 import { GetArenaUsecase } from "@/backend/arena/application/usecase/GetArenaUsecase";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
@@ -8,23 +8,26 @@ import { PrismaMemberRepository } from "@/backend/member/infra/repositories/pris
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { validate } from "@/utils/validation";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     try {
         const memberId = await getAuthUserId(); // 로그인 유저
 
-        // get query parameters from URL
         const url = new URL(request.url);
-        const currentPage: number = Number(
-            url.searchParams.get("currentPage") || 1
-        );
-        const status: number = Number(url.searchParams.get("status"));
-        const mine: boolean = url.searchParams.get("mine") === "true";
-        const pageSize: number = Number(url.searchParams.get("pageSize")!);
+        const validated = validate(GetArenaSchema, Object.fromEntries(url.searchParams));
+        if (!validated.success) return validated.response;
 
-        // ✅ 추가: 타 사용자 ID
-        const targetMemberId = url.searchParams.get("memberId");
+        const { currentPage, status, mine, pageSize, memberId: targetMemberId } = validated.data;
+
+        // 기존 권한 체크 유지
+        if (!memberId && mine) {
+            return NextResponse.json(
+                { message: "멤버 투기장 조회 권한이 없습니다." },
+                { status: 401 }
+            );
+        }
 
         let effectiveMemberId: string | undefined;
 
@@ -39,14 +42,6 @@ export async function GET(request: Request) {
         // 3️⃣ 나머지는 전체 조회
         else {
             effectiveMemberId = undefined;
-        }
-
-        // 기존 권한 체크 유지
-        if (!memberId && mine) {
-            return NextResponse.json(
-                { error: "멤버 투기장 조회 권한이 없습니다." },
-                { status: 401 }
-            );
         }
 
         // set up repositories and usecases
