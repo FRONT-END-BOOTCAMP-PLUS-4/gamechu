@@ -55,6 +55,7 @@ docs/server/
 
 # claude code
 .claude/settings.local.json
+docs/superpowers/
 .claude/tsc-cache/
 .claude/hooks/node_modules/
 # Playwright

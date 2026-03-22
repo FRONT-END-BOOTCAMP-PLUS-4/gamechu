@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-
-// Mirrors the AutoLink URL detection logic in Comment.tsx (AUTOLINK_MATCHERS).
-const URL_REGEX =
-    /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+import { URL_REGEX } from "../../urlMatchers";
 
 function detectAutoLinkUrl(text: string): string | null {
     const match = URL_REGEX.exec(text);
@@ -11,8 +8,6 @@ function detectAutoLinkUrl(text: string): string | null {
     return url.startsWith("http") ? url : `https://${url}`;
 }
 
-// Mirrors the LinkPlugin validateUrl in Comment.tsx:
-//   validateUrl={(url) => /^https?:\/\//.test(url)}
 function isValidLinkUrl(url: string): boolean {
     return /^https?:\/\//.test(url);
 }

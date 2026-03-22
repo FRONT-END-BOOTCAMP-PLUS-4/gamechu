@@ -24,6 +24,7 @@ import { sharedNodes } from "./lexical/nodes";
 import { sharedTheme } from "./lexical/sharedTheme";
 import { ToolbarPlugin } from "./lexical/plugins/ToolbarPlugin";
 import { ImagePlugin } from "./lexical/plugins/ImagePlugin";
+import { AUTOLINK_MATCHERS } from "./lexical/urlMatchers";
 
 interface CommentProps {
     gameId: string;
@@ -48,23 +49,6 @@ function EditorRefPlugin({
     }, [editor, editorRef]);
     return null;
 }
-
-const URL_REGEX =
-    /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
-
-const AUTOLINK_MATCHERS = [
-    (text: string) => {
-        const match = URL_REGEX.exec(text);
-        if (!match) return null;
-        const url = match[0];
-        return {
-            index: match.index,
-            length: url.length,
-            text: url,
-            url: url.startsWith("http") ? url : `https://${url}`,
-        };
-    },
-];
 
 export default function Comment({
     gameId,
