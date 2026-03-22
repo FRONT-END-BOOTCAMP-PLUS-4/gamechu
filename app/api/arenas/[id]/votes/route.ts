@@ -4,6 +4,7 @@ import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { GetVoteUsecase } from "@/backend/vote/application/usecase/GetVoteUsecase";
 import { GetVoteDto } from "@/backend/vote/application/usecase/dto/GetVoteDto";
+import { IdSchema, validate } from "@/utils/validation";
 
 type RequestParams = {
     params: Promise<{
@@ -14,7 +15,16 @@ type RequestParams = {
 export async function GET(request: Request, { params }: RequestParams) {
     const memberId = await getAuthUserId();
     const { id } = await params;
-    const arenaId: number = Number(id);
+
+    const idValidation = validate(IdSchema, id);
+    if (!idValidation.success) {
+        return NextResponse.json(
+            { message: "유효하지 않은 투기장 ID입니다." },
+            { status: 400 }
+        );
+    }
+    const arenaId = idValidation.data;
+
     // get query parameters from URL
     const url = new URL(request.url);
     const votedTo: string = url.searchParams.get("votedTo") ?? "";
@@ -25,12 +35,6 @@ export async function GET(request: Request, { params }: RequestParams) {
             totalCount: 0,
             message: "비로그인 상태입니다.",
         });
-    }
-    if (isNaN(arenaId)) {
-        return NextResponse.json(
-            { error: "유효하지 않은 투기장 ID입니다." },
-            { status: 400 }
-        );
     }
 
     try {
@@ -51,7 +55,7 @@ export async function GET(request: Request, { params }: RequestParams) {
     } catch (error) {
         console.error("투표 정보 조회 중 오류 발생:", error);
         return NextResponse.json(
-            { error: "알 수 없는 오류 발생" },
+            { message: "알 수 없는 오류 발생" },
             { status: 500 }
         );
     }

@@ -1,12 +1,13 @@
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
 import { CreateChattingUsecase } from "@/backend/chatting/application/usecase/CreateChattingUsecase";
 import { CreateChattingDto } from "@/backend/chatting/application/usecase/dto/CreateChattingDto";
+import { CreateChattingSchema } from "@/backend/chatting/application/usecase/dto/CreateChattingDto";
 import { PrismaChattingRepository } from "@/backend/chatting/infra/repositories/prisma/PrismaChattingRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { IdSchema, validate } from "@/utils/validation";
 import { NextRequest, NextResponse } from "next/server";
 
 // 상수 정의 (프론트엔드 훅, 유스케이스와 맞춰야 함)
-const MAX_MESSAGE_LENGTH = 200;
 const MAX_SEND_COUNT = 5;
 
 type RequestParams = {
@@ -17,39 +18,32 @@ type RequestParams = {
 
 export async function POST(req: NextRequest, { params }: RequestParams) {
     const { id } = await params;
-    const arenaId: number = Number(id);
     const memberId = await getAuthUserId();
-    const { content } = await req.json();
+
     if (!memberId) {
         return NextResponse.json(
             { message: "권한이 없습니다." },
             { status: 401 }
         );
     }
-    if (isNaN(arenaId)) {
+
+    const idValidation = validate(IdSchema, id);
+    if (!idValidation.success) {
         return NextResponse.json(
-            { error: "유효하지 않은 투기장 ID입니다." },
+            { message: "유효하지 않은 투기장 ID입니다." },
             { status: 400 }
         );
     }
-    if (
-        !content ||
-        typeof content !== "string" ||
-        content.trim().length === 0
-    ) {
-        return NextResponse.json(
-            { error: "메시지 내용을 입력해주세요." },
-            { status: 400 }
-        );
+    const arenaId = idValidation.data;
+
+    const body = await req.json();
+    const bodyValidation = validate(CreateChattingSchema, body);
+    if (!bodyValidation.success) {
+        return bodyValidation.response;
     }
-    if (content.length > MAX_MESSAGE_LENGTH) {
-        return NextResponse.json(
-            {
-                error: `메시지 길이는 ${MAX_MESSAGE_LENGTH}자를 초과할 수 없습니다.`,
-            },
-            { status: 400 }
-        );
-    }
+
+    const { content } = bodyValidation.data;
+
     // -- 아레나 정보 불러오기 및 유효성 검사 --
     try {
         const chattingRepository = new PrismaChattingRepository();
@@ -85,7 +79,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
             ) {
                 return NextResponse.json(
                     {
-                        error: `메시지 길이는 ${MAX_MESSAGE_LENGTH}자를 초과할 수 없습니다.`,
+                        message: `메시지 길이는 200자를 초과할 수 없습니다.`,
                     },
                     { status: 400 }
                 );
@@ -96,7 +90,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
             ) {
                 return NextResponse.json(
                     {
-                        error: `메시지 전송 횟수(${MAX_SEND_COUNT}번)를 모두 사용했습니다.`,
+                        message: `메시지 전송 횟수(${MAX_SEND_COUNT}번)를 모두 사용했습니다.`,
                     },
                     { status: 400 }
                 );
@@ -106,7 +100,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
                 message.includes("Not a participant")
             ) {
                 return NextResponse.json(
-                    { error: "아레나 참가자만 메시지를 보낼 수 있습니다." },
+                    { message: "아레나 참가자만 메시지를 보낼 수 있습니다." },
                     { status: 403 }
                 );
             }
@@ -116,11 +110,11 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
                 ) ||
                 message.includes("Invalid arena status")
             ) {
-                return NextResponse.json({ error: message }, { status: 400 });
+                return NextResponse.json({ message }, { status: 400 });
             }
         }
         return NextResponse.json(
-            { error: "알 수 없는 오류가 발생했습니다." },
+            { message: "알 수 없는 오류가 발생했습니다." },
             { status: 500 }
         );
     }

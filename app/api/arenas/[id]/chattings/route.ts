@@ -2,6 +2,7 @@ import { GetChattingDto } from "@/backend/chatting/application/usecase/dto/GetCh
 import { GetChattingUsecase } from "@/backend/chatting/application/usecase/GetChattingUsecase";
 import { PrismaChattingRepository } from "@/backend/chatting/infra/repositories/prisma/PrismaChattingRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { IdSchema, validate } from "@/utils/validation";
 import { NextResponse } from "next/server";
 
 type RequestParams = {
@@ -12,14 +13,16 @@ type RequestParams = {
 
 export async function GET(req: Request, { params }: RequestParams) {
     const { id } = await params;
-    const arenaId: number = Number(id);
     const memberId: string | null = await getAuthUserId();
-    if (isNaN(arenaId)) {
+
+    const idValidation = validate(IdSchema, id);
+    if (!idValidation.success) {
         return NextResponse.json(
-            { error: "유효하지 않은 투기장 ID입니다." },
+            { message: "유효하지 않은 투기장 ID입니다." },
             { status: 400 }
         );
     }
+    const arenaId = idValidation.data;
 
     try {
         const chattingRepository = new PrismaChattingRepository();
@@ -32,7 +35,7 @@ export async function GET(req: Request, { params }: RequestParams) {
     } catch (error) {
         console.error("채팅 조회 중 오류 발생:", error);
         return NextResponse.json(
-            { error: "알 수 없는 오류 발생" },
+            { message: "알 수 없는 오류 발생" },
             { status: 500 }
         );
     }
