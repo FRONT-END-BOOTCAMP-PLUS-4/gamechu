@@ -4,12 +4,8 @@ import { authOptions } from "@/lib/auth/authOptions";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { GetMemberProfileUsecase } from "@/backend/member/application/usecase/GetMemberProfileUsecase";
 import { UpdateMemberProfileUseCase } from "@/backend/member/application/usecase/UpdateMemberProfileUseCase";
-import { UpdateProfileRequestDto } from "@/backend/member/application/usecase/dto/UpdateProfileRequestDto";
-
-const getUsecase = new GetMemberProfileUsecase(new PrismaMemberRepository());
-const updateUsecase = new UpdateMemberProfileUseCase(
-    new PrismaMemberRepository()
-);
+import { UpdateProfileRequestDto, UpdateProfileSchema } from "@/backend/member/application/usecase/dto/UpdateProfileRequestDto";
+import { validate } from "@/utils/validation";
 
 export async function GET() {
     const session = await getServerSession(authOptions);
@@ -17,6 +13,7 @@ export async function GET() {
     if (!memberId)
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
+    const getUsecase = new GetMemberProfileUsecase(new PrismaMemberRepository());
     const profile = await getUsecase.execute(memberId);
     if (!profile)
         return NextResponse.json({ message: "Not found" }, { status: 404 });
@@ -30,18 +27,25 @@ export async function PUT(req: Request) {
         const memberId = session?.user?.id;
         if (!memberId)
             return NextResponse.json(
-                { message: "Unauthorized" },
+                { message: "인증이 필요합니다." },
                 { status: 401 }
             );
 
         const body = await req.json();
 
+        const validated = validate(UpdateProfileSchema, body);
+        if (!validated.success) return validated.response;
+
+        const updateUsecase = new UpdateMemberProfileUseCase(
+            new PrismaMemberRepository()
+        );
+
         const dto = new UpdateProfileRequestDto({
             memberId,
-            nickname: body.nickname,
-            isMale: body.isMale,
-            birthDate: body.birthDate, // yyyymmdd
-            imageUrl: body.imageUrl,
+            nickname: validated.data.nickname,
+            isMale: validated.data.isMale,
+            birthDate: validated.data.birthDate,
+            imageUrl: validated.data.imageUrl,
         });
 
         await updateUsecase.execute(dto);
