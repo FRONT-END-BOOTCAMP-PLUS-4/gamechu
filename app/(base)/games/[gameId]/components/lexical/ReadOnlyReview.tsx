@@ -11,7 +11,25 @@ interface ReadOnlyReviewProps {
     content: string;
 }
 
+function isLexicalJson(content: string): boolean {
+    try {
+        const parsed = JSON.parse(content);
+        return typeof parsed?.root === "object" && parsed.root !== null;
+    } catch {
+        return false;
+    }
+}
+
 export function ReadOnlyReview({ content }: ReadOnlyReviewProps) {
+    if (!isLexicalJson(content)) {
+        // Fallback: render as plain text for pre-migration HTML reviews or parse errors
+        return (
+            <p className="prose prose-sm max-w-full break-words text-sm text-font-200">
+                {content}
+            </p>
+        );
+    }
+
     const config = {
         namespace: "review-readonly",
         editorState: content,
