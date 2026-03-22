@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useMemo } from "react";
 import StarRating from "@/app/(base)/games/[gameId]/components/StarRating";
 import Button from "@/app/components/Button";
 import { useRouter } from "next/navigation";
@@ -29,6 +29,7 @@ interface CommentProps {
     gameId: string;
     editingReviewId?: number;
     defaultValue?: string;
+    defaultRating?: number;
     onSuccess: () => void;
     viewerId?: string | null;
 }
@@ -69,14 +70,12 @@ export default function Comment({
     gameId,
     editingReviewId,
     defaultValue = "",
+    defaultRating = 0,
     onSuccess,
     viewerId,
 }: CommentProps) {
     const router = useRouter();
-    // TODO: rating not pre-populated in edit mode — user must re-select it.
-    // Fix: accept a `defaultRating` prop and pass it as initial useState value,
-    // then include the existing rating in the PATCH request body.
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(defaultRating);
     const [toast, setToast] = useState({
         show: false,
         message: "",
@@ -88,15 +87,18 @@ export default function Comment({
     const editorRef = useRef<LexicalEditor | null>(null);
     const imageInputRef = useRef<HTMLInputElement | null>(null);
 
-    const editorConfig = {
-        namespace: "review-editor",
-        nodes: sharedNodes,
-        editorState: defaultValue || null,
-        onError(error: Error) {
-            console.error(error);
-        },
-        theme: sharedTheme,
-    };
+    const editorConfig = useMemo(
+        () => ({
+            namespace: "review-editor",
+            nodes: sharedNodes,
+            editorState: defaultValue || null,
+            onError(error: Error) {
+                console.error(error);
+            },
+            theme: sharedTheme,
+        }),
+        [defaultValue]
+    );
 
     const handleEditorChange = (
         editorState: EditorState,
@@ -169,10 +171,16 @@ export default function Comment({
                 }
             );
 
-            if (!res.ok)
-                throw new Error(
-                    isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패"
-                );
+            if (!res.ok) {
+                let serverMessage: string | undefined;
+                try {
+                    const errData = await res.json();
+                    serverMessage = typeof errData?.message === "string" ? errData.message : undefined;
+                } catch {
+                    // ignore json parse failure
+                }
+                throw new Error(serverMessage ?? (isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패"));
+            }
 
             setRating(0);
             onSuccess();
@@ -180,7 +188,7 @@ export default function Comment({
             console.error("리뷰 저장 실패:", err);
             setToast({
                 show: true,
-                message: "리뷰 저장에 실패했습니다.",
+                message: err instanceof Error ? err.message : "리뷰 저장에 실패했습니다.",
                 status: "error",
             });
             setTimeout(() => {

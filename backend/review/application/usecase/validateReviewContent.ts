@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const MAX_TEXT_LENGTH = 10_000;
 
-export const LexicalEditorStateSchema = z.object({
+const LexicalEditorStateSchema = z.object({
     root: z.object({
         children: z.array(z.record(z.string(), z.unknown())),
         direction: z.string().nullable(),
@@ -14,7 +14,7 @@ export const LexicalEditorStateSchema = z.object({
     }),
 });
 
-export function extractTextContent(node: unknown): string {
+function extractTextContent(node: unknown): string {
     if (typeof node !== "object" || node === null) return "";
     const n = node as Record<string, unknown>;
     if (n.type === "text" && typeof n.text === "string") return n.text;
