@@ -54,7 +54,7 @@ describe("POST /api/member/arenas", () => {
             body: JSON.stringify({
                 title: "Test Arena",
                 description: "Some description",
-                startDate: "2026-04-01",
+                startDate: "2026-04-01T00:00:00.000Z",
             }),
             headers: { "content-type": "application/json" },
         });
