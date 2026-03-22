@@ -60,7 +60,7 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
                 headers: { "content-type": "application/json" },
             }
         );
-        const response = await POST(req);
+        const response = await POST(req, { params: Promise.resolve({ gameId: "10" }) });
         expect(response.status).toBe(401);
     });
 
@@ -77,7 +77,7 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
                 headers: { "content-type": "application/json" },
             }
         );
-        const response = await POST(req);
+        const response = await POST(req, { params: Promise.resolve({ gameId: "10" }) });
         expect(response.status).toBe(200);
     });
 
