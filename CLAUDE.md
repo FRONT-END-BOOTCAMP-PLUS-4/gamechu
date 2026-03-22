@@ -28,11 +28,16 @@ npm run test:e2e   # Run Playwright E2E tests
 - Frontend: Next.js 15 (App Router), TypeScript, TailwindCSS, Zustand
 - Backend: PostgreSQL, Prisma, Redis, Socket.io
 
+## Git Workflow (overrides skill defaults)
+
+- whenever commit, issue, PR: read 'Git & Collaboration' Section on `docs/CODE_CONVENTIONS.md`.
+
 ## Key Rules
 
 - **Prisma singleton**: Always `import prisma from "@/lib/prisma"` — never `new PrismaClient()`
 - **Per-request instantiation**: Repositories and use cases must be created _inside_ each handler function, not at module level
 - **Error response shape**: Use `{ message }` key, never `{ error }`
+- **Keep project directory**: Never access outside project directory (ex. /tmp, /temp)
 
 ### Directory layout
 

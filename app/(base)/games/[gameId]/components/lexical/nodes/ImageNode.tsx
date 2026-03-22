@@ -64,6 +64,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
     decorate(): JSX.Element {
         return (
+            // eslint-disable-next-line @next/next/no-img-element -- DecoratorNode cannot use next/image (no known dimensions or configured hostname)
             <img
                 src={this.__src}
                 alt={this.__alt}
