@@ -1,43 +1,25 @@
 import { NextResponse } from "next/server";
-import { CreateNotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/CreateNotificationRecordDto";
+import { CreateNotificationRecordDto, CreateNotificationRecordSchema } from "@/backend/notification-record/application/usecase/dto/CreateNotificationRecordDto";
 import { NotificationRecordRepository } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
 import { PrismaNotificationRecordRepository } from "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository";
 import { CreateNotificationRecordUsecase } from "@/backend/notification-record/application/usecase/CreateNotificationRecordUsecase";
 import { NotificationRecord } from "@/prisma/generated";
+import { validate } from "@/utils/validation";
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        // body validation
-        if (!body.memberId) {
-            return NextResponse.json(
-                {
-                    error: "Missing member id",
-                },
-                { status: 400 }
-            );
-        } else if (!body.typeId) {
-            return NextResponse.json(
-                {
-                    error: "Missing type id",
-                },
-                { status: 400 }
-            );
-        } else if (!body.description) {
-            return NextResponse.json(
-                {
-                    error: "Missing description",
-                },
-                { status: 400 }
-            );
-        }
+        const parsed = validate(CreateNotificationRecordSchema, body);
+        if (!parsed.success) return parsed.response;
+
+        const { memberId, typeId, description } = parsed.data;
 
         const createNotificationRecordDto: CreateNotificationRecordDto =
             new CreateNotificationRecordDto(
-                body.memberId,
-                body.typeId,
-                body.description
+                memberId,
+                typeId,
+                description
             );
 
         const notificationRecordRepository: NotificationRecordRepository =

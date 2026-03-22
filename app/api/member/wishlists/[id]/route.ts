@@ -4,6 +4,7 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaWishListRepository } from "@/backend/wishlist/infra/repositories/prisma/PrismaWishListRepository";
 import { DeleteWishlistUsecase } from "@/backend/wishlist/application/usecase/DeleteWishlistUsecase";
 import { DeleteWishlistDto } from "@/backend/wishlist/application/usecase/dto/DeleteWishlistDto";
+import { validate, IdSchema } from "@/utils/validation";
 
 type RequestParams = {
     params: Promise<{
@@ -23,14 +24,14 @@ export async function DELETE(req: NextRequest, { params }: RequestParams) {
         }
 
         const { id } = await params; // 폴더 이름이 [id]일 경우
-        const wishlistId = Number(id);
-
-        if (isNaN(wishlistId)) {
+        const parsed = validate(IdSchema, id);
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: "Invalid game ID" },
                 { status: 400 }
             );
         }
+        const wishlistId = parsed.data;
 
         const wishlistRepo = new PrismaWishListRepository();
         const usecase = new DeleteWishlistUsecase(wishlistRepo);
