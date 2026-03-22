@@ -24,6 +24,36 @@ const validLexicalJson = JSON.stringify({
     },
 });
 
+const emptyLexicalJson = JSON.stringify({
+    root: {
+        children: [],
+        direction: null,
+        format: "",
+        indent: 0,
+        type: "root",
+        version: 1,
+    },
+});
+
+const base64ImageLexicalJson = JSON.stringify({
+    root: {
+        children: [
+            {
+                src: "data:image/png;base64,iVBORw0KGgo=",
+                alt: "img",
+                width: 300,
+                type: "image",
+                version: 1,
+            },
+        ],
+        direction: null,
+        format: "",
+        indent: 0,
+        type: "root",
+        version: 1,
+    },
+});
+
 const mockReviewDto = {
     id: 1,
     gameId: 10,
@@ -111,6 +141,22 @@ describe("CreateReviewUsecase", () => {
                 rating: 3,
             })
         ).rejects.toThrow("리뷰 콘텐츠가 너무 큽니다.");
+    });
+
+    it("error: empty Lexical root (no text) throws", async () => {
+        const repo = MockReviewRepository();
+        const usecase = new CreateReviewUsecase(repo);
+        await expect(
+            usecase.execute("m1", { gameId: 10, content: emptyLexicalJson, rating: 3 })
+        ).rejects.toThrow("리뷰 내용을 입력해주세요.");
+    });
+
+    it("error: base64 image src throws", async () => {
+        const repo = MockReviewRepository();
+        const usecase = new CreateReviewUsecase(repo);
+        await expect(
+            usecase.execute("m1", { gameId: 10, content: base64ImageLexicalJson, rating: 3 })
+        ).rejects.toThrow("이미지는 URL 형식으로만 삽입할 수 있습니다.");
     });
 
     it("error: invalid JSON structure (missing root) throws", async () => {
