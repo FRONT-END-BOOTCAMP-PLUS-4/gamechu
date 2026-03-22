@@ -7,6 +7,7 @@ import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/reposi
 import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { IdSchema, validate } from "@/utils/validation";
 
 // 의존성 생성
 const likeRepo = new PrismaReviewLikeRepository();
@@ -34,13 +35,14 @@ export async function POST(
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const parsedReviewId = Number.parseInt((await params).reviewId ?? "", 10);
-    if (isNaN(parsedReviewId)) {
+    const reviewIdValidation = validate(IdSchema, (await params).reviewId);
+    if (!reviewIdValidation.success) {
         return NextResponse.json(
             { message: "Invalid reviewId" },
             { status: 400 }
         );
     }
+    const parsedReviewId = reviewIdValidation.data;
 
     try {
         const result = await usecase.execute({
