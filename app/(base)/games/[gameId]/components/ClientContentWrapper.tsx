@@ -154,6 +154,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                                 gameId={String(gameId)}
                                 editingReviewId={editingId}
                                 defaultValue={myComment?.comment ?? ""}
+                                defaultRating={myComment?.rating ?? 0}
                                 onSuccess={() => {
                                     fetchComments();
                                     setEditingId(null);
