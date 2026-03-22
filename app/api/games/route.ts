@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/GamePrismaRepository";
 import { GetFilteredGamesUsecase } from "@/backend/game/application/usecase/GetFilteredGamesUsecase";
 import { GetGameMetaDataUsecase } from "@/backend/game/application/usecase/GetGameMetaDataUsecase";
+import { GetFilteredGamesSchema } from "@/backend/game/application/usecase/dto/GetFilteredGamesRequestDto";
 
 import { PrismaGenreRepository } from "@/backend/genre/infra/repositories/prisma/PrismaGenreRepository";
 import { PrismaThemeRepository } from "@/backend/theme/infra/repositories/prisma/PrismaThemeRepository";
@@ -11,7 +12,8 @@ import { PrismaReviewRepository } from "@/backend/review/infra/repositories/pris
 
 import redis from "@/lib/redis";
 import { generateCacheKey } from "@/lib/cacheKey";
-import type { CacheKeyParams, SortType } from "@/lib/cacheKey";
+import type { CacheKeyParams } from "@/lib/cacheKey";
+import { validate } from "@/utils/validation";
 
 export async function GET(req: NextRequest) {
     try {
@@ -20,29 +22,6 @@ export async function GET(req: NextRequest) {
 
         // 메타데이터 요청 여부
         const meta = params.get("meta") === "true";
-
-        // 쿼리 파라미터 파싱 (ID 기반)
-        const genreId = params.get("genreId") ?? undefined;
-        const themeId = params.get("themeId") ?? undefined;
-        const platformId = params.get("platformId") ?? undefined;
-        const keyword = params.get("keyword") ?? undefined;
-        const sort = (params.get("sort") || "popular") as SortType;
-        const page = parseInt(params.get("page") || "1", 10);
-        const size = parseInt(params.get("size") || "6", 10);
-        const offset = (page - 1) * size;
-        const limit = size;
-
-        const cacheKeyParams: CacheKeyParams = {
-            genreId,
-            themeId,
-            platformId,
-            keyword,
-            sort,
-            page: page.toString(),
-            size: size.toString(),
-        };
-
-        const cacheKey = generateCacheKey(cacheKeyParams);
 
         // 메타데이터 요청 처리
         if (meta) {
@@ -54,6 +33,28 @@ export async function GET(req: NextRequest) {
             const metadata = await metaUsecase.execute();
             return NextResponse.json(metadata, { status: 200 });
         }
+
+        // 쿼리 파라미터 유효성 검사
+        const validation = validate(GetFilteredGamesSchema, Object.fromEntries(params));
+        if (!validation.success) {
+            return validation.response;
+        }
+
+        const { sort, page, size, genreId, themeId, platformId, keyword } = validation.data;
+        const offset = (page - 1) * size;
+        const limit = size;
+
+        const cacheKeyParams: CacheKeyParams = {
+            genreId: genreId?.toString(),
+            themeId: themeId?.toString(),
+            platformId: platformId?.toString(),
+            keyword,
+            sort,
+            page: page.toString(),
+            size: size.toString(),
+        };
+
+        const cacheKey = generateCacheKey(cacheKeyParams);
 
         // // 캐시 조회
         const isCacheTarget = !!cacheKey;
@@ -76,9 +77,9 @@ export async function GET(req: NextRequest) {
         );
 
         const { data, totalCount } = await getFilteredGamesUsecase.execute({
-            genreId: genreId ? parseInt(genreId) : undefined,
-            themeId: themeId ? parseInt(themeId) : undefined,
-            platformId: platformId ? parseInt(platformId) : undefined,
+            genreId,
+            themeId,
+            platformId,
             keyword,
             sort,
             offset,
@@ -102,10 +103,7 @@ export async function GET(req: NextRequest) {
         if (error instanceof Error) {
             console.error("[GET /api/games] 에러:", error.message, error.stack);
             return NextResponse.json(
-                {
-                    message: "게임 목록 조회 중 오류가 발생했습니다.",
-                    error: error.message,
-                },
+                { message: "게임 목록 조회 중 오류가 발생했습니다." },
                 { status: 500 }
             );
         } else {
