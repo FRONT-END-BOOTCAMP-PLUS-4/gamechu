@@ -1,4 +1,4 @@
-import { GetNotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/GetNotificationRecordDto";
+import { GetNotificationRecordDto, GetNotificationRecordSchema } from "@/backend/notification-record/application/usecase/dto/GetNotificationRecordDto";
 import { NotificationRecordListDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordListDto";
 import { GetNotificationRecordUsecase } from "@/backend/notification-record/application/usecase/GetNotificationRecordUsecase";
 import { NotificationRecordRepository } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
@@ -7,6 +7,7 @@ import { NotificationTypeRepository } from "@/backend/notification-type/domain/r
 import { PrismaNotificationTypeRepository } from "@/backend/notification-type/infra/repositories/prisma/PrismaNotificationTypeRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextResponse } from "next/server";
+import { validate } from "@/utils/validation";
 
 export async function GET(request: Request) {
     try {
@@ -14,15 +15,17 @@ export async function GET(request: Request) {
         const memberId: string | null = await getAuthUserId();
         if (!memberId) {
             return NextResponse.json(
-                { error: "알림 조회 권한이 없습니다." },
+                { message: "알림 조회 권한이 없습니다." },
                 { status: 401 }
             );
         }
 
         // get query parameters from URL
         const url = new URL(request.url);
-        const currentPageParam: string =
-            url.searchParams.get("currentPage") || "1";
+        const parsed = validate(GetNotificationRecordSchema, Object.fromEntries(url.searchParams));
+        if (!parsed.success) return parsed.response;
+
+        const { currentPage } = parsed.data;
 
         // set up usecase
         const notificationRecordRepository: NotificationRecordRepository =
@@ -37,7 +40,7 @@ export async function GET(request: Request) {
 
         // set up query Dto
         const getNotificationRecordDto = new GetNotificationRecordDto(
-            Number(currentPageParam),
+            currentPage,
             memberId
         );
 
