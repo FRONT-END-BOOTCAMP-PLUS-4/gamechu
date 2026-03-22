@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
+import { validate, IdSchema } from "@/utils/validation";
+import { UpdateReviewSchema } from "@/backend/review/application/usecase/dto/UpdateReviewDto";
 
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
@@ -13,18 +15,39 @@ import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usec
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: Promise<{ reviewId: string }> }
+    { params }: { params: Promise<{ gameId: string; reviewId: string }> }
 ) {
     const userId = await getAuthUserId();
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    const { gameId, reviewId } = await params;
+
+    const gameIdResult = IdSchema.safeParse(gameId);
+    if (!gameIdResult.success) {
+        return NextResponse.json(
+            { message: "유효하지 않은 게임 ID입니다." },
+            { status: 400 }
+        );
+    }
+
+    const reviewIdResult = IdSchema.safeParse(reviewId);
+    if (!reviewIdResult.success) {
+        return NextResponse.json(
+            { message: "유효하지 않은 리뷰 ID입니다." },
+            { status: 400 }
+        );
+    }
+
+    const validated = validate(UpdateReviewSchema, await req.json());
+    if (!validated.success) return validated.response;
+
+    // 의존성 주입
     const reviewRepo = new PrismaReviewRepository();
     const updateReviewUsecase = new UpdateReviewUsecase(reviewRepo);
 
-    const reviewId = parseInt((await params).reviewId);
-    const review = await reviewRepo.findById(reviewId);
+    const review = await reviewRepo.findById(reviewIdResult.data);
 
     if (!review) {
         return NextResponse.json(
@@ -40,14 +63,11 @@ export async function PATCH(
         );
     }
 
-    const body = await req.json();
-    try {
-        const result = await updateReviewUsecase.execute(reviewId, body);
-        return NextResponse.json(result);
-    } catch (err) {
-        const message = err instanceof Error ? err.message : "잘못된 요청입니다.";
-        return NextResponse.json({ message }, { status: 400 });
-    }
+    const result = await updateReviewUsecase.execute(
+        reviewIdResult.data,
+        validated.data
+    );
+    return NextResponse.json(result);
 }
 
 export async function DELETE(
@@ -55,11 +75,11 @@ export async function DELETE(
     { params }: { params: Promise<{ gameId: string; reviewId: string }> }
 ) {
     const { reviewId } = await params;
-    const reviewIdNum = parseInt(reviewId, 10);
 
-    if (!reviewIdNum || isNaN(reviewIdNum)) {
+    const reviewIdResult = IdSchema.safeParse(reviewId);
+    if (!reviewIdResult.success) {
         return NextResponse.json(
-            { message: "유효하지 않은 리뷰 ID입니다" },
+            { message: "유효하지 않은 리뷰 ID입니다." },
             { status: 400 }
         );
     }
@@ -69,6 +89,7 @@ export async function DELETE(
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    // 의존성 주입
     const reviewRepo = new PrismaReviewRepository();
     const likeRepo = new PrismaReviewLikeRepository();
     const memberRepo = new PrismaMemberRepository();
@@ -85,7 +106,7 @@ export async function DELETE(
         applyReviewScoreUsecase
     );
 
-    const review = await reviewRepo.findById(reviewIdNum);
+    const review = await reviewRepo.findById(reviewIdResult.data);
     if (!review) {
         return NextResponse.json(
             { message: "리뷰를 찾을 수 없습니다" },
@@ -100,6 +121,6 @@ export async function DELETE(
         );
     }
 
-    await deleteReviewUsecase.execute(reviewIdNum);
+    await deleteReviewUsecase.execute(reviewIdResult.data);
     return NextResponse.json({ message: "리뷰 삭제 완료" });
 }
