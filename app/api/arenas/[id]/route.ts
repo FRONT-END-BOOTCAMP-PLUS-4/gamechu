@@ -17,6 +17,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ArenaCacheService } from "@/backend/arena/infra/cache/ArenaCacheService";
 import { validate, IdSchema } from "@/utils/validation";
 import type { ArenaStatus } from "@/types/arena-status";
+import { errorResponse } from "@/utils/apiResponse";
 
 type RequestParams = {
     params: Promise<{
@@ -48,15 +49,9 @@ export async function GET(request: Request, { params }: RequestParams) {
             error instanceof Error &&
             error.message.includes("Arena not found")
         ) {
-            return NextResponse.json(
-                { message: "투기장이 존재하지 않습니다." },
-                { status: 404 }
-            );
+            return errorResponse("투기장이 존재하지 않습니다.", 404);
         }
-        return NextResponse.json(
-            { message: `Failed to fetch participants: ${error}` },
-            { status: 500 }
-        );
+        return errorResponse(`Failed to fetch participants: ${error}`, 500);
     }
 }
 
@@ -103,27 +98,16 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
         // score validation for arena join
         if (status === 2) {
             if (!challengerId) {
-                return NextResponse.json(
-                    { message: "참여자 정보를 찾을 수 없습니다." },
-                    { status: 400 }
-                );
+                return errorResponse("참여자 정보를 찾을 수 없습니다.", 400);
             }
 
             const challenger = await memberRepository.findById(challengerId);
             if (!challenger) {
-                return NextResponse.json(
-                    { message: "회원 정보를 찾을 수 없습니다." },
-                    { status: 404 }
-                );
+                return errorResponse("회원 정보를 찾을 수 없습니다.", 404);
             }
 
             if (challenger.score < 100) {
-                return NextResponse.json(
-                    {
-                        message: "투기장 참여를 위해서는 최소 100점 이상의 점수가 필요합니다.",
-                    },
-                    { status: 403 }
-                );
+                return errorResponse("투기장 참여를 위해서는 최소 100점 이상의 점수가 필요합니다.", 403);
             }
         }
 
@@ -184,10 +168,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         const arena: Arena | null = await arenaRepository.findById(arenaId);
 
         if (!arena) {
-            return NextResponse.json(
-                { message: "투기장이 존재하지 않습니다." },
-                { status: 404 }
-            );
+            return errorResponse("투기장이 존재하지 않습니다.", 404);
         }
         // execute usecase
         await endArenaUsecase.execute(arenaId);
