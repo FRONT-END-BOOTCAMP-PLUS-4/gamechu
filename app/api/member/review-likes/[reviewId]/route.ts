@@ -8,23 +8,6 @@ import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usec
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 
-// 의존성 생성
-const likeRepo = new PrismaReviewLikeRepository();
-const reviewRepo = new PrismaReviewRepository();
-const memberRepo = new PrismaMemberRepository();
-const scoreRecordRepo = new PrismaScoreRecordRepository();
-const scorePolicy = new ScorePolicy();
-const applyReviewScoreUsecase = new ApplyReviewScoreUsecase(
-    scorePolicy,
-    memberRepo,
-    scoreRecordRepo
-);
-const usecase = new ToggleReviewLikeUsecase(
-    likeRepo,
-    reviewRepo,
-    applyReviewScoreUsecase
-);
-
 export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ reviewId: string }> }
@@ -41,6 +24,22 @@ export async function POST(
             { status: 400 }
         );
     }
+
+    const likeRepo = new PrismaReviewLikeRepository();
+    const reviewRepo = new PrismaReviewRepository();
+    const memberRepo = new PrismaMemberRepository();
+    const scoreRecordRepo = new PrismaScoreRecordRepository();
+    const scorePolicy = new ScorePolicy();
+    const applyReviewScoreUsecase = new ApplyReviewScoreUsecase(
+        scorePolicy,
+        memberRepo,
+        scoreRecordRepo
+    );
+    const usecase = new ToggleReviewLikeUsecase(
+        likeRepo,
+        reviewRepo,
+        applyReviewScoreUsecase
+    );
 
     try {
         const result = await usecase.execute({
