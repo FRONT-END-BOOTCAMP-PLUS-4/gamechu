@@ -6,19 +6,26 @@ import { GetMemberProfileUsecase } from "@/backend/member/application/usecase/Ge
 import { UpdateMemberProfileUseCase } from "@/backend/member/application/usecase/UpdateMemberProfileUseCase";
 import { UpdateProfileRequestDto, UpdateProfileSchema } from "@/backend/member/application/usecase/dto/UpdateProfileRequestDto";
 import { validate } from "@/utils/validation";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function GET() {
-    const session = await getServerSession(authOptions);
-    const memberId = session?.user?.id;
-    if (!memberId)
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    try {
+        const session = await getServerSession(authOptions);
+        const memberId = session?.user?.id;
+        if (!memberId)
+            return errorResponse("Unauthorized", 401);
 
-    const getUsecase = new GetMemberProfileUsecase(new PrismaMemberRepository());
-    const profile = await getUsecase.execute(memberId);
-    if (!profile)
-        return NextResponse.json({ message: "Not found" }, { status: 404 });
+        const getUsecase = new GetMemberProfileUsecase(new PrismaMemberRepository());
+        const profile = await getUsecase.execute(memberId);
+        if (!profile)
+            return errorResponse("Not found", 404);
 
-    return NextResponse.json(profile);
+        return NextResponse.json(profile);
+    } catch (error: unknown) {
+        console.error("[profile] GET error:", error);
+        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
+    }
 }
 
 export async function PUT(req: Request) {
@@ -26,10 +33,7 @@ export async function PUT(req: Request) {
         const session = await getServerSession(authOptions);
         const memberId = session?.user?.id;
         if (!memberId)
-            return NextResponse.json(
-                { message: "인증이 필요합니다." },
-                { status: 401 }
-            );
+            return errorResponse("Unauthorized", 401);
 
         const body = await req.json();
 
@@ -50,14 +54,10 @@ export async function PUT(req: Request) {
 
         await updateUsecase.execute(dto);
 
-        return NextResponse.json({
-            message: "프로필이 성공적으로 수정되었습니다.",
-        });
-    } catch (err) {
+        return NextResponse.json({ message: "프로필이 성공적으로 수정되었습니다." });
+    } catch (err: unknown) {
         console.error("[PROFILE_UPDATE_ERROR]", err);
-        return NextResponse.json(
-            { message: (err as Error).message || "프로필 수정 실패" },
-            { status: 400 }
-        );
+        const message = err instanceof Error ? err.message : "프로필 수정 실패";
+        return errorResponse(message, 500);
     }
 }
