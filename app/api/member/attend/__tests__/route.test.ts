@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi } from "vitest";
 
 vi.mock("@/utils/GetAuthUserId.server", () => ({
@@ -63,5 +64,21 @@ describe("POST /api/member/attend", () => {
         expect(body.success).toBe(true);
         expect(typeof body.attendedDate).toBe("string");
         expect(body.attendedDate.length).toBeGreaterThan(0);
+    });
+
+    it("returns 500 when usecase throws", async () => {
+        const { ApplyAttendanceScoreUsecase } = await import(
+            "@/backend/score-policy/application/usecase/ApplyAttendanceScoreUsecase"
+        );
+        vi.mocked(ApplyAttendanceScoreUsecase).mockImplementationOnce(
+            function (this: Record<string, unknown>) {
+                this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
+            } as unknown as typeof ApplyAttendanceScoreUsecase
+        );
+
+        const response = await POST();
+        expect(response.status).toBe(500);
+        const body = await response.json();
+        expect(body).toHaveProperty("message");
     });
 });

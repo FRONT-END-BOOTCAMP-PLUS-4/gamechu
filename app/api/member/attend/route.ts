@@ -4,38 +4,40 @@ import { ApplyAttendanceScoreUsecase } from "@/backend/score-policy/application/
 import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function POST() {
-    const memberId = await getAuthUserId(); // ✅ next-auth 쿠키에서 memberId 추출
-    if (!memberId) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    try {
+        const memberId = await getAuthUserId();
+        if (!memberId) {
+            return errorResponse("Unauthorized", 401);
+        }
 
-    const memberRepo = new PrismaMemberRepository();
-    const lastAttendedDate = await memberRepo.getLastAttendedDate(memberId); // ← 이건 UTC 기반일 수 있음
+        const memberRepo = new PrismaMemberRepository();
+        const lastAttendedDate = await memberRepo.getLastAttendedDate(memberId);
 
-    const usecase = new ApplyAttendanceScoreUsecase(
-        new ScorePolicy(),
-        memberRepo,
-        new PrismaScoreRecordRepository()
-    );
-
-    await usecase.execute({ memberId, lastAttendedDate });
-
-    // ✅ lastAttendedDate를 한국 시간 기준 문자열로 변환
-    let attendedDateStr: string | null = null;
-    if (lastAttendedDate) {
-        const localDateStr = new Date(lastAttendedDate).toLocaleDateString(
-            "ko-KR",
-            {
-                timeZone: "Asia/Seoul",
-            }
+        const usecase = new ApplyAttendanceScoreUsecase(
+            new ScorePolicy(),
+            memberRepo,
+            new PrismaScoreRecordRepository()
         );
-        attendedDateStr = localDateStr;
-    }
 
-    return NextResponse.json({
-        success: true,
-        attendedDate: attendedDateStr, // ✅ 클라이언트가 정확히 비교할 수 있도록
-    });
+        await usecase.execute({ memberId, lastAttendedDate });
+
+        let attendedDateStr: string | null = null;
+        if (lastAttendedDate) {
+            attendedDateStr = new Date(lastAttendedDate).toLocaleDateString("ko-KR", {
+                timeZone: "Asia/Seoul",
+            });
+        }
+
+        return NextResponse.json({
+            success: true,
+            attendedDate: attendedDateStr,
+        });
+    } catch (error: unknown) {
+        console.error("[attend] error:", error);
+        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
+    }
 }
