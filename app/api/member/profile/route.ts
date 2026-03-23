@@ -45,8 +45,9 @@ export async function PUT(req: Request) {
         await usecase.execute(dto);
 
         return NextResponse.json({ message: "프로필이 성공적으로 수정되었습니다." });
-    } catch (err) {
+    } catch (err: unknown) {
         console.error("[PROFILE_UPDATE_ERROR]", err);
-        return errorResponse((err as Error).message || "프로필 수정 실패", 400);
+        const message = err instanceof Error ? err.message : "프로필 수정 실패";
+        return errorResponse(message, 400);
     }
 }
