@@ -1,6 +1,7 @@
 import { DeleteArenaUsecase } from "@/backend/arena/application/usecase/DeleteArenaUsecase";
 import { GetArenaDetailDto } from "@/backend/arena/application/usecase/dto/GetArenaDetailDto";
 import { UpdateArenaDetailDto } from "@/backend/arena/application/usecase/dto/UpdateArenaDetailDto";
+import { UpdateArenaAdminSchema } from "@/backend/arena/application/usecase/dto/UpdateArenaDto";
 import { EndArenaUsecase } from "@/backend/arena/application/usecase/EndArenaUsecase";
 import { GetArenaDetailUsecase } from "@/backend/arena/application/usecase/GetArenaDetailUsecase";
 import { UpdateArenaStatusUsecase } from "@/backend/arena/application/usecase/UpdateArenaStatusUsecase";
@@ -14,6 +15,8 @@ import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/P
 import { Arena } from "@/prisma/generated";
 import { NextRequest, NextResponse } from "next/server";
 import { ArenaCacheService } from "@/backend/arena/infra/cache/ArenaCacheService";
+import { validate, IdSchema } from "@/utils/validation";
+import type { ArenaStatus } from "@/types/arena-status";
 
 type RequestParams = {
     params: Promise<{
@@ -23,11 +26,10 @@ type RequestParams = {
 
 export async function GET(request: Request, { params }: RequestParams) {
     const { id } = await params;
-    const arenaId: number = Number(id);
+    const idValidated = validate(IdSchema, Number(id));
+    if (!idValidated.success) return idValidated.response;
+    const arenaId = idValidated.data;
 
-    if (isNaN(arenaId)) {
-        return NextResponse.json({ error: "Invalid arenaId" }, { status: 400 });
-    }
     const arenaRepository = new PrismaArenaRepository();
     const memberRepository = new PrismaMemberRepository();
     const voteRepository = new PrismaVoteRepository();
@@ -47,12 +49,12 @@ export async function GET(request: Request, { params }: RequestParams) {
             error.message.includes("Arena not found")
         ) {
             return NextResponse.json(
-                { error: "투기장이 존재하지 않습니다." },
+                { message: "투기장이 존재하지 않습니다." },
                 { status: 404 }
             );
         }
         return NextResponse.json(
-            { error: `Failed to fetch participants: ${error}` },
+            { message: `Failed to fetch participants: ${error}` },
             { status: 500 }
         );
     }
@@ -61,9 +63,16 @@ export async function GET(request: Request, { params }: RequestParams) {
 // TODO: api/member/arena/[id]/route.ts 생성 완료! app에서 fetch 경로만 수정하면 끝
 // 해당 API는 시스템(관리자)가 투기장을 자동으로 변경하는 경우 (status값 변화 등) 사용합니다!
 export async function PATCH(req: NextRequest, { params }: RequestParams) {
-    const { status, challengerId } = await req.json();
     const { id } = await params;
-    const arenaId: number = Number(id);
+    const idValidated = validate(IdSchema, Number(id));
+    if (!idValidated.success) return idValidated.response;
+    const arenaId = idValidated.data;
+
+    const body = await req.json();
+    const validated = validate(UpdateArenaAdminSchema, body);
+    if (!validated.success) return validated.response;
+
+    const { status, challengerId } = validated.data;
 
     const scorePolicy = new ScorePolicy();
     const memberRepository = new PrismaMemberRepository();
@@ -87,7 +96,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
 
     const updateArenaDetailDto = new UpdateArenaDetailDto(
         arenaId,
-        status,
+        status as ArenaStatus,
         challengerId
     );
     try {
@@ -95,7 +104,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
         if (status === 2) {
             if (!challengerId) {
                 return NextResponse.json(
-                    { error: "참여자 정보를 찾을 수 없습니다." },
+                    { message: "참여자 정보를 찾을 수 없습니다." },
                     { status: 400 }
                 );
             }
@@ -103,7 +112,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
             const challenger = await memberRepository.findById(challengerId);
             if (!challenger) {
                 return NextResponse.json(
-                    { error: "회원 정보를 찾을 수 없습니다." },
+                    { message: "회원 정보를 찾을 수 없습니다." },
                     { status: 404 }
                 );
             }
@@ -111,7 +120,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
             if (challenger.score < 100) {
                 return NextResponse.json(
                     {
-                        error: "투기장 참여를 위해서는 최소 100점 이상의 점수가 필요합니다.",
+                        message: "투기장 참여를 위해서는 최소 100점 이상의 점수가 필요합니다.",
                     },
                     { status: 403 }
                 );
@@ -147,7 +156,9 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
 export async function DELETE(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
-        const arenaId: number = Number(id);
+        const idValidated = validate(IdSchema, Number(id));
+        if (!idValidated.success) return idValidated.response;
+        const arenaId = idValidated.data;
 
         const arenaRepository: ArenaRepository = new PrismaArenaRepository();
         const voteRepository = new PrismaVoteRepository();
@@ -174,7 +185,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
 
         if (!arena) {
             return NextResponse.json(
-                { error: "투기장이 존재하지 않습니다." },
+                { message: "투기장이 존재하지 않습니다." },
                 { status: 404 }
             );
         }

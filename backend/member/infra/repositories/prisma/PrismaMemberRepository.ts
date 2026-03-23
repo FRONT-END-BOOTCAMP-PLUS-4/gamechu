@@ -49,17 +49,20 @@ export class PrismaMemberRepository implements MemberRepository {
     async updateProfile(dto: UpdateProfileRequestDto): Promise<void> {
         const { birthDate: rawBirth, ...rest } = dto;
 
-        if (!/^\d{8}$/.test(rawBirth)) {
-            throw new Error("생년월일 형식은 yyyymmdd여야 합니다.");
-        }
+        let parsedDate: Date | undefined;
+        if (rawBirth !== undefined) {
+            if (!/^\d{8}$/.test(rawBirth)) {
+                throw new Error("생년월일 형식은 yyyymmdd여야 합니다.");
+            }
 
-        const year = parseInt(rawBirth.slice(0, 4), 10);
-        const month = parseInt(rawBirth.slice(4, 6), 10) - 1;
-        const day = parseInt(rawBirth.slice(6, 8), 10);
+            const year = parseInt(rawBirth.slice(0, 4), 10);
+            const month = parseInt(rawBirth.slice(4, 6), 10) - 1;
+            const day = parseInt(rawBirth.slice(6, 8), 10);
 
-        const parsedDate = new Date(Date.UTC(year, month, day)); // ✅ UTC 기준 날짜 생성
-        if (isNaN(parsedDate.getTime())) {
-            throw new Error("유효하지 않은 생년월일입니다.");
+            parsedDate = new Date(Date.UTC(year, month, day)); // ✅ UTC 기준 날짜 생성
+            if (isNaN(parsedDate.getTime())) {
+                throw new Error("유효하지 않은 생년월일입니다.");
+            }
         }
 
         await this.prisma.member.update({
@@ -67,7 +70,7 @@ export class PrismaMemberRepository implements MemberRepository {
             data: {
                 nickname: rest.nickname,
                 isMale: rest.isMale,
-                birthDate: parsedDate, // ✅ 이곳에서만 파싱
+                ...(parsedDate !== undefined ? { birthDate: parsedDate } : {}), // ✅ optional field
                 imageUrl: rest.imageUrl,
             },
         });

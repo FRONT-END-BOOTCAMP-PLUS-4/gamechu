@@ -41,7 +41,7 @@ describe("POST /api/auth/signup", () => {
             nickname: "tester",
             email: "test@example.com",
             password: "password123",
-            birthDate: "1990-01-01",
+            birthDate: "19900101",
             gender: "M",
         });
         const response = await POST(req);
@@ -63,7 +63,7 @@ describe("POST /api/auth/signup", () => {
             nickname: "tester",
             email: "existing@example.com",
             password: "password123",
-            birthDate: "1990-01-01",
+            birthDate: "19900101",
             gender: "M",
         });
         const response = await POST(req);

@@ -6,13 +6,9 @@ import { PrismaReviewRepository } from "@/backend/review/infra/repositories/pris
 import { GetWishlistUsecase } from "@/backend/wishlist/application/usecase/GetWishlistUsecase";
 import { GetWishlistsUsecase } from "@/backend/wishlist/application/usecase/GetWishlistsUsecase";
 import { CreateWishlistUsecase } from "@/backend/wishlist/application/usecase/CreateWishlistUsecase";
-import { GetWishlistDto } from "@/backend/wishlist/application/usecase/dto/GetWishlistDto";
+import { GetWishlistDto, WishlistBodySchema } from "@/backend/wishlist/application/usecase/dto/GetWishlistDto";
 import { GetWishlistsDto } from "@/backend/wishlist/application/usecase/dto/GetWishlistsDto";
-
-// ✅ repository instance 생성
-const wishlistRepo = new PrismaWishListRepository();
-const gameRepo = new GamePrismaRepository();
-const reviewRepo = new PrismaReviewRepository();
+import { validate } from "@/utils/validation";
 
 export async function GET(req: NextRequest) {
     const memberId = await getAuthUserId();
@@ -35,6 +31,7 @@ export async function GET(req: NextRequest) {
             );
         }
 
+        const wishlistRepo = new PrismaWishListRepository();
         const usecase = new GetWishlistUsecase(wishlistRepo);
         const getWishlistDto = new GetWishlistDto(gameId, memberId);
         try {
@@ -50,6 +47,9 @@ export async function GET(req: NextRequest) {
     }
 
     // ✅ 전체 목록 + 페이지네이션
+    const wishlistRepo = new PrismaWishListRepository();
+    const gameRepo = new GamePrismaRepository();
+    const reviewRepo = new PrismaReviewRepository();
     const usecase = new GetWishlistsUsecase(wishlistRepo, gameRepo, reviewRepo);
     const getWishlistsDto = new GetWishlistsDto(memberId, page);
     try {
@@ -70,7 +70,12 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     try {
-        const { gameId } = await req.json();
+        const body = await req.json();
+        const parsed = validate(WishlistBodySchema, body);
+        if (!parsed.success) return parsed.response;
+
+        const { gameId } = parsed.data;
+        const wishlistRepo = new PrismaWishListRepository();
         const usecase = new CreateWishlistUsecase(wishlistRepo);
         const getWishlistDto = new GetWishlistDto(gameId, memberId);
         const wishlistId = await usecase.execute(getWishlistDto);
@@ -82,11 +87,10 @@ export async function POST(req: NextRequest) {
                 wishlistId,
             },
             { status: 200 }
-        ); // 👈 꼭 명시하세요!
+        );
     } catch (error) {
         console.error("[WISHLIST_ADD_ERROR]", error);
 
-        // 👇 실제로 에러가 아닐 수도 있으므로 500 아님을 구분
         return NextResponse.json(
             { message: "위시리스트 등록 실패" },
             { status: 400 }
