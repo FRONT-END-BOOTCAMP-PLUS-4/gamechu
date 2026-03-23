@@ -13,7 +13,7 @@
 37 API routes have three overlapping issues:
 
 1. **Inconsistent error response shape** — project mandates `{ message }` (CLAUDE.md) but `{ error }` appears in `attend/route.ts`, `notification-records/[id]/route.ts`, and `arenas/[id]/route.ts`
-2. **Missing try-catch** — `games/[id]/reviews/route.ts`, `profile/[nickname]/route.ts`, `reviews/member/route.ts` have no error handling; unhandled rejections crash the endpoint silently
+2. **Missing try-catch** — `games/[id]/reviews/route.ts`, `attend/route.ts`, `profile/[nickname]/route.ts`, `reviews/member/route.ts` have no error handling; unhandled rejections crash the endpoint silently
 3. **Module-level repo/usecase instantiation** — 8+ route files instantiate repos at module scope, holding stale Prisma connections across requests
 
 No shared error utility exists. Each route hand-rolls its own catch block with varying format.
@@ -51,14 +51,17 @@ Two functions. The `{ message }` shape is mechanically enforced — callers cann
 Every handler follows this order, no variation:
 
 ```typescript
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+type RequestParams = { params: Promise<{ id: string }> };
+
+export async function GET(request: Request, { params }: RequestParams) {
     try {
         // 1. Auth guard
         const memberId = await getAuthUserId();
         if (!memberId) return errorResponse("Unauthorized", 401);
 
         // 2. Param validation (using existing validate() + IdSchema)
-        const id = validate(IdSchema, params.id);
+        const { id: rawId } = await params;
+        const id = validate(IdSchema, rawId);
         if (!id.success) return id.response;
 
         // 3. Per-request instantiation
@@ -91,13 +94,13 @@ All fixes applied in a single pass per file:
 
 | Fix | Files |
 |-----|-------|
-| `{ error }` → `{ message }` | `app/api/member/attend/route.ts`<br>`app/api/member/notification-records/[id]/route.ts`<br>`app/api/arenas/[id]/route.ts` |
-| Add missing try-catch | `app/api/games/[id]/reviews/route.ts` *(also closes §2.1)*<br>`app/api/member/profile/[nickname]/route.ts`<br>`app/api/reviews/member/route.ts` |
-| Move instantiation inside handler | `app/api/games/[id]/reviews/route.ts`<br>`app/api/member/wishlists/route.ts`<br>`app/api/member/review-likes/[reviewId]/route.ts`<br>`app/api/member/profile/route.ts`<br>`app/api/member/profile/[nickname]/route.ts`<br>`app/api/reviews/member/route.ts`<br>`app/api/reviews/member/[memberId]/route.ts`<br>`app/api/member/games/[gameId]/reviews/[reviewId]/route.ts` |
+| `{ error }` → `{ message }` | `app/api/member/attend/route.ts` *(also missing try-catch — see below)*<br>`app/api/member/notification-records/[id]/route.ts` *(only the three early-return guards on auth/404/403 need fixing; catch block already uses `{ message }`)*<br>`app/api/arenas/[id]/route.ts` |
+| Add missing try-catch | `app/api/games/[id]/reviews/route.ts` *(also closes the §2.1 critical bug)*<br>`app/api/member/attend/route.ts` *(no try-catch at all — fix alongside `{ error }` change)*<br>`app/api/member/profile/[nickname]/route.ts`<br>`app/api/reviews/member/route.ts` |
+| Move instantiation inside handler | `app/api/games/[id]/reviews/route.ts`<br>`app/api/member/wishlists/route.ts` *(repos only at module scope — usecases are already instantiated inside handlers)*<br>`app/api/member/review-likes/[reviewId]/route.ts`<br>`app/api/member/profile/route.ts`<br>`app/api/member/profile/[nickname]/route.ts`<br>`app/api/reviews/member/route.ts`<br>`app/api/reviews/member/[memberId]/route.ts` |
 
 **~10 route files total.** No business logic changes — structural cleanup only.
 
-Note: `games/[id]/reviews/route.ts` receives all three fixes simultaneously and closes the §2.1 critical bug.
+Note: `games/[id]/reviews/route.ts` receives all three fixes simultaneously and closes the §2.1 critical bug. `app/api/member/games/[gameId]/reviews/[reviewId]/route.ts` was removed from scope — instantiation is already per-request inside handlers.
 
 ---
 
@@ -105,7 +108,7 @@ Note: `games/[id]/reviews/route.ts` receives all three fixes simultaneously and 
 
 `utils/apiResponse.ts` — no unit tests needed (two one-liner wrappers around `NextResponse.json`).
 
-For routes receiving try-catch that currently have **no error-path tests** (`games/[id]/reviews`, `profile/[nickname]`, `reviews/member`): add a minimal test — mock the usecase to throw, assert 500 response + `{ message }` key.
+For routes receiving try-catch that currently have **no error-path tests** (`games/[id]/reviews`, `attend`, `profile/[nickname]`, `reviews/member`): add a minimal test — mock the usecase to throw, assert 500 response + `{ message }` key.
 
 All existing route tests must pass unchanged after the refactor. If a test breaks during module-level cleanup, the fix is updating `vi.mock` declarations to appear before the import (known Vitest pattern).
 
