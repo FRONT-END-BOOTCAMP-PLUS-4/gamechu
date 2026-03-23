@@ -5,55 +5,49 @@ import { PrismaMemberRepository } from "@/backend/member/infra/repositories/pris
 import { GetMemberProfileUsecase } from "@/backend/member/application/usecase/GetMemberProfileUsecase";
 import { UpdateMemberProfileUseCase } from "@/backend/member/application/usecase/UpdateMemberProfileUseCase";
 import { UpdateProfileRequestDto } from "@/backend/member/application/usecase/dto/UpdateProfileRequestDto";
-
-const getUsecase = new GetMemberProfileUsecase(new PrismaMemberRepository());
-const updateUsecase = new UpdateMemberProfileUseCase(
-    new PrismaMemberRepository()
-);
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function GET() {
-    const session = await getServerSession(authOptions);
-    const memberId = session?.user?.id;
-    if (!memberId)
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    try {
+        const session = await getServerSession(authOptions);
+        const memberId = session?.user?.id;
+        if (!memberId)
+            return errorResponse("Unauthorized", 401);
 
-    const profile = await getUsecase.execute(memberId);
-    if (!profile)
-        return NextResponse.json({ message: "Not found" }, { status: 404 });
+        const usecase = new GetMemberProfileUsecase(new PrismaMemberRepository());
+        const profile = await usecase.execute(memberId);
+        if (!profile) return errorResponse("Not found", 404);
 
-    return NextResponse.json(profile);
+        return NextResponse.json(profile);
+    } catch (error: unknown) {
+        console.error("[profile] GET error:", error);
+        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
+    }
 }
 
 export async function PUT(req: Request) {
     try {
         const session = await getServerSession(authOptions);
         const memberId = session?.user?.id;
-        if (!memberId)
-            return NextResponse.json(
-                { message: "Unauthorized" },
-                { status: 401 }
-            );
+        if (!memberId) return errorResponse("Unauthorized", 401);
 
         const body = await req.json();
-
         const dto = new UpdateProfileRequestDto({
             memberId,
             nickname: body.nickname,
             isMale: body.isMale,
-            birthDate: body.birthDate, // yyyymmdd
+            birthDate: body.birthDate,
             imageUrl: body.imageUrl,
         });
 
-        await updateUsecase.execute(dto);
+        const usecase = new UpdateMemberProfileUseCase(new PrismaMemberRepository());
+        await usecase.execute(dto);
 
-        return NextResponse.json({
-            message: "프로필이 성공적으로 수정되었습니다.",
-        });
-    } catch (err) {
+        return NextResponse.json({ message: "프로필이 성공적으로 수정되었습니다." });
+    } catch (err: unknown) {
         console.error("[PROFILE_UPDATE_ERROR]", err);
-        return NextResponse.json(
-            { message: (err as Error).message || "프로필 수정 실패" },
-            { status: 400 }
-        );
+        const message = err instanceof Error ? err.message : "프로필 수정 실패";
+        return errorResponse(message, 400);
     }
 }

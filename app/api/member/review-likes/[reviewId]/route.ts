@@ -7,52 +7,43 @@ import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/reposi
 import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-
-// 의존성 생성
-const likeRepo = new PrismaReviewLikeRepository();
-const reviewRepo = new PrismaReviewRepository();
-const memberRepo = new PrismaMemberRepository();
-const scoreRecordRepo = new PrismaScoreRecordRepository();
-const scorePolicy = new ScorePolicy();
-const applyReviewScoreUsecase = new ApplyReviewScoreUsecase(
-    scorePolicy,
-    memberRepo,
-    scoreRecordRepo
-);
-const usecase = new ToggleReviewLikeUsecase(
-    likeRepo,
-    reviewRepo,
-    applyReviewScoreUsecase
-);
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ reviewId: string }> }
 ) {
-    const userId = await getAuthUserId();
-    if (!userId) {
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    const parsedReviewId = Number.parseInt((await params).reviewId ?? "", 10);
-    if (isNaN(parsedReviewId)) {
-        return NextResponse.json(
-            { message: "Invalid reviewId" },
-            { status: 400 }
-        );
-    }
-
     try {
+        const userId = await getAuthUserId();
+        if (!userId) return errorResponse("Unauthorized", 401);
+
+        const parsedReviewId = Number.parseInt((await params).reviewId ?? "", 10);
+        if (isNaN(parsedReviewId)) return errorResponse("Invalid reviewId", 400);
+
+        const likeRepo = new PrismaReviewLikeRepository();
+        const reviewRepo = new PrismaReviewRepository();
+        const memberRepo = new PrismaMemberRepository();
+        const scoreRecordRepo = new PrismaScoreRecordRepository();
+        const scorePolicy = new ScorePolicy();
+        const applyReviewScoreUsecase = new ApplyReviewScoreUsecase(
+            scorePolicy,
+            memberRepo,
+            scoreRecordRepo
+        );
+        const usecase = new ToggleReviewLikeUsecase(
+            likeRepo,
+            reviewRepo,
+            applyReviewScoreUsecase
+        );
+
         const result = await usecase.execute({
             reviewId: parsedReviewId,
             memberId: userId,
         });
         return NextResponse.json(result);
-    } catch (err) {
-        console.error("리뷰 좋아요 처리 실패", err);
-        return NextResponse.json(
-            { message: "Internal Server Error" },
-            { status: 500 }
-        );
+    } catch (err: unknown) {
+        console.error("[review-likes] POST error:", err);
+        const message = err instanceof Error ? err.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
     }
 }
