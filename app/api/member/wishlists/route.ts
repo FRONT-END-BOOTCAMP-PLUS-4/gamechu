@@ -19,16 +19,12 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const gameIdParam = searchParams.get("gameId");
     const pageParam = searchParams.get("page");
-    const page = Math.max(Number(pageParam) || 1, 1); // 기본값 1, 0 이하 방지
+    const page = Math.max(Number(pageParam) || 1, 1);
 
-    // ✅ 단일 조회 (isWish 체크)
     if (gameIdParam !== null) {
         const gameId = Number(gameIdParam);
         if (isNaN(gameId)) {
-            return NextResponse.json(
-                { message: "Invalid gameId" },
-                { status: 400 }
-            );
+            return NextResponse.json({ message: "Invalid gameId" }, { status: 400 });
         }
 
         const wishlistRepo = new PrismaWishListRepository();
@@ -39,10 +35,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json(result);
         } catch (err) {
             console.error("[WISHLIST_SINGLE_FETCH_ERROR]", err);
-            return NextResponse.json(
-                { message: "단일 위시리스트 조회 실패" },
-                { status: 500 }
-            );
+            return NextResponse.json({ message: "단일 위시리스트 조회 실패" }, { status: 500 });
         }
     }
 
@@ -54,13 +47,10 @@ export async function GET(req: NextRequest) {
     const getWishlistsDto = new GetWishlistsDto(memberId, page);
     try {
         const result = await usecase.execute(getWishlistsDto);
-        return NextResponse.json(result); // WishListPageDto 형식 반환
+        return NextResponse.json(result);
     } catch (error) {
         console.error("[WISHLIST_FETCH_ERROR]", error);
-        return NextResponse.json(
-            { message: "위시리스트 목록 조회 실패" },
-            { status: 500 }
-        );
+        return NextResponse.json({ message: "위시리스트 목록 조회 실패" }, { status: 500 });
     }
 }
 
@@ -80,12 +70,8 @@ export async function POST(req: NextRequest) {
         const getWishlistDto = new GetWishlistDto(gameId, memberId);
         const wishlistId = await usecase.execute(getWishlistDto);
 
-        // ✅ 성공적으로 등록되었으면 명시적으로 200 반환
         return NextResponse.json(
-            {
-                message: "위시리스트에 추가되었습니다.",
-                wishlistId,
-            },
+            { message: "위시리스트에 추가되었습니다.", wishlistId },
             { status: 200 }
         );
     } catch (error) {
