@@ -17,6 +17,13 @@ interface Props {
 export default function ProfileInfoTab(props: Props) {
     const [isEdit, setIsEdit] = useState(false);
     const [nickname, setNickname] = useState(props.nickname);
+    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<
+        boolean | null
+    >(null);
+    const [nicknameMessage, setNicknameMessage] = useState<{
+        text: string;
+        isError: boolean;
+    } | null>(null);
     const [gender, setGender] = useState<"M" | "F">(props.isMale ? "M" : "F");
     const [birth, setBirth] = useState(
         props.birthDate.slice(0, 10).replace(/-/g, "")
@@ -24,6 +31,53 @@ export default function ProfileInfoTab(props: Props) {
     const [previewImage, setPreviewImage] = useState(props.imageUrl);
     const [, setImageFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const checkNicknameDuplicate = async () => {
+        setNicknameMessage(null);
+
+        if (!nickname) {
+            setNicknameMessage({
+                text: "닉네임을 입력해주세요.",
+                isError: true,
+            });
+            setIsNicknameDuplicate(null);
+            return;
+        }
+
+        if (nickname.length > 8) {
+            setNicknameMessage({
+                text: "닉네임은 8자 이하여야 합니다.",
+                isError: true,
+            });
+            setIsNicknameDuplicate(null);
+            return;
+        }
+
+        try {
+            const res = await fetch(
+                `/api/member/nickname-check?nickname=${encodeURIComponent(nickname)}`
+            );
+            const data = await res.json();
+
+            if (res.status === 409) {
+                setNicknameMessage({ text: data.message, isError: true });
+                setIsNicknameDuplicate(true);
+                return;
+            }
+
+            if (!res.ok) {
+                throw new Error(data.message || "중복 확인 실패");
+            }
+
+            setIsNicknameDuplicate(false);
+            setNicknameMessage({ text: data.message, isError: false });
+        } catch (err) {
+            const message =
+                err instanceof Error ? err.message : "오류가 발생했습니다.";
+            setNicknameMessage({ text: message, isError: true });
+            setIsNicknameDuplicate(null);
+        }
+    };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -79,12 +133,39 @@ export default function ProfileInfoTab(props: Props) {
                     <label className="block text-body font-semibold text-font-100">
                         닉네임
                     </label>
-                    <Input
-                        placeholder="닉네임을 입력하세요"
-                        value={nickname}
-                        onChange={(e) => setNickname(e.target.value)}
-                        disabled={!isEdit}
-                    />
+                    <div className="flex items-start gap-2">
+                        <div className="flex-1">
+                            <Input
+                                placeholder="닉네임을 입력하세요 (최대 8자)"
+                                value={nickname}
+                                onChange={(e) => {
+                                    setNickname(e.target.value);
+                                    setIsNicknameDuplicate(null);
+                                    setNicknameMessage(null);
+                                }}
+                                disabled={!isEdit}
+                            />
+                        </div>
+                        {isEdit && (
+                            <Button
+                                label="중복 검사"
+                                size="small"
+                                type="black"
+                                onClick={checkNicknameDuplicate}
+                            />
+                        )}
+                    </div>
+                    {nicknameMessage && (
+                        <p
+                            className={`mt-1 text-caption ${
+                                nicknameMessage.isError
+                                    ? "text-state-error"
+                                    : "text-state-success"
+                            }`}
+                        >
+                            {nicknameMessage.text}
+                        </p>
+                    )}
                 </div>
 
                 {/* 이메일 (수정 불가) */}
@@ -153,6 +234,24 @@ export default function ProfileInfoTab(props: Props) {
                         <Button
                             label="수정 완료"
                             onClick={async () => {
+                                if (
+                                    nickname !== props.nickname &&
+                                    isNicknameDuplicate === null
+                                ) {
+                                    setNicknameMessage({
+                                        text: "닉네임 중복 검사를 먼저 진행해주세요.",
+                                        isError: true,
+                                    });
+                                    return;
+                                }
+                                if (isNicknameDuplicate) {
+                                    setNicknameMessage({
+                                        text: "이미 사용 중인 닉네임입니다.",
+                                        isError: true,
+                                    });
+                                    return;
+                                }
+
                                 try {
                                     const res = await fetch(
                                         "/api/member/profile",
@@ -181,6 +280,7 @@ export default function ProfileInfoTab(props: Props) {
 
                                     alert("프로필이 수정되었습니다.");
                                     setIsEdit(false);
+                                    setNicknameMessage(null);
                                 } catch (err) {
                                     console.error("프로필 수정 중 오류:", err);
                                     alert("예기치 못한 오류가 발생했습니다.");
@@ -190,7 +290,12 @@ export default function ProfileInfoTab(props: Props) {
                         <Button
                             label="취소"
                             type="black"
-                            onClick={() => setIsEdit(false)}
+                            onClick={() => {
+                                setIsEdit(false);
+                                setNickname(props.nickname);
+                                setIsNicknameDuplicate(null);
+                                setNicknameMessage(null);
+                            }}
                         />
                     </>
                 ) : (

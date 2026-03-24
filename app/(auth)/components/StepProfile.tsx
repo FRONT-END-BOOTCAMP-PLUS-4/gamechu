@@ -11,6 +11,10 @@ type Props = {
 
 export default function StepProfile({ onNext }: Props) {
     const [nickname, setNickname] = useState("");
+    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<
+        boolean | null
+    >(null);
+    const [nicknameSuccessMessage, setNicknameSuccessMessage] = useState("");
     const [email, setEmail] = useState("");
     const [isEmailDuplicate, setIsEmailDuplicate] = useState<boolean | null>(
         null
@@ -21,6 +25,57 @@ export default function StepProfile({ onNext }: Props) {
     const [birth, setBirth] = useState("");
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
     const [successMessage, setSuccessMessage] = useState("");
+
+    const checkNicknameDuplicate = async () => {
+        setNicknameSuccessMessage("");
+        setFieldErrors((prev) => ({ ...prev, nickname: "" }));
+
+        if (!nickname) {
+            setFieldErrors((prev) => ({
+                ...prev,
+                nickname: "닉네임을 입력해주세요.",
+            }));
+            setIsNicknameDuplicate(null);
+            return;
+        }
+
+        if (nickname.length > 8) {
+            setFieldErrors((prev) => ({
+                ...prev,
+                nickname: "닉네임은 8자 이하여야 합니다.",
+            }));
+            setIsNicknameDuplicate(null);
+            return;
+        }
+
+        try {
+            const res = await fetch(
+                `/api/auth/nickname-check?nickname=${encodeURIComponent(nickname)}`
+            );
+            const data = await res.json();
+
+            if (res.status === 409) {
+                setFieldErrors((prev) => ({
+                    ...prev,
+                    nickname: data.message,
+                }));
+                setIsNicknameDuplicate(true);
+                return;
+            }
+
+            if (!res.ok) {
+                throw new Error(data.message || "중복 확인 실패");
+            }
+
+            setIsNicknameDuplicate(false);
+            setNicknameSuccessMessage(data.message);
+        } catch (err) {
+            const message =
+                err instanceof Error ? err.message : "오류가 발생했습니다.";
+            setFieldErrors((prev) => ({ ...prev, nickname: message }));
+            setIsNicknameDuplicate(null);
+        }
+    };
 
     const validateEmailFormat = (email: string) =>
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -81,6 +136,12 @@ export default function StepProfile({ onNext }: Props) {
         const errors: Record<string, string> = {};
 
         if (!nickname) errors.nickname = "닉네임을 입력해주세요.";
+        else if (nickname.length > 8)
+            errors.nickname = "닉네임은 8자 이하여야 합니다.";
+        else if (isNicknameDuplicate === null)
+            errors.nickname = "닉네임 중복 검사를 진행해주세요.";
+        else if (isNicknameDuplicate)
+            errors.nickname = "이미 사용 중인 닉네임입니다.";
         if (!email) errors.email = "이메일을 입력해주세요.";
         else if (!validateEmailFormat(email))
             errors.email = "올바른 이메일 형식이 아닙니다.";
@@ -148,26 +209,45 @@ export default function StepProfile({ onNext }: Props) {
     return (
         <div className="space-y-6">
             <div className="space-y-1">
-                <label className="block text-body text-font-100 font-semibold">
+                <label className="block text-body font-semibold text-font-100">
                     닉네임
                 </label>
-                <Input
-                    placeholder="닉네임을 입력하세요"
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                />
+                <div className="flex items-start gap-2">
+                    <div className="flex-1">
+                        <Input
+                            placeholder="닉네임을 입력하세요 (최대 8자)"
+                            value={nickname}
+                            onChange={(e) => {
+                                setNickname(e.target.value);
+                                setIsNicknameDuplicate(null);
+                                setNicknameSuccessMessage("");
+                            }}
+                        />
+                    </div>
+                    <Button
+                        label="중복 검사"
+                        size="small"
+                        type="black"
+                        onClick={checkNicknameDuplicate}
+                    />
+                </div>
                 {fieldErrors.nickname && (
-                    <p className="text-caption text-state-error mt-1">
+                    <p className="mt-1 text-caption text-state-error">
                         {fieldErrors.nickname}
+                    </p>
+                )}
+                {!fieldErrors.nickname && nicknameSuccessMessage && (
+                    <p className="text-state-success mt-1 text-caption">
+                        {nicknameSuccessMessage}
                     </p>
                 )}
             </div>
 
             <div className="space-y-1">
-                <label className="block text-body text-font-100 font-semibold">
+                <label className="block text-body font-semibold text-font-100">
                     이메일
                 </label>
-                <div className="flex gap-2 items-start">
+                <div className="flex items-start gap-2">
                     <div className="flex-1">
                         <Input
                             placeholder="이메일을 입력하세요"
@@ -186,19 +266,19 @@ export default function StepProfile({ onNext }: Props) {
                     />
                 </div>
                 {fieldErrors.email && (
-                    <p className="text-caption text-state-error mt-1">
+                    <p className="mt-1 text-caption text-state-error">
                         {fieldErrors.email}
                     </p>
                 )}
                 {!fieldErrors.email && successMessage && (
-                    <p className="text-caption text-state-success mt-1">
+                    <p className="text-state-success mt-1 text-caption">
                         {successMessage}
                     </p>
                 )}
             </div>
 
             <div className="space-y-1">
-                <label className="block text-body text-font-100 font-semibold">
+                <label className="block text-body font-semibold text-font-100">
                     비밀번호
                 </label>
                 <Input
@@ -208,14 +288,14 @@ export default function StepProfile({ onNext }: Props) {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 {fieldErrors.password && (
-                    <p className="text-caption text-state-error mt-1">
+                    <p className="mt-1 text-caption text-state-error">
                         {fieldErrors.password}
                     </p>
                 )}
             </div>
 
             <div className="space-y-1">
-                <label className="block text-body text-font-100 font-semibold">
+                <label className="block text-body font-semibold text-font-100">
                     비밀번호 확인
                 </label>
                 <Input
@@ -225,47 +305,47 @@ export default function StepProfile({ onNext }: Props) {
                     onChange={(e) => setConfirm(e.target.value)}
                 />
                 {fieldErrors.confirm && (
-                    <p className="text-caption text-state-error mt-1">
+                    <p className="mt-1 text-caption text-state-error">
                         {fieldErrors.confirm}
                     </p>
                 )}
             </div>
 
             <div className="space-y-1">
-                <label className="block text-body text-font-100 font-semibold">
+                <label className="block text-body font-semibold text-font-100">
                     성별
                 </label>
                 <div className="flex justify-center gap-4">
                     <button
                         onClick={() => setGender("M")}
-                        className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 ${
+                        className={`h-[50px] w-[150px] rounded-xl font-semibold transition-all duration-200 ${
                             gender === "M"
                                 ? "bg-primary-blue-200 text-white shadow-md"
-                                : "bg-background-200 text-font-100 border border-line-200 hover:border-primary-blue-200"
+                                : "border border-line-200 bg-background-200 text-font-100 hover:border-primary-blue-200"
                         }`}
                     >
                         남자
                     </button>
                     <button
                         onClick={() => setGender("F")}
-                        className={`w-[150px] h-[50px] rounded-xl font-semibold transition-all duration-200 ${
+                        className={`h-[50px] w-[150px] rounded-xl font-semibold transition-all duration-200 ${
                             gender === "F"
                                 ? "bg-primary-purple-200 text-white shadow-md"
-                                : "bg-background-200 text-font-100 border border-line-200 hover:border-primary-purple-200"
+                                : "border border-line-200 bg-background-200 text-font-100 hover:border-primary-purple-200"
                         }`}
                     >
                         여자
                     </button>
                 </div>
                 {fieldErrors.gender && (
-                    <p className="text-caption text-state-error text-center mt-1">
+                    <p className="mt-1 text-center text-caption text-state-error">
                         {fieldErrors.gender}
                     </p>
                 )}
             </div>
 
             <div className="space-y-1">
-                <label className="block text-body text-font-100 font-semibold">
+                <label className="block text-body font-semibold text-font-100">
                     생년월일
                 </label>
                 <Input
@@ -274,14 +354,14 @@ export default function StepProfile({ onNext }: Props) {
                     onChange={(e) => setBirth(e.target.value)}
                 />
                 {fieldErrors.birth && (
-                    <p className="text-caption text-state-error mt-1">
+                    <p className="mt-1 text-caption text-state-error">
                         {fieldErrors.birth}
                     </p>
                 )}
             </div>
 
             {fieldErrors.general && (
-                <p className="text-caption text-state-error mt-2">
+                <p className="mt-2 text-caption text-state-error">
                     {fieldErrors.general}
                 </p>
             )}
