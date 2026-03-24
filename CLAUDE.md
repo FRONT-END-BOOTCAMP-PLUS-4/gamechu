@@ -30,6 +30,7 @@ npm run test:e2e   # Run Playwright E2E tests
 
 ## Git Workflow (overrides skill defaults)
 
+- whenever using worktree, don't forget to execute commands: `npm i`, `npx prisma generate`
 - whenever commit, issue, PR: read 'Git & Collaboration' Section on `docs/CODE_CONVENTIONS.md`.
 
 ## Key Rules
