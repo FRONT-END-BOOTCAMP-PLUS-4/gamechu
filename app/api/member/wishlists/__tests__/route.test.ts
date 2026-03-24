@@ -124,7 +124,7 @@ describe("POST /api/member/wishlists", () => {
         expect(body).toHaveProperty("wishlistId", 42);
     });
 
-    it("returns 400 when usecase throws", async () => {
+    it("returns 500 when usecase throws", async () => {
         const { CreateWishlistUsecase } = await import(
             "@/backend/wishlist/application/usecase/CreateWishlistUsecase"
         );
@@ -140,7 +140,7 @@ describe("POST /api/member/wishlists", () => {
             headers: { "Content-Type": "application/json" },
         });
         const response = await POST(req);
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(500);
         const body = await response.json();
         expect(body).toHaveProperty("message");
     });
