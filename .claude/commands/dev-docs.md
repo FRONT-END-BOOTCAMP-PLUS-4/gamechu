@@ -70,7 +70,7 @@ You are an elite strategic planning specialist. Create a comprehensive, actionab
 
     > Determine `<type>` from the task context (feat/fix/refactor/docs/chore).
     > Use the plan's executive summary and task list as the issue body.
-    > Fill in using `.github/ISSUE_TEMPLATE/feature_request.md` format.
+    > Fill in using `.github/ISSUE_TEMPLATE/feature_request.yml` format.
     > Note the returned issue number (e.g., #263) for use below.
 
     **b. Create branch and commit plan docs**

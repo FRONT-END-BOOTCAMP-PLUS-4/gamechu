@@ -71,6 +71,6 @@ After PR creation, output:
 
 ## Reference
 
-- Issue body format: `.github/ISSUE_TEMPLATE/feature_request.md`
+- Issue body format: `.github/ISSUE_TEMPLATE/feature_request.yml`
 - PR body format: `.github/PULL_REQUEST_TEMPLATE.md`
 - Branch naming, commit conventions, workflow: `docs/CODE_CONVENTIONS.md` "Git & Collaboration"
