@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
     // CSRF: reject cross-origin mutations on /api/member/*
     const method = req.method;
     const isMutation = ["POST", "PUT", "PATCH", "DELETE"].includes(method);
-    const isMemberApi = pathname.startsWith("/api/member/");
+    const isMemberApi = pathname.startsWith("/api/member");
 
     if (isMutation && isMemberApi) {
         const origin = req.headers.get("origin");
