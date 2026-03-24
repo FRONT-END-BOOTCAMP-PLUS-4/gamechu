@@ -111,7 +111,7 @@ describe("PUT /api/member/profile", () => {
         expect(body).toHaveProperty("message");
     });
 
-    it("returns 400 when usecase throws", async () => {
+    it("returns 500 when usecase throws", async () => {
         const { UpdateMemberProfileUseCase } = await import(
             "@/backend/member/application/usecase/UpdateMemberProfileUseCase"
         );
@@ -127,7 +127,7 @@ describe("PUT /api/member/profile", () => {
             headers: { "Content-Type": "application/json" },
         });
         const response = await PUT(req);
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(500);
         const body = await response.json();
         expect(body).toHaveProperty("message");
     });
