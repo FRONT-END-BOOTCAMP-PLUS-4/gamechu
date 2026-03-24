@@ -133,3 +133,35 @@
 .animate-fade-in-right-strong {
     opacity: 0;
 }
+
+/* ── Error Boundary Animations ── */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes countdown {
+    from { width: 100%; }
+    to   { width: 0%; }
+}
+@keyframes pulse-badge {
+    0%,  100% { box-shadow: 0 0 8px rgba(255, 59, 92, 0.2); }
+    50%        { box-shadow: 0 0 20px rgba(255, 59, 92, 0.5), 0 0 40px rgba(255, 59, 92, 0.2); }
+}
+@keyframes ring-pulse {
+    0%,  100% { transform: scale(1);   opacity: 1; }
+    50%        { transform: scale(1.1); opacity: 0.4; }
+}
+@keyframes icon-shake {
+    0%   { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+    60%  { transform: scale(1.1) rotate(4deg);   opacity: 1; }
+    80%  { transform: scale(0.95) rotate(-2deg); }
+    100% { transform: scale(1)   rotate(0deg);   opacity: 1; }
+}
+@keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(30px, 20px) scale(1.08); }
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
