@@ -48,6 +48,44 @@ describe("POST /api/auth/signup", () => {
         expect(response.status).toBe(201);
     });
 
+    it("short password returns 400", async () => {
+        const req = makeRequest({
+            nickname: "tester",
+            email: "test@example.com",
+            password: "short",
+            birthDate: "19900101",
+            gender: "M",
+        });
+        const response = await POST(req);
+        expect(response.status).toBe(400);
+        const body = await response.json();
+        expect(body.message).toContain("8자");
+    });
+
+    it("invalid gender returns 400", async () => {
+        const req = makeRequest({
+            nickname: "tester",
+            email: "test@example.com",
+            password: "password123",
+            birthDate: "19900101",
+            gender: "X",
+        });
+        const response = await POST(req);
+        expect(response.status).toBe(400);
+    });
+
+    it("invalid birthDate format returns 400", async () => {
+        const req = makeRequest({
+            nickname: "tester",
+            email: "test@example.com",
+            password: "password123",
+            birthDate: "1990-01-01",
+            gender: "M",
+        });
+        const response = await POST(req);
+        expect(response.status).toBe(400);
+    });
+
     it("duplicate email returns 400", async () => {
         const { PrismaMemberRepository } = await import(
             "@/backend/member/infra/repositories/prisma/PrismaMemberRepository"

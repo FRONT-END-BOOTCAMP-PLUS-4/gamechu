@@ -18,13 +18,8 @@ export async function POST(
     }
 
     const { gameId } = await params;
-    const gameIdResult = IdSchema.safeParse(gameId);
-    if (!gameIdResult.success) {
-        return NextResponse.json(
-            { message: "유효하지 않은 게임 ID입니다." },
-            { status: 400 }
-        );
-    }
+    const gameIdValidated = validate(IdSchema, gameId);
+    if (!gameIdValidated.success) return gameIdValidated.response;
 
     const validated = validate(CreateReviewSchema, await req.json());
     if (!validated.success) return validated.response;
@@ -32,9 +27,17 @@ export async function POST(
     const repository = new PrismaReviewRepository();
     const usecase = new CreateReviewUsecase(repository);
 
-    const result = await usecase.execute(memberId, {
-        gameId: gameIdResult.data,
-        ...validated.data,
-    });
-    return NextResponse.json(result);
+    try {
+        const result = await usecase.execute(memberId, {
+            gameId: gameIdValidated.data,
+            ...validated.data,
+        });
+        return NextResponse.json(result);
+    } catch (err) {
+        console.error("리뷰 작성 실패", err);
+        return NextResponse.json(
+            { message: err instanceof Error ? err.message : "Internal Server Error" },
+            { status: 400 }
+        );
+    }
 }

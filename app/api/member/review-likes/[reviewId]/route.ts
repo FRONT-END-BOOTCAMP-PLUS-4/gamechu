@@ -9,23 +9,6 @@ import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { IdSchema, validate } from "@/utils/validation";
 
-// 의존성 생성
-const likeRepo = new PrismaReviewLikeRepository();
-const reviewRepo = new PrismaReviewRepository();
-const memberRepo = new PrismaMemberRepository();
-const scoreRecordRepo = new PrismaScoreRecordRepository();
-const scorePolicy = new ScorePolicy();
-const applyReviewScoreUsecase = new ApplyReviewScoreUsecase(
-    scorePolicy,
-    memberRepo,
-    scoreRecordRepo
-);
-const usecase = new ToggleReviewLikeUsecase(
-    likeRepo,
-    reviewRepo,
-    applyReviewScoreUsecase
-);
-
 export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ reviewId: string }> }
@@ -36,13 +19,24 @@ export async function POST(
     }
 
     const reviewIdValidation = validate(IdSchema, (await params).reviewId);
-    if (!reviewIdValidation.success) {
-        return NextResponse.json(
-            { message: "Invalid reviewId" },
-            { status: 400 }
-        );
-    }
+    if (!reviewIdValidation.success) return reviewIdValidation.response;
     const parsedReviewId = reviewIdValidation.data;
+
+    const likeRepo = new PrismaReviewLikeRepository();
+    const reviewRepo = new PrismaReviewRepository();
+    const memberRepo = new PrismaMemberRepository();
+    const scoreRecordRepo = new PrismaScoreRecordRepository();
+    const scorePolicy = new ScorePolicy();
+    const applyReviewScoreUsecase = new ApplyReviewScoreUsecase(
+        scorePolicy,
+        memberRepo,
+        scoreRecordRepo
+    );
+    const usecase = new ToggleReviewLikeUsecase(
+        likeRepo,
+        reviewRepo,
+        applyReviewScoreUsecase
+    );
 
     try {
         const result = await usecase.execute({

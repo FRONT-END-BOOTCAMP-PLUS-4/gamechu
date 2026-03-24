@@ -49,4 +49,16 @@ describe("GET /api/games", () => {
         expect(data.games).toHaveLength(1);
         expect(data.totalCount).toBe(1);
     });
+
+    it("GET with invalid sort value returns 400", async () => {
+        const req = new NextRequest("http://localhost/api/games?sort=invalid");
+        const response = await GET(req);
+        expect(response.status).toBe(400);
+    });
+
+    it("GET with page=0 returns 400", async () => {
+        const req = new NextRequest("http://localhost/api/games?page=0");
+        const response = await GET(req);
+        expect(response.status).toBe(400);
+    });
 });

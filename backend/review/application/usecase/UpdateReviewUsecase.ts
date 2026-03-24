@@ -7,7 +7,7 @@ export class UpdateReviewUsecase {
     constructor(private readonly reviewRepository: ReviewRepository) {}
 
     async execute(reviewId: number, dto: UpdateReviewDto): Promise<ReviewDto> {
-        validateReviewContent(dto.content);
+        if (dto.content !== undefined) validateReviewContent(dto.content);
         return this.reviewRepository.update(reviewId, dto);
     }
 }
