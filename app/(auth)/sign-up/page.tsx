@@ -32,11 +32,11 @@ export default function Register() {
     };
 
     return (
-        <div className="w-full max-w-xl mx-auto min-h-screen flex flex-col px-4 py-8 text-white">
-            <h2 className="text-h2 font-bold mb-6">회원 정보를 입력해주세요</h2>
-            <div className="w-full mb-8">
-                <div className="text-sm text-right mb-1">{step}/4 진행중</div>
-                <div className="w-full h-[6px] bg-line-200 rounded-full overflow-hidden">
+        <div className="mx-auto flex min-h-screen w-full max-w-xl flex-col px-4 py-8 text-white">
+            <h2 className="mb-6 text-h2 font-bold">회원 정보를 입력해주세요</h2>
+            <div className="mb-8 w-full">
+                <div className="mb-1 text-right text-sm">{step}/4 진행중</div>
+                <div className="h-[6px] w-full overflow-hidden rounded-full bg-line-200">
                     <div
                         className="h-full bg-primary-purple-200 transition-all duration-300"
                         style={{ width: `${(step / 4) * 100}%` }}
