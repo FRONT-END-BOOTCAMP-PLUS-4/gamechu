@@ -25,13 +25,14 @@ npm run test:e2e   # Run Playwright E2E tests
 
 ## Tech Stack
 
-- Frontend: Next.js 15 (App Router), TypeScript, TailwindCSS, Zustand
-- Backend: PostgreSQL, Prisma, Redis, Socket.io
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript, TailwindCSS 3, Zustand 5, Framer Motion, Lexical (rich text editor)
+- **Backend**: PostgreSQL, Prisma 6, Redis (ioredis), Socket.io 4, NextAuth.js v4, Zod 4
+- **Testing**: Vitest 4, Playwright, Testing Library
+- **Tooling**: ESLint, Prettier, Husky
 
 ## Git Workflow (overrides skill defaults)
 
-- whenever using worktree, don't forget to execute commands: `npm i`, `npx prisma generate`
-- whenever commit, issue, PR: read 'Git & Collaboration' Section on `docs/CODE_CONVENTIONS.md`.
+- Whenever deals with git(include git, gh, and GitHub mcp), Read `docs/conventions/GIT_COLLABORATION.md`
 
 ## Key Rules
 
@@ -62,5 +63,11 @@ stores/           # Zustand global state (auth, modal, loading, arena)
 utils/            # Pure utility functions
 types/            # Shared TypeScript types
 prisma/           # schema.prisma + migrations
-docs/             # core conventions for the project - refer whenever needed
+docs/
+  CODE_CONVENTIONS.md          # code style, architecture, testing conventions
+  conventions/
+    GIT_COLLABORATION.md       # git workflow, issue/PR/worktree conventions
+  superpowers/
+    plans/                     # implementation plans
+    specs/                     # design specs
 ```

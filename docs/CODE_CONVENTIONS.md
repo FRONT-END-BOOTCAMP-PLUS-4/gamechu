@@ -326,7 +326,9 @@ Use in tests:
 import { createMockArenaRepository } from "@/tests/mocks/createMockArenaRepository";
 
 const mockRepo = createMockArenaRepository();
-mockRepo.findAll.mockResolvedValue([/* ... */]);
+mockRepo.findAll.mockResolvedValue([
+    /* ... */
+]);
 const usecase = new GetArenaListUsecase(mockRepo);
 ```
 
@@ -336,17 +338,19 @@ const usecase = new GetArenaListUsecase(mockRepo);
 
 ```ts
 // ❌ Silently breaks — `this` is undefined inside arrow function
-vi.fn().mockImplementation(() => ({ method: vi.fn() }))
+vi.fn().mockImplementation(() => ({ method: vi.fn() }));
 
 // ✅ Use function keyword so `this` is bound correctly
-vi.fn(function(this: any) {
+vi.fn(function (this: any) {
     this.method = vi.fn();
-})
+});
 
 // ✅ Or use a class
-vi.fn(class {
-    method = vi.fn();
-})
+vi.fn(
+    class {
+        method = vi.fn();
+    }
+);
 ```
 
 ### Mocking modules
@@ -412,7 +416,9 @@ Instantiate the handler function directly — no HTTP server needed:
 import { GET } from "@/app/api/arenas/route";
 
 it("returns 200 with arena list", async () => {
-    mockRepo.findAll.mockResolvedValue([/* arenas */]);
+    mockRepo.findAll.mockResolvedValue([
+        /* arenas */
+    ]);
     const req = new Request("http://localhost/api/arenas?currentPage=1");
     const res = await GET(req);
     expect(res.status).toBe(200);
@@ -445,10 +451,10 @@ afterEach(() => cleanup());
 
 E2E tests catch issues that unit tests cannot: broken routes, hydration errors, missing UI elements, and API crashes in the real Next.js runtime. They are **not** a replacement for unit tests — they sit on top as a regression safety net.
 
-| Layer | Tool | When | Role |
-| ----- | ---- | ---- | ---- |
-| Unit | Vitest | Every commit (pre-commit hook) | Business logic correctness |
-| E2E | Playwright | Every PR (CI) | Route health, page rendering, API status |
+| Layer | Tool       | When                           | Role                                     |
+| ----- | ---------- | ------------------------------ | ---------------------------------------- |
+| Unit  | Vitest     | Every commit (pre-commit hook) | Business logic correctness               |
+| E2E   | Playwright | Every PR (CI)                  | Route health, page rendering, API status |
 
 ### File location & naming
 
@@ -510,7 +516,9 @@ import { test, expect } from "@playwright/test";
 test("/log-in 페이지 폼 렌더링", async ({ page }) => {
     await page.goto("/log-in");
 
-    await expect(page.locator("input[type='email'], input[name='email']")).toBeVisible();
+    await expect(
+        page.locator("input[type='email'], input[name='email']")
+    ).toBeVisible();
     await expect(page.locator("input[type='password']")).toBeVisible();
 });
 ```
@@ -572,62 +580,4 @@ test("GET /api/games — 500 아님", async ({ request }) => {
 
 ## Git & Collaboration
 
-### Branch types
-
-| Prefix      | Purpose                           |
-| ----------- | --------------------------------- |
-| `feat/`     | New feature                       |
-| `fix/`      | Bug fix                           |
-| `refactor/` | Code refactoring                  |
-| `build/`    | Build-related changes             |
-| `chore/`    | Miscellaneous small changes       |
-| `docs/`     | Documentation                     |
-| `style/`    | Non-functional code style changes |
-| `test/`     | Test code                         |
-| `API/`      | API integration                   |
-| `file/`     | File/folder changes               |
-
-### Branch naming
-
-```
-<type>/#<issue-number>
-e.g. feat/#12
-```
-
-### Commit messages
-
-```
-[<type>/#<issue-number>] message
-e.g. [API/#35] 글 작성 API 연동
-```
-
-### Workflow
-
-1. Pull latest `dev` branch
-2. Create issue -> create branch from issue
-3. Work on branch -> commit
-4. Before push: switch to `dev`, pull latest, switch back, `git rebase dev`
-   - **Exception**: If the current branch depends on a previous unmerged branch that only contains Claude-related settings (`.claude/`, skill files, `CLAUDE.md`), skip rebasing onto `dev`. The assignee will handle the merge order manually. (e.g., `chore/#259` depends on `chore/#257` which updated Claude commands — no rebase needed)
-5. Resolve conflicts if any, then push
-6. If `dev` changed after your branch (other PRs merged), rebase and `--force` push
-7. Create PR: branch -> `dev`
-8. Get teammate approval -> approver rebases into `dev`
-9. Close issue (use `close #` in PR), delete branch
-10. If ready, rebase `main` to `dev`, then GitHub Actions will run automatically (build -> test -> deploy)
-
-### Issue template
-
-> 템플릿 파일: `.github/ISSUE_TEMPLATE/feature_request.md`
-
-| Field     | How to set                                        |
-| --------- | ------------------------------------------------- |
-| Assignees | 본인을 선택                                       |
-| Labels    | 이슈 타입에 맞는 라벨 선택 (e.g. `docs`, `feat`)  |
-| Projects  | `Gamechu` 프로젝트 선택                            |
-
-### PR template
-
-> 템플릿 파일: `.github/PULL_REQUEST_TEMPLATE.md`
-
-> **PR의 Assignees, Labels, Projects는 연결된 Issue와 동일하게 설정한다.**
-> PR 본문만 실제 작업 내용에 맞게 작성하되, 메타 필드는 Issue에서 그대로 가져온다.
+- Whenever deals with git(include git, gh, and GitHub mcp), Read `docs/conventions/GIT_COLLABORATION.md`
