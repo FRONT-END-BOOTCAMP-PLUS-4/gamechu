@@ -16,12 +16,7 @@ export async function GET(req: Request, { params }: RequestParams) {
     const memberId: string | null = await getAuthUserId();
 
     const idValidation = validate(IdSchema, id);
-    if (!idValidation.success) {
-        return NextResponse.json(
-            { message: "유효하지 않은 투기장 ID입니다." },
-            { status: 400 }
-        );
-    }
+    if (!idValidation.success) return idValidation.response;
     const arenaId = idValidation.data;
 
     try {

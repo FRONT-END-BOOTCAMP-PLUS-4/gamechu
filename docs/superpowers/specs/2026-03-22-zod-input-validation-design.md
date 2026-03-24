@@ -272,7 +272,7 @@ Path-param-only routes (add `IdSchema` for the path param, no body schema):
 | `POST /api/auth/signup` | `email` | `z.string().email("올바른 이메일 형식이 아닙니다.")` |
 | `POST /api/auth/signup` | `nickname` | `z.string().min(1).max(20)` |
 | `POST /api/auth/signup` | `password` | `z.string().min(8, "비밀번호는 8자 이상이어야 합니다.")` |
-| `POST /api/auth/signup` | `birthDate` | `z.string().date()` |
+| `POST /api/auth/signup` | `birthDate` | `z.string().regex(/^\d{8}$/)` (YYYYMMDD — 실제 시스템 형식) |
 | `POST /api/auth/signup` | `gender` | `z.enum(["M", "F"])` |
 | `GET /api/auth/email-check` | `email` (query param) | `z.string().email()` |
 

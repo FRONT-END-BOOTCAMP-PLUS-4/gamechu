@@ -26,7 +26,7 @@ type RequestParams = {
 
 export async function GET(request: Request, { params }: RequestParams) {
     const { id } = await params;
-    const idValidated = validate(IdSchema, Number(id));
+    const idValidated = validate(IdSchema, id);
     if (!idValidated.success) return idValidated.response;
     const arenaId = idValidated.data;
 
@@ -64,7 +64,7 @@ export async function GET(request: Request, { params }: RequestParams) {
 // 해당 API는 시스템(관리자)가 투기장을 자동으로 변경하는 경우 (status값 변화 등) 사용합니다!
 export async function PATCH(req: NextRequest, { params }: RequestParams) {
     const { id } = await params;
-    const idValidated = validate(IdSchema, Number(id));
+    const idValidated = validate(IdSchema, id);
     if (!idValidated.success) return idValidated.response;
     const arenaId = idValidated.data;
 
@@ -156,7 +156,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
 export async function DELETE(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
-        const idValidated = validate(IdSchema, Number(id));
+        const idValidated = validate(IdSchema, id);
         if (!idValidated.success) return idValidated.response;
         const arenaId = idValidated.data;
 

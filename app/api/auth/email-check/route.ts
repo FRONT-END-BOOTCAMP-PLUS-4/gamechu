@@ -6,6 +6,7 @@ import { validate } from "@/utils/validation";
 import { z } from "zod";
 
 const emailCheckLimiter = new RateLimiter("email-check", 60_000, 10);
+// 단일 쿼리 파라미터 전용 스키마 — 별도 DTO 파일 불필요 (intentional inline exception)
 const EmailQuerySchema = z.object({ email: z.string().email("올바른 이메일 형식이 아닙니다.") });
 
 export async function GET(req: NextRequest) {

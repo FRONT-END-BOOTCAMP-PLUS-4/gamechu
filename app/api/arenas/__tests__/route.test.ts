@@ -58,4 +58,28 @@ describe("GET /api/arenas", () => {
         const response = await GET(request);
         expect(response.status).toBe(200);
     });
+
+    it("GET with invalid currentPage returns 400", async () => {
+        const request = new Request(
+            "http://localhost/api/arenas?currentPage=0&pageSize=10"
+        );
+        const response = await GET(request);
+        expect(response.status).toBe(400);
+    });
+
+    it("GET with invalid pageSize returns 400", async () => {
+        const request = new Request(
+            "http://localhost/api/arenas?currentPage=1&pageSize=0"
+        );
+        const response = await GET(request);
+        expect(response.status).toBe(400);
+    });
+
+    it("GET with invalid mine value returns 400", async () => {
+        const request = new Request(
+            "http://localhost/api/arenas?currentPage=1&mine=yes"
+        );
+        const response = await GET(request);
+        expect(response.status).toBe(400);
+    });
 });

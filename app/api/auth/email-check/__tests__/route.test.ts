@@ -59,4 +59,15 @@ describe("GET /api/auth/email-check", () => {
         const response = await GET(req);
         expect(response.status).toBe(400);
     });
+
+    it("returns 400 when email format is invalid", async () => {
+        const req = new Request(
+            "http://localhost/api/auth/email-check?email=not-an-email"
+        ) as never;
+
+        const response = await GET(req);
+        expect(response.status).toBe(400);
+        const body = await response.json();
+        expect(body.message).toContain("이메일");
+    });
 });

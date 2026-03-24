@@ -104,7 +104,7 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
                 headers: { "content-type": "application/json" },
             }
         );
-        const response = await POST(req);
+        const response = await POST(req, { params: Promise.resolve({ gameId: "10" }) });
         expect(response.status).toBe(400);
         const body = await response.json();
         expect(body.message).toBe("유효하지 않은 콘텐츠 형식입니다.");
@@ -133,7 +133,7 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
                 headers: { "content-type": "application/json" },
             }
         );
-        const response = await POST(req);
+        const response = await POST(req, { params: Promise.resolve({ gameId: "10" }) });
         expect(response.status).toBe(400);
         const body = await response.json();
         expect(body.message).toContain("10,000자");

@@ -19,7 +19,7 @@ type RequestParams = {
 export async function PATCH(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
-        const idValidated = validate(IdSchema, Number(id));
+        const idValidated = validate(IdSchema, id);
         if (!idValidated.success) return idValidated.response;
         const arenaId = idValidated.data;
 
@@ -72,7 +72,7 @@ export async function PATCH(request: Request, { params }: RequestParams) {
 export async function DELETE(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
-        const idValidated = validate(IdSchema, Number(id));
+        const idValidated = validate(IdSchema, id);
         if (!idValidated.success) return idValidated.response;
         const arenaId = idValidated.data;
 
