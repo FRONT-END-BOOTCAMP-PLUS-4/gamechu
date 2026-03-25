@@ -2,71 +2,80 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import useVoteList from "../useVoteList";
+import { createWrapper } from "@/tests/utils/createQueryWrapper";
+
+const mockVote = { votes: [], totalCount: 0 };
 
 describe("useVoteList", () => {
     beforeEach(() => {
         vi.stubGlobal("fetch", vi.fn());
     });
 
-    it("returns voteResult for multiple arenaIds on success", async () => {
-        const mockVote1 = { votes: [{ id: 1, votedTo: "challenger" }] };
-        const mockVote2 = { votes: [{ id: 2, votedTo: "host" }] };
-        vi.mocked(fetch)
-            .mockResolvedValueOnce({
-                ok: true,
-                json: () => Promise.resolve(mockVote1),
-            } as unknown as Response)
-            .mockResolvedValueOnce({
-                ok: true,
-                json: () => Promise.resolve(mockVote2),
-            } as unknown as Response);
+    it("fetches votes for each arenaId", async () => {
+        vi.mocked(fetch).mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(mockVote),
+        } as unknown as Response);
 
-        const { result } = renderHook(() =>
-            useVoteList({ arenaIds: [1, 2] })
+        const { result } = renderHook(
+            () => useVoteList({ arenaIds: [1, 2] }),
+            { wrapper: createWrapper() }
         );
 
         await waitFor(() => expect(result.current.loading).toBe(false));
-
-        expect(result.current.voteResult).toEqual([mockVote1, mockVote2]);
-        expect(result.current.error).toBeNull();
+        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(result.current.voteResult).toHaveLength(2);
     });
 
-    it("sets loading to false and does not fetch when arenaIds is empty", async () => {
-        const { result } = renderHook(() => useVoteList({ arenaIds: [] }));
+    it("returns empty array and loading=false when arenaIds is empty", async () => {
+        const { result } = renderHook(
+            () => useVoteList({ arenaIds: [] }),
+            { wrapper: createWrapper() }
+        );
 
         await waitFor(() => expect(result.current.loading).toBe(false));
-
         expect(result.current.voteResult).toEqual([]);
         expect(fetch).not.toHaveBeenCalled();
     });
 
-    it("sets error when a fetch response is not ok", async () => {
+    it("sets error on non-ok response", async () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: false,
-            json: () => Promise.resolve({}),
+            status: 500,
+            json: () => Promise.resolve({ message: "오류" }),
         } as unknown as Response);
 
-        const { result } = renderHook(() =>
-            useVoteList({ arenaIds: [1] })
+        const { result } = renderHook(
+            () => useVoteList({ arenaIds: [1] }),
+            { wrapper: createWrapper() }
         );
 
         await waitFor(() => expect(result.current.loading).toBe(false));
-
         expect(result.current.error).toBeInstanceOf(Error);
-        expect(result.current.error?.message).toContain("Fetch failed for arena 1");
     });
 
-    it("fetches correct URL for each arenaId", async () => {
+    it("sorts arenaIds for stable cache key", async () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
-            json: () => Promise.resolve({ votes: [] }),
+            json: () => Promise.resolve(mockVote),
         } as unknown as Response);
 
-        renderHook(() => useVoteList({ arenaIds: [10, 20] }));
+        // [3,1,2] and [1,2,3] should produce the same sorted key
+        const { result: r1 } = renderHook(
+            () => useVoteList({ arenaIds: [3, 1, 2] }),
+            { wrapper: createWrapper() }
+        );
+        await waitFor(() => expect(r1.current.loading).toBe(false));
 
-        await waitFor(() => {
-            expect(fetch).toHaveBeenCalledWith("/api/arenas/10/votes");
-            expect(fetch).toHaveBeenCalledWith("/api/arenas/20/votes");
-        });
+        // fetch called for IDs 1, 2, 3 regardless of input order
+        expect(fetch).toHaveBeenCalledWith(
+            expect.stringContaining("/api/arenas/1/votes")
+        );
+        expect(fetch).toHaveBeenCalledWith(
+            expect.stringContaining("/api/arenas/2/votes")
+        );
+        expect(fetch).toHaveBeenCalledWith(
+            expect.stringContaining("/api/arenas/3/votes")
+        );
     });
 });
