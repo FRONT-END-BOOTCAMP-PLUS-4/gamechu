@@ -2,9 +2,9 @@
 
 import { useEffect } from "react";
 
-interface ErrorViewProps {
+type ErrorViewProps = {
     reset: () => void;
-}
+};
 
 export default function ErrorView({ reset }: ErrorViewProps) {
     useEffect(() => {
@@ -138,7 +138,7 @@ export default function ErrorView({ reset }: ErrorViewProps) {
                     <div className="px-4 py-3.5 font-mono text-[12px] leading-[1.8] space-y-0">
                         <div className="flex gap-2">
                             <span className="text-[#7c5cfc]">›</span>
-                            <span className="text-[#a0a0c0]">render ./app/(base)/page</span>
+                            <span className="text-[#a0a0c0]">render [component]</span>
                         </div>
                         <div className="flex gap-2">
                             <span className="text-[#7c5cfc]">›</span>
