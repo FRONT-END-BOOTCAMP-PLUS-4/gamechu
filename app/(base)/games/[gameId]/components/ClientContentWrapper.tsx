@@ -1,24 +1,14 @@
+// app/(base)/games/[gameId]/components/ClientContentWrapper.tsx
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import ReviewSelector from "./ReviewSelector";
 import Comment from "./Comment";
 import CommentCard from "./CommentCard";
 import Pager from "@/app/components/Pager";
-
-interface Review {
-    id: number;
-    profileImage: string;
-    nickname: string;
-    date: string;
-    tier: string;
-    rating: number;
-    comment: string;
-    likes: number;
-    isLiked: boolean;
-    memberId: string;
-    score: number;
-}
+import { useGameReviews } from "@/hooks/useGameReviews";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface Props {
     gameId: number;
@@ -27,78 +17,31 @@ interface Props {
 
 export default function ClientContentWrapper({ gameId, viewerId }: Props) {
     const commentRef = useRef<HTMLDivElement>(null);
+    const queryClient = useQueryClient();
 
     const itemsPerPage = 4;
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedReviewType, setSelectedReviewType] = useState<
         "expert" | "user"
     >("expert");
-    const [allComments, setAllComments] = useState<Review[]>([]);
     const [editingId, setEditingId] = useState<number | null>(null);
 
+    const { reviews: allComments, deleteReview } = useGameReviews(gameId);
+
     const isExpertTier = (score: number) => score >= 3000;
-
-    const fetchComments = useCallback(async () => {
-        try {
-            const res = await fetch(`/api/games/${gameId}/reviews`);
-
-            const data = await res.json();
-
-            const enriched = data.map(
-                (r: {
-                    id: number;
-                    memberId: string;
-                    imageUrl?: string;
-                    nickname?: string;
-                    createdAt: string;
-                    score: number;
-                    rating: number;
-                    content: string;
-                    likeCount?: number;
-                    isLiked?: boolean;
-                }): Review => ({
-                    id: r.id,
-                    memberId: r.memberId,
-                    profileImage:
-                        r.imageUrl && r.imageUrl.startsWith("data:")
-                            ? r.imageUrl
-                            : r.imageUrl || "/icons/profile.svg",
-                    nickname: r.nickname ?? "유저",
-                    date: new Date(r.createdAt).toLocaleDateString("ko-KR"),
-                    tier: String(r.score),
-                    rating: r.rating / 2,
-                    comment: r.content,
-                    likes: r.likeCount ?? 0,
-                    isLiked: r.isLiked ?? false,
-                    score: r.score ?? 0,
-                })
-            );
-
-            setAllComments(enriched);
-        } catch (err) {
-            console.error("댓글 조회 실패", err);
-        }
-    }, [gameId]);
-
-    useEffect(() => {
-        fetchComments();
-    }, [fetchComments]);
 
     const handleDelete = async (reviewId: number) => {
         const confirm = window.confirm("정말 삭제하시겠습니까?");
         if (!confirm) return;
-
         try {
-            const res = await fetch(
-                `/api/member/games/${gameId}/reviews/${reviewId}`,
-                { method: "DELETE" }
-            );
-            if (!res.ok) throw new Error("댓글 삭제 실패");
-            await fetchComments();
-        } catch (err) {
-            console.error(" 댓글 삭제 실패", err);
+            await deleteReview(reviewId);
+        } catch {
             alert("댓글 삭제 실패");
         }
+    };
+
+    const handleReviewSuccess = () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.reviews(gameId) });
     };
 
     const myComment = allComments.find(
@@ -106,6 +49,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
     );
     const expertComments = allComments.filter((c) => isExpertTier(c.score));
     const userComments = allComments.filter((c) => !isExpertTier(c.score));
+
     const currentComments =
         selectedReviewType === "expert" ? expertComments : userComments;
 
@@ -119,13 +63,12 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
 
     return (
         <div className="flex w-full flex-col items-start gap-10 lg:flex-row">
-            {/* 좌측: 셀렉터 */}
             <div className="flex w-full flex-shrink-0 flex-col lg:w-[300px]">
                 <ReviewSelector
                     selected={selectedReviewType}
                     onSelect={(type) => {
                         setSelectedReviewType(type);
-                        fetchComments();
+                        handleReviewSuccess();
                     }}
                     expertReviewCount={expertComments.length}
                     expertAvgRating={
@@ -144,9 +87,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                 />
             </div>
 
-            {/* 우측: 댓글 등록 + 리스트 */}
             <div className="w-full max-w-full flex-1 space-y-10 px-4 lg:px-0">
-                {/* 내가 쓴 댓글 or 댓글 작성 */}
                 {typeof gameId === "number" &&
                     (editingId !== null ? (
                         <div ref={commentRef}>
@@ -156,7 +97,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                                 defaultValue={myComment?.comment ?? ""}
                                 defaultRating={myComment?.rating ?? 0}
                                 onSuccess={() => {
-                                    fetchComments();
+                                    handleReviewSuccess();
                                     setEditingId(null);
                                 }}
                                 viewerId={viewerId}
@@ -193,12 +134,10 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                     ) : (
                         <Comment
                             gameId={String(gameId)}
-                            onSuccess={fetchComments}
+                            onSuccess={handleReviewSuccess}
                             viewerId={viewerId}
                         />
                     ))}
-
-                {/* 댓글 리스트 */}
 
                 {commentsForPage.map((c) => (
                     <CommentCard
