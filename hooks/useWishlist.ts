@@ -30,7 +30,7 @@ export function useWishlist(gameId: number, viewerId: string) {
 
     const { mutateAsync: toggle, isPending } = useMutation({
         mutationFn: async () => {
-            const current = queryClient.getQueryData<WishlistStatus>(key);
+            const current = queryClient.getQueryData<WishlistStatus>(key) ?? data;
             if (current?.exists && current.wishlistId !== null) {
                 await fetch(`/api/member/wishlists/${current.wishlistId}`, {
                     method: "DELETE",
