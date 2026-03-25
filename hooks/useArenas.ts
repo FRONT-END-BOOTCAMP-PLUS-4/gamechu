@@ -32,7 +32,6 @@ export default function useFetchArenas({
 
     return {
         arenaListDto: data ?? null,
-        setArenaListDto: () => {}, // retained for API compatibility — no-op after migration
         loading: isLoading,
         error: error ?? null,
     };

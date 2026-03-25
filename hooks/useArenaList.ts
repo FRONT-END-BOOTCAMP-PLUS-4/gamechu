@@ -18,7 +18,6 @@ export function useArenaList() {
 
     return {
         arenaList: data ?? [],
-        setArenaList: () => {}, // retained for API compatibility — no-op
         loading: isLoading,
         error: error ?? null,
     };
