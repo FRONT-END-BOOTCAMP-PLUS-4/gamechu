@@ -1,5 +1,6 @@
 import { Press_Start_2P } from "next/font/google";
 import Modals from "./components/Modals";
+import QueryProvider from "./components/QueryProvider";
 import "./globals.css";
 export { viewport } from "./viewport";
 
@@ -18,8 +19,10 @@ export default function RootLayout({
     return (
         <html lang="ko" className={pressStart2P.variable}>
             <body className="bg-background-400 font-sans text-font-100">
-                <Modals />
-                {children}
+                <QueryProvider>
+                    <Modals />
+                    {children}
+                </QueryProvider>
             </body>
         </html>
     );
