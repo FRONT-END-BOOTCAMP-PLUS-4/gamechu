@@ -1,25 +1,25 @@
 // hooks/useArenaList.ts
-import { useEffect, useState } from "react";
-import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
+import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/queryKeys";
+import { fetcher } from "@/lib/fetcher";
+import type { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
+
+type ArenaListResponse = { success: boolean; data?: ArenaDetailDto[] };
 
 export function useArenaList() {
-    const [arenaList, setArenaList] = useState<ArenaDetailDto[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
+    const { data, error, isLoading } = useQuery<ArenaDetailDto[]>({
+        queryKey: queryKeys.arenaList(),
+        queryFn: async () => {
+            // Use fetcher so non-ok responses throw (consistent error handling)
+            const json = await fetcher<ArenaListResponse>("/api/arenas");
+            return json.success && Array.isArray(json.data) ? json.data : [];
+        },
+    });
 
-    useEffect(() => {
-        fetch("/api/arenas")
-            .then((res) => res.json())
-            .then((resData) => {
-                if (resData.success && Array.isArray(resData.data)) {
-                    setArenaList(resData.data);
-                } else {
-                    setArenaList([]);
-                }
-            })
-            .catch((err) => setError(err))
-            .finally(() => setLoading(false));
-    }, []);
-
-    return { arenaList, setArenaList, loading, error };
+    return {
+        arenaList: data ?? [],
+        setArenaList: () => {}, // retained for API compatibility — no-op
+        loading: isLoading,
+        error: error ?? null,
+    };
 }
