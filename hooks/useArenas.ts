@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
-import { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
+// hooks/useArenas.ts
+import { useQuery } from "@tanstack/react-query";
+import { fetcher } from "@/lib/fetcher";
+import { queryKeys, type ArenasQueryParams } from "@/lib/queryKeys";
+import type { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
 
-type FetchArenasParams = {
-    currentPage?: number;
-    status: number;
-    mine: boolean;
-    pageSize: number;
-    targetMemberId?: string; // ⭐ 추가
-};
+export type { ArenasQueryParams };
 
 export default function useFetchArenas({
     currentPage = 1,
@@ -15,41 +12,28 @@ export default function useFetchArenas({
     mine = false,
     pageSize = 10,
     targetMemberId,
-}: FetchArenasParams) {
-    const [arenaListDto, setArenaListDto] = useState<ArenaListDto | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<Error | null>(null);
+}: ArenasQueryParams) {
+    const params = new URLSearchParams({
+        currentPage: currentPage.toString(),
+        pageSize: pageSize.toString(),
+        status: status.toString(),
+    });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const params = new URLSearchParams({
-                    currentPage: currentPage.toString(),
-                    pageSize: pageSize.toString(),
-                    ...(status !== undefined
-                        ? { status: status.toString() }
-                        : {}),
-                });
+    if (targetMemberId) {
+        params.set("memberId", targetMemberId);
+    } else {
+        params.set("mine", mine.toString());
+    }
 
-                // ⭐ 타 사용자 조회가 우선
-                if (targetMemberId) {
-                    params.set("memberId", targetMemberId);
-                } else {
-                    params.set("mine", mine.toString());
-                }
+    const { data, error, isLoading } = useQuery<ArenaListDto>({
+        queryKey: queryKeys.arenas({ currentPage, status, mine, pageSize, targetMemberId }),
+        queryFn: () => fetcher<ArenaListDto>(`/api/arenas?${params.toString()}`),
+    });
 
-                const res = await fetch(`/api/arenas?${params.toString()}`);
-                const json = await res.json();
-                setArenaListDto(json);
-            } catch (error: unknown) {
-                if (error instanceof Error) setError(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [currentPage, status, mine, pageSize, targetMemberId]);
-
-    return { arenaListDto, setArenaListDto, loading, error };
+    return {
+        arenaListDto: data ?? null,
+        setArenaListDto: () => {}, // retained for API compatibility — no-op after migration
+        loading: isLoading,
+        error: error ?? null,
+    };
 }
