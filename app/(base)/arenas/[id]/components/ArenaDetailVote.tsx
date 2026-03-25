@@ -9,13 +9,8 @@ import Image from "next/image";
 
 export default function ArenaDetailVote() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
-    const {
-        existingVote,
-        loading,
-        error,
-        refetch: refetchVoteData,
-        submitVote,
-    } = useVote({
+    // refetch removed; onSuccess invalidation handles cache refresh
+    const { existingVote, loading, error, submitVote } = useVote({
         arenaId: arenaDetail?.id || 0,
         mine: true,
     });
@@ -59,8 +54,12 @@ export default function ArenaDetailVote() {
         if (!arenaDetail?.id || !votedTo || loading) return;
         setPersistentError("");
         try {
-            await submitVote(arenaDetail.id, votedTo, existingVote);
-            refetchVoteData();
+            await submitVote({
+                arenaId: arenaDetail.id,
+                votedTo,
+                existingVote,
+            });
+            // refetch removed — useMutation onSuccess calls invalidateQueries
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setPersistentError(err.message);

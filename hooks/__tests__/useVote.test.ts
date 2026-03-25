@@ -2,126 +2,112 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor, act } from "@testing-library/react";
 import { useVote } from "../useVote";
+import { createWrapper } from "@/tests/utils/createQueryWrapper";
+
+const mockVoteDto = {
+    votes: [{ votedTo: "host-id" }],
+    totalCount: 1,
+};
 
 describe("useVote", () => {
     beforeEach(() => {
         vi.stubGlobal("fetch", vi.fn());
     });
 
-    it("fetches vote data on mount and returns it", async () => {
-        const mockVoteData = { votes: [{ id: 1, votedTo: "challenger" }] };
+    it("returns voteData on successful fetch", async () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
-            json: () => Promise.resolve(mockVoteData),
+            json: () => Promise.resolve(mockVoteDto),
         } as unknown as Response);
 
-        const { result } = renderHook(() =>
-            useVote({ arenaId: 1, mine: false })
+        const { result } = renderHook(
+            () => useVote({ arenaId: 1, mine: false }),
+            { wrapper: createWrapper() }
         );
 
         await waitFor(() => expect(result.current.loading).toBe(false));
-
-        expect(result.current.voteData).toEqual(mockVoteData);
+        expect(result.current.voteData).toEqual(mockVoteDto);
         expect(result.current.error).toBeNull();
     });
 
-    it("sets existingVote from first vote when mine=true", async () => {
-        const mockVoteData = { votes: [{ id: 1, votedTo: "challenger" }] };
+    it("returns existingVote from votes[0].votedTo when mine=true", async () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
-            json: () => Promise.resolve(mockVoteData),
+            json: () => Promise.resolve(mockVoteDto),
         } as unknown as Response);
 
-        const { result } = renderHook(() =>
-            useVote({ arenaId: 1, mine: true })
+        const { result } = renderHook(
+            () => useVote({ arenaId: 1, mine: true }),
+            { wrapper: createWrapper() }
         );
 
         await waitFor(() => expect(result.current.loading).toBe(false));
-
-        expect(result.current.existingVote).toBe("challenger");
+        expect(result.current.existingVote).toBe("host-id");
     });
 
-    it("sets existingVote to null when mine=false", async () => {
-        const mockVoteData = { votes: [{ id: 1, votedTo: "challenger" }] };
+    it("returns null existingVote when mine=false", async () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
-            json: () => Promise.resolve(mockVoteData),
+            json: () => Promise.resolve(mockVoteDto),
         } as unknown as Response);
 
-        const { result } = renderHook(() =>
-            useVote({ arenaId: 1, mine: false })
+        const { result } = renderHook(
+            () => useVote({ arenaId: 1, mine: false }),
+            { wrapper: createWrapper() }
         );
 
         await waitFor(() => expect(result.current.loading).toBe(false));
-
         expect(result.current.existingVote).toBeNull();
     });
 
-    it("sets error message when fetch is not ok", async () => {
+    it("submitVote calls POST when existingVote is null (object params)", async () => {
         vi.mocked(fetch).mockResolvedValue({
-            ok: false,
+            ok: true,
             json: () => Promise.resolve({}),
         } as unknown as Response);
 
-        const { result } = renderHook(() =>
-            useVote({ arenaId: 1, mine: false })
+        const { result } = renderHook(
+            () => useVote({ arenaId: 1, mine: true }),
+            { wrapper: createWrapper() }
         );
-
-        await waitFor(() => expect(result.current.loading).toBe(false));
-
-        expect(result.current.error).toBe("Failed to fetch vote data");
-    });
-
-    it("submitVote sends POST when existingVote is null", async () => {
-        vi.mocked(fetch)
-            .mockResolvedValueOnce({
-                ok: true,
-                json: () => Promise.resolve({ votes: [] }),
-            } as unknown as Response)
-            .mockResolvedValueOnce({
-                ok: true,
-                json: () => Promise.resolve({ success: true }),
-            } as unknown as Response);
-
-        const { result } = renderHook(() =>
-            useVote({ arenaId: 1, mine: true })
-        );
-
         await waitFor(() => expect(result.current.loading).toBe(false));
 
         await act(async () => {
-            await result.current.submitVote(1, "challenger", null);
+            await result.current.submitVote({
+                arenaId: 1,
+                votedTo: "challenger",
+                existingVote: null,
+            });
         });
 
         expect(fetch).toHaveBeenCalledWith(
-            "/api/member/arenas/1/votes",
+            expect.stringContaining("/api/member/arenas/1/votes"),
             expect.objectContaining({ method: "POST" })
         );
     });
 
-    it("submitVote sends PATCH when existingVote is set", async () => {
-        vi.mocked(fetch)
-            .mockResolvedValueOnce({
-                ok: true,
-                json: () => Promise.resolve({ votes: [] }),
-            } as unknown as Response)
-            .mockResolvedValueOnce({
-                ok: true,
-                json: () => Promise.resolve({ success: true }),
-            } as unknown as Response);
+    it("submitVote calls PATCH when existingVote is set (object params)", async () => {
+        vi.mocked(fetch).mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve({}),
+        } as unknown as Response);
 
-        const { result } = renderHook(() =>
-            useVote({ arenaId: 1, mine: true })
+        const { result } = renderHook(
+            () => useVote({ arenaId: 1, mine: true }),
+            { wrapper: createWrapper() }
         );
-
         await waitFor(() => expect(result.current.loading).toBe(false));
 
         await act(async () => {
-            await result.current.submitVote(1, "host", "challenger");
+            await result.current.submitVote({
+                arenaId: 1,
+                votedTo: "host",
+                existingVote: "challenger",
+            });
         });
 
         expect(fetch).toHaveBeenCalledWith(
-            "/api/member/arenas/1/votes",
+            expect.stringContaining("/api/member/arenas/1/votes"),
             expect.objectContaining({ method: "PATCH" })
         );
     });

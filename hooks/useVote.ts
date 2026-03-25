@@ -1,6 +1,8 @@
-// hooks/useVoteData.ts
-import { VoteDto } from "@/backend/vote/application/usecase/dto/VoteDto";
-import { useCallback, useEffect, useState } from "react";
+// hooks/useVote.ts
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetcher } from "@/lib/fetcher";
+import { queryKeys } from "@/lib/queryKeys";
+import type { VoteListDto } from "@/backend/vote/application/usecase/dto/VoteListDto";
 
 type GetVoteParams = {
     arenaId: number;
@@ -8,93 +10,63 @@ type GetVoteParams = {
     mine: boolean;
 };
 
+type SubmitVoteParams = {
+    arenaId: number;
+    votedTo: string;
+    existingVote: string | null;
+};
+
 export function useVote({ arenaId, votedTo, mine }: GetVoteParams) {
-    const [voteData, setVoteData] = useState<VoteDto | null>(null);
-    const [existingVote, setExistingVote] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    const queryClient = useQueryClient();
 
-    const fetchVoteData = useCallback(async () => {
-        if (!arenaId) return;
-        setLoading(true);
-        try {
-            const query = new URLSearchParams({
-                ...(votedTo !== undefined ? { votedTo: votedTo } : {}),
-                ...(mine ? { mine: "true" } : {}),
-            }).toString();
+    const queryKey = mine
+        ? queryKeys.arenaVotesMine(arenaId)
+        : queryKeys.arenaVotes(arenaId);
 
-            const res = await fetch(`/api/arenas/${arenaId}/votes?${query}`);
-            if (!res.ok) throw new Error("Failed to fetch vote data");
-            const data = await res.json();
-            if (mine) {
-                const myVote = data?.votes?.[0];
-                setExistingVote(myVote?.votedTo ?? null);
-            } else {
-                setExistingVote(null);
-            }
-            setVoteData(data);
-            console.log("vote data", data);
-            setError(null);
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("알 수 없는 에러가 발생했습니다.");
-            }
-        } finally {
-            setLoading(false);
-        }
-    }, [arenaId, votedTo, mine]);
+    const query = new URLSearchParams({
+        ...(votedTo !== undefined ? { votedTo } : {}),
+        ...(mine ? { mine: "true" } : {}),
+    }).toString();
 
-    const submitVote = async (
-        arenaId: number,
-        votedTo: string,
-        existingVote: string | null
-    ) => {
-        setLoading(true);
-        setError(null);
+    const { data, isLoading, error } = useQuery<VoteListDto>({
+        queryKey,
+        queryFn: () =>
+            fetcher<VoteListDto>(`/api/arenas/${arenaId}/votes?${query}`),
+        enabled: !!arenaId,
+    });
 
-        try {
-            const method = existingVote ? "PATCH" : "POST";
-
-            const res = await fetch(`/api/member/arenas/${arenaId}/votes`, {
-                method,
-                headers: {
-                    "Content-Type": "application/json",
-                },
+    const { mutateAsync: submitVote, isPending } = useMutation<
+        unknown,
+        Error,
+        SubmitVoteParams
+    >({
+        mutationFn: ({ arenaId, votedTo, existingVote }) =>
+            fetch(`/api/member/arenas/${arenaId}/votes`, {
+                method: existingVote ? "PATCH" : "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ arenaId, votedTo }),
-            });
-
-            const data = await res.json();
-            if (!res.ok) {
-                const serverMessage =
-                    data.message || data.error || "투표에 실패했습니다.";
-                throw new Error(serverMessage);
-            }
-
-            return data;
-        } catch (err: unknown) {
-            const errorMessage =
-                err instanceof Error
-                    ? err.message
-                    : "알 수 없는 오류가 발생했습니다.";
-            setError(errorMessage);
-            throw new Error(errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchVoteData();
-    }, [fetchVoteData]);
+            }).then(async (res) => {
+                if (!res.ok) {
+                    const body = await res.json().catch(() => ({}));
+                    throw new Error(
+                        (body as { message?: string }).message ??
+                            "투표에 실패했습니다."
+                    );
+                }
+                return res.json();
+            }),
+        // Prefix-match: invalidates both arenaVotes and arenaVotesMine in one call
+        onSuccess: () =>
+            queryClient.invalidateQueries({
+                queryKey: queryKeys.arenaVotes(arenaId),
+            }),
+    });
 
     return {
-        voteData,
-        existingVote,
-        loading,
-        error,
-        refetch: fetchVoteData,
+        voteData: data ?? null,
+        existingVote: mine ? (data?.votes?.[0]?.votedTo ?? null) : null,
+        loading: isLoading || isPending,
+        error: error?.message ?? null,
         submitVote,
     };
 }
