@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, RefObject } from "react";
+import { ReactNode } from "react";
 import { createPortal } from "react-dom";
 import FocusTrap from "focus-trap-react";
 
@@ -8,7 +8,6 @@ type ModalWrapperProps = {
     isOpen: boolean;
     onClose: () => void;
     children: ReactNode;
-    anchorRef?: RefObject<HTMLElement>;
     labelId?: string;
 };
 
