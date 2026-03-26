@@ -73,7 +73,9 @@ export default function Header() {
                 <button
                     className="rounded-lg bg-white/10 p-1 transition-all sm:hidden"
                     onClick={toggleMenu}
-                    aria-label="메뉴 열기"
+                    aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
+                    aria-expanded={menuOpen}
+                    aria-controls="mobile-menu"
                 >
                     {menuOpen ? <X size={28} /> : <Menu size={28} />}
                 </button>
@@ -89,6 +91,7 @@ export default function Header() {
                     {isLoggedIn && (
                         <button
                             className="relative rounded-lg p-2 transition-colors hover:bg-white/20"
+                            aria-label="알림"
                             onClick={() => {
                                 useModalStore
                                     .getState()
@@ -98,7 +101,7 @@ export default function Header() {
                         >
                             <Image
                                 src="/icons/bell.svg"
-                                alt="알림"
+                                alt=""
                                 width={24}
                                 height={24}
                                 className="text-white"
@@ -137,6 +140,8 @@ export default function Header() {
 
             {/* 모바일 드롭다운 메뉴 */}
             <div
+                id="mobile-menu"
+                aria-hidden={!menuOpen}
                 className={`absolute left-0 right-0 z-40 overflow-hidden border-b border-t border-white/10 bg-background-300 transition-all duration-300 sm:hidden ${
                     menuOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
                 }`}
@@ -156,6 +161,7 @@ export default function Header() {
                                     {/* 알림 버튼 */}
                                     <button
                                         className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-white/10"
+                                        aria-label="알림"
                                         onClick={() => {
                                             useModalStore
                                                 .getState()
@@ -168,7 +174,7 @@ export default function Header() {
                                     >
                                         <Image
                                             src="/icons/bell.svg"
-                                            alt="알림"
+                                            alt=""
                                             width={20}
                                             height={20}
                                             className="text-white"
