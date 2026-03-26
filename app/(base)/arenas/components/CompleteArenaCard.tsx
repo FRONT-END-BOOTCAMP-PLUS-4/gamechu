@@ -1,9 +1,9 @@
 "use client";
 
 import TierBadge from "@/app/components/TierBadge";
+import CardLink from "@/app/components/CardLink";
 import Image from "next/image";
 import VoteStatusBar from "./VoteStatusBar";
-import { useRouter } from "next/navigation";
 
 type CompleteArenaCardProps = {
     id: number;
@@ -29,14 +29,11 @@ export default function CompleteArenaCard({
     showBadgeIconOnly = false,
     ...props
 }: CompleteArenaCardProps) {
-    const router = useRouter();
-    const onClickHandler = () => {
-        router.push(`/arenas/${props.id}`);
-    };
     return (
-        <div
-            className="flex h-full w-full transform flex-col gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
-            onClick={onClickHandler}
+        <CardLink
+            href={`/arenas/${props.id}`}
+            aria-label={`${props.title} 아레나`}
+            className="flex h-full w-full transform flex-col gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
         >
             <div className="flex-grow rounded-2xl bg-background-200 p-4">
                 {/* 제목 */}
@@ -100,6 +97,6 @@ export default function CompleteArenaCard({
                     />
                 </div>
             </div>
-        </div>
+        </CardLink>
     );
 }

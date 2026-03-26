@@ -1,8 +1,8 @@
 "use client";
 
 import TierBadge from "@/app/components/TierBadge";
+import CardLink from "@/app/components/CardLink";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 type WaitingArenaCardProps = {
     id: number;
@@ -19,15 +19,11 @@ export default function WaitingArenaCard({
     showBadgeIconOnly = false,
     ...props
 }: WaitingArenaCardProps) {
-    const router = useRouter();
-    const onClickHandler = () => {
-        router.push(`/arenas/${props.id}`);
-    };
-
     return (
-        <div
-            className="flex h-full w-full transform flex-col gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
-            onClick={onClickHandler}
+        <CardLink
+            href={`/arenas/${props.id}`}
+            aria-label={`${props.title} 아레나`}
+            className="flex h-full w-full transform flex-col gap-4 rounded-2xl border border-transparent bg-background-300 p-4 text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
         >
             <div className="flex flex-row items-start justify-between gap-1">
                 <div className="line-clamp-2 min-h-[3.5rem] break-keep text-lg font-bold">
@@ -85,6 +81,6 @@ export default function WaitingArenaCard({
                     </span>
                 </div>
             </div>
-        </div>
+        </CardLink>
     );
 }
