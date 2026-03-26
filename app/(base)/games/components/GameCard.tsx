@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import CardLink from "@/app/components/CardLink";
 
 interface GameCardProps {
     id: number;
@@ -21,9 +21,6 @@ export default function GameCard({
     thumbnail,
     reviewCount,
 }: GameCardProps) {
-    const router = useRouter();
-    const handleClick = () => router.push(`/games/${id}`);
-
     const thumbnailSrc =
         !thumbnail || !thumbnail.trim()
             ? "/icons/default-thumbnail.svg"
@@ -32,9 +29,10 @@ export default function GameCard({
               : thumbnail;
 
     return (
-        <div
-            onClick={handleClick}
-            className="group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-background-300 transition-all duration-300 hover:-translate-y-0.5 hover:bg-background-200"
+        <CardLink
+            href={`/games/${id}`}
+            aria-label={`${title} 게임 상세보기`}
+            className="relative flex w-full flex-col overflow-hidden rounded-xl bg-background-300 transition-all duration-300 hover:-translate-y-0.5 hover:bg-background-200"
         >
             {/* 이미지 영역 */}
             <div className="relative aspect-[3/4] w-full overflow-hidden">
@@ -66,10 +64,13 @@ export default function GameCard({
 
                 {/* 별점 */}
                 <div className="mt-1 flex items-center justify-between border-t border-white/5 pt-2">
-                    <div className="flex items-center gap-1">
+                    <div
+                        className="flex items-center gap-1"
+                        aria-label={`리뷰 ${reviewCount}개`}
+                    >
                         <Image
                             src="/icons/review.svg"
-                            alt="reviews"
+                            alt=""
                             width={14}
                             height={14}
                             className="opacity-70"
@@ -79,10 +80,13 @@ export default function GameCard({
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-1 rounded-lg bg-primary-purple-300/10 px-2 py-0.5">
+                    <div
+                        className="flex items-center gap-1 rounded-lg bg-primary-purple-300/10 px-2 py-0.5"
+                        aria-label={`전문가 평점 ${(expertRating ?? 0).toFixed(1)}`}
+                    >
                         <Image
                             src="/icons/empty-purple-star.svg"
-                            alt="rating"
+                            alt=""
                             width={12}
                             height={12}
                         />
@@ -92,6 +96,6 @@ export default function GameCard({
                     </div>
                 </div>
             </div>
-        </div>
+        </CardLink>
     );
 }
