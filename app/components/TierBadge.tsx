@@ -13,6 +13,8 @@ export default function TierBadge({ score, iconOnly = false }: TierBadgeProps) {
 
     return (
         <div
+            role="img"
+            aria-label={`${tier.label} 티어`}
             className={
                 iconOnly
                     ? // ✅ 아이콘만 모드
@@ -29,7 +31,7 @@ export default function TierBadge({ score, iconOnly = false }: TierBadgeProps) {
             {/* 아이콘은 항상 출력 */}
             <Image
                 src={tier.icon}
-                alt={`${tier.label} 배지`}
+                alt=""
                 width={18}
                 height={18}
                 className={
