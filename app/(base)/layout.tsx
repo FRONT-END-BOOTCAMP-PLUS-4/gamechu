@@ -1,6 +1,5 @@
 // app/(base)/layout.tsx
 import type { Metadata } from "next";
-// import HeaderWrapper from "../components/HeaderWrapper"; // ✅ CSR Header Wrapper
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import GlobalAttendanceToast from "./components/GlobalAttendanceToast";

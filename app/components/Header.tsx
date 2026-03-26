@@ -142,6 +142,7 @@ export default function Header() {
             <div
                 id="mobile-menu"
                 aria-hidden={!menuOpen}
+                inert={!menuOpen || undefined}
                 className={`absolute left-0 right-0 z-40 overflow-hidden border-b border-t border-white/10 bg-background-300 transition-all duration-300 sm:hidden ${
                     menuOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
                 }`}
