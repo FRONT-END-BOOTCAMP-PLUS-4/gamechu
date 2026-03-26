@@ -14,8 +14,18 @@ export default function NotificationModal() {
     const { data } = useNotifications(currentPage);
 
     return (
-        <ModalWrapper isOpen={isOpen} onClose={closeModal}>
+        <ModalWrapper
+            isOpen={isOpen}
+            onClose={closeModal}
+            labelId="notification-modal-title"
+        >
             <div className="w-[480px] max-h-[80vh] flex flex-col gap-4">
+                <h2
+                    id="notification-modal-title"
+                    className="text-lg font-bold text-font-100"
+                >
+                    알림
+                </h2>
                 {data && (
                     <div>
                         <NotificationRecordList
