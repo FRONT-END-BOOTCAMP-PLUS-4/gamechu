@@ -115,10 +115,10 @@ export default function CreateArenaModal() {
     };
 
     return (
-        <ModalWrapper isOpen={isOpen} onClose={closeModal}>
+        <ModalWrapper isOpen={isOpen} onClose={closeModal} labelId="create-arena-modal-title">
             <div className="flex flex-col gap-4">
                 {/* ✅ 제목 */}
-                <h2 className="flex items-center gap-2 text-xl font-bold text-white">
+                <h2 id="create-arena-modal-title" className="flex items-center gap-2 text-xl font-bold text-white">
                     <Image
                         src="/icons/arena2.svg"
                         alt="투기장 아이콘"
