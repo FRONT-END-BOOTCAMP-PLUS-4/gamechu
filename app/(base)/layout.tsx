@@ -25,7 +25,7 @@ export default function BaseLayout({
     return (
         <>
             <Header />
-            <main className="mx-auto max-w-[1480px] font-sans text-font-100 sm:px-10">
+            <main id="main-content" className="mx-auto max-w-[1480px] font-sans text-font-100 sm:px-10">
                 <LottieLoaderWrapper />
                 <GlobalAttendanceToast />
                 {children}
