@@ -11,8 +11,7 @@ export interface CacheKeyParams {
 }
 
 /**
- * 캐시 키 생성 함수
- * 쿼리 조건을 기준으로 고유한 키 생성
+ * Game list cache key (existing — unchanged)
  */
 export function generateCacheKey(params: CacheKeyParams): string {
     const {
@@ -28,35 +27,51 @@ export function generateCacheKey(params: CacheKeyParams): string {
     return `games:${sort}:${genreId}:${themeId}:${platformId}:${keyword}:${page}:${size}`;
 }
 
-/**
- * Arena 캐시 키 생성 함수
- */
-export function generateArenaCacheKey(params: {
+// ─── New key generators ────────────────────────────────────────────────────
+
+export function gameDetailKey(id: number): string {
+    return `game:detail:${id}`;
+}
+
+export function genreListKey(): string {
+    return "genre:list";
+}
+
+export function platformListKey(): string {
+    return "platform:list";
+}
+
+export function themeListKey(): string {
+    return "theme:list";
+}
+
+export function gameMetaKey(): string {
+    return "game:meta";
+}
+
+export function memberProfileKey(nickname: string): string {
+    return `member:profile:${nickname}`;
+}
+
+// ─── Arena keys (version-based) ───────────────────────────────────────────
+
+export const ARENA_LIST_VERSION_KEY = "arena:list:version";
+
+export interface ArenaListKeyParams {
     currentPage: number;
     status?: number;
     targetMemberId?: string;
     pageSize: number;
-}): string {
-    const {
-        currentPage = 1,
-        status,
-        targetMemberId,
-        pageSize = 10,
-    } = params;
-
-    return `arena:list:${status ?? ""}:${targetMemberId ?? ""}:${pageSize}:${currentPage}`;
 }
 
-/**
- * Arena 상세 캐시 키
- */
-export function generateArenaDetailCacheKey(arenaId: number): string {
-    return `arena:detail:${arenaId}`;
+export function arenaListKey(
+    version: string,
+    params: ArenaListKeyParams
+): string {
+    const { currentPage, status, targetMemberId, pageSize } = params;
+    return `arena:list:v${version}:${status ?? ""}:${targetMemberId ?? ""}:${pageSize}:${currentPage}`;
 }
 
-/**
- * 특정 사용자의 모든 arena 캐시 무효화
- */
-export function getArenaCachePatterns(userId: string): string[] {
-    return [`arena:list:*:${userId}:*`, `arena:list:*::*`]; // 사용자 본인 + 전체 캐시
+export function arenaDetailKey(id: number): string {
+    return `arena:detail:${id}`;
 }

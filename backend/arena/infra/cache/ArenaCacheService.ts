@@ -1,8 +1,7 @@
 import redis from "@/lib/redis";
 import {
-    generateArenaCacheKey,
-    generateArenaDetailCacheKey,
-    getArenaCachePatterns,
+    arenaListKey,
+    arenaDetailKey,
 } from "@/lib/cacheKey";
 import { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
@@ -21,7 +20,7 @@ export class ArenaCacheService {
         pageSize: number;
     }): Promise<ArenaListDto | null> {
         try {
-            const cacheKey = generateArenaCacheKey(params);
+            const cacheKey = arenaListKey("0", params);
             const cached = await redis.get(cacheKey);
             return cached ? JSON.parse(cached) : null;
         } catch (error) {
@@ -43,7 +42,7 @@ export class ArenaCacheService {
         data: ArenaListDto
     ): Promise<void> {
         try {
-            const cacheKey = generateArenaCacheKey(params);
+            const cacheKey = arenaListKey("0", params);
             await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(data));
         } catch (error) {
             console.error("Cache write error:", error);
@@ -55,7 +54,7 @@ export class ArenaCacheService {
      */
     async getArenaDetailCache(arenaId: number): Promise<ArenaDetailDto | null> {
         try {
-            const cacheKey = generateArenaDetailCacheKey(arenaId);
+            const cacheKey = arenaDetailKey(arenaId);
             const cached = await redis.get(cacheKey);
             return cached ? JSON.parse(cached) : null;
         } catch (error) {
@@ -72,7 +71,7 @@ export class ArenaCacheService {
         data: ArenaDetailDto
     ): Promise<void> {
         try {
-            const cacheKey = generateArenaDetailCacheKey(arenaId);
+            const cacheKey = arenaDetailKey(arenaId);
             await redis.setex(cacheKey, DETAIL_CACHE_TTL, JSON.stringify(data));
         } catch (error) {
             console.error("Cache write error:", error);
@@ -84,7 +83,7 @@ export class ArenaCacheService {
      */
     async invalidateArenaCache(arenaId: number): Promise<void> {
         try {
-            const detailKey = generateArenaDetailCacheKey(arenaId);
+            const detailKey = arenaDetailKey(arenaId);
             await redis.del(detailKey);
 
             // list cache는 패턴으로 무효화 (모든 페이지의 리스트 캐시 제거)
@@ -95,17 +94,11 @@ export class ArenaCacheService {
     }
 
     /**
-     * 특정 사용자의 arena 캐시 무효화
+     * 특정 사용자의 arena 캐시 무효화 (dead code — will be removed)
      */
-    async invalidateUserArenaCache(userId: string): Promise<void> {
-        try {
-            const patterns = getArenaCachePatterns(userId);
-            for (const pattern of patterns) {
-                await this.deleteKeysByPattern(pattern);
-            }
-        } catch (error) {
-            console.error("User cache invalidation error:", error);
-        }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async invalidateUserArenaCache(_userId: string): Promise<void> {
+        // no-op: replaced by version-based invalidation in Task 8
     }
 
     /**
