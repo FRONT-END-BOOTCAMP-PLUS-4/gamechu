@@ -2,6 +2,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { GetGameDetailUsecase } from "@/backend/game/application/usecase/GetGameDetailUsecase";
 import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/GamePrismaRepository";
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
+import { withCache } from "@/lib/withCache";
+import { gameDetailKey } from "@/lib/cacheKey";
 
 export async function GET(
     _req: NextRequest,
@@ -23,7 +25,11 @@ export async function GET(
     );
 
     try {
-        const gameDetail = await usecase.execute(gameId);
+        const gameDetail = await withCache(
+            gameDetailKey(gameId),
+            600,
+            () => usecase.execute(gameId)
+        );
         return NextResponse.json(gameDetail);
     } catch (err) {
         console.error("게임 조회 실패:", err);
