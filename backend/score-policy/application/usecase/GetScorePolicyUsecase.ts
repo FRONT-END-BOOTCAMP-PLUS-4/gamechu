@@ -9,14 +9,9 @@ export class GetScorePolicyUsecase {
     }
 
     async execute(): Promise<ScorePolicy[]> {
-        try {
-            const scorePolicies: ScorePolicy[] =
-                await this.scorePolicyRepository.findAll();
+        const scorePolicies: ScorePolicy[] =
+            await this.scorePolicyRepository.findAll();
 
-            return scorePolicies;
-        } catch (error) {
-            console.error("Error retrieving score policies", error);
-            throw new Error("Error retrieving score policies");
-        }
+        return scorePolicies;
     }
 }

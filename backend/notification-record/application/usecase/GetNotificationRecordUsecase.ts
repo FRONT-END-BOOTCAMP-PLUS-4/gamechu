@@ -21,70 +21,62 @@ export class GetNotificationRecordUsecase {
     async execute(
         getNotificationRecordDto: GetNotificationRecordDto
     ): Promise<NotificationRecordListDto> {
-        try {
-            // page setup
-            const pageSize: number = 5;
-            const currentPage: number =
-                getNotificationRecordDto.currentPage || 1;
-            const memberId: string = getNotificationRecordDto.memberId;
-            const offset: number = (currentPage - 1) * pageSize;
-            const limit: number = pageSize;
+        // page setup
+        const pageSize: number = 5;
+        const currentPage: number = getNotificationRecordDto.currentPage || 1;
+        const memberId: string = getNotificationRecordDto.memberId;
+        const offset: number = (currentPage - 1) * pageSize;
+        const limit: number = pageSize;
 
-            // data query
-            const filter = new NotificationRecordFilter(
-                memberId,
-                null,
-                null,
-                "createdAt",
-                false,
-                offset,
-                limit
-            );
+        // data query
+        const filter = new NotificationRecordFilter(
+            memberId,
+            null,
+            null,
+            "createdAt",
+            false,
+            offset,
+            limit
+        );
 
-            const records: NotificationRecord[] =
-                await this.notificationRecordRepository.findAll(filter);
-            const recordDto: NotificationRecordDto[] = await Promise.all(
-                records.map(async (record) => {
-                    const type: NotificationType | null =
-                        await this.notificationTypeRepository.findById(
-                            record.typeId
-                        );
+        const records: NotificationRecord[] =
+            await this.notificationRecordRepository.findAll(filter);
+        const recordDto: NotificationRecordDto[] = await Promise.all(
+            records.map(async (record) => {
+                const type: NotificationType | null =
+                    await this.notificationTypeRepository.findById(
+                        record.typeId
+                    );
 
-                    return {
-                        id: record.id,
-                        memberId: record.memberId,
-                        typeId: record.typeId,
-                        description: record.description,
-                        createdAt: record.createdAt,
-                        typeName: type?.name || "기타",
-                        typeImageUrl:
-                            type?.imageUrl ||
-                            "@/public/icons/defaultTypeImage.ico",
-                    };
-                })
-            );
-            const totalCount: number =
-                await this.notificationRecordRepository.count(filter);
-            const startPage =
-                Math.floor((currentPage - 1) / pageSize) * pageSize + 1;
-            const endPage = Math.ceil(totalCount / pageSize);
-            const pages = Array.from(
-                { length: 5 },
-                (_, i) => i + startPage
-            ).filter((pageNumber) => pageNumber <= endPage);
+                return {
+                    id: record.id,
+                    memberId: record.memberId,
+                    typeId: record.typeId,
+                    description: record.description,
+                    createdAt: record.createdAt,
+                    typeName: type?.name || "기타",
+                    typeImageUrl:
+                        type?.imageUrl || "@/public/icons/defaultTypeImage.ico",
+                };
+            })
+        );
+        const totalCount: number =
+            await this.notificationRecordRepository.count(filter);
+        const startPage =
+            Math.floor((currentPage - 1) / pageSize) * pageSize + 1;
+        const endPage = Math.ceil(totalCount / pageSize);
+        const pages = Array.from({ length: 5 }, (_, i) => i + startPage).filter(
+            (pageNumber) => pageNumber <= endPage
+        );
 
-            const recordListDto: NotificationRecordListDto = {
-                records: recordDto,
-                totalCount,
-                currentPage,
-                pages,
-                endPage,
-            };
+        const recordListDto: NotificationRecordListDto = {
+            records: recordDto,
+            totalCount,
+            currentPage,
+            pages,
+            endPage,
+        };
 
-            return recordListDto;
-        } catch (error) {
-            console.error("Error retrieving notification records", error);
-            throw new Error("Error retrieving notification records");
-        }
+        return recordListDto;
     }
 }

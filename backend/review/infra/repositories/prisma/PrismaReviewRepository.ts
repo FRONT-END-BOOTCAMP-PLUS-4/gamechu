@@ -88,18 +88,13 @@ export class PrismaReviewRepository implements ReviewRepository {
     }
 
     async delete(reviewId: number): Promise<void> {
-        try {
-            await this.prisma.reviewLike.deleteMany({
-                where: { reviewId },
-            });
+        await this.prisma.reviewLike.deleteMany({
+            where: { reviewId },
+        });
 
-            await this.prisma.review.delete({
-                where: { id: reviewId },
-            });
-        } catch (err) {
-            console.error("🔥 삭제 중 오류 발생:", err);
-            throw err;
-        }
+        await this.prisma.review.delete({
+            where: { id: reviewId },
+        });
     }
 
     async findAllByGameIds(
