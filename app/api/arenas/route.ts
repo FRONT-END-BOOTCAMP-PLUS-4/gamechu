@@ -10,10 +10,13 @@ import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/P
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate } from "@/utils/validation";
 import { NextResponse } from "next/server";
+import redis from "@/lib/redis";
+import { withCache } from "@/lib/withCache";
+import { ARENA_LIST_VERSION_KEY, arenaListKey } from "@/lib/cacheKey";
 
 export async function GET(request: Request) {
     try {
-        const memberId = await getAuthUserId(); // 로그인 유저
+        const memberId = await getAuthUserId();
 
         const url = new URL(request.url);
         const validated = validate(GetArenaSchema, Object.fromEntries(url.searchParams));
@@ -21,7 +24,6 @@ export async function GET(request: Request) {
 
         const { currentPage, status, mine, pageSize, memberId: targetMemberId } = validated.data;
 
-        // 기존 권한 체크 유지
         if (!memberId && mine) {
             return NextResponse.json(
                 { message: "멤버 투기장 조회 권한이 없습니다." },
@@ -30,21 +32,14 @@ export async function GET(request: Request) {
         }
 
         let effectiveMemberId: string | undefined;
-
-        // 1️⃣ 타 사용자 조회가 최우선
         if (targetMemberId) {
             effectiveMemberId = targetMemberId;
-        }
-        // 2️⃣ 그게 없고, mine=true + 로그인 상태면 내 ID
-        else if (mine && memberId) {
+        } else if (mine && memberId) {
             effectiveMemberId = memberId;
-        }
-        // 3️⃣ 나머지는 전체 조회
-        else {
+        } else {
             effectiveMemberId = undefined;
         }
 
-        // set up repositories and usecases
         const arenaRepository: ArenaRepository = new PrismaArenaRepository();
         const memberRepository: MemberRepository = new PrismaMemberRepository();
         const voteRepository: VoteRepository = new PrismaVoteRepository();
@@ -59,15 +54,24 @@ export async function GET(request: Request) {
             {
                 currentPage,
                 status,
-                mine: false, // 🔥 이제 mine 의미 없음 (필터링은 memberId로만)
+                mine: false,
                 targetMemberId: effectiveMemberId,
             },
             memberId,
             pageSize
         );
 
-        const arenaListDto: ArenaListDto =
-            await getArenaUsecase.execute(getArenaDto);
+        const version = (await redis.get(ARENA_LIST_VERSION_KEY)) ?? "0";
+        const key = arenaListKey(version, {
+            currentPage,
+            status,
+            targetMemberId: effectiveMemberId,
+            pageSize,
+        });
+
+        const arenaListDto: ArenaListDto = await withCache(key, 60, () =>
+            getArenaUsecase.execute(getArenaDto)
+        );
 
         return NextResponse.json(arenaListDto);
     } catch (error: unknown) {
