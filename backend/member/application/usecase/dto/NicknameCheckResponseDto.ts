@@ -1,3 +1,6 @@
 export class NicknameCheckResponseDto {
-    constructor(public readonly isDuplicate: boolean) {}
+    constructor(
+        public readonly isDuplicate: boolean,
+        public readonly foundMemberId: string | null,
+    ) {}
 }
