@@ -9,13 +9,8 @@ export class GetNotificationTypeUsecase {
     }
 
     async execute(): Promise<NotificationType[]> {
-        try {
-            const notificationTypes: NotificationType[] =
-                await this.notificationTypeRepository.findAll();
-            return notificationTypes;
-        } catch (error) {
-            console.error("Error retrieving notification types", error);
-            throw new Error("Error retrieving notification types");
-        }
+        const notificationTypes: NotificationType[] =
+            await this.notificationTypeRepository.findAll();
+        return notificationTypes;
     }
 }
