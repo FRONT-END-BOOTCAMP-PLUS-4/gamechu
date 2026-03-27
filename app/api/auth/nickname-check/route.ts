@@ -6,38 +6,31 @@ import {
     getClientIp,
     rateLimitResponse,
 } from "@/lib/RateLimiter";
+import { validate } from "@/utils/validation";
+import { z } from "zod";
 
 const nicknameCheckLimiter = new RateLimiter("nickname-check", 60_000, 10);
+const NicknameQuerySchema = z.object({
+    nickname: z
+        .string()
+        .min(1, "닉네임이 누락되었습니다.")
+        .max(8, "닉네임은 8자 이하여야 합니다."),
+});
 
 export async function GET(req: NextRequest) {
     const ip = getClientIp(req);
     const rateLimit = await nicknameCheckLimiter.check(ip);
-    if (!rateLimit.allowed) {
-        return rateLimitResponse(rateLimit.retryAfterMs);
-    }
+    if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfterMs);
 
     const { searchParams } = new URL(req.url);
-    const nickname = searchParams.get("nickname");
-
-    if (!nickname) {
-        return NextResponse.json(
-            { message: "닉네임이 누락되었습니다." },
-            { status: 400 }
-        );
-    }
-
-    if (nickname.length > 8) {
-        return NextResponse.json(
-            { message: "닉네임은 8자 이하여야 합니다." },
-            { status: 400 }
-        );
-    }
+    const validated = validate(NicknameQuerySchema, Object.fromEntries(searchParams));
+    if (!validated.success) return validated.response;
 
     const repo = new PrismaMemberRepository();
     const usecase = new NicknameCheckUsecase(repo);
 
     try {
-        const result = await usecase.execute(nickname);
+        const result = await usecase.execute(validated.data.nickname);
 
         if (result.isDuplicate) {
             return NextResponse.json(
