@@ -14,15 +14,15 @@ import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/reposi
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { Arena } from "@/prisma/generated";
 import { NextRequest, NextResponse } from "next/server";
-import { ArenaCacheService } from "@/backend/arena/infra/cache/ArenaCacheService";
+import redis from "@/lib/redis";
+import { withCache } from "@/lib/withCache";
+import { arenaDetailKey, ARENA_LIST_VERSION_KEY } from "@/lib/cacheKey";
 import { validate, IdSchema } from "@/utils/validation";
 import type { ArenaStatus } from "@/types/arena-status";
 import { errorResponse } from "@/utils/apiResponse";
 
 type RequestParams = {
-    params: Promise<{
-        id: string;
-    }>;
+    params: Promise<{ id: string }>;
 };
 
 export async function GET(request: Request, { params }: RequestParams) {
@@ -41,8 +41,11 @@ export async function GET(request: Request, { params }: RequestParams) {
     );
     const getArenaDetailDto = new GetArenaDetailDto(arenaId);
     try {
-        const result = await getArenaDetailusecase.execute(getArenaDetailDto);
-
+        const result = await withCache(
+            arenaDetailKey(arenaId),
+            120,
+            () => getArenaDetailusecase.execute(getArenaDetailDto)
+        );
         return NextResponse.json(result, { status: 200 });
     } catch (error: unknown) {
         if (
@@ -55,8 +58,6 @@ export async function GET(request: Request, { params }: RequestParams) {
     }
 }
 
-// TODO: api/member/arena/[id]/route.ts 생성 완료! app에서 fetch 경로만 수정하면 끝
-// 해당 API는 시스템(관리자)가 투기장을 자동으로 변경하는 경우 (status값 변화 등) 사용합니다!
 export async function PATCH(req: NextRequest, { params }: RequestParams) {
     const { id } = await params;
     const idValidated = validate(IdSchema, id);
@@ -95,7 +96,6 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
         challengerId
     );
     try {
-        // score validation for arena join
         if (status === 2) {
             if (!challengerId) {
                 return errorResponse("참여자 정보를 찾을 수 없습니다.", 400);
@@ -111,14 +111,13 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
             }
         }
 
-        await updateArenaStatusUsecase.execute(updateArenaDetailDto); // challengerId 없으면 undefined
+        await updateArenaStatusUsecase.execute(updateArenaDetailDto);
         if (status === 5) {
             await endArenaUsecase.execute(arenaId);
         }
 
-        // 캐시 무효화
-        const cacheService = new ArenaCacheService();
-        await cacheService.invalidateArenaCache(arenaId);
+        await redis.del(arenaDetailKey(arenaId));
+        await redis.incr(ARENA_LIST_VERSION_KEY);
 
         return NextResponse.json({ success: true });
     } catch (error: unknown) {
@@ -136,7 +135,6 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
     }
 }
 
-// 해당 API는 투기장 시작 시간 전까지 참여자가 모집되지 않을 경우 서버(관리자)가 자동으로 투기장을 삭제할 때 사용합니다!
 export async function DELETE(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
@@ -164,20 +162,18 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         const deleteArenaUsecase: DeleteArenaUsecase = new DeleteArenaUsecase(
             arenaRepository
         );
-        // 점수도 돌려줘야함
+
         const arena: Arena | null = await arenaRepository.findById(arenaId);
 
         if (!arena) {
             return errorResponse("투기장이 존재하지 않습니다.", 404);
         }
-        // execute usecase
+
         await endArenaUsecase.execute(arenaId);
-        // endArenaUsecase에서 점수 돌려준 후 delete 실행
         await deleteArenaUsecase.execute(arenaId);
 
-        // 캐시 무효화
-        const cacheService = new ArenaCacheService();
-        await cacheService.invalidateArenaCache(arenaId);
+        await redis.del(arenaDetailKey(arenaId));
+        await redis.incr(ARENA_LIST_VERSION_KEY);
 
         return NextResponse.json(
             { message: "투기장 삭제 성공" },

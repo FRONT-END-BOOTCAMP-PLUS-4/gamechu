@@ -1,5 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
 
+vi.mock("@/lib/redis", () => ({
+    default: {
+        get: vi.fn().mockResolvedValue(null),
+        setex: vi.fn().mockResolvedValue("OK"),
+    },
+}));
+
 vi.mock("@/utils/GetAuthUserId.server", () => ({
     getAuthUserId: vi.fn().mockResolvedValue("test-user-id"),
 }));
