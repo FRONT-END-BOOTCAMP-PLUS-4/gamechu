@@ -68,7 +68,6 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                     selected={selectedReviewType}
                     onSelect={(type) => {
                         setSelectedReviewType(type);
-                        handleReviewSuccess();
                     }}
                     expertReviewCount={expertComments.length}
                     expertAvgRating={
