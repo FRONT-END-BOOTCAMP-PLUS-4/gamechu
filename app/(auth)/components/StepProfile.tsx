@@ -128,13 +128,19 @@ export default function StepProfile({ onNext }: Props) {
         setSuccessMessage("");
         const errors: Record<string, string> = {};
 
-        if (!nickname) errors.nickname = "닉네임을 입력해주세요.";
-        else if (nickname.length > 8)
-            errors.nickname = "닉네임은 8자 이하여야 합니다.";
-        else if (isNicknameDuplicate === null)
-            errors.nickname = "닉네임 중복 검사를 진행해주세요.";
-        else if (isNicknameDuplicate)
-            errors.nickname = "이미 사용 중인 닉네임입니다.";
+        if (!nickname) {
+            setNicknameMessage({ text: "닉네임을 입력해주세요.", isError: true });
+            errors.nickname = "error";
+        } else if (nickname.length > 8) {
+            setNicknameMessage({ text: "닉네임은 8자 이하여야 합니다.", isError: true });
+            errors.nickname = "error";
+        } else if (isNicknameDuplicate === null) {
+            setNicknameMessage({ text: "닉네임 중복 검사를 진행해주세요.", isError: true });
+            errors.nickname = "error";
+        } else if (isNicknameDuplicate) {
+            setNicknameMessage({ text: "이미 사용 중인 닉네임입니다.", isError: true });
+            errors.nickname = "error";
+        }
         if (!email) errors.email = "이메일을 입력해주세요.";
         else if (!validateEmailFormat(email))
             errors.email = "올바른 이메일 형식이 아닙니다.";
