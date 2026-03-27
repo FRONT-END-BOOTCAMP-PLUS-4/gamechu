@@ -4,11 +4,13 @@ import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/G
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { withCache } from "@/lib/withCache";
 import { gameDetailKey } from "@/lib/cacheKey";
+import logger from "@/lib/logger";
 
 export async function GET(
     _req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const log = logger.child({ route: "/api/games/[id]", method: "GET" });
     const { id } = await params;
     const gameId = Number(id);
 
@@ -32,7 +34,7 @@ export async function GET(
         );
         return NextResponse.json(gameDetail);
     } catch (err) {
-        console.error("게임 조회 실패:", err);
+        log.error({ err }, "게임 상세 조회 실패");
         return NextResponse.json(
             { message: "Game not found" },
             { status: 404 }

@@ -20,6 +20,7 @@ import { arenaDetailKey, ARENA_LIST_VERSION_KEY } from "@/lib/cacheKey";
 import { validate, IdSchema } from "@/utils/validation";
 import type { ArenaStatus } from "@/types/arena-status";
 import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/logger";
 
 type RequestParams = {
     params: Promise<{ id: string }>;
@@ -59,6 +60,7 @@ export async function GET(request: Request, { params }: RequestParams) {
 }
 
 export async function PATCH(req: NextRequest, { params }: RequestParams) {
+    const log = logger.child({ route: "/api/arenas/[id]", method: "PATCH" });
     const { id } = await params;
     const idValidated = validate(IdSchema, id);
     if (!idValidated.success) return idValidated.response;
@@ -121,7 +123,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
 
         return NextResponse.json({ success: true });
     } catch (error: unknown) {
-        console.error("Error updating arenas:", error);
+        log.error({ err: error }, "아레나 수정 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "투기장 수정 실패" },
@@ -136,6 +138,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
 }
 
 export async function DELETE(request: Request, { params }: RequestParams) {
+    const log = logger.child({ route: "/api/arenas/[id]", method: "DELETE" });
     try {
         const { id } = await params;
         const idValidated = validate(IdSchema, id);
@@ -180,7 +183,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
             { status: 200 }
         );
     } catch (error: unknown) {
-        console.error("Error deleting arenas:", error);
+        log.error({ err: error }, "아레나 삭제 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "투기장 삭제 실패" },
