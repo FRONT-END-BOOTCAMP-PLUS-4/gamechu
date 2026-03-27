@@ -5,10 +5,12 @@ import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/reposi
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/logger";
 
 export async function POST() {
+    const memberId = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/attend", method: "POST" });
     try {
-        const memberId = await getAuthUserId();
         if (!memberId) {
             return errorResponse("Unauthorized", 401);
         }
@@ -36,7 +38,7 @@ export async function POST() {
             attendedDate: attendedDateStr,
         });
     } catch (error: unknown) {
-        console.error("[attend] error:", error);
+        log.error({ userId: memberId, err: error }, "출석 체크 실패");
         const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }

@@ -7,9 +7,11 @@ import { PrismaMemberRepository } from "@/backend/member/infra/repositories/pris
 import { ScoreRecordRepository } from "@/backend/score-record/domain/repositories/ScoreRecordRepository";
 import { MemberRepository } from "@/backend/member/domain/repositories/MemberRepository";
 import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
+import logger from "@/lib/logger";
 
 export async function GET() {
     const memberId = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/scores", method: "GET" });
 
     if (!memberId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -22,7 +24,7 @@ export async function GET() {
         const result = await usecase.execute(memberId);
         return NextResponse.json(result);
     } catch (error) {
-        console.error("[SCORE_RECORDS_ERROR]", error);
+        log.error({ userId: memberId, err: error }, "점수 기록 조회 실패");
         return NextResponse.json(
             { message: "스코어 기록 조회 실패" },
             { status: 500 }
@@ -31,6 +33,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    const log = logger.child({ route: "/api/member/scores", method: "POST" });
     try {
         // body validation
         const body = await request.json();
@@ -76,7 +79,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json(null, { status: 201 });
     } catch (error: unknown) {
-        console.error("Error creating arenas:", error);
+        log.error({ err: error }, "점수 기록 생성 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "점수 기록 생성 실패" },

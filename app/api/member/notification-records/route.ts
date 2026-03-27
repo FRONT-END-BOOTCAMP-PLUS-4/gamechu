@@ -8,11 +8,13 @@ import { PrismaNotificationTypeRepository } from "@/backend/notification-type/in
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextResponse } from "next/server";
 import { validate } from "@/utils/validation";
+import logger from "@/lib/logger";
 
 export async function GET(request: Request) {
+    const memberId: string | null = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/notification-records", method: "GET" });
     try {
         // member validation
-        const memberId: string | null = await getAuthUserId();
         if (!memberId) {
             return NextResponse.json(
                 { message: "알림 조회 권한이 없습니다." },
@@ -51,7 +53,7 @@ export async function GET(request: Request) {
 
         return NextResponse.json(notificationRecordListDto);
     } catch (error: unknown) {
-        console.error("Error fetching notification records:", error);
+        log.error({ userId: memberId, err: error }, "알림 기록 조회 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "알림 조회 실패" },

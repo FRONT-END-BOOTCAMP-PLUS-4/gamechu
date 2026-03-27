@@ -8,11 +8,13 @@ import { Arena } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate } from "@/utils/validation";
 import { NextResponse } from "next/server";
+import logger from "@/lib/logger";
 
 export async function POST(request: Request) {
+    const memberId: string | null = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/arenas", method: "POST" });
     try {
         // member validation
-        const memberId: string | null = await getAuthUserId();
         if (!memberId) {
             return NextResponse.json(
                 { message: "투기장 작성 권한이 없습니다." },
@@ -59,7 +61,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json(newArena, { status: 201 });
     } catch (error: unknown) {
-        console.error("Error creating arenas:", error);
+        log.error({ userId: memberId, err: error }, "아레나 생성 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "투기장 생성 실패" },

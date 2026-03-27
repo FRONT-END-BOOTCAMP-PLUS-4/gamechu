@@ -6,6 +6,7 @@ import { PrismaChattingRepository } from "@/backend/chatting/infra/repositories/
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { IdSchema, validate } from "@/utils/validation";
 import { NextRequest, NextResponse } from "next/server";
+import logger from "@/lib/logger";
 
 // 상수 정의 (프론트엔드 훅, 유스케이스와 맞춰야 함)
 const MAX_SEND_COUNT = 5;
@@ -19,6 +20,7 @@ type RequestParams = {
 export async function POST(req: NextRequest, { params }: RequestParams) {
     const { id } = await params;
     const memberId = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/arenas/[id]/chattings", method: "POST" });
 
     if (!memberId) {
         return NextResponse.json(
@@ -67,10 +69,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
             { status: 201 }
         );
     } catch (error: unknown) {
-        console.error(
-            `💥 Error processing chat POST for arena ${arenaId} by member ${memberId}:`,
-            error
-        );
+        log.error({ userId: memberId, arenaId, err: error }, "채팅 메시지 전송 실패");
         if (typeof error === "object" && error !== null && "message" in error) {
             const message = String((error as { message?: string }).message);
             if (

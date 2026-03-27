@@ -12,12 +12,14 @@ import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { UpdateReviewUsecase } from "@/backend/review/application/usecase/UpdateReviewUsecase";
 import { DeleteReviewUsecase } from "@/backend/review/application/usecase/DeleteReviewUsecase";
 import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
+import logger from "@/lib/logger";
 
 export async function PATCH(
     req: NextRequest,
     { params }: { params: Promise<{ gameId: string; reviewId: string }> }
 ) {
     const userId = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/games/[gameId]/reviews/[reviewId]", method: "PATCH" });
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -57,7 +59,7 @@ export async function PATCH(
         );
         return NextResponse.json(result);
     } catch (err) {
-        console.error("리뷰 수정 실패", err);
+        log.error({ userId, err }, "리뷰 수정 실패");
         return NextResponse.json(
             { message: err instanceof Error ? err.message : "Internal Server Error" },
             { status: 400 }

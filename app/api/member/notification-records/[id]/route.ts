@@ -5,6 +5,7 @@ import { NotificationRecord } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { errorResponse } from "@/utils/apiResponse";
 import { NextResponse } from "next/server";
+import logger from "@/lib/logger";
 
 type RequestParams = {
     params: Promise<{
@@ -13,9 +14,10 @@ type RequestParams = {
 };
 
 export async function DELETE(request: Request, { params }: RequestParams) {
+    const memberId: string | null = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/notification-records/[id]", method: "DELETE" });
     try {
         // member validation
-        const memberId: string | null = await getAuthUserId();
         if (!memberId) {
             return errorResponse("멤버가 아닙니다.", 401);
         }
@@ -47,7 +49,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
             { status: 200 }
         );
     } catch (error: unknown) {
-        console.error("Error deleting notification records:", error);
+        log.error({ userId: memberId, err: error }, "알림 기록 삭제 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "알림 삭제 실패" },

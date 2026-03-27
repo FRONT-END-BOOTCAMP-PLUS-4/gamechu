@@ -9,13 +9,15 @@ import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { IdSchema, validate } from "@/utils/validation";
 import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/logger";
 
 export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ reviewId: string }> }
 ) {
+    const userId = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/review-likes/[reviewId]", method: "POST" });
     try {
-        const userId = await getAuthUserId();
         if (!userId) return errorResponse("Unauthorized", 401);
 
         const reviewIdValidation = validate(IdSchema, (await params).reviewId);
@@ -44,7 +46,7 @@ export async function POST(
         });
         return NextResponse.json(result);
     } catch (err: unknown) {
-        console.error("[review-likes] POST error:", err);
+        log.error({ userId, err }, "리뷰 좋아요 토글 실패");
         const message = err instanceof Error ? err.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }

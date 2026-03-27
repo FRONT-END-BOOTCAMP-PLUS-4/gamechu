@@ -7,6 +7,7 @@ import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/P
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate } from "@/utils/validation";
 import { NextRequest, NextResponse } from "next/server";
+import logger from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
     try {
@@ -46,6 +47,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+    const log = logger.child({ route: "/api/member/arenas/[id]/votes", method: "PATCH" });
     try {
         //TODO: Patch나 Delete의 경우 우선 해당 데이터가 존재하는지 확인하고, 없을 경우 에러를 출력하는 로직을 먼저 넣어주세요.
         const memberId = await getAuthUserId();
@@ -73,7 +75,7 @@ export async function PATCH(req: NextRequest) {
         const result = await updateVoteUsecase.execute(submitVoteDto);
         return NextResponse.json(result, { status: 200 });
     } catch (error: unknown) {
-        console.error("🔥 PATCH vote error:", error);
+        log.error({ err: error }, "투표 수정 실패");
         const errorMessage =
             error instanceof Error ? error.message : "서버 오류";
         return NextResponse.json({ message: errorMessage }, { status: 500 });
