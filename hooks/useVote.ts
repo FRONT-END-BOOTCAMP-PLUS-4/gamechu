@@ -6,7 +6,6 @@ import type { VoteListDto } from "@/backend/vote/application/usecase/dto/VoteLis
 
 type GetVoteParams = {
     arenaId: number;
-    votedTo?: string;
     mine: boolean;
 };
 
@@ -16,7 +15,7 @@ type SubmitVoteParams = {
     existingVote: string | null;
 };
 
-export function useVote({ arenaId, votedTo, mine }: GetVoteParams) {
+export function useVote({ arenaId, mine }: GetVoteParams) {
     const queryClient = useQueryClient();
 
     const queryKey = mine
@@ -24,7 +23,6 @@ export function useVote({ arenaId, votedTo, mine }: GetVoteParams) {
         : queryKeys.arenaVotes(arenaId);
 
     const query = new URLSearchParams({
-        ...(votedTo !== undefined ? { votedTo } : {}),
         ...(mine ? { mine: "true" } : {}),
     }).toString();
 

@@ -208,9 +208,9 @@ export default function RootLayout({ children }) {
 - `queryKey`: `queryKeys.wishlist(gameId)`
 - `queryFn`: `fetcher('/api/member/wishlists?gameId=...')`
 - **`enabled` flag:** `enabled: !!viewerId` — the wishlist endpoint returns 401 for unauthenticated users. Without this guard the query fires on every unauthenticated game detail page load. The hook accepts `viewerId: string | null` as a second parameter.
-- **`wishlistId` threading (avoiding the DELETE race):** The `wishlistId` required for `DELETE /api/member/wishlists/${wishlistId}` is read synchronously from the current query cache data (`data?.wishlistId`) at mutation time. Because the mutation is disabled while `isWished === null` (loading state), `data` is always populated before the user can trigger a toggle. After a successful POST the server returns `{ wishlistId }` — this is stored in the mutation's `onSuccess` by calling `queryClient.setQueryData(queryKeys.wishlist(gameId), (old) => ({ ...old, wishlistId: newId, exists: true }))` for an immediate synchronous update before the invalidation re-fetch completes. This prevents the race condition where a second toggle fires before the refetch resolves.
+- **`wishlistId` threading (avoiding the DELETE race):** The `wishlistId` required for `DELETE /api/member/wishlists/${wishlistId}` is read synchronously from the current query cache data (`data?.wishlistId`) at mutation time. After a successful POST the server returns `{ wishlistId }` — this is stored in the mutation's `onSuccess` by calling `queryClient.setQueryData(queryKeys.wishlist(gameId), (old) => ({ ...old, wishlistId: newId, exists: true }))` for an immediate synchronous update before the invalidation re-fetch completes. This prevents the race condition where a second toggle fires before the refetch resolves.
 - `refetchOnWindowFocus`: `false` — wishlist status is only toggled explicitly by the user.
-- Returns: `{ isWished: boolean | null, toggle: () => void, isLoading: boolean }`
+- Returns: `{ isWished: boolean, toggle: () => void, isLoading: boolean }` — `false` during loading; button renders disabled with spinner via `isLoading` flag.
 
 ---
 
