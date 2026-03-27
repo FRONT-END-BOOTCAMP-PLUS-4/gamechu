@@ -39,9 +39,6 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
     return (
         <div
             id="tier-point-help-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={dialogTitleId}
             className="fixed inset-0 z-50"
         >
             {/* overlay */}
@@ -62,7 +59,12 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
                     allowOutsideClick: true,
                 }}
             >
-                <div className="absolute left-1/2 top-1/2 w-[92vw] max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-background-300 p-6 shadow-xl">
+                <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby={dialogTitleId}
+                    className="absolute left-1/2 top-1/2 w-[92vw] max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-background-300 p-6 shadow-xl"
+                >
                     <div className="flex items-start justify-between gap-4">
                         <div>
                             <h3
