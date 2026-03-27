@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import redis from "@/lib/redis";
+import logger from "@/lib/logger";
 
 type RateLimitResult = {
     allowed: boolean;
@@ -41,9 +42,7 @@ export class RateLimiter {
                     oldestTimestamp + this.windowMs - now,
                     0
                 );
-                console.warn(
-                    `[RateLimiter] ${this.prefix} limit exceeded for ${key}`
-                );
+                logger.warn({ prefix: this.prefix, key }, "레이트 리밋 초과");
                 return { allowed: false, remaining: 0, retryAfterMs };
             }
 
@@ -57,10 +56,7 @@ export class RateLimiter {
                 retryAfterMs: 0,
             };
         } catch (error) {
-            console.error(
-                `[RateLimiter] Redis error for ${this.prefix}:`,
-                error
-            );
+            logger.warn({ prefix: this.prefix, err: error }, "레이트 리미터 Redis 오류 — 요청 허용");
             return {
                 allowed: true,
                 remaining: this.maxRequests,
