@@ -5,6 +5,7 @@ import { PrismaWishListRepository } from "@/backend/wishlist/infra/repositories/
 import { DeleteWishlistUsecase } from "@/backend/wishlist/application/usecase/DeleteWishlistUsecase";
 import { DeleteWishlistDto } from "@/backend/wishlist/application/usecase/dto/DeleteWishlistDto";
 import { validate, IdSchema } from "@/utils/validation";
+import logger from "@/lib/logger";
 
 type RequestParams = {
     params: Promise<{
@@ -14,8 +15,9 @@ type RequestParams = {
 
 // DELETE 요청 핸들러
 export async function DELETE(req: NextRequest, { params }: RequestParams) {
+    const memberId = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/wishlists/[id]", method: "DELETE" });
     try {
-        const memberId = await getAuthUserId();
         if (!memberId) {
             return NextResponse.json(
                 { message: "Unauthorized" },
@@ -42,7 +44,7 @@ export async function DELETE(req: NextRequest, { params }: RequestParams) {
 
         return NextResponse.json({ message: "삭제 완료" }, { status: 200 });
     } catch (error) {
-        console.error("[WISHLIST_DELETE_ERROR]", error);
+        log.error({ userId: memberId, err: error }, "위시리스트 삭제 실패");
         return NextResponse.json(
             { message: error instanceof Error ? error.message : "삭제 실패" },
             { status: 400 }

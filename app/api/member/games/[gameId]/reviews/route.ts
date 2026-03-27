@@ -6,12 +6,14 @@ import { PrismaReviewRepository } from "@/backend/review/infra/repositories/pris
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate, IdSchema } from "@/utils/validation";
 import { CreateReviewSchema } from "@/backend/review/application/usecase/dto/CreateReviewDto";
+import logger from "@/lib/logger";
 
 export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ gameId: string }> }
 ) {
     const memberId = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/games/[gameId]/reviews", method: "POST" });
 
     if (!memberId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -34,7 +36,7 @@ export async function POST(
         });
         return NextResponse.json(result);
     } catch (err) {
-        console.error("리뷰 작성 실패", err);
+        log.error({ userId: memberId, err }, "리뷰 작성 실패");
         return NextResponse.json(
             { message: err instanceof Error ? err.message : "Internal Server Error" },
             { status: 400 }

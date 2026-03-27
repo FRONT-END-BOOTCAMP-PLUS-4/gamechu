@@ -7,11 +7,13 @@ import { UpdateMemberProfileUseCase } from "@/backend/member/application/usecase
 import { UpdateProfileRequestDto, UpdateProfileSchema } from "@/backend/member/application/usecase/dto/UpdateProfileRequestDto";
 import { validate } from "@/utils/validation";
 import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/logger";
 
 export async function GET() {
+    const session = await getServerSession(authOptions);
+    const memberId = session?.user?.id;
+    const log = logger.child({ route: "/api/member/profile", method: "GET" });
     try {
-        const session = await getServerSession(authOptions);
-        const memberId = session?.user?.id;
         if (!memberId)
             return errorResponse("Unauthorized", 401);
 
@@ -22,16 +24,17 @@ export async function GET() {
 
         return NextResponse.json(profile);
     } catch (error: unknown) {
-        console.error("[profile] GET error:", error);
+        log.error({ userId: memberId, err: error }, "프로필 조회 실패");
         const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
 
 export async function PUT(req: Request) {
+    const session = await getServerSession(authOptions);
+    const memberId = session?.user?.id;
+    const log = logger.child({ route: "/api/member/profile", method: "PUT" });
     try {
-        const session = await getServerSession(authOptions);
-        const memberId = session?.user?.id;
         if (!memberId)
             return errorResponse("Unauthorized", 401);
 
@@ -56,7 +59,7 @@ export async function PUT(req: Request) {
 
         return NextResponse.json({ message: "프로필이 성공적으로 수정되었습니다." });
     } catch (err: unknown) {
-        console.error("[PROFILE_UPDATE_ERROR]", err);
+        log.error({ userId: memberId, err }, "프로필 수정 실패");
         const message = err instanceof Error ? err.message : "프로필 수정 실패";
         return errorResponse(message, 500);
     }

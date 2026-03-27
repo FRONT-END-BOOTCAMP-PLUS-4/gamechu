@@ -8,6 +8,7 @@ import { Arena } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate, IdSchema } from "@/utils/validation";
 import { NextResponse } from "next/server";
+import logger from "@/lib/logger";
 
 type RequestParams = {
     params: Promise<{
@@ -70,6 +71,7 @@ export async function PATCH(request: Request, { params }: RequestParams) {
 
 // TODO: 투기장 참가자 간 상호 동의하에 삭제하는 기능을 추가할 시, 해당 API를 사용
 export async function DELETE(request: Request, { params }: RequestParams) {
+    const log = logger.child({ route: "/api/member/arenas/[id]", method: "DELETE" });
     try {
         const { id } = await params;
         const idValidated = validate(IdSchema, id);
@@ -110,7 +112,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
             { status: 200 }
         );
     } catch (error: unknown) {
-        console.error("Error deleting arenas:", error);
+        log.error({ err: error }, "아레나 삭제 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "투기장 삭제 실패" },

@@ -10,10 +10,12 @@ import { GetWishlistDto, WishlistBodySchema } from "@/backend/wishlist/applicati
 import { GetWishlistsDto } from "@/backend/wishlist/application/usecase/dto/GetWishlistsDto";
 import { validate } from "@/utils/validation";
 import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
+    const memberId = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/wishlists", method: "GET" });
     try {
-        const memberId = await getAuthUserId();
         if (!memberId) return errorResponse("Unauthorized", 401);
 
         const { searchParams } = new URL(req.url);
@@ -40,15 +42,16 @@ export async function GET(req: NextRequest) {
         const result = await usecase.execute(getWishlistsDto);
         return NextResponse.json(result);
     } catch (error: unknown) {
-        console.error("[wishlists] GET error:", error);
+        log.error({ userId: memberId, err: error }, "위시리스트 조회 실패");
         const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
 
 export async function POST(req: NextRequest) {
+    const memberId = await getAuthUserId();
+    const log = logger.child({ route: "/api/member/wishlists", method: "POST" });
     try {
-        const memberId = await getAuthUserId();
         if (!memberId) return errorResponse("Unauthorized", 401);
 
         const body = await req.json();
@@ -66,7 +69,7 @@ export async function POST(req: NextRequest) {
             { status: 200 }
         );
     } catch (error: unknown) {
-        console.error("[wishlists] POST error:", error);
+        log.error({ userId: memberId, err: error }, "위시리스트 추가 실패");
         const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }

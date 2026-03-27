@@ -4,11 +4,13 @@ import { GetMemberProfileByNicknameUsecase } from "@/backend/member/application/
 import { errorResponse } from "@/utils/apiResponse";
 import { withCache } from "@/lib/withCache";
 import { memberProfileKey } from "@/lib/cacheKey";
+import logger from "@/lib/logger";
 
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ nickname: string }> }
 ) {
+    const log = logger.child({ route: "/api/member/profile/[nickname]", method: "GET" });
     try {
         const { nickname } = await params;
         const usecase = new GetMemberProfileByNicknameUsecase(
@@ -24,7 +26,7 @@ export async function GET(
 
         return NextResponse.json(profile);
     } catch (error: unknown) {
-        console.error("[profile/nickname] error:", error);
+        log.error({ err: error }, "닉네임 프로필 조회 실패");
         const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
