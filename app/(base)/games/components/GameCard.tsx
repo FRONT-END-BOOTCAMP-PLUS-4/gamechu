@@ -64,10 +64,7 @@ export default function GameCard({
 
                 {/* 별점 */}
                 <div className="mt-1 flex items-center justify-between border-t border-white/5 pt-2">
-                    <div
-                        className="flex items-center gap-1"
-                        aria-label={`리뷰 ${reviewCount}개`}
-                    >
+                    <div className="flex items-center gap-1">
                         <Image
                             src="/icons/review.svg"
                             alt=""
@@ -80,10 +77,7 @@ export default function GameCard({
                         </span>
                     </div>
 
-                    <div
-                        className="flex items-center gap-1 rounded-lg bg-primary-purple-300/10 px-2 py-0.5"
-                        aria-label={`전문가 평점 ${(expertRating ?? 0).toFixed(1)}`}
-                    >
+                    <div className="flex items-center gap-1 rounded-lg bg-primary-purple-300/10 px-2 py-0.5">
                         <Image
                             src="/icons/empty-purple-star.svg"
                             alt=""

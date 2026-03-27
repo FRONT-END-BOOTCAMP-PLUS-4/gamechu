@@ -22,7 +22,7 @@ export default function NotificationModal() {
             <div className="w-[480px] max-h-[80vh] flex flex-col gap-4">
                 <h2
                     id="notification-modal-title"
-                    className="text-lg font-bold text-font-100"
+                    className="sr-only"
                 >
                     알림
                 </h2>
