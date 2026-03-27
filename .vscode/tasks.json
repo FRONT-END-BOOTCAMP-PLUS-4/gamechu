@@ -27,7 +27,7 @@
             "presentation": {
                 "reveal": "silent",
                 "panel": "dedicated",
-                "close": true
+                "close": false
             },
             "runOptions": {
                 "runOn": "folderOpen"
