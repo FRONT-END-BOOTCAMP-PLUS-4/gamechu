@@ -14,7 +14,10 @@ export default function StepProfile({ onNext }: Props) {
     const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<
         boolean | null
     >(null);
-    const [nicknameSuccessMessage, setNicknameSuccessMessage] = useState("");
+    const [nicknameMessage, setNicknameMessage] = useState<{
+        text: string;
+        isError: boolean;
+    } | null>(null);
     const [email, setEmail] = useState("");
     const [isEmailDuplicate, setIsEmailDuplicate] = useState<boolean | null>(
         null
@@ -27,23 +30,16 @@ export default function StepProfile({ onNext }: Props) {
     const [successMessage, setSuccessMessage] = useState("");
 
     const checkNicknameDuplicate = async () => {
-        setNicknameSuccessMessage("");
-        setFieldErrors((prev) => ({ ...prev, nickname: "" }));
+        setNicknameMessage(null);
 
         if (!nickname) {
-            setFieldErrors((prev) => ({
-                ...prev,
-                nickname: "닉네임을 입력해주세요.",
-            }));
+            setNicknameMessage({ text: "닉네임을 입력해주세요.", isError: true });
             setIsNicknameDuplicate(null);
             return;
         }
 
         if (nickname.length > 8) {
-            setFieldErrors((prev) => ({
-                ...prev,
-                nickname: "닉네임은 8자 이하여야 합니다.",
-            }));
+            setNicknameMessage({ text: "닉네임은 8자 이하여야 합니다.", isError: true });
             setIsNicknameDuplicate(null);
             return;
         }
@@ -55,10 +51,7 @@ export default function StepProfile({ onNext }: Props) {
             const data = await res.json();
 
             if (res.status === 409) {
-                setFieldErrors((prev) => ({
-                    ...prev,
-                    nickname: data.message,
-                }));
+                setNicknameMessage({ text: data.message, isError: true });
                 setIsNicknameDuplicate(true);
                 return;
             }
@@ -68,11 +61,11 @@ export default function StepProfile({ onNext }: Props) {
             }
 
             setIsNicknameDuplicate(false);
-            setNicknameSuccessMessage(data.message);
+            setNicknameMessage({ text: data.message, isError: false });
         } catch (err) {
             const message =
                 err instanceof Error ? err.message : "오류가 발생했습니다.";
-            setFieldErrors((prev) => ({ ...prev, nickname: message }));
+            setNicknameMessage({ text: message, isError: true });
             setIsNicknameDuplicate(null);
         }
     };
@@ -220,7 +213,7 @@ export default function StepProfile({ onNext }: Props) {
                             onChange={(e) => {
                                 setNickname(e.target.value);
                                 setIsNicknameDuplicate(null);
-                                setNicknameSuccessMessage("");
+                                setNicknameMessage(null);
                             }}
                         />
                     </div>
@@ -231,14 +224,15 @@ export default function StepProfile({ onNext }: Props) {
                         onClick={checkNicknameDuplicate}
                     />
                 </div>
-                {fieldErrors.nickname && (
-                    <p className="mt-1 text-caption text-state-error">
-                        {fieldErrors.nickname}
-                    </p>
-                )}
-                {!fieldErrors.nickname && nicknameSuccessMessage && (
-                    <p className="text-state-success mt-1 text-caption">
-                        {nicknameSuccessMessage}
+                {nicknameMessage && (
+                    <p
+                        className={`mt-1 text-caption ${
+                            nicknameMessage.isError
+                                ? "text-state-error"
+                                : "text-state-success"
+                        }`}
+                    >
+                        {nicknameMessage.text}
                     </p>
                 )}
             </div>
