@@ -5,6 +5,7 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { GetVoteUsecase } from "@/backend/vote/application/usecase/GetVoteUsecase";
 import { GetVoteDto } from "@/backend/vote/application/usecase/dto/GetVoteDto";
 import { IdSchema, validate } from "@/utils/validation";
+import logger from "@/lib/logger";
 
 type RequestParams = {
     params: Promise<{
@@ -14,6 +15,7 @@ type RequestParams = {
 
 export async function GET(request: Request, { params }: RequestParams) {
     const memberId = await getAuthUserId();
+    const log = logger.child({ route: "/api/arenas/[id]/votes", method: "GET" });
     const { id } = await params;
 
     const idValidation = validate(IdSchema, id);
@@ -53,7 +55,7 @@ export async function GET(request: Request, { params }: RequestParams) {
 
         return NextResponse.json(result);
     } catch (error) {
-        console.error("투표 정보 조회 중 오류 발생:", error);
+        log.error({ userId: memberId, err: error }, "투표 정보 조회 실패");
         return NextResponse.json(
             { message: "알 수 없는 오류 발생" },
             { status: 500 }

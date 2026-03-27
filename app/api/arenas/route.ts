@@ -13,10 +13,12 @@ import { NextResponse } from "next/server";
 import redis from "@/lib/redis";
 import { withCache } from "@/lib/withCache";
 import { ARENA_LIST_VERSION_KEY, arenaListKey } from "@/lib/cacheKey";
+import logger from "@/lib/logger";
 
 export async function GET(request: Request) {
+    const log = logger.child({ route: "/api/arenas", method: "GET" });
+    const memberId = await getAuthUserId();
     try {
-        const memberId = await getAuthUserId();
 
         const url = new URL(request.url);
         const validated = validate(GetArenaSchema, Object.fromEntries(url.searchParams));
@@ -65,7 +67,7 @@ export async function GET(request: Request) {
         try {
             version = (await redis.get(ARENA_LIST_VERSION_KEY)) ?? "0";
         } catch {
-            console.error("[cache] version key read error");
+            log.warn({}, "아레나 버전 키 캐시 읽기 실패");
         }
         const key = arenaListKey(version, {
             currentPage,
@@ -80,7 +82,7 @@ export async function GET(request: Request) {
 
         return NextResponse.json(arenaListDto);
     } catch (error: unknown) {
-        console.error("Error fetching arenas:", error);
+        log.error({ userId: memberId, err: error }, "아레나 목록 조회 실패");
 
         if (error instanceof Error) {
             return NextResponse.json(

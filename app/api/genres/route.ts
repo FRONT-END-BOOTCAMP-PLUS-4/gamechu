@@ -3,15 +3,17 @@ import { PrismaGenreRepository } from "@/backend/genre/infra/repositories/prisma
 import { GetAllGenresUsecase } from "@/backend/genre/application/usecase/GetAllGenresUsecase";
 import { withCache } from "@/lib/withCache";
 import { genreListKey } from "@/lib/cacheKey";
+import logger from "@/lib/logger";
 
 export async function GET() {
+    const log = logger.child({ route: "/api/genres", method: "GET" });
     try {
         const repo = new PrismaGenreRepository();
         const usecase = new GetAllGenresUsecase(repo);
         const genres = await withCache(genreListKey(), 3600, () => usecase.execute());
         return NextResponse.json(genres);
     } catch (e) {
-        console.error("[GET /genres] 장르 조회 실패:", e);
+        log.error({ err: e }, "장르 조회 실패");
         return NextResponse.json({ message: "서버 오류" }, { status: 500 });
     }
 }

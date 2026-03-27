@@ -14,8 +14,10 @@ import { withCache } from "@/lib/withCache";
 import { generateCacheKey, gameMetaKey } from "@/lib/cacheKey";
 import type { CacheKeyParams } from "@/lib/cacheKey";
 import { validate } from "@/utils/validation";
+import logger from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
+    const log = logger.child({ route: "/api/games", method: "GET" });
     try {
         const url = new URL(req.url);
         const params = url.searchParams;
@@ -74,14 +76,13 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json(response, { status: 200 });
     } catch (error: unknown) {
+        log.error({ err: error }, "게임 목록 조회 실패");
         if (error instanceof Error) {
-            console.error("[GET /api/games] 에러:", error.message, error.stack);
             return NextResponse.json(
                 { message: "게임 목록 조회 중 오류가 발생했습니다." },
                 { status: 500 }
             );
         } else {
-            console.error("[GET /api/games] 알 수 없는 에러:", error);
             return NextResponse.json(
                 { message: "게임 목록 조회 중 알 수 없는 오류가 발생했습니다." },
                 { status: 500 }

@@ -4,6 +4,7 @@ import { PrismaChattingRepository } from "@/backend/chatting/infra/repositories/
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { IdSchema, validate } from "@/utils/validation";
 import { NextResponse } from "next/server";
+import logger from "@/lib/logger";
 
 type RequestParams = {
     params: Promise<{
@@ -14,6 +15,7 @@ type RequestParams = {
 export async function GET(req: Request, { params }: RequestParams) {
     const { id } = await params;
     const memberId: string | null = await getAuthUserId();
+    const log = logger.child({ route: "/api/arenas/[id]/chattings", method: "GET" });
 
     const idValidation = validate(IdSchema, id);
     if (!idValidation.success) return idValidation.response;
@@ -28,7 +30,7 @@ export async function GET(req: Request, { params }: RequestParams) {
 
         return NextResponse.json(result);
     } catch (error) {
-        console.error("채팅 조회 중 오류 발생:", error);
+        log.error({ userId: memberId, err: error }, "채팅 조회 실패");
         return NextResponse.json(
             { message: "알 수 없는 오류 발생" },
             { status: 500 }

@@ -4,11 +4,13 @@ import { PrismaReviewRepository } from "@/backend/review/infra/repositories/pris
 import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/logger";
 
 export async function GET(
     req: NextRequest,
     { params }: { params: Promise<Record<string, string>> }
 ) {
+    const log = logger.child({ route: "/api/games/[id]/reviews", method: "GET" });
     try {
         const { id } = await params;
         const gameId = id;
@@ -25,7 +27,7 @@ export async function GET(
         const result = await usecase.execute(parsedId, viewerId || "");
         return NextResponse.json(result);
     } catch (error: unknown) {
-        console.error("[games/reviews] error:", error);
+        log.error({ err: error }, "게임 리뷰 조회 실패");
         const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
