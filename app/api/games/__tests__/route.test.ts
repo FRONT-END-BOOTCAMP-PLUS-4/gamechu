@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 vi.mock("@/lib/redis", () => ({
     default: {
         get: vi.fn().mockResolvedValue(null),
-        set: vi.fn().mockResolvedValue("OK"),
+        setex: vi.fn().mockResolvedValue("OK"),
     },
 }));
 
@@ -60,5 +60,15 @@ describe("GET /api/games", () => {
         const req = new NextRequest("http://localhost/api/games?page=0");
         const response = await GET(req);
         expect(response.status).toBe(400);
+    });
+
+    it("GET with meta=true returns metadata", async () => {
+        const req = new NextRequest("http://localhost/api/games?meta=true");
+        const response = await GET(req);
+        expect(response.status).toBe(200);
+        const data = await response.json();
+        expect(data).toHaveProperty("genres");
+        expect(data).toHaveProperty("themes");
+        expect(data).toHaveProperty("platforms");
     });
 });
