@@ -21,6 +21,11 @@ e2e/.auth/
 /.next/
 /out/
 
+# deployment rollback state (server-side, generated at runtime)
+.next.bak
+.last-good-commit
+.pending-rollback-commit
+
 # production
 /build
 
