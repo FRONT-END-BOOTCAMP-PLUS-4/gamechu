@@ -1,6 +1,13 @@
 // @vitest-environment node
 import { describe, it, expect, vi } from "vitest";
 
+vi.mock("@/lib/redis", () => ({
+    default: {
+        get: vi.fn().mockResolvedValue(null),
+        setex: vi.fn().mockResolvedValue("OK"),
+    },
+}));
+
 vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
     PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
         this.findByNickname = vi.fn().mockResolvedValue(null);

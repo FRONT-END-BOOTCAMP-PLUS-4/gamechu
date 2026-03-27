@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { GetMemberProfileByNicknameUsecase } from "@/backend/member/application/usecase/GetMemberProfileByNicknameUsecase";
 import { errorResponse } from "@/utils/apiResponse";
+import { withCache } from "@/lib/withCache";
+import { memberProfileKey } from "@/lib/cacheKey";
 
 export async function GET(
     request: NextRequest,
@@ -12,7 +14,11 @@ export async function GET(
         const usecase = new GetMemberProfileByNicknameUsecase(
             new PrismaMemberRepository()
         );
-        const profile = await usecase.execute(nickname);
+        const profile = await withCache(
+            memberProfileKey(nickname),
+            120,
+            () => usecase.execute(nickname)
+        );
 
         if (!profile) return errorResponse("Not found", 404);
 
