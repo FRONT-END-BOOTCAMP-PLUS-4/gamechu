@@ -61,7 +61,12 @@ export async function GET(request: Request) {
             pageSize
         );
 
-        const version = (await redis.get(ARENA_LIST_VERSION_KEY)) ?? "0";
+        let version = "0";
+        try {
+            version = (await redis.get(ARENA_LIST_VERSION_KEY)) ?? "0";
+        } catch {
+            console.error("[cache] version key read error");
+        }
         const key = arenaListKey(version, {
             currentPage,
             status,
