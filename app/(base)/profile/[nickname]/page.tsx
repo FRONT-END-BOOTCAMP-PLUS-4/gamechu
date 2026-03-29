@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, use } from "react";
 import ProfileSummaryCard from "../components/ProfileSummaryCard";
-import ProfileTierCard from "./components/ProfileTierCard";
+import ProfileTierCard from "../components/ProfileTierCard";
 import ProfileSidebar from "../components/ProfileSidebar";
 import ProfileReviewTab from "../components/tabs/ProfileReviewTab";
 import ProfileArenaTab from "./components/tab/ProfileArenaTab";
@@ -92,7 +92,7 @@ export default function ProfilePage({
                     imageUrl={imageUrl}
                     score={score}
                 />
-                <ProfileTierCard score={score} />
+                <ProfileTierCard isOwnProfile={false} score={score} />
             </div>
 
             {/* 본문 */}
