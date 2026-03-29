@@ -16,7 +16,7 @@ export default function RecruitingArenaList({ memberId }: ArenaListProps) {
     const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
         status: 1,
-        mine: true,
+        mine: !memberId,
         pageSize,
         ...(memberId ? { targetMemberId: memberId } : {}),
     });

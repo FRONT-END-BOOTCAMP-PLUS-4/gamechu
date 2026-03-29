@@ -27,7 +27,7 @@ export default function ProfileSummaryCard(props: ProfileSummaryCardProps) {
         <div
             className={[
                 "w-full rounded-xl bg-background-300 p-6 shadow md:w-[250px]",
-                isOwnProfile ? "md:h-[320px]" : "h-[270px]",
+                isOwnProfile ? "md:h-[320px]" : "md:h-[270px]",
             ].join(" ")}
         >
             <div className="mx-auto mb-4 h-[120px] w-[120px] overflow-hidden rounded-full">

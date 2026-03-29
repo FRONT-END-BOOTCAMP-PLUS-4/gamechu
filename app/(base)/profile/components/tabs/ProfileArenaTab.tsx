@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import WaitingArenaList from "../WaitingArenaList";
-import DebatingArenaList from "../DebatingArenaList";
-import CompletedArenaList from "../CompletedArenaList";
-import RecruitingArenaList from "../RecruitingArenaList";
-import VotingArenaList from "../VotingArenaList";
+import WaitingArenaList from "@/app/(base)/profile/components/WaitingArenaList";
+import DebatingArenaList from "@/app/(base)/profile/components/DebatingArenaList";
+import CompletedArenaList from "@/app/(base)/profile/components/CompletedArenaList";
+import RecruitingArenaList from "@/app/(base)/profile/components/RecruitingArenaList";
+import VotingArenaList from "@/app/(base)/profile/components/VotingArenaList";
 
 const TABS = [
     { key: "recruiting", label: "모집 중" },
