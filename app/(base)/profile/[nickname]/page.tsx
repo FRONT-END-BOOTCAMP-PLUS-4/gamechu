@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, use } from "react";
-import ProfileSummaryCard from "./components/ProfileSummaryCard";
+import ProfileSummaryCard from "../components/ProfileSummaryCard";
 import ProfileTierCard from "./components/ProfileTierCard";
 import ProfileSidebar from "../components/ProfileSidebar";
 import ProfileReviewTab from "../components/tabs/ProfileReviewTab";
@@ -86,6 +86,7 @@ export default function ProfilePage({
             {/* 상단 카드 영역 */}
             <div className="mb-10 flex flex-col items-center gap-4 md:flex-row md:items-start md:gap-10">
                 <ProfileSummaryCard
+                    isOwnProfile={false}
                     reviewCount={reviewCount}
                     nickname={nickname}
                     imageUrl={imageUrl}

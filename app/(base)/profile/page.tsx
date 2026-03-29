@@ -115,6 +115,7 @@ export default function ProfilePage() {
             {/* 상단 카드 영역 */}
             <div className="mb-10 flex flex-col items-center gap-4 md:flex-row md:items-start md:gap-10">
                 <ProfileSummaryCard
+                    isOwnProfile={true}
                     reviewCount={reviewCount}
                     wishlistCount={wishlistPageData.totalCount}
                     nickname={nickname}
