@@ -123,7 +123,7 @@ export default function ProfilePage() {
                     score={score}
                     createdAt={createdAt}
                 />
-                <ProfileTierCard score={score} />
+                <ProfileTierCard isOwnProfile={true} score={score} />
             </div>
 
             {/* 본문 */}
