@@ -36,7 +36,7 @@ export default function ProfileTierCard({
         <div
             className={[
                 "w-full flex-1 rounded-xl bg-background-300 p-6 shadow",
-                isOwnProfile ? "h-[320px]" : "h-[270px]",
+                isOwnProfile ? "md:h-[320px]" : "md:h-[270px]",
             ].join(" ")}
         >
             {/* 제목 & 설명 */}

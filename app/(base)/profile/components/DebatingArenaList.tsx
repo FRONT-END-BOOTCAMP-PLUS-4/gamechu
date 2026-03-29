@@ -18,7 +18,7 @@ export default function DebatingArenaList({ memberId }: ArenaListProps) {
     const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
         status: 3,
-        mine: true,
+        mine: !memberId,
         pageSize,
         ...(memberId ? { targetMemberId: memberId } : {}),
     });

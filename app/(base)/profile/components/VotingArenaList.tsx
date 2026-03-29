@@ -16,7 +16,7 @@ export default function VotingArenaList({ memberId }: ArenaListProps) {
     const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
         status: 4,
-        mine: true,
+        mine: !memberId,
         pageSize,
         ...(memberId ? { targetMemberId: memberId } : {}),
     });
