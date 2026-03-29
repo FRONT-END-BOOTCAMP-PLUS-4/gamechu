@@ -129,7 +129,7 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row md:items-start md:space-x-10">
                 {/* 사이드바 */}
                 <div className="mb-6 w-full md:mb-0 md:w-[250px]">
-                    <ProfileSidebar onSelect={setActiveTab} />
+                    <ProfileSidebar isOwnProfile={true} onSelect={setActiveTab} />
                 </div>
 
                 {/* 컨텐츠 영역 */}
