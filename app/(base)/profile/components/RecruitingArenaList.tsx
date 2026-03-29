@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useFetchArenas from "@/hooks/useArenas";
 import RecruitingArenaCard from "@/app/(base)/arenas/components/RecruitingArenaCard";
 import Pager from "@/app/components/Pager";
@@ -20,12 +20,6 @@ export default function RecruitingArenaList({ memberId }: ArenaListProps) {
         pageSize,
         ...(memberId ? { targetMemberId: memberId } : {}),
     });
-
-    useEffect(() => {
-        if (!loading && arenaListDto?.arenas) {
-            console.log("✅ 모집 중 투기장 개수:", arenaListDto.arenas.length);
-        }
-    }, [loading, arenaListDto]);
 
     if (loading) {
         return <p className="text-sm text-font-200">로딩 중입니다...</p>;

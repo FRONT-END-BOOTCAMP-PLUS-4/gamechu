@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import useArenas from "@/hooks/useArenas";
+import { useState } from "react";
+import useFetchArenas from "@/hooks/useArenas";
 import CompleteArenaCard from "@/app/(base)/arenas/components/CompleteArenaCard";
 import Pager from "@/app/components/Pager";
 
@@ -14,19 +14,13 @@ export default function CompletedArenaList({ memberId }: ArenaListProps) {
     const pageSize = 6;
     const status = 5;
 
-    const { arenaListDto, loading, error } = useArenas({
+    const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
         status,
         mine: true,
         pageSize,
         ...(memberId ? { targetMemberId: memberId } : {}),
     });
-
-    useEffect(() => {
-        if (!loading && arenaListDto?.arenas) {
-            console.log("✅ 완료된 투기장 개수:", arenaListDto.arenas.length);
-        }
-    }, [loading, arenaListDto]);
 
     if (loading) {
         return <p className="text-sm text-font-200">로딩 중입니다...</p>;
