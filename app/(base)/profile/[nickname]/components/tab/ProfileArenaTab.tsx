@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import WaitingArenaList from "../WaitingArenaList";
-import DebatingArenaList from "../DebatingArenaList";
-import CompletedArenaList from "../CompletedArenaList";
-import RecruitingArenaList from "../RecrutingArenaList";
-import VotingArenaList from "../VotingArenaList";
+import WaitingArenaList from "@/app/(base)/profile/components/WaitingArenaList";
+import DebatingArenaList from "@/app/(base)/profile/components/DebatingArenaList";
+import CompletedArenaList from "@/app/(base)/profile/components/CompletedArenaList";
+import RecruitingArenaList from "@/app/(base)/profile/components/RecruitingArenaList";
+import VotingArenaList from "@/app/(base)/profile/components/VotingArenaList";
 
 const TABS = [
     { key: "recruiting", label: "모집 중" },
@@ -41,7 +41,6 @@ export default function ProfileArenaTab({ memberId }: { memberId: string }) {
         <div className="flex w-full flex-col gap-6 rounded-xl bg-background-400 p-6 shadow">
             <h2 className="text-lg font-semibold">투기장</h2>
 
-            {/* 탭 메뉴 */}
             <div className="no-scrollbar relative overflow-x-auto">
                 <div className="flex min-w-max justify-center gap-2 whitespace-nowrap border-b border-gray-600 px-4 pb-2 sm:gap-4">
                     {TABS.map((tab) => (
@@ -60,7 +59,6 @@ export default function ProfileArenaTab({ memberId }: { memberId: string }) {
                 </div>
             </div>
 
-            {/* 탭 내용 */}
             <div>{renderContent()}</div>
         </div>
     );

@@ -5,16 +5,21 @@ import useArenas from "@/hooks/useArenas";
 import CompleteArenaCard from "@/app/(base)/arenas/components/CompleteArenaCard";
 import Pager from "@/app/components/Pager";
 
-export default function MyCompletedArenaList() {
+type ArenaListProps = {
+    memberId?: string;
+};
+
+export default function CompletedArenaList({ memberId }: ArenaListProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 6;
-    const status = 5; // 종료된 투기장
+    const status = 5;
 
     const { arenaListDto, loading, error } = useArenas({
         currentPage,
         status,
         mine: true,
         pageSize,
+        ...(memberId ? { targetMemberId: memberId } : {}),
     });
 
     useEffect(() => {
@@ -54,8 +59,6 @@ export default function MyCompletedArenaList() {
                     />
                 ))}
             </div>
-
-            {/* 페이지네이션 */}
             <Pager
                 currentPage={arenaListDto.currentPage}
                 endPage={arenaListDto.endPage}

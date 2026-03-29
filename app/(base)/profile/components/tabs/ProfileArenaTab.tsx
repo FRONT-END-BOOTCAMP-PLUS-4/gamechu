@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import MyWaitingArenaList from "../MyWaitingArenaList";
-import MyDebatingArenaList from "../MyDebatingArenaList";
-import MyCompletedArenaList from "../MyCompletedArenaList";
-import MyRecruitingArenaList from "../MyRecrutingArenaList";
-import MyVotingArenaList from "../MyVotingArenaList";
+import WaitingArenaList from "../WaitingArenaList";
+import DebatingArenaList from "../DebatingArenaList";
+import CompletedArenaList from "../CompletedArenaList";
+import RecruitingArenaList from "../RecruitingArenaList";
+import VotingArenaList from "../VotingArenaList";
 
 const TABS = [
     { key: "recruiting", label: "모집 중" },
@@ -23,15 +23,15 @@ export default function ProfileArenaTab() {
     const renderContent = () => {
         switch (activeTab) {
             case "recruiting":
-                return <MyRecruitingArenaList />;
+                return <RecruitingArenaList />;
             case "waiting":
-                return <MyWaitingArenaList />;
+                return <WaitingArenaList />;
             case "debating":
-                return <MyDebatingArenaList />;
+                return <DebatingArenaList />;
             case "voting":
-                return <MyVotingArenaList />;
+                return <VotingArenaList />;
             case "completed":
-                return <MyCompletedArenaList />;
+                return <CompletedArenaList />;
             default:
                 return null;
         }
@@ -41,7 +41,6 @@ export default function ProfileArenaTab() {
         <div className="flex w-full flex-col gap-6 rounded-xl bg-background-400 p-6 shadow">
             <h2 className="text-lg font-semibold">투기장</h2>
 
-            {/* 탭 메뉴 */}
             <div className="no-scrollbar relative overflow-x-auto">
                 <div className="flex min-w-max justify-center gap-2 whitespace-nowrap border-b border-gray-600 px-4 pb-2 sm:gap-4">
                     {TABS.map((tab) => (
@@ -60,7 +59,6 @@ export default function ProfileArenaTab() {
                 </div>
             </div>
 
-            {/* 탭 내용 */}
             <div>{renderContent()}</div>
         </div>
     );

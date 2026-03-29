@@ -2,23 +2,28 @@
 
 import { useEffect, useState } from "react";
 import useFetchArenas from "@/hooks/useArenas";
-import VotingArenaCard from "../../arenas/components/VotingArenaCard";
+import WaitingArenaCard from "@/app/(base)/arenas/components/WaitingArenaCard";
 import Pager from "@/app/components/Pager";
 
-export default function MyVotingArenaList() {
+type ArenaListProps = {
+    memberId?: string;
+};
+
+export default function WaitingArenaList({ memberId }: ArenaListProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 6;
 
     const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
-        status: 4, // 상태 4 = 투표 중
-        mine: true, // 내가 생성하거나 참여한 투기장만
+        status: 2,
+        mine: true,
         pageSize,
+        ...(memberId ? { targetMemberId: memberId } : {}),
     });
 
     useEffect(() => {
         if (!loading && arenaListDto?.arenas) {
-            console.log("✅ 투표 중 투기장 개수:", arenaListDto.arenas.length);
+            console.log("✅ 대기 중 투기장 개수:", arenaListDto.arenas.length);
         }
     }, [loading, arenaListDto]);
 
@@ -37,7 +42,7 @@ export default function MyVotingArenaList() {
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
         return (
             <p className="text-sm text-font-200">
-                투표 중인 투기장이 없습니다.
+                대기 중인 투기장이 없습니다.
             </p>
         );
     }
@@ -47,7 +52,7 @@ export default function MyVotingArenaList() {
             <div className="w-full">
                 <div className="grid grid-cols-1 gap-6 px-1 md:grid-cols-2">
                     {arenaListDto.arenas.map((arena) => (
-                        <VotingArenaCard
+                        <WaitingArenaCard
                             key={arena.id}
                             id={arena.id}
                             title={arena.title}
@@ -55,15 +60,12 @@ export default function MyVotingArenaList() {
                             creatorScore={arena.creatorScore}
                             challengerNickname={arena.challengerNickname}
                             challengerScore={arena.challengerScore}
-                            voteEndDate={new Date(arena.voteEndDate)}
-                            voteCount={arena.voteCount}
+                            startDate={new Date(arena.startDate)}
                             showBadgeIconOnly={true}
                         />
                     ))}
                 </div>
             </div>
-
-            {/* 페이지네이션 */}
             <Pager
                 currentPage={arenaListDto.currentPage}
                 endPage={arenaListDto.endPage}
