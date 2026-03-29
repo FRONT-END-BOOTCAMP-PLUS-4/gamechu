@@ -67,7 +67,7 @@ export async function GET(request: Request) {
         try {
             version = (await redis.get(ARENA_LIST_VERSION_KEY)) ?? "0";
         } catch {
-            log.warn({}, "아레나 버전 키 캐시 읽기 실패");
+            log.warn({ key: ARENA_LIST_VERSION_KEY }, "아레나 버전 키 캐시 읽기 실패");
         }
         const key = arenaListKey(version, {
             currentPage,
