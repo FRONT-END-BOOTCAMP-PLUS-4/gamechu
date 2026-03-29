@@ -2,28 +2,34 @@
 
 import { useEffect, useState } from "react";
 import useFetchArenas from "@/hooks/useArenas";
-import RecruitingArenaCard from "@/app/(base)/arenas/components/RecruitingArenaCard";
+import DebatingArenaCard from "@/app/(base)/arenas/components/DebatingArenaCard";
 import Pager from "@/app/components/Pager";
+import { useLoadingStore } from "@/stores/loadingStore";
 
-export default function RecruitingArenaList({
-    memberId,
-}: {
-    memberId: string;
-}) {
+type ArenaListProps = {
+    memberId?: string;
+};
+
+export default function DebatingArenaList({ memberId }: ArenaListProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 6;
+    const { setLoading } = useLoadingStore();
 
     const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
-        status: 1, // 모집 중
-        mine: true, // 내가 생성/참여한 것만
+        status: 3,
+        mine: true,
         pageSize,
-        targetMemberId: memberId,
+        ...(memberId ? { targetMemberId: memberId } : {}),
     });
 
     useEffect(() => {
+        setLoading(loading);
+    }, [loading, setLoading]);
+
+    useEffect(() => {
         if (!loading && arenaListDto?.arenas) {
-            console.log("✅ 모집 중 투기장 개수:", arenaListDto.arenas.length);
+            console.log("✅ 진행 중 투기장 개수:", arenaListDto.arenas.length);
         }
     }, [loading, arenaListDto]);
 
@@ -42,7 +48,7 @@ export default function RecruitingArenaList({
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
         return (
             <p className="text-sm text-font-200">
-                모집 중인 투기장이 없습니다.
+                진행 중인 투기장이 없습니다.
             </p>
         );
     }
@@ -52,17 +58,20 @@ export default function RecruitingArenaList({
             <div className="w-full">
                 <div className="grid grid-cols-1 gap-6 px-1 md:grid-cols-2">
                     {arenaListDto.arenas.map((arena) => (
-                        <RecruitingArenaCard
+                        <DebatingArenaCard
                             key={arena.id}
-                            {...arena}
-                            startDate={new Date(arena.startDate)}
-                            showBadgeIconOnly={true}
+                            id={arena.id}
+                            title={arena.title}
+                            creatorNickname={arena.creatorNickname}
+                            creatorScore={arena.creatorScore}
+                            challengerNickname={arena.challengerNickname}
+                            challengerScore={arena.challengerScore}
+                            debateEndDate={new Date(arena.debateEndDate)}
+                            showBadgeIconOnly={false}
                         />
                     ))}
                 </div>
             </div>
-
-            {/* 페이지네이션 */}
             <Pager
                 currentPage={arenaListDto.currentPage}
                 endPage={arenaListDto.endPage}

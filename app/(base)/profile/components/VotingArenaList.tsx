@@ -2,31 +2,28 @@
 
 import { useEffect, useState } from "react";
 import useFetchArenas from "@/hooks/useArenas";
-import DebatingArenaCard from "@/app/(base)/arenas/components/DebatingArenaCard";
+import VotingArenaCard from "@/app/(base)/arenas/components/VotingArenaCard";
 import Pager from "@/app/components/Pager";
-import { useLoadingStore } from "@/stores/loadingStore"; // ✅ 전역 로딩 스토어
 
-export default function DebatingArenaList({ memberId }: { memberId: string }) {
+type ArenaListProps = {
+    memberId?: string;
+};
+
+export default function VotingArenaList({ memberId }: ArenaListProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 6;
-    const { setLoading } = useLoadingStore(); // ✅ 전역 로딩 제어 가져오기
 
     const { arenaListDto, loading, error } = useFetchArenas({
         currentPage,
-        status: 3, // 토론 중인 투기장
+        status: 4,
         mine: true,
         pageSize,
-        targetMemberId: memberId,
+        ...(memberId ? { targetMemberId: memberId } : {}),
     });
-
-    // ✅ 전역 로딩 상태 동기화
-    useEffect(() => {
-        setLoading(loading);
-    }, [loading, setLoading]);
 
     useEffect(() => {
         if (!loading && arenaListDto?.arenas) {
-            console.log("✅ 진행 중 투기장 개수:", arenaListDto.arenas.length);
+            console.log("✅ 투표 중 투기장 개수:", arenaListDto.arenas.length);
         }
     }, [loading, arenaListDto]);
 
@@ -45,7 +42,7 @@ export default function DebatingArenaList({ memberId }: { memberId: string }) {
     if (!arenaListDto || arenaListDto.arenas.length === 0) {
         return (
             <p className="text-sm text-font-200">
-                진행 중인 투기장이 없습니다.
+                투표 중인 투기장이 없습니다.
             </p>
         );
     }
@@ -55,7 +52,7 @@ export default function DebatingArenaList({ memberId }: { memberId: string }) {
             <div className="w-full">
                 <div className="grid grid-cols-1 gap-6 px-1 md:grid-cols-2">
                     {arenaListDto.arenas.map((arena) => (
-                        <DebatingArenaCard
+                        <VotingArenaCard
                             key={arena.id}
                             id={arena.id}
                             title={arena.title}
@@ -63,14 +60,13 @@ export default function DebatingArenaList({ memberId }: { memberId: string }) {
                             creatorScore={arena.creatorScore}
                             challengerNickname={arena.challengerNickname}
                             challengerScore={arena.challengerScore}
-                            debateEndDate={new Date(arena.debateEndDate)}
-                            showBadgeIconOnly={false}
+                            voteEndDate={new Date(arena.voteEndDate)}
+                            voteCount={arena.voteCount}
+                            showBadgeIconOnly={true}
                         />
                     ))}
                 </div>
             </div>
-
-            {/* 페이지네이션 */}
             <Pager
                 currentPage={arenaListDto.currentPage}
                 endPage={arenaListDto.endPage}
