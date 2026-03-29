@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TierBadge from "@/app/components/TierBadge";
 import { tiers, Tier } from "@/constants/tiers";
 import { getTier } from "@/utils/GetTiers";
@@ -31,15 +31,6 @@ export default function ProfileTierCard({
 
     const pointsToNext =
         currentTier.max === Infinity ? 0 : Math.max(0, nextTier.min - score);
-
-    useEffect(() => {
-        if (!isOwnProfile) return;
-        if (isHelpOpen) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
-    }, [isHelpOpen, isOwnProfile]);
 
     return (
         <div
