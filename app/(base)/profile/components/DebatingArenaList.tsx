@@ -27,12 +27,6 @@ export default function DebatingArenaList({ memberId }: ArenaListProps) {
         setLoading(loading);
     }, [loading, setLoading]);
 
-    useEffect(() => {
-        if (!loading && arenaListDto?.arenas) {
-            console.log("✅ 진행 중 투기장 개수:", arenaListDto.arenas.length);
-        }
-    }, [loading, arenaListDto]);
-
     if (loading) {
         return <p className="text-sm text-font-200">로딩 중입니다...</p>;
     }
