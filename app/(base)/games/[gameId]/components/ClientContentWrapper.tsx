@@ -53,10 +53,15 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
     const currentComments =
         selectedReviewType === "expert" ? expertComments : userComments;
 
-    const totalItems = currentComments.length;
+    // 상단에 별도 표시되는 내 리뷰는 목록에서 제외해 중복 방지
+    const listComments = myComment
+        ? currentComments.filter((c) => c.id !== myComment.id)
+        : currentComments;
+
+    const totalItems = listComments.length;
     const endPage = Math.ceil(totalItems / itemsPerPage);
     const pages = Array.from({ length: endPage }, (_, i) => i + 1);
-    const commentsForPage = currentComments.slice(
+    const commentsForPage = listComments.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
