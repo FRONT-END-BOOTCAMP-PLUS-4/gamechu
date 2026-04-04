@@ -53,7 +53,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
     const currentComments =
         selectedReviewType === "expert" ? expertComments : userComments;
 
-    // 상단에 별도 표시되는 내 리뷰는 목록에서 제외해 중복 방지
+    // fix: myComment 상단/목록 중복 노출 방지 (#214)
     const listComments = myComment
         ? currentComments.filter((c) => c.id !== myComment.id)
         : currentComments;
@@ -73,6 +73,7 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
                     selected={selectedReviewType}
                     onSelect={(type) => {
                         setSelectedReviewType(type);
+                        setCurrentPage(1);
                     }}
                     expertReviewCount={expertComments.length}
                     expertAvgRating={

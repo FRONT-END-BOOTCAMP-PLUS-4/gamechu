@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import ClientContentWrapper from "../ClientContentWrapper";
 
 // Mock useGameReviews
@@ -36,7 +36,18 @@ vi.mock("../Comment", () => ({
 }));
 
 vi.mock("../ReviewSelector", () => ({
-    default: () => <div data-testid="review-selector" />,
+    default: ({
+        onSelect,
+    }: {
+        onSelect: (type: "expert" | "user") => void;
+    }) => (
+        <div data-testid="review-selector">
+            <button
+                data-testid="user-tab-btn"
+                onClick={() => onSelect("user")}
+            />
+        </div>
+    ),
 }));
 
 vi.mock("@/app/components/Pager", () => ({
@@ -78,6 +89,28 @@ describe("ClientContentWrapper — 중복 리뷰 버그", () => {
         });
 
         render(<ClientContentWrapper gameId={1} viewerId="member-1" />);
+
+        // viewer의 CommentCard는 정확히 1번만 렌더링되어야 한다
+        const myCards = screen.getAllByTestId("comment-card-member-1");
+        expect(myCards).toHaveLength(1);
+    });
+
+    it("user 탭: user 티어 내 리뷰가 상단에 표시될 때 목록에는 중복되지 않는다", () => {
+        // Given: viewer(member-1)의 user 티어 리뷰(score < 3000) + 다른 user 리뷰 2개
+        (useGameReviews as ReturnType<typeof vi.fn>).mockReturnValue({
+            reviews: [
+                makeReview(1, "member-1", 1500), // viewer's review (user tier)
+                makeReview(2, "member-2", 2000),
+                makeReview(3, "member-3", 1000),
+            ],
+            isLoading: false,
+            deleteReview: mockDeleteReview,
+        });
+
+        render(<ClientContentWrapper gameId={1} viewerId="member-1" />);
+
+        // user 탭으로 전환
+        fireEvent.click(screen.getByTestId("user-tab-btn"));
 
         // viewer의 CommentCard는 정확히 1번만 렌더링되어야 한다
         const myCards = screen.getAllByTestId("comment-card-member-1");
