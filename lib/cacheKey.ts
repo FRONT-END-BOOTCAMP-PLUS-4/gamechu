@@ -57,12 +57,12 @@ export function memberProfileKey(nickname: string): string {
 
 export const ARENA_LIST_VERSION_KEY = "arena:list:version";
 
-export interface ArenaListKeyParams {
+type ArenaListKeyParams = {
     currentPage: number;
     status?: number;
     targetMemberId?: string;
     pageSize: number;
-}
+};
 
 export function arenaListKey(
     version: string,

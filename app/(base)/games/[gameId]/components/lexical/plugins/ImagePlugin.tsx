@@ -5,15 +5,15 @@ import { createCommand, COMMAND_PRIORITY_EDITOR, $insertNodes } from "lexical";
 import { useEffect } from "react";
 import { $createImageNode, ImageNode } from "../nodes/ImageNode";
 
-export const INSERT_IMAGE_COMMAND = createCommand<{
+const INSERT_IMAGE_COMMAND = createCommand<{
     src: string;
     alt: string;
     width?: number;
 }>("INSERT_IMAGE_COMMAND");
 
-interface ImagePluginProps {
+type ImagePluginProps = {
     inputRef: React.RefObject<HTMLInputElement | null>;
-}
+};
 
 export function ImagePlugin({ inputRef }: ImagePluginProps) {
     const [editor] = useLexicalComposerContext();
