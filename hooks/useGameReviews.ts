@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetcher } from "@/lib/fetcher";
 import { queryKeys } from "@/lib/queryKeys";
 
-export type Review = {
+type Review = {
     id: number;
     memberId: string;
     profileImage: string;

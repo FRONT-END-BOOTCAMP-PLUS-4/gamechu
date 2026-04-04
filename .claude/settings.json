@@ -1,4 +1,7 @@
 {
+    "env": {
+        "MAX_THINKING_TOKENS": "10000"
+    },
     "permissions": {
         "allow": [
             "Edit:*",
@@ -10,7 +13,7 @@
         "defaultMode": "acceptEdits"
     },
     "enableAllProjectMcpServers": true,
-    "enabledMcpjsonServers": ["mysql", "sequential-thinking", "playwright"],
+    "enabledMcpjsonServers": ["sequential-thinking", "playwright"],
     "hooks": {
         "UserPromptSubmit": [
             {
@@ -68,7 +71,8 @@
         ]
     },
     "enabledPlugins": {
-        "superpowers@claude-plugins-official": true,
-        "frontend-design@claude-plugins-official": true
+        "superpowers@claude-plugins-official": false,
+        "frontend-design@claude-plugins-official": true,
+        "everything-claude-code@everything-claude-code": true
     }
 }

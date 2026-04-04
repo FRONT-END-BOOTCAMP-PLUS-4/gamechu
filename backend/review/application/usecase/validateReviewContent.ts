@@ -1,7 +1,7 @@
 // backend/review/application/usecase/validateReviewContent.ts
 import { z } from "zod";
 
-export const MAX_TEXT_LENGTH = 10_000;
+const MAX_TEXT_LENGTH = 10_000;
 
 const LexicalEditorStateSchema = z.object({
     root: z.object({

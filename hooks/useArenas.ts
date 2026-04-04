@@ -4,7 +4,6 @@ import { fetcher } from "@/lib/fetcher";
 import { queryKeys, type ArenasQueryParams } from "@/lib/queryKeys";
 import type { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
 
-export type { ArenasQueryParams };
 
 export default function useFetchArenas({
     currentPage = 1,
