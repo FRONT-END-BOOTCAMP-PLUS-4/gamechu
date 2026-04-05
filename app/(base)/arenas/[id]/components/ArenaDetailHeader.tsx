@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import useArenaStore from "@/stores/UseArenaStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -10,26 +11,31 @@ export default function ArenaDetailHeader() {
     const arenaDetail = useArenaStore((state) => state.arenaData);
     const router = useRouter();
 
-    const handleCreatorClick = async () => {
+    const { mutate: navigateToProfile } = useMutation({
+        mutationFn: async (nickname: string) => {
+            const myUserId = await getAuthUserId();
+            if (!myUserId) return { nickname, isMine: false };
+            const res = await fetch("/api/member/profile");
+            if (!res.ok) return { nickname, isMine: false };
+            const myProfile = await res.json();
+            return { nickname, isMine: myProfile.nickname === nickname };
+        },
+        onSuccess: ({ nickname, isMine }) => {
+            if (isMine) {
+                router.push("/profile");
+            } else {
+                router.push(`/profile/${encodeURIComponent(nickname)}`);
+            }
+        },
+        onError: (_, nickname) => {
+            router.push(`/profile/${encodeURIComponent(nickname as string)}`);
+        },
+    });
+
+    const handleCreatorClick = () => {
         const nickname = arenaDetail?.creatorName;
         if (!nickname) return;
-        try {
-            const myUserId = await getAuthUserId();
-            if (!myUserId) {
-                router.push(`/profile/${encodeURIComponent(nickname)}`);
-                return;
-            }
-            const res = await fetch("/api/member/profile");
-            if (!res.ok) throw new Error("Failed to fetch my profile");
-            const myProfile = await res.json();
-            if (myProfile.nickname === nickname) {
-                router.push("/profile");
-                return;
-            }
-            router.push(`/profile/${encodeURIComponent(nickname)}`);
-        } catch {
-            router.push(`/profile/${encodeURIComponent(nickname)}`);
-        }
+        navigateToProfile(nickname);
     };
 
     return (

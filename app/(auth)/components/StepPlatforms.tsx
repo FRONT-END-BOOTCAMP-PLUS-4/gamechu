@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
 import { Platform } from "@/prisma/generated";
@@ -11,25 +14,25 @@ type Props = {
 }
 
 export default function StepPlatforms({ onSubmit, onBack }: Props) {
-    const [platforms, setPlatforms] = useState<Platform[]>([]);
-    const [selectedPlatformIds, setSelectedPlatformIds] = useState<number[]>(
-        []
-    );
+    const [selectedPlatformIds, setSelectedPlatformIds] = useState<number[]>([]);
 
-    // ✅ 플랫폼 데이터 가져오기
-    useEffect(() => {
-        const fetchPlatforms = async () => {
-            try {
-                const res = await fetch("/api/platforms");
-                const data: Platform[] = await res.json();
-                setPlatforms(data);
-            } catch {
-                // fetch error — silently ignored; list remains empty
-            }
-        };
+    const { data: platforms = [] } = useQuery<Platform[]>({
+        queryKey: queryKeys.platforms(),
+        queryFn: () => fetcher("/api/platforms"),
+    });
 
-        fetchPlatforms();
-    }, []);
+    const { mutate: savePlatforms } = useMutation({
+        mutationFn: () =>
+            fetch("/api/preferred-platforms", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ platformIds: selectedPlatformIds }),
+            }).then((res) => {
+                if (!res.ok) throw new Error("선호 플랫폼 저장에 실패했습니다.");
+            }),
+        onSuccess: () => onSubmit(),
+        onError: () => alert("선호 플랫폼 저장에 실패했습니다."),
+    });
 
     const togglePlatform = (platformId: number) => {
         setSelectedPlatformIds((prev) =>
@@ -39,31 +42,12 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
         );
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
         if (selectedPlatformIds.length === 0) {
             onSubmit();
             return;
         }
-
-        try {
-            const res = await fetch("/api/preferred-platforms", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    platformIds: selectedPlatformIds,
-                }),
-            });
-
-            if (res.ok) {
-                onSubmit();
-            } else {
-                alert("선호 플랫폼 저장에 실패했습니다.");
-            }
-        } catch {
-            alert("오류가 발생했습니다.");
-        }
+        savePlatforms();
     };
 
     return (

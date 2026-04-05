@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Button from "@/app/components/Button";
 import Lottie from "lottie-react";
@@ -63,6 +64,35 @@ export default function CommentCard({
     const [isOverflowing, setIsOverflowing] = useState(false);
     const commentRef = useRef<HTMLDivElement>(null);
 
+    const { mutate: toggleLike } = useMutation({
+        mutationFn: () =>
+            fetch(`/api/member/review-likes/${id}/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ memberId: viewerId }),
+            }).then(async (res) => {
+                if (!res.ok) throw new Error("좋아요 처리 실패");
+            }),
+        onMutate: () => {
+            const newLikedState = !isLiked;
+            setIsLiked(newLikedState);
+            setLikeCount((prev) => prev + (newLikedState ? 1 : -1));
+            if (newLikedState) {
+                setAnimationKey((prev) => prev + 1);
+                setAnimationDone(false);
+            }
+            setIsLoading(true);
+            return { previousLiked: isLiked };
+        },
+        onError: (_, __, context) => {
+            if (context) {
+                setIsLiked(context.previousLiked);
+                setLikeCount((prev) => prev + (context.previousLiked ? 1 : -1));
+            }
+        },
+        onSettled: () => setIsLoading(false),
+    });
+
     //실제 콘텐츠 높이 저장을 위한 useEffect
     useEffect(() => {
         const el = commentRef.current;
@@ -100,7 +130,7 @@ export default function CommentCard({
 
     const toggleMenu = () => setShowMenu((prev) => !prev);
 
-    const handleLike = async () => {
+    const handleLike = () => {
         if (!viewerId) {
             setToast({
                 show: true,
@@ -125,36 +155,7 @@ export default function CommentCard({
         }
 
         if (isLoading) return;
-
-        setIsLoading(true);
-        const newLikedState = !isLiked;
-        setIsLiked(newLikedState);
-        setLikeCount((prev) => prev + (newLikedState ? 1 : -1));
-
-        if (newLikedState) {
-            setAnimationKey((prev) => prev + 1);
-            setAnimationDone(false);
-        }
-
-        try {
-            const res = await fetch(`/api/member/review-likes/${id}/`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ memberId: viewerId }),
-            });
-
-            await res.json();
-
-            if (!res.ok) {
-                setIsLiked(!newLikedState);
-                setLikeCount((prev) => prev + (newLikedState ? -1 : 1));
-            }
-        } catch {
-            setIsLiked(!newLikedState);
-            setLikeCount((prev) => prev + (newLikedState ? -1 : 1));
-        } finally {
-            setIsLoading(false);
-        }
+        toggleLike();
     };
 
     return (

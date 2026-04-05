@@ -4,85 +4,75 @@ import ArenaDetailVote from "./components/ArenaDetailVote";
 import ArenaDetailHeader from "./components/ArenaDetailHeader";
 import ArenaDetailInfo from "./components/ArenaDetailInfo";
 import ArenaDetailContainer from "./components/ArenaDetailContainer";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 import useArenaStore from "@/stores/UseArenaStore";
 import { useArenaAutoStatusDetail } from "@/hooks/useArenaAutoStatusDetail";
 import { useParams } from "next/navigation";
-import { useLoadingStore } from "@/stores/LoadingStore"; // ✅ 전역 로딩 스토어 가져오기
+import { useLoadingStore } from "@/stores/LoadingStore";
 
 export default function ArenaDetailPage() {
     const setGlobalArenaData = useArenaStore((state) => state.setArenaData);
     const clearGlobalArenaData = useArenaStore((state) => state.clearArenaData);
-    const { setLoading } = useLoadingStore(); // ✅ 전역 로딩 제어 함수
+    const { setLoading } = useLoadingStore();
     const idParams = useParams().id;
     const arenaId = Number(idParams);
 
-    useArenaAutoStatusDetail({
-        onStatusUpdate: () => {},
+    useArenaAutoStatusDetail({ onStatusUpdate: () => {} });
+
+    const { data, isLoading, isError } = useQuery<ArenaDetailDto>({
+        queryKey: queryKeys.arenaDetail(arenaId),
+        queryFn: () => fetcher(`/api/arenas/${arenaId}`),
+        enabled: !!arenaId,
     });
 
-    const [notFound, setNotFound] = useState(false);
+    useEffect(() => {
+        setLoading(isLoading);
+    }, [isLoading, setLoading]);
 
     useEffect(() => {
-        const fetchArenaDetail = async () => {
-            setLoading(true); // ✅ 로딩 시작
-            try {
-                const res = await fetch(`/api/arenas/${arenaId}`, {
-                    method: "GET",
-                    cache: "no-store",
-                });
-
-                if (!res.ok) {
-                    setNotFound(true);
-                    return;
-                }
-
-                const data: ArenaDetailDto = await res.json();
-                setGlobalArenaData(
-                    new ArenaDetailDto(
-                        data.id,
-                        data.creatorId,
-                        data.creatorName,
-                        data.creatorScore,
-                        data.creatorImageUrl,
-                        data.challengerId,
-                        data.challengerName,
-                        data.challengerScore,
-                        data.challengerImageUrl,
-                        data.title,
-                        data.description,
-                        new Date(data.startDate),
-                        new Date(data.endChatting),
-                        new Date(data.endVote),
-                        data.status,
-                        data.voteCount,
-                        data.leftCount,
-                        data.rightCount,
-                        data.leftPercent,
-                        data.rightPercent
-                    )
-                );
-            } catch {
-            } finally {
-                setLoading(false); // ✅ 로딩 종료
-            }
-        };
-
-        fetchArenaDetail();
-
+        if (data) {
+            setGlobalArenaData(
+                new ArenaDetailDto(
+                    data.id,
+                    data.creatorId,
+                    data.creatorName,
+                    data.creatorScore,
+                    data.creatorImageUrl,
+                    data.challengerId,
+                    data.challengerName,
+                    data.challengerScore,
+                    data.challengerImageUrl,
+                    data.title,
+                    data.description,
+                    new Date(data.startDate),
+                    new Date(data.endChatting),
+                    new Date(data.endVote),
+                    data.status,
+                    data.voteCount,
+                    data.leftCount,
+                    data.rightCount,
+                    data.leftPercent,
+                    data.rightPercent
+                )
+            );
+        }
         return () => {
             clearGlobalArenaData();
         };
-    }, [arenaId, setGlobalArenaData, clearGlobalArenaData, setLoading]);
+    }, [data, setGlobalArenaData, clearGlobalArenaData]);
 
-    if (notFound) {
+    if (isError) {
         return (
             <div className="flex h-screen flex-col items-center justify-center overflow-hidden bg-background-400">
                 존재하지 않는 투기장입니다.
             </div>
         );
     }
+
     return (
         <div className="px-4 py-10 sm:px-8 md:px-12 lg:px-16">
             {/* 반응형 레이아웃: 기본 column, 큰 화면에서 row */}

@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
 import { Genre } from "@/prisma/generated";
@@ -11,23 +14,25 @@ type Props = {
 }
 
 export default function StepGenres({ onNext, onBack }: Props) {
-    const [genres, setGenres] = useState<Genre[]>([]);
     const [selectedGenreIds, setSelectedGenreIds] = useState<number[]>([]);
 
-    // ✅ 장르 목록 불러오기
-    useEffect(() => {
-        const fetchGenres = async () => {
-            try {
-                const res = await fetch("/api/genres");
-                const data: Genre[] = await res.json();
-                setGenres(data);
-            } catch {
-                // fetch error — silently ignored; list remains empty
-            }
-        };
+    const { data: genres = [] } = useQuery<Genre[]>({
+        queryKey: queryKeys.genres(),
+        queryFn: () => fetcher("/api/genres"),
+    });
 
-        fetchGenres();
-    }, []);
+    const { mutate: saveGenres } = useMutation({
+        mutationFn: () =>
+            fetch("/api/preferred-genres", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ genreIds: selectedGenreIds }),
+            }).then((res) => {
+                if (!res.ok) throw new Error("선호 장르 저장에 실패했습니다.");
+            }),
+        onSuccess: () => onNext(),
+        onError: () => alert("선호 장르 저장에 실패했습니다."),
+    });
 
     const toggleGenre = (genreId: number) => {
         setSelectedGenreIds((prev) =>
@@ -37,32 +42,12 @@ export default function StepGenres({ onNext, onBack }: Props) {
         );
     };
 
-    const handleNext = async () => {
-        // 선택 안 했으면 그냥 다음
+    const handleNext = () => {
         if (selectedGenreIds.length === 0) {
             onNext();
             return;
         }
-
-        try {
-            const res = await fetch("/api/preferred-genres", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    genreIds: selectedGenreIds, // ✅ memberId 제거
-                }),
-            });
-
-            if (res.ok) {
-                onNext();
-            } else {
-                alert("선호 장르 저장에 실패했습니다.");
-            }
-        } catch {
-            alert("오류가 발생했습니다.");
-        }
+        saveGenres();
     };
 
     return (

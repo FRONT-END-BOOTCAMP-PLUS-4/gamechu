@@ -8,6 +8,16 @@
  * the dependency direction clean: lib/ must not import from hooks/.
  */
 
+export type GamesQueryParams = {
+    page: number;
+    size: number;
+    genreId?: number;
+    themeId?: number;
+    platformId?: number;
+    keyword?: string;
+    sort?: string;
+};
+
 export type ArenasQueryParams = {
     currentPage?: number;
     status: number;
@@ -50,6 +60,48 @@ export const queryKeys = {
      * unnecessary re-fetches from new array references on each render.
      */
     voteList: (sortedArenaIds: number[]) => ["votes", sortedArenaIds] as const,
+
+    /** All genres list. */
+    genres: () => ["genres"] as const,
+
+    /** All themes list. */
+    themes: () => ["themes"] as const,
+
+    /** All platforms list. */
+    platforms: () => ["platforms"] as const,
+
+    /** Game filter metadata (genres + themes + platforms combined). */
+    gameMeta: () => ["gameMeta"] as const,
+
+    /** Paginated game list with filters. */
+    games: (params: GamesQueryParams) => ["games", params] as const,
+
+    /** Current user's own profile. */
+    myProfile: () => ["myProfile"] as const,
+
+    /** Another user's profile by nickname. */
+    userProfile: (nickname: string) => ["userProfile", nickname] as const,
+
+    /** Current user's own reviews. */
+    myReviews: () => ["myReviews"] as const,
+
+    /** Reviews by a specific member. */
+    reviewsByMember: (memberId: string) => ["reviewsByMember", memberId] as const,
+
+    /** Current user's wishlists (paginated). */
+    myWishlists: (page: number) => ["myWishlists", page] as const,
+
+    /** Score records for current user. */
+    scoreRecords: () => ["scoreRecords"] as const,
+
+    /** Arena detail by ID. */
+    arenaDetail: (arenaId: number) => ["arenaDetail", arenaId] as const,
+
+    /** Nickname availability check (lazy — use with enabled: false). */
+    nicknameCheck: (nickname: string) => ["nicknameCheck", nickname] as const,
+
+    /** Email availability check (lazy — use with enabled: false). */
+    emailCheck: (email: string) => ["emailCheck", email] as const,
 
     /** Reviews for a game page. */
     reviews: (gameId: number) => ["reviews", gameId] as const,
