@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { cn } from "@/utils/tailwindUtil";
 import { Search, X } from "lucide-react";
 
-interface SearchBarProps {
+type SearchBarProps = {
     onSearch: (value: string) => void;
 }
 

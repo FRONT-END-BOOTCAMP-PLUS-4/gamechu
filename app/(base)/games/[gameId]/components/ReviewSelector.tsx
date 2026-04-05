@@ -6,7 +6,7 @@ import Lottie from "lottie-react";
 import Rio from "@/public/rio.json";
 import { cn } from "@/utils/tailwindUtil";
 
-interface ReviewSelectorProps {
+type ReviewSelectorProps = {
     selected: "expert" | "user";
     onSelect: (type: "expert" | "user") => void;
     expertReviewCount: number;

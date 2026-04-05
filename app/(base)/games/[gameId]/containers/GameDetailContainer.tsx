@@ -7,7 +7,7 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import GameHeaderInfoSection from "../components/GameHeaderInfoSection";
 
-interface Props {
+type Props = {
     gameId: number;
 }
 

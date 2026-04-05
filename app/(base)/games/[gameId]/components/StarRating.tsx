@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/utils/tailwindUtil";
 
-interface StarRatingProps {
+type StarRatingProps = {
     value: number;
     onChange?: (value: number) => void;
     readOnly?: boolean;

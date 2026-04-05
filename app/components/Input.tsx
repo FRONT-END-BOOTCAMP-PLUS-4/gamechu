@@ -2,13 +2,13 @@
 
 import { InputHTMLAttributes, ReactElement } from "react";
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+type Props = InputHTMLAttributes<HTMLInputElement> & {
     hasError?: boolean;
     renderRight?: ReactElement;
     variant?: "outlined" | "filled";
     inputClassName?: string;
     className?: string;
-}
+};
 
 export default function Input({
     hasError = false,

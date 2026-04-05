@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import GameFilter from "./GameFilter";
 import { X } from "lucide-react";
 
-interface GameFilterWrapperProps {
+type GameFilterWrapperProps = {
     genres: { id: number; name: string }[];
     themes: { id: number; name: string }[];
     platforms: { id: number; name: string }[];

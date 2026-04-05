@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
-interface GlobalToastProps {
+type GlobalToastProps = {
     show: boolean;
     status: "success" | "error" | "info";
     message: string;
@@ -16,20 +16,20 @@ export default function Toast({
     message,
     duration = 3000,
 }: GlobalToastProps) {
-    const [visible, setVisible] = useState(show);
+    const [isVisible, setIsVisible] = useState(show);
 
     useEffect(() => {
         if (!show) return;
-        setVisible(true);
+        setIsVisible(true);
         const timer = setTimeout(() => {
-            setVisible(false);
+            setIsVisible(false);
         }, duration);
         return () => clearTimeout(timer);
     }, [show, duration]);
 
     return (
         <AnimatePresence>
-            {visible && (
+            {isVisible && (
                 <motion.div
                     key="global-toast"
                     initial={{ opacity: 0, y: 50 }}

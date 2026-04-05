@@ -10,7 +10,7 @@ import Pager from "@/app/components/Pager";
 import { useGameReviews } from "@/hooks/useGameReviews";
 import { queryKeys } from "@/lib/queryKeys";
 
-interface Props {
+type Props = {
     gameId: number;
     viewerId: string | null;
 }

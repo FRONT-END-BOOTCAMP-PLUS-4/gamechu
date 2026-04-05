@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { ReadOnlyReview } from "@/app/(base)/games/[gameId]/components/lexical/ReadOnlyReview";
 
-export interface MemberReviewItemProps {
+export type MemberReviewItemProps = {
     id: number;
     gameId: number;
     content: string;

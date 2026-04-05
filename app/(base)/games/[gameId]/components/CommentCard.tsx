@@ -13,7 +13,7 @@ import { ChevronDown, ChevronUp, MoreVertical } from "lucide-react";
 import UserProfileComponent from "@/app/components/UserProfileComponent";
 import { ReadOnlyReview } from "./lexical/ReadOnlyReview";
 
-interface CommentCardProps {
+type CommentCardProps = {
     id: number;
     profileImage: string;
     nickname: string;
@@ -59,7 +59,7 @@ export default function CommentCard({
         status: "info" as "success" | "error" | "info",
     });
 
-    const [expanded, setExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
     const [isOverflowing, setIsOverflowing] = useState(false);
     const commentRef = useRef<HTMLDivElement>(null);
 
@@ -229,8 +229,8 @@ export default function CommentCard({
                     ref={commentRef}
                     initial={false}
                     animate={{
-                        maxHeight: expanded ? `${contentHeight}px` : "150px",
-                        opacity: expanded ? 1 : 0.9,
+                        maxHeight: isExpanded ? `${contentHeight}px` : "150px",
+                        opacity: isExpanded ? 1 : 0.9,
                     }}
                     transition={{ duration: 0.2, ease: "easeInOut" }}
                     className="overflow-hidden text-sm text-font-100 lg:text-body"
@@ -239,7 +239,7 @@ export default function CommentCard({
                 </motion.div>
                 {/* 흐림 효과 (그라데이션): 넘칠 때(isOverflowing)이면서 접혀있을 때만 표시 */}
                 <AnimatePresence>
-                    {isOverflowing && !expanded && (
+                    {isOverflowing && !isExpanded && (
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -299,12 +299,12 @@ export default function CommentCard({
             {isOverflowing && (
                 <div className="absolute bottom-2 right-4 flex items-center">
                     <button
-                        onClick={() => setExpanded(!expanded)}
+                        onClick={() => setIsExpanded(!isExpanded)}
                         className="flex items-center gap-1.5 rounded-lg bg-background-300/70 px-3 py-2 text-sm font-bold text-font-200 transition-all hover:bg-background-300 hover:text-font-100 active:scale-95"
                     >
-                        <span>{expanded ? "접기" : "더보기"}</span>
+                        <span>{isExpanded ? "접기" : "더보기"}</span>
 
-                        {expanded ? (
+                        {isExpanded ? (
                             <ChevronUp size={18} strokeWidth={2} />
                         ) : (
                             <ChevronDown size={18} strokeWidth={2} />

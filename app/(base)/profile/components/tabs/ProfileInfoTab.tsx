@@ -5,7 +5,7 @@ import Image from "next/image";
 import Input from "@/app/components/Input";
 import Button from "@/app/components/Button";
 
-interface Props {
+type Props = {
     nickname: string;
     email: string;
     password: string;

@@ -7,12 +7,12 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function ArenaDetailRecruiting() {
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const arenaDetail = useArenaStore((state) => state.arenaData);
 
     const handleJoin = async () => {
-        setLoading(true);
+        setIsLoading(true);
         setError(null);
         try {
             const memberId = await getAuthUserId(); // 🔐 로그인된 유저 ID 가져오기
@@ -53,7 +53,7 @@ export default function ArenaDetailRecruiting() {
             }
             setError(errorMessage);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -97,11 +97,11 @@ export default function ArenaDetailRecruiting() {
 
                 <div className="w-full transition-all hover:scale-105 active:scale-95">
                     <Button
-                        label={loading ? "참가 처리 중..." : "도전하기"}
+                        label={isLoading ? "참가 처리 중..." : "도전하기"}
                         type="purple"
                         size="large"
                         onClick={handleJoin}
-                        disabled={loading}
+                        disabled={isLoading}
                     />
                 </div>
 

@@ -7,7 +7,7 @@ import RecruitingArenaCard from "./RecruitingArenaCard";
 import useArenas from "@/hooks/useArenas";
 import { useEffect } from "react";
 
-interface Props {
+type Props = {
     onLoaded?: () => void; // ✅ 로딩 완료 시 호출되는 콜백
 }
 

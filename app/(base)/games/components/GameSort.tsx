@@ -7,7 +7,7 @@ interface SortOption {
     value: "latest" | "popular" | "rating";
 }
 
-interface Props {
+type Props = {
     current: "latest" | "popular" | "rating";
     onChange: (value: "latest" | "popular" | "rating") => void;
 }

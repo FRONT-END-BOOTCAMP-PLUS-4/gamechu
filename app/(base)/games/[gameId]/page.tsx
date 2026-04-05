@@ -1,6 +1,6 @@
 import GameDetailContainer from "./containers/GameDetailContainer";
 
-interface PageProps {
+type PageProps = {
     params: Promise<{ gameId: string }>;
 }
 

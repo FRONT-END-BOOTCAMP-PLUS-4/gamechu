@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Button from "./Button";
 
-interface LandingCardProps {
+type LandingCardProps = {
     href: string;
     iconSrc: string;
     iconAlt: string;
