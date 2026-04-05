@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { UpdateReviewUsecase } from "../UpdateReviewUsecase";
-import { MockReviewRepository } from "@/tests/mocks/MockReviewRepository";
+import { createMockReviewRepository } from "@/tests/mocks/createMockReviewRepository";
 import { ReviewDto } from "../dto/ReviewDto";
 
 const validLexicalJson = JSON.stringify({
@@ -55,7 +55,7 @@ const base64ImageLexicalJson = JSON.stringify({
 
 describe("UpdateReviewUsecase", () => {
     it("delegates to repository.update with valid Lexical JSON", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const updatedDto = {
             id: 1,
             content: validLexicalJson,
@@ -77,7 +77,7 @@ describe("UpdateReviewUsecase", () => {
     });
 
     it("error: XSS payload (non-JSON) throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new UpdateReviewUsecase(repo);
         await expect(
             usecase.execute(1, {
@@ -88,7 +88,7 @@ describe("UpdateReviewUsecase", () => {
     });
 
     it("error: empty string throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new UpdateReviewUsecase(repo);
         await expect(
             usecase.execute(1, {
@@ -99,7 +99,7 @@ describe("UpdateReviewUsecase", () => {
     });
 
     it("error: content exceeding 500KB throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new UpdateReviewUsecase(repo);
         const largeContent = "x".repeat(500_001);
         await expect(
@@ -111,7 +111,7 @@ describe("UpdateReviewUsecase", () => {
     });
 
     it("error: empty Lexical root (no text) throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new UpdateReviewUsecase(repo);
         await expect(
             usecase.execute(1, { content: emptyLexicalJson, rating: 3 })
@@ -119,7 +119,7 @@ describe("UpdateReviewUsecase", () => {
     });
 
     it("error: base64 image src throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new UpdateReviewUsecase(repo);
         await expect(
             usecase.execute(1, { content: base64ImageLexicalJson, rating: 3 })
@@ -127,7 +127,7 @@ describe("UpdateReviewUsecase", () => {
     });
 
     it("error: invalid JSON structure (missing root) throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new UpdateReviewUsecase(repo);
         await expect(
             usecase.execute(1, {
@@ -138,7 +138,7 @@ describe("UpdateReviewUsecase", () => {
     });
 
     it("error: text content exceeding 10,000 chars throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new UpdateReviewUsecase(repo);
         const longText = "가".repeat(10_001);
         const content = JSON.stringify({

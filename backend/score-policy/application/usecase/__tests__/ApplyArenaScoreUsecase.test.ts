@@ -1,13 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
 import { ApplyArenaScoreUsecase } from "../ApplyArenaScoreUsecase";
-import { MockScoreRecordRepository } from "@/tests/mocks/MockScoreRecordRepository";
+import { createMockScoreRecordRepository } from "@/tests/mocks/createMockScoreRecordRepository";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 
 describe("ApplyArenaScoreUsecase", () => {
     function setup() {
         const scorePolicy = new ScorePolicy();
         const memberRepo = { incrementScore: vi.fn().mockResolvedValue(undefined) };
-        const scoreRecordRepo = MockScoreRecordRepository();
+        const scoreRecordRepo = createMockScoreRecordRepository();
         vi.mocked(scoreRecordRepo.createRecord).mockResolvedValue(undefined);
         const usecase = new ApplyArenaScoreUsecase(
             scorePolicy,

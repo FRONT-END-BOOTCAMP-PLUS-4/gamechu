@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { SignUpUsecase } from "../SignUpUsecase";
-import { MockMemberRepository } from "@/tests/mocks/MockMemberRepository";
+import { createMockMemberRepository } from "@/tests/mocks/createMockMemberRepository";
 import { Member } from "@/prisma/generated";
 import { SignUpRequestDto } from "../dto/SignUpRequestDto";
 
@@ -19,7 +19,7 @@ const mockMember = {
 
 describe("SignUpUsecase", () => {
     it("happy path: new email creates member", async () => {
-        const repo = MockMemberRepository();
+        const repo = createMockMemberRepository();
         vi.mocked(repo.findByEmail).mockResolvedValue(null);
         vi.mocked(repo.create).mockResolvedValue(mockMember);
 
@@ -37,7 +37,7 @@ describe("SignUpUsecase", () => {
     });
 
     it("error: duplicate email throws", async () => {
-        const repo = MockMemberRepository();
+        const repo = createMockMemberRepository();
         vi.mocked(repo.findByEmail).mockResolvedValue(mockMember);
 
         const usecase = new SignUpUsecase(repo);

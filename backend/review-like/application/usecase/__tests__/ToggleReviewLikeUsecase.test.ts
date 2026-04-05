@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { ToggleReviewLikeUsecase } from "../ToggleReviewLikeUsecase";
-import { MockReviewLikeRepository } from "@/tests/mocks/MockReviewLikeRepository";
-import { MockReviewRepository } from "@/tests/mocks/MockReviewRepository";
+import { createMockReviewLikeRepository } from "@/tests/mocks/createMockReviewLikeRepository";
+import { createMockReviewRepository } from "@/tests/mocks/createMockReviewRepository";
 import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
 import { ReviewDto } from "@/backend/review/application/usecase/dto/ReviewDto";
 
@@ -26,8 +26,8 @@ const mockReview: ReviewDto = {
 
 describe("ToggleReviewLikeUsecase", () => {
     it("like path: isLiked returns false → like called, score execute called with LIKE, returns { liked: true }", async () => {
-        const likeRepo = MockReviewLikeRepository();
-        const reviewRepo = MockReviewRepository();
+        const likeRepo = createMockReviewLikeRepository();
+        const reviewRepo = createMockReviewRepository();
         const applyScore = makeApplyReviewScoreMock();
 
         vi.mocked(likeRepo.isLiked).mockResolvedValue(false);
@@ -52,8 +52,8 @@ describe("ToggleReviewLikeUsecase", () => {
     });
 
     it("unlike path: isLiked returns true → unlike called, score execute called with UNLIKE, returns { liked: false }", async () => {
-        const likeRepo = MockReviewLikeRepository();
-        const reviewRepo = MockReviewRepository();
+        const likeRepo = createMockReviewLikeRepository();
+        const reviewRepo = createMockReviewRepository();
         const applyScore = makeApplyReviewScoreMock();
 
         vi.mocked(likeRepo.isLiked).mockResolvedValue(true);
@@ -78,8 +78,8 @@ describe("ToggleReviewLikeUsecase", () => {
     });
 
     it("not found: reviewRepo.findById returns null → throws '리뷰 없음'", async () => {
-        const likeRepo = MockReviewLikeRepository();
-        const reviewRepo = MockReviewRepository();
+        const likeRepo = createMockReviewLikeRepository();
+        const reviewRepo = createMockReviewRepository();
         const applyScore = makeApplyReviewScoreMock();
 
         vi.mocked(likeRepo.isLiked).mockResolvedValue(false);

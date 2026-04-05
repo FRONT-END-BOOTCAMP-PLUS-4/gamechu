@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { CreateReviewUsecase } from "../CreateReviewUsecase";
-import { MockReviewRepository } from "@/tests/mocks/MockReviewRepository";
+import { createMockReviewRepository } from "@/tests/mocks/createMockReviewRepository";
 import { ReviewDto } from "../dto/ReviewDto";
 import { ReviewByMembersDto } from "../dto/ReviewByMembersDto";
 
@@ -71,7 +71,7 @@ const mockReviewDto = {
 
 describe("CreateReviewUsecase", () => {
     it("happy path: valid Lexical JSON creates review", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         vi.mocked(repo.findByMemberId).mockResolvedValue([]);
         vi.mocked(repo.create).mockResolvedValue(mockReviewDto);
 
@@ -91,7 +91,7 @@ describe("CreateReviewUsecase", () => {
     });
 
     it("error: duplicate review for same game throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         vi.mocked(repo.findByMemberId).mockResolvedValue([
             { gameId: 10, id: 99, memberId: "m1" } as unknown as ReviewByMembersDto,
         ]);
@@ -107,7 +107,7 @@ describe("CreateReviewUsecase", () => {
     });
 
     it("error: XSS payload (non-JSON) throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new CreateReviewUsecase(repo);
         await expect(
             usecase.execute("m1", {
@@ -119,7 +119,7 @@ describe("CreateReviewUsecase", () => {
     });
 
     it("error: empty string throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new CreateReviewUsecase(repo);
         await expect(
             usecase.execute("m1", {
@@ -131,7 +131,7 @@ describe("CreateReviewUsecase", () => {
     });
 
     it("error: content exceeding 500KB throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new CreateReviewUsecase(repo);
         const largeContent = "x".repeat(500_001);
         await expect(
@@ -144,7 +144,7 @@ describe("CreateReviewUsecase", () => {
     });
 
     it("error: empty Lexical root (no text) throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new CreateReviewUsecase(repo);
         await expect(
             usecase.execute("m1", { gameId: 10, content: emptyLexicalJson, rating: 3 })
@@ -152,7 +152,7 @@ describe("CreateReviewUsecase", () => {
     });
 
     it("error: base64 image src throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new CreateReviewUsecase(repo);
         await expect(
             usecase.execute("m1", { gameId: 10, content: base64ImageLexicalJson, rating: 3 })
@@ -160,7 +160,7 @@ describe("CreateReviewUsecase", () => {
     });
 
     it("error: invalid JSON structure (missing root) throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new CreateReviewUsecase(repo);
         await expect(
             usecase.execute("m1", {
@@ -172,7 +172,7 @@ describe("CreateReviewUsecase", () => {
     });
 
     it("error: text content exceeding 10,000 chars throws", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const usecase = new CreateReviewUsecase(repo);
         const longText = "가".repeat(10_001);
         const content = JSON.stringify({

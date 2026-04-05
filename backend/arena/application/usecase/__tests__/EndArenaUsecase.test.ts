@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { EndArenaUsecase } from "../EndArenaUsecase";
-import { MockArenaRepository } from "@/tests/mocks/MockArenaRepository";
-import { MockVoteRepository } from "@/tests/mocks/MockVoteRepository";
+import { createMockArenaRepository } from "@/tests/mocks/createMockArenaRepository";
+import { createMockVoteRepository } from "@/tests/mocks/createMockVoteRepository";
 import { Arena } from "@/prisma/generated";
 import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
 
@@ -14,8 +14,8 @@ const challengerId = "challenger-1";
 
 describe("EndArenaUsecase", () => {
     it("WIN case: applyArenaScoreUsecase called with winner's memberId and WIN result", async () => {
-        const arenaRepo = MockArenaRepository();
-        const voteRepo = MockVoteRepository();
+        const arenaRepo = createMockArenaRepository();
+        const voteRepo = createMockVoteRepository();
         const applyScore = makeApplyArenaScoreMock();
 
         vi.mocked(arenaRepo.findById).mockResolvedValue({
@@ -43,8 +43,8 @@ describe("EndArenaUsecase", () => {
     });
 
     it("DRAW case: applyArenaScoreUsecase called twice with DRAW", async () => {
-        const arenaRepo = MockArenaRepository();
-        const voteRepo = MockVoteRepository();
+        const arenaRepo = createMockArenaRepository();
+        const voteRepo = createMockVoteRepository();
         const applyScore = makeApplyArenaScoreMock();
 
         vi.mocked(arenaRepo.findById).mockResolvedValue({
@@ -71,8 +71,8 @@ describe("EndArenaUsecase", () => {
     });
 
     it("CANCEL case (no challenger): applyArenaScoreUsecase called once with CANCEL", async () => {
-        const arenaRepo = MockArenaRepository();
-        const voteRepo = MockVoteRepository();
+        const arenaRepo = createMockArenaRepository();
+        const voteRepo = createMockVoteRepository();
         const applyScore = makeApplyArenaScoreMock();
 
         vi.mocked(arenaRepo.findById).mockResolvedValue({

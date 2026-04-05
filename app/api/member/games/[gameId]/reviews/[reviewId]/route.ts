@@ -55,8 +55,8 @@ export async function PATCH(
         return NextResponse.json(result);
     } catch (err) {
         log.error({ userId, err }, "리뷰 수정 실패");
-        const message = err instanceof Error ? err.message : "알 수 없는 오류 발생";
-        return errorResponse(message, 500);
+        const message = err instanceof Error ? err.message : "Internal Server Error";
+        return errorResponse(message, 400);
     }
 }
 

@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
 import { LoginUsecase } from "../LoginUsecase";
-import { MockMemberRepository } from "@/tests/mocks/MockMemberRepository";
+import { createMockMemberRepository } from "@/tests/mocks/createMockMemberRepository";
 import { hash } from "bcryptjs";
 import { Member } from "@/prisma/generated";
 
 describe("LoginUsecase", () => {
     it("happy path: valid credentials returns LoginResponseDto", async () => {
-        const repo = MockMemberRepository();
+        const repo = createMockMemberRepository();
         const hashedPassword = await hash("correct-password", 10);
         vi.mocked(repo.findByEmail).mockResolvedValue({
             id: "member-1",
@@ -32,7 +32,7 @@ describe("LoginUsecase", () => {
     });
 
     it("error: invalid password returns null", async () => {
-        const repo = MockMemberRepository();
+        const repo = createMockMemberRepository();
         const hashedPassword = await hash("correct-password", 10);
         vi.mocked(repo.findByEmail).mockResolvedValue({
             id: "member-1",
@@ -57,7 +57,7 @@ describe("LoginUsecase", () => {
     });
 
     it("error: member not found returns null", async () => {
-        const repo = MockMemberRepository();
+        const repo = createMockMemberRepository();
         vi.mocked(repo.findByEmail).mockResolvedValue(null);
 
         const usecase = new LoginUsecase(repo);

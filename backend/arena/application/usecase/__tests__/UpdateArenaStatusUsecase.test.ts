@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { UpdateArenaStatusUsecase } from "../UpdateArenaStatusUsecase";
-import { MockArenaRepository } from "@/tests/mocks/MockArenaRepository";
+import { createMockArenaRepository } from "@/tests/mocks/createMockArenaRepository";
 import { Arena } from "@/prisma/generated";
 import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
 
@@ -10,7 +10,7 @@ function makeApplyArenaScoreMock() {
 
 describe("UpdateArenaStatusUsecase", () => {
     it("status 2 transition: updateChallengerAndStatus called and score applied for challenger", async () => {
-        const arenaRepo = MockArenaRepository();
+        const arenaRepo = createMockArenaRepository();
         const applyScore = makeApplyArenaScoreMock();
 
         vi.mocked(arenaRepo.findById).mockResolvedValue({
@@ -45,7 +45,7 @@ describe("UpdateArenaStatusUsecase", () => {
     });
 
     it("non-2 status: updateStatus called without score", async () => {
-        const arenaRepo = MockArenaRepository();
+        const arenaRepo = createMockArenaRepository();
         const applyScore = makeApplyArenaScoreMock();
 
         vi.mocked(arenaRepo.findById).mockResolvedValue({
@@ -67,7 +67,7 @@ describe("UpdateArenaStatusUsecase", () => {
     });
 
     it("arena not found throws error", async () => {
-        const arenaRepo = MockArenaRepository();
+        const arenaRepo = createMockArenaRepository();
         const applyScore = makeApplyArenaScoreMock();
 
         vi.mocked(arenaRepo.findById).mockResolvedValue(null);

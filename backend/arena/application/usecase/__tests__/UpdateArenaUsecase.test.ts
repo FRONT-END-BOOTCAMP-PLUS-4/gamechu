@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { UpdateArenaUsecase } from "../UpdateArenaUsecase";
-import { MockArenaRepository } from "@/tests/mocks/MockArenaRepository";
+import { createMockArenaRepository } from "@/tests/mocks/createMockArenaRepository";
 import { Arena } from "@/prisma/generated";
 
 const makeArena = (overrides: Partial<Arena> = {}): Arena => ({
@@ -16,7 +16,7 @@ const makeArena = (overrides: Partial<Arena> = {}): Arena => ({
 
 describe("UpdateArenaUsecase", () => {
     it("not found: findById returns null → throws 'Arena not found'", async () => {
-        const arenaRepo = MockArenaRepository();
+        const arenaRepo = createMockArenaRepository();
         vi.mocked(arenaRepo.findById).mockResolvedValue(null);
 
         const usecase = new UpdateArenaUsecase(arenaRepo);
@@ -24,7 +24,7 @@ describe("UpdateArenaUsecase", () => {
     });
 
     it("status update: status in dto → arena.status mutated, update called with modified arena", async () => {
-        const arenaRepo = MockArenaRepository();
+        const arenaRepo = createMockArenaRepository();
         const arena = makeArena({ status: 1 });
         vi.mocked(arenaRepo.findById).mockResolvedValue(arena);
         vi.mocked(arenaRepo.update).mockResolvedValue({ ...arena, status: 2 });
@@ -38,7 +38,7 @@ describe("UpdateArenaUsecase", () => {
     });
 
     it("no status in dto: arena.status unchanged, update still called", async () => {
-        const arenaRepo = MockArenaRepository();
+        const arenaRepo = createMockArenaRepository();
         const arena = makeArena({ status: 1 });
         vi.mocked(arenaRepo.findById).mockResolvedValue(arena);
         vi.mocked(arenaRepo.update).mockResolvedValue(arena);
