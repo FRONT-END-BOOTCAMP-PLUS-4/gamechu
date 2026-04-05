@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { ApplyAttendanceScoreUsecase } from "../ApplyAttendanceScoreUsecase";
-import { MockScoreRecordRepository } from "@/tests/mocks/MockScoreRecordRepository";
+import { createMockScoreRecordRepository } from "@/tests/mocks/createMockScoreRecordRepository";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 
 describe("ApplyAttendanceScoreUsecase", () => {
@@ -11,7 +11,7 @@ describe("ApplyAttendanceScoreUsecase", () => {
             getLastAttendedDate: vi.fn(),
             updateLastAttendedDate: vi.fn().mockResolvedValue(undefined),
         };
-        const scoreRecordRepo = MockScoreRecordRepository();
+        const scoreRecordRepo = createMockScoreRecordRepository();
         vi.mocked(scoreRecordRepo.createRecord).mockResolvedValue(undefined);
         const usecase = new ApplyAttendanceScoreUsecase(
             scorePolicy,

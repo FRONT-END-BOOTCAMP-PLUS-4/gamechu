@@ -5,9 +5,9 @@ vi.mock("@/lib/redis", () => ({
 }));
 
 import { GetArenaDetailUsecase } from "../GetArenaDetailUsecase";
-import { MockArenaRepository } from "@/tests/mocks/MockArenaRepository";
-import { MockMemberRepository } from "@/tests/mocks/MockMemberRepository";
-import { MockVoteRepository } from "@/tests/mocks/MockVoteRepository";
+import { createMockArenaRepository } from "@/tests/mocks/createMockArenaRepository";
+import { createMockMemberRepository } from "@/tests/mocks/createMockMemberRepository";
+import { createMockVoteRepository } from "@/tests/mocks/createMockVoteRepository";
 
 const startDate = new Date("2026-04-01T10:00:00.000Z");
 const mockArenaWithRelations = {
@@ -28,9 +28,9 @@ describe("GetArenaDetailUsecase", () => {
     });
 
     it("executes business logic: calls getArenaById and builds ArenaDetailDto", async () => {
-        const arenaRepo = MockArenaRepository();
-        const memberRepo = MockMemberRepository();
-        const voteRepo = MockVoteRepository();
+        const arenaRepo = createMockArenaRepository();
+        const memberRepo = createMockMemberRepository();
+        const voteRepo = createMockVoteRepository();
 
         vi.mocked(arenaRepo.getArenaById).mockResolvedValue(
             mockArenaWithRelations as never
@@ -48,9 +48,9 @@ describe("GetArenaDetailUsecase", () => {
     });
 
     it("vote percentage: totalCount > 0 computes leftPercent and rightPercent correctly", async () => {
-        const arenaRepo = MockArenaRepository();
-        const memberRepo = MockMemberRepository();
-        const voteRepo = MockVoteRepository();
+        const arenaRepo = createMockArenaRepository();
+        const memberRepo = createMockMemberRepository();
+        const voteRepo = createMockVoteRepository();
 
         vi.mocked(arenaRepo.getArenaById).mockResolvedValue(
             mockArenaWithRelations as never
@@ -67,9 +67,9 @@ describe("GetArenaDetailUsecase", () => {
     });
 
     it("zero-vote edge case: totalCount === 0 → both percents are 0", async () => {
-        const arenaRepo = MockArenaRepository();
-        const memberRepo = MockMemberRepository();
-        const voteRepo = MockVoteRepository();
+        const arenaRepo = createMockArenaRepository();
+        const memberRepo = createMockMemberRepository();
+        const voteRepo = createMockVoteRepository();
 
         vi.mocked(arenaRepo.getArenaById).mockResolvedValue(
             mockArenaWithRelations as never
@@ -86,9 +86,9 @@ describe("GetArenaDetailUsecase", () => {
     });
 
     it("time calculations: endChatting = startDate + 30min, endVote = endChatting + 24h", async () => {
-        const arenaRepo = MockArenaRepository();
-        const memberRepo = MockMemberRepository();
-        const voteRepo = MockVoteRepository();
+        const arenaRepo = createMockArenaRepository();
+        const memberRepo = createMockMemberRepository();
+        const voteRepo = createMockVoteRepository();
 
         vi.mocked(arenaRepo.getArenaById).mockResolvedValue(
             mockArenaWithRelations as never

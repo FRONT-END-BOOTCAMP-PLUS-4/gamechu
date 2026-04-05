@@ -38,7 +38,7 @@ export async function POST(
         return NextResponse.json(result);
     } catch (err) {
         log.error({ userId: memberId, err }, "리뷰 작성 실패");
-        const message = err instanceof Error ? err.message : "알 수 없는 오류 발생";
-        return errorResponse(message, 500);
+        const message = err instanceof Error ? err.message : "Internal Server Error";
+        return errorResponse(message, 400);
     }
 }

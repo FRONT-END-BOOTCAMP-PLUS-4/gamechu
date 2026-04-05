@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from "vitest";
 import { UpdateVoteUsecase } from "../UpdateVoteUsecase";
-import { MockVoteRepository } from "@/tests/mocks/MockVoteRepository";
+import { createMockVoteRepository } from "@/tests/mocks/createMockVoteRepository";
 import { Vote } from "@/prisma/generated";
 
 describe("UpdateVoteUsecase", () => {
     it("updates votedTo on existing vote", async () => {
-        const voteRepo = MockVoteRepository();
+        const voteRepo = createMockVoteRepository();
         const existingVote = {
             id: 10,
             arenaId: 1,
@@ -31,7 +31,7 @@ describe("UpdateVoteUsecase", () => {
     });
 
     it("throws if no existing vote", async () => {
-        const voteRepo = MockVoteRepository();
+        const voteRepo = createMockVoteRepository();
         vi.mocked(voteRepo.findAll).mockResolvedValue([]);
 
         const usecase = new UpdateVoteUsecase(voteRepo);

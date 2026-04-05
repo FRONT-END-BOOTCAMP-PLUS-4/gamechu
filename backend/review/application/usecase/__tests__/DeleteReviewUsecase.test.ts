@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { DeleteReviewUsecase } from "../DeleteReviewUsecase";
-import { MockReviewRepository } from "@/tests/mocks/MockReviewRepository";
+import { createMockReviewRepository } from "@/tests/mocks/createMockReviewRepository";
 import { ReviewDto } from "../dto/ReviewDto";
 import { ReviewLikeRepository } from "@/backend/review-like/domain/repositories/ReviewLikeRepository";
 import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
@@ -15,7 +15,7 @@ function makeLikeRepo(likeCount: number) {
 
 describe("DeleteReviewUsecase", () => {
     it("deletes review and applies DELETE score with likeCount", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const likeRepo = makeLikeRepo(5);
         const applyScore = makeApplyReviewScoreMock();
 
@@ -41,7 +41,7 @@ describe("DeleteReviewUsecase", () => {
     });
 
     it("throws if review not found", async () => {
-        const repo = MockReviewRepository();
+        const repo = createMockReviewRepository();
         const likeRepo = makeLikeRepo(0);
         const applyScore = makeApplyReviewScoreMock();
 

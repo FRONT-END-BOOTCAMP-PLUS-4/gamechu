@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { CreateArenaUsecase } from "../CreateArenaUsecase";
-import { MockArenaRepository } from "@/tests/mocks/MockArenaRepository";
+import { createMockArenaRepository } from "@/tests/mocks/createMockArenaRepository";
 import { CreateArenaDto } from "../dto/CreateArenaDto";
 import { Arena } from "@/prisma/generated";
 
@@ -16,7 +16,7 @@ const mockArena = {
 
 describe("CreateArenaUsecase", () => {
     it("saves arena with status 1 and challengerId null", async () => {
-        const repo = MockArenaRepository();
+        const repo = createMockArenaRepository();
         vi.mocked(repo.save).mockResolvedValue(mockArena);
 
         const usecase = new CreateArenaUsecase(repo);
@@ -39,7 +39,7 @@ describe("CreateArenaUsecase", () => {
     });
 
     it("propagates repository errors", async () => {
-        const repo = MockArenaRepository();
+        const repo = createMockArenaRepository();
         vi.mocked(repo.save).mockRejectedValue(new Error("DB error"));
 
         const usecase = new CreateArenaUsecase(repo);
