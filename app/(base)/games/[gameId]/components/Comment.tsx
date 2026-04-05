@@ -76,9 +76,7 @@ export default function Comment({
             namespace: "review-editor",
             nodes: sharedNodes,
             editorState: defaultValue || null,
-            onError(error: Error) {
-                console.error(error);
-            },
+            onError() {},
             theme: sharedTheme,
         }),
         [defaultValue]
@@ -169,7 +167,6 @@ export default function Comment({
             setRating(0);
             onSuccess();
         } catch (err) {
-            console.error("리뷰 저장 실패:", err);
             setToast({
                 show: true,
                 message: err instanceof Error ? err.message : "리뷰 저장에 실패했습니다.",

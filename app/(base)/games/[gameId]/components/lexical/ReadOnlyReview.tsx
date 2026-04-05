@@ -36,7 +36,7 @@ export function ReadOnlyReview({ content }: ReadOnlyReviewProps) {
         editable: false,
         nodes: sharedNodes,
         theme: sharedTheme,
-        onError: (e: Error) => console.error(e),
+        onError: () => {},
     };
 
     return (

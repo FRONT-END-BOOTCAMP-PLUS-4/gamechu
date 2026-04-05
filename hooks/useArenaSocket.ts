@@ -1,5 +1,5 @@
 // hooks/useArenaSocket.ts
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { socket } from "@/socket";
 import { ChattingDto } from "@/backend/chatting/application/usecase/dto/ChattingDto";
 import { ArenaStatus } from "@/types/arena-status";
@@ -14,8 +14,6 @@ export function useArenaSocket({
     status,
     onReceive,
 }: ArenaSocketProps) {
-    const [isConnected, setIsConnected] = useState(false);
-    const [transport, setTransport] = useState("N/A");
     const onReceiveRef = useRef(onReceive);
 
     useEffect(() => {
@@ -23,26 +21,10 @@ export function useArenaSocket({
     }, [onReceive]);
 
     function onConnect() {
-        setIsConnected(true);
-        setTransport(socket.io.engine.transport.name);
-
-        console.log("transport: ", transport);
-        console.log("socket connected: ", isConnected);
-        socket.io.engine.on("upgrade", (transport) => {
-            setTransport(transport.name);
-        });
+        socket.io.engine.on("upgrade", () => {});
     }
-    function onDisconnect() {
-        setIsConnected(false);
-        setTransport("disconnected");
-        console.log("Socket disconnected.");
-    }
-
-    // 소켓 연결 에러 시 실행될 함수
-    function onConnectError(error: Error) {
-        console.error("Socket connection error:", error);
-        // 에러 발생 시 사용자에게 알림 등의 추가 처리 가능
-    }
+    function onDisconnect() {}
+    function onConnectError() {}
 
     useEffect(() => {
         if (status !== 3) return;
@@ -56,7 +38,6 @@ export function useArenaSocket({
         }
         const roomId = arenaId?.toString();
         socket.emit("join room", roomId);
-        console.log("join room", roomId);
 
         // 메시지 수신 핸들러
         const handleChatMessage = (msg: {
@@ -76,17 +57,12 @@ export function useArenaSocket({
                 content: msg.text,
                 createdAt: new Date(),
             };
-            console.log(
-                "✅ Socket: Converted message to ChattingDto:",
-                newChat
-            );
             onReceiveRef.current(newChat); // useArenaSocket을 호출한 곳에서 넘겨준 onReceive콜백 함수 실행
         };
 
         socket.on("chat message", handleChatMessage); // 서버에서 chat message 이벤트가 오면 실행
         // 클린업 함수: 컴포넌트 언마운트, arenaId/status 변경 시 기존 리스너 해제
         return () => {
-            console.log(`Socket: Cleaning up for room ${roomId}`);
             socket.off("connect", onConnect);
             socket.off("disconnect", onDisconnect);
             socket.off("connect_error", onConnectError); // 에러 핸들러 해제

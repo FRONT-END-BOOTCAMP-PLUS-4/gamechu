@@ -39,8 +39,8 @@ export default function ProfilePointHistoryTab() {
                 if (!res.ok) throw new Error("스코어 기록 조회 실패");
                 const data = await res.json();
                 setRecords(data);
-            } catch (err) {
-                console.error("🔥 포인트 히스토리 조회 실패", err);
+            } catch {
+                // fetch error — silently ignored; records remain empty
             } finally {
                 setLoading(false); // ✅ 로딩 종료
             }

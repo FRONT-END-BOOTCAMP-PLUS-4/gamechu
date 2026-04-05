@@ -25,8 +25,8 @@ export function useArenaAutoStatusDetail({
                     if (newStatus === "delete") {
                         await deleteArena(arenaDetail!.id);
                     } else await updateStatus(newStatus);
-                } catch (err) {
-                    console.error(err);
+                } catch {
+                    // auto-status check error — silently ignored
                 }
             };
 
@@ -81,8 +81,8 @@ export function useArenaAutoStatusDetail({
             });
             if (!res.ok) throw new Error("아레나 삭제 실패");
             onStatusUpdate?.(0);
-        } catch (err) {
-            console.error(`아레나 ${arenaId} 삭제 실패:`, err);
+        } catch {
+            // arena delete error — silently ignored
         }
     };
 
@@ -96,8 +96,8 @@ export function useArenaAutoStatusDetail({
             });
             if (!res.ok) throw new Error("상태 변경 실패");
             onStatusUpdate?.(newStatus);
-        } catch (err) {
-            console.error("상태 자동 업데이트 실패:", err);
+        } catch {
+            // status update error — silently ignored
         }
     };
 }

@@ -281,8 +281,7 @@ export default function ProfileInfoTab(props: Props) {
                                     alert("프로필이 수정되었습니다.");
                                     setIsEdit(false);
                                     setNicknameMessage(null);
-                                } catch (err) {
-                                    console.error("프로필 수정 중 오류:", err);
+                                } catch {
                                     alert("예기치 못한 오류가 발생했습니다.");
                                 }
                             }}

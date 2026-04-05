@@ -41,8 +41,8 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
                     try {
                         if (newStatus === "delete") await deleteArena(id);
                         else await updateStatus(id, newStatus);
-                    } catch (err) {
-                        console.error(err);
+                    } catch {
+                        // auto-status check error — silently ignored
                     }
                 };
 
@@ -86,8 +86,8 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
             });
             if (!res.ok) throw new Error("아레나 삭제 실패");
             onStatusUpdate?.(arenaId, 0 as ArenaStatus);
-        } catch (err) {
-            console.error(`아레나 ${arenaId} 삭제 실패:`, err);
+        } catch {
+            // arena delete error — silently ignored
         }
     };
 
@@ -101,8 +101,8 @@ export function useArenaAutoStatus({ arenaList, onStatusUpdate }: Props) {
             });
             if (!res.ok) throw new Error("상태 업데이트 실패");
             onStatusUpdate?.(arenaId, newStatus);
-        } catch (err) {
-            console.error(`아레나 ${arenaId} 상태 업데이트 실패:`, err);
+        } catch {
+            // status update error — silently ignored
         }
     };
 }

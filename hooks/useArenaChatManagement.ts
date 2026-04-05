@@ -94,7 +94,6 @@ export function useArenaChatManagement({
                 errorMessage = err;
             }
             setErrorChats(errorMessage);
-            console.error("채팅 및 횟수 정보 불러오기 실패:", err);
             // 로딩 실패 시 남은 횟수를 알 수 없으므로, 일단 0으로 설정하여 전송 막기
             setRemainingSends(0);
         } finally {
@@ -178,7 +177,6 @@ export function useArenaChatManagement({
                 } else if (typeof err === "string") {
                     errorMessage = err;
                 }
-                console.error("채팅 전송 오류:", err);
                 setErrorChats(errorMessage);
             }
         },

@@ -43,8 +43,7 @@ export default function UserProfileComponent({
 
             // 다른 사람 프로필
             router.push(`/profile/${encodeURIComponent(nickname)}`);
-        } catch (error) {
-            console.error("[PROFILE_CLICK_ERROR]", error);
+        } catch {
             router.push(`/profile/${encodeURIComponent(nickname)}`);
         }
     };

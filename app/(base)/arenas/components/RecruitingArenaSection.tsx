@@ -23,11 +23,7 @@ export default function RecruitingArenaSection({ onLoaded }: Props) {
 
     useArenaAutoStatus({
         arenaList: arenaListDto?.arenas || [],
-        onStatusUpdate: (arenaId, newStatus) => {
-            console.log(
-                `Arena ${arenaId}가 상태 ${newStatus}로 전이되었습니다.`
-            );
-        },
+        onStatusUpdate: () => {},
     });
 
     // ✅ 로딩이 끝났을 때 onLoaded 호출

@@ -27,11 +27,7 @@ export default function VotingArenaSection({ onLoaded }: Props) {
     });
     useArenaAutoStatus({
         arenaList: arenaListDto?.arenas || [],
-        onStatusUpdate: (arenaId, newStatus) => {
-            console.log(
-                `Arena ${arenaId}가 상태 ${newStatus}로 전이되었습니다.`
-            );
-        },
+        onStatusUpdate: () => {},
     });
 
     const [arenaIdsToFetch, setArenaIdsToFetch] = useState<number[]>([]);
