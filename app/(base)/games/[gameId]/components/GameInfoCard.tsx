@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-interface GameInfoCardProps {
+type GameInfoCardProps = {
     platforms: string[];
     genres: string[];
     themes: string[];

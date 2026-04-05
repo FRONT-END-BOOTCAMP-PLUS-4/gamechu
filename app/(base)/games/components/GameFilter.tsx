@@ -17,7 +17,7 @@ interface FilterItem {
     name: string;
 }
 
-interface GameFilterProps {
+type GameFilterProps = {
     selectedTag?: { id: number; type: "genre" | "theme" };
     setSelectedTag: (tag?: { id: number; type: "genre" | "theme" }) => void;
     selectedPlatformId?: number;

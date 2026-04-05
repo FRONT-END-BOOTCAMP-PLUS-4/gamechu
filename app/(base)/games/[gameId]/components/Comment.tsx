@@ -26,7 +26,7 @@ import { ToolbarPlugin } from "./lexical/plugins/ToolbarPlugin";
 import { ImagePlugin } from "./lexical/plugins/ImagePlugin";
 import { AUTOLINK_MATCHERS } from "./lexical/urlMatchers";
 
-interface CommentProps {
+type CommentProps = {
     gameId: string;
     editingReviewId?: number;
     defaultValue?: string;

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import CardLink from "@/app/components/CardLink";
 
-interface GameCardProps {
+type GameCardProps = {
     id: number;
     platform: string;
     title: string;

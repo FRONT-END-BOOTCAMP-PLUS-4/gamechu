@@ -4,7 +4,7 @@ import Button from "@/app/components/Button";
 import Image from "next/image";
 import React from "react";
 
-interface ArenaInputBoxProps {
+type ArenaInputBoxProps = {
     content: string;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onSend: () => void;

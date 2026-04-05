@@ -1,7 +1,7 @@
 import Image from "next/image";
 import WishlistButtonClient from "./WishlistButtonClient";
 
-interface GameTitleInfoSectionProps {
+type GameTitleInfoSectionProps = {
     title: string;
     developer: string | null;
     rating?: number | null;

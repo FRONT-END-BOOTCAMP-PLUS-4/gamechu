@@ -5,7 +5,7 @@ import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
 import { Platform } from "@/prisma/generated";
 
-interface Props {
+type Props = {
     onSubmit: () => void;
     onBack: () => void;
 }

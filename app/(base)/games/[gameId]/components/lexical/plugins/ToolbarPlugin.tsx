@@ -36,7 +36,7 @@ import { useCallback, useEffect, useState } from "react";
 
 const FONT_SIZES = ["12", "14", "16", "18", "20", "24", "32"] as const;
 
-interface ToolbarPluginProps {
+type ToolbarPluginProps = {
     onImageUpload: () => void;
 }
 

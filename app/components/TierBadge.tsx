@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { getTier } from "@/utils/GetTiers";
 
-interface TierBadgeProps {
+type TierBadgeProps = {
     score: number;
     iconOnly?: boolean; // ✅ 아이콘만 출력할지 여부
 }

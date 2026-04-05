@@ -7,7 +7,7 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { sharedNodes } from "./nodes";
 import { sharedTheme } from "./sharedTheme";
 
-interface ReadOnlyReviewProps {
+type ReadOnlyReviewProps = {
     content: string;
 }
 

@@ -8,7 +8,7 @@ import { socket } from "@/socket";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import useArenaStore from "@/stores/useArenaStore";
 
-interface UseArenaChatManagementProps {
+type UseArenaChatManagementProps = {
     arenaId: number | undefined;
     status: ArenaStatus | undefined;
 }

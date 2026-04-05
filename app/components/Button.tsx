@@ -7,7 +7,7 @@ import { cn } from "@/utils/tailwindUtil";
 type ButtonSize = "xs" | "small" | "medium" | "large" | "send";
 type ButtonType = "purple" | "blue" | "black" | "red";
 
-interface ButtonProps {
+type ButtonProps = {
     label?: string;
     size?: ButtonSize;
     type?: ButtonType;

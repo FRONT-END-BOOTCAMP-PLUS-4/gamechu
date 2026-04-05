@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import TierBadge from "@/app/components/TierBadge";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 
-interface UserProfileComponentProps {
+type UserProfileComponentProps = {
     profileImage: string;
     nickname: string;
     score?: number;

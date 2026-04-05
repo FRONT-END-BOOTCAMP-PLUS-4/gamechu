@@ -1,5 +1,5 @@
 import Image from "next/image";
-interface Props {
+type Props = {
     image: string;
     title: string;
 }

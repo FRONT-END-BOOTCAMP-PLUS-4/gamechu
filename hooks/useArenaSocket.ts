@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { socket } from "@/socket";
 import { ChattingDto } from "@/backend/chatting/application/usecase/dto/ChattingDto";
 import { ArenaStatus } from "@/types/arena-status";
-interface ArenaSocketProps {
+type ArenaSocketProps = {
     arenaId: number | undefined;
     status: ArenaStatus | undefined;
     onReceive: (chat: ChattingDto) => void;

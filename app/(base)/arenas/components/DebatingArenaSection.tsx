@@ -7,7 +7,7 @@ import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
 import { useEffect } from "react";
 
-interface Props {
+type Props = {
     onLoaded?: () => void; // ✅ 상위로 로딩 완료 알림
 }
 

@@ -5,7 +5,7 @@ import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
 import { Theme } from "@/prisma/generated";
 
-interface Props {
+type Props = {
     onNext: () => void;
     onBack: () => void;
 }
