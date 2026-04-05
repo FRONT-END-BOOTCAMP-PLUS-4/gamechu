@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import useFetchArenas from "@/hooks/useArenas";
 import DebatingArenaCard from "@/app/(base)/arenas/components/DebatingArenaCard";
 import Pager from "@/app/components/Pager";
-import { useLoadingStore } from "@/stores/loadingStore";
+import { useLoadingStore } from "@/stores/LoadingStore";
 
 type ArenaListProps = {
     memberId?: string;

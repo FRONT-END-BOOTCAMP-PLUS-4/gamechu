@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { cn } from "@/utils/tailwindUtil";
+import { cn } from "@/utils/TailwindUtil";
 import { ChevronDown } from "lucide-react";
 
 type TagType = "genre" | "theme";

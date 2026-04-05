@@ -7,7 +7,7 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
-import useModalStore from "@/stores/modalStore";
+import useModalStore from "@/stores/ModalStore";
 import Button from "./Button";
 import { Menu, User, X } from "lucide-react";
 

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { GetMemberProfileByNicknameUsecase } from "@/backend/member/application/usecase/GetMemberProfileByNicknameUsecase";
-import { errorResponse } from "@/utils/apiResponse";
-import { withCache } from "@/lib/withCache";
-import { memberProfileKey } from "@/lib/cacheKey";
-import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/ApiResponse";
+import { withCache } from "@/lib/WithCache";
+import { memberProfileKey } from "@/lib/CacheKey";
+import logger from "@/lib/Logger";
 
 export async function GET(
     request: NextRequest,

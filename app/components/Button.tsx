@@ -2,7 +2,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { cn } from "@/utils/tailwindUtil";
+import { cn } from "@/utils/TailwindUtil";
 
 type ButtonSize = "xs" | "small" | "medium" | "large" | "send";
 type ButtonType = "purple" | "blue" | "black" | "red";

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import useModalStore from "../modalStore";
+import useModalStore from "../ModalStore";
 
 describe("modalStore", () => {
     beforeEach(() => {

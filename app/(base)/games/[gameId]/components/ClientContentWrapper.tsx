@@ -8,7 +8,7 @@ import Comment from "./Comment";
 import CommentCard from "./CommentCard";
 import Pager from "@/app/components/Pager";
 import { useGameReviews } from "@/hooks/useGameReviews";
-import { queryKeys } from "@/lib/queryKeys";
+import { queryKeys } from "@/lib/QueryKeys";
 
 type Props = {
     gameId: number;

@@ -6,9 +6,9 @@ import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { Arena } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { validate } from "@/utils/validation";
+import { validate } from "@/utils/Validation";
 import { NextResponse } from "next/server";
-import logger from "@/lib/logger";
+import logger from "@/lib/Logger";
 
 export async function POST(request: Request) {
     const memberId: string | null = await getAuthUserId();

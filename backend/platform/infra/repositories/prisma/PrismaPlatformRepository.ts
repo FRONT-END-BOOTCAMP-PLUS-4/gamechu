@@ -1,6 +1,6 @@
 import { PlatformRepository } from "@/backend/platform/domain/repositories/PlatformRepository";
 import { PrismaClient } from "@/prisma/generated";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaPlatformRepository implements PlatformRepository {
     private prisma: PrismaClient;

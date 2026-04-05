@@ -6,10 +6,10 @@ import ArenaDetailInfo from "./components/ArenaDetailInfo";
 import ArenaDetailContainer from "./components/ArenaDetailContainer";
 import React, { useEffect, useState } from "react";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 import { useArenaAutoStatusDetail } from "@/hooks/useArenaAutoStatusDetail";
 import { useParams } from "next/navigation";
-import { useLoadingStore } from "@/stores/loadingStore"; // ✅ 전역 로딩 스토어 가져오기
+import { useLoadingStore } from "@/stores/LoadingStore"; // ✅ 전역 로딩 스토어 가져오기
 
 export default function ArenaDetailPage() {
     const setGlobalArenaData = useArenaStore((state) => state.setArenaData);

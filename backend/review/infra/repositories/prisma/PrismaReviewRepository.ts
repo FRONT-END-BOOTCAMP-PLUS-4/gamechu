@@ -4,7 +4,7 @@ import { CreateReviewDto } from "@/backend/review/application/usecase/dto/Create
 import { UpdateReviewDto } from "@/backend/review/application/usecase/dto/UpdateReviewDto";
 import { ReviewDto } from "@/backend/review/application/usecase/dto/ReviewDto";
 import { ReviewByMembersDto } from "@/backend/review/application/usecase/dto/ReviewByMembersDto";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaReviewRepository implements ReviewRepository {
     private prisma: PrismaClient;

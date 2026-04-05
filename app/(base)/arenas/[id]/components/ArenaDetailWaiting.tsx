@@ -1,6 +1,6 @@
 "use client";
 
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
 

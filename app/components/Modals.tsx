@@ -1,6 +1,6 @@
 "use client";
 
-import useModalStore from "@/stores/modalStore";
+import useModalStore from "@/stores/ModalStore";
 import NotificationModal from "@/app/(base)/components/NotificationModal";
 import CreateArenaModal from "../(base)/arenas/components/CreateArenaModal";
 

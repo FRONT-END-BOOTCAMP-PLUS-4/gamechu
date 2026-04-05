@@ -7,8 +7,8 @@ import { NotificationTypeRepository } from "@/backend/notification-type/domain/r
 import { PrismaNotificationTypeRepository } from "@/backend/notification-type/infra/repositories/prisma/PrismaNotificationTypeRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { NextResponse } from "next/server";
-import { validate } from "@/utils/validation";
-import logger from "@/lib/logger";
+import { validate } from "@/utils/Validation";
+import logger from "@/lib/Logger";
 
 export async function GET(request: Request) {
     const memberId: string | null = await getAuthUserId();

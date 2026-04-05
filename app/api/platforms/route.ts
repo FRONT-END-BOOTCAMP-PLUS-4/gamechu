@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { PrismaPlatformRepository } from "@/backend/platform/infra/repositories/prisma/PrismaPlatformRepository";
 import { GetAllPlatformsUsecase } from "@/backend/platform/application/usecase/GetAllPlatformsUsecase";
-import { withCache } from "@/lib/withCache";
-import { platformListKey } from "@/lib/cacheKey";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import { withCache } from "@/lib/WithCache";
+import { platformListKey } from "@/lib/CacheKey";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function GET() {
     const log = logger.child({ route: "/api/platforms", method: "GET" });

@@ -4,7 +4,7 @@ import {
     CreateNotificationRecordInput,
     NotificationRecordRepository,
 } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaNotificationRecordRepository
     implements NotificationRecordRepository

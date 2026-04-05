@@ -25,7 +25,7 @@ vi.mock("@/utils/GetAuthUserId.client", () => ({
 }));
 
 // Mock modalStore
-vi.mock("@/stores/modalStore", () => ({
+vi.mock("@/stores/ModalStore", () => ({
     default: { getState: () => ({ openModal: vi.fn() }) },
 }));
 

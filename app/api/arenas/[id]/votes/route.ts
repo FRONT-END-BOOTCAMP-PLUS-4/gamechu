@@ -4,9 +4,9 @@ import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { GetVoteUsecase } from "@/backend/vote/application/usecase/GetVoteUsecase";
 import { GetVoteDto } from "@/backend/vote/application/usecase/dto/GetVoteDto";
-import { IdSchema, validate } from "@/utils/validation";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import { IdSchema, validate } from "@/utils/Validation";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 type RequestParams = {
     params: Promise<{

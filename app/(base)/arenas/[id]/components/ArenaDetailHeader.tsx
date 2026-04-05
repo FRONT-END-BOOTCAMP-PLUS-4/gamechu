@@ -1,6 +1,6 @@
 "use client";
 
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TierBadge from "@/app/components/TierBadge";

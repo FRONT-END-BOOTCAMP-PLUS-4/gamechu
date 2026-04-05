@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Lottie from "lottie-react";
 import Rio from "@/public/rio.json";
-import { cn } from "@/utils/tailwindUtil";
+import { cn } from "@/utils/TailwindUtil";
 
 type ReviewSelectorProps = {
     selected: "expert" | "user";

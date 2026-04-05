@@ -6,7 +6,7 @@ import { ArenaStatus } from "@/types/arena-status";
 import { useArenaSocket } from "./useArenaSocket";
 import { socket } from "@/socket";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 
 type UseArenaChatManagementProps = {
     arenaId: number | undefined;

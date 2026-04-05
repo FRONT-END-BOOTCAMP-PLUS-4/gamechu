@@ -2,7 +2,7 @@
 
 import { PrismaClient } from "@/prisma/generated";
 import { ReviewLikeRepository } from "@/backend/review-like/domain/repositories/ReviewLikeRepository";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaReviewLikeRepository implements ReviewLikeRepository {
     private prisma: PrismaClient;

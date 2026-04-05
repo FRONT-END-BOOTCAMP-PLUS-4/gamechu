@@ -10,7 +10,7 @@ import ProfileReviewTab from "./components/tabs/ProfileReviewTab";
 import ProfileWishlistTab from "./components/tabs/ProfileWishlistTab";
 import ProfilePointHistoryTab from "./components/tabs/ProfilePointHistoryTab";
 import ProfileArenaTab from "./components/tabs/ProfileArenaTab";
-import { useLoadingStore } from "@/stores/loadingStore";
+import { useLoadingStore } from "@/stores/LoadingStore";
 
 type WishlistGame = {
     id: number;

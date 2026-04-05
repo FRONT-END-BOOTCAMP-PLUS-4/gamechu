@@ -10,11 +10,11 @@ import { PrismaThemeRepository } from "@/backend/theme/infra/repositories/prisma
 import { PrismaPlatformRepository } from "@/backend/platform/infra/repositories/prisma/PrismaPlatformRepository";
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 
-import { withCache } from "@/lib/withCache";
-import { generateCacheKey, gameMetaKey } from "@/lib/cacheKey";
-import type { CacheKeyParams } from "@/lib/cacheKey";
-import { validate } from "@/utils/validation";
-import logger from "@/lib/logger";
+import { withCache } from "@/lib/WithCache";
+import { generateCacheKey, gameMetaKey } from "@/lib/CacheKey";
+import type { CacheKeyParams } from "@/lib/CacheKey";
+import { validate } from "@/utils/Validation";
+import logger from "@/lib/Logger";
 
 export async function GET(req: NextRequest) {
     const log = logger.child({ route: "/api/games", method: "GET" });

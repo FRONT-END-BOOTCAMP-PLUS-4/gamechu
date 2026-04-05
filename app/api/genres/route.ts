@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { PrismaGenreRepository } from "@/backend/genre/infra/repositories/prisma/PrismaGenreRepository";
 import { GetAllGenresUsecase } from "@/backend/genre/application/usecase/GetAllGenresUsecase";
-import { withCache } from "@/lib/withCache";
-import { genreListKey } from "@/lib/cacheKey";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import { withCache } from "@/lib/WithCache";
+import { genreListKey } from "@/lib/CacheKey";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function GET() {
     const log = logger.child({ route: "/api/genres", method: "GET" });

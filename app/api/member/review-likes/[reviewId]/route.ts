@@ -7,9 +7,9 @@ import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/reposi
 import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { IdSchema, validate } from "@/utils/validation";
-import { errorResponse } from "@/utils/apiResponse";
-import logger from "@/lib/logger";
+import { IdSchema, validate } from "@/utils/Validation";
+import { errorResponse } from "@/utils/ApiResponse";
+import logger from "@/lib/Logger";
 
 export async function POST(
     req: NextRequest,

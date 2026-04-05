@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/utils/tailwindUtil";
+import { cn } from "@/utils/TailwindUtil";
 import {
     ChevronLeft,
     ChevronRight,

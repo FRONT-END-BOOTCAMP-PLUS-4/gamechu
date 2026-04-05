@@ -5,7 +5,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { sharedNodes } from "./nodes";
-import { sharedTheme } from "./sharedTheme";
+import { sharedTheme } from "./SharedTheme";
 
 type ReadOnlyReviewProps = {
     content: string;

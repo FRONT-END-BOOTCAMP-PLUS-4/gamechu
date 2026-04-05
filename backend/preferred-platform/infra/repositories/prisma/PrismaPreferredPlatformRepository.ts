@@ -4,7 +4,7 @@ import {
     CreatePreferredPlatformInput,
 } from "@/backend/preferred-platform/domain/repositories/PreferredPlatformRepository";
 import { PrismaClient, PreferredPlatform } from "@/prisma/generated";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaPreferredPlatformRepository
     implements PreferredPlatformRepository

@@ -4,8 +4,8 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaPreferredPlatformRepository } from "@/backend/preferred-platform/infra/repositories/prisma/PrismaPreferredPlatformRepository";
 import { CreatePreferredPlatformsUsecase } from "@/backend/preferred-platform/application/usecase/CreatePreferredPlatformsUsecase";
 import { CreatePreferredPlatformsDto } from "@/backend/preferred-platform/application/usecase/dto/CreatePreferredPlatformsDto";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function POST(req: NextRequest) {
     const log = logger.child({ route: "/api/preferred-platforms", method: "POST" });

@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useArenaAutoStatusDetail } from "../useArenaAutoStatusDetail";
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 
 const makeArenaData = (overrides: object) => ({

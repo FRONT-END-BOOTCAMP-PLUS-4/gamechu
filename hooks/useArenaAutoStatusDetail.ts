@@ -1,4 +1,4 @@
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 import { ArenaStatus } from "@/types/arena-status";
 import dayjs from "dayjs";
 import { useEffect } from "react";

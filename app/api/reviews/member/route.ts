@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { GetReviewsByMemberIdUsecase } from "@/backend/review/application/usecase/GetReviewsByMemberIdUsecase";
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { errorResponse } from "@/utils/apiResponse";
-import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/ApiResponse";
+import logger from "@/lib/Logger";
 
 export async function GET() {
     const log = logger.child({ route: "/api/reviews/member", method: "GET" });

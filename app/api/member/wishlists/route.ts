@@ -8,9 +8,9 @@ import { GetWishlistsUsecase } from "@/backend/wishlist/application/usecase/GetW
 import { CreateWishlistUsecase } from "@/backend/wishlist/application/usecase/CreateWishlistUsecase";
 import { GetWishlistDto, WishlistBodySchema } from "@/backend/wishlist/application/usecase/dto/GetWishlistDto";
 import { GetWishlistsDto } from "@/backend/wishlist/application/usecase/dto/GetWishlistsDto";
-import { validate } from "@/utils/validation";
-import { errorResponse } from "@/utils/apiResponse";
-import logger from "@/lib/logger";
+import { validate } from "@/utils/Validation";
+import { errorResponse } from "@/utils/ApiResponse";
+import logger from "@/lib/Logger";
 
 export async function GET(req: NextRequest) {
     const memberId = await getAuthUserId();

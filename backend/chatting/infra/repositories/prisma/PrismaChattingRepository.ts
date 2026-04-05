@@ -6,7 +6,7 @@ import {
 import { ChattingFilter } from "@/backend/chatting/domain/repositories/filters/ChattingFilter";
 
 import { Chatting, Prisma, PrismaClient } from "@/prisma/generated";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaChattingRepository implements ChattingRepository {
     private prisma: PrismaClient;

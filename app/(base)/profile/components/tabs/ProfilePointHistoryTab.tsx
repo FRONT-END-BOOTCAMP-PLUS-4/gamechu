@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import PointHistoryCard from "../PointHistoryCard";
 import Pager from "@/app/components/Pager";
-import { useLoadingStore } from "@/stores/loadingStore"; // ✅ 전역 로딩 상태 사용
+import { useLoadingStore } from "@/stores/LoadingStore"; // ✅ 전역 로딩 상태 사용
 
 interface ScoreRecord {
     actualScore: number;

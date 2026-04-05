@@ -6,10 +6,10 @@ import {
     getClientIp,
     rateLimitResponse,
 } from "@/lib/RateLimiter";
-import { validate } from "@/utils/validation";
+import { validate } from "@/utils/Validation";
 import { z } from "zod";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 const nicknameCheckLimiter = new RateLimiter("nickname-check", 60_000, 10);
 const NicknameQuerySchema = z.object({

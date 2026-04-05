@@ -2,7 +2,7 @@
 import { PreferredThemeRepository } from "@/backend/preferred-theme/domain/repositories/PreferredThemeRepository";
 import { PrismaClient, PreferredTheme } from "@/prisma/generated";
 import { CreatePreferredThemeInput } from "@/backend/preferred-theme/domain/repositories/PreferredThemeRepository";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaPreferredThemeRepository
     implements PreferredThemeRepository

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { validate, IdSchema } from "@/utils/validation";
+import { validate, IdSchema } from "@/utils/Validation";
 import { UpdateReviewSchema } from "@/backend/review/application/usecase/dto/UpdateReviewDto";
-import { errorResponse } from "@/utils/apiResponse";
+import { errorResponse } from "@/utils/ApiResponse";
 
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
@@ -13,7 +13,7 @@ import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { UpdateReviewUsecase } from "@/backend/review/application/usecase/UpdateReviewUsecase";
 import { DeleteReviewUsecase } from "@/backend/review/application/usecase/DeleteReviewUsecase";
 import { ApplyReviewScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase";
-import logger from "@/lib/logger";
+import logger from "@/lib/Logger";
 
 export async function PATCH(
     req: NextRequest,

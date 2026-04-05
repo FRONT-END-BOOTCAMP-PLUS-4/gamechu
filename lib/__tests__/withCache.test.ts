@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@/lib/redis", () => ({
+vi.mock("@/lib/Redis", () => ({
     default: {
         get: vi.fn(),
         setex: vi.fn(),
     },
 }));
 
-import { withCache } from "../withCache";
-import redis from "@/lib/redis";
+import { withCache } from "../WithCache";
+import redis from "@/lib/Redis";
 
 const mockGet = redis.get as ReturnType<typeof vi.fn>;
 const mockSetex = redis.setex as ReturnType<typeof vi.fn>;

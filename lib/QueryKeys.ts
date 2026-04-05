@@ -1,4 +1,4 @@
-// lib/queryKeys.ts
+// lib/QueryKeys.ts
 
 /**
  * Typed cache key factories — single source of truth.

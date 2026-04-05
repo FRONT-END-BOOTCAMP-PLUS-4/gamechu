@@ -1,7 +1,7 @@
 "use client";
 
 import ModalWrapper from "@/app/components/ModalWrapper";
-import useModalStore from "@/stores/modalStore";
+import useModalStore from "@/stores/ModalStore";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/app/components/Button";

@@ -7,7 +7,7 @@ import ArenaDetailWaiting from "./ArenaDetailWaiting";
 import ArenaDetailInputBox from "./ArenaDetailInputBox";
 import ArenaDetailChatList from "./ArenaDetailChatList";
 
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 import { useArenaChatManagement } from "@/hooks/useArenaChatManagement";
 
 const MAX_MESSAGE_LENGTH = 200;

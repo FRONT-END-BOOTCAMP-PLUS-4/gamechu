@@ -5,9 +5,9 @@ import { PrismaMemberRepository } from "@/backend/member/infra/repositories/pris
 import { GetMemberProfileUsecase } from "@/backend/member/application/usecase/GetMemberProfileUsecase";
 import { UpdateMemberProfileUseCase } from "@/backend/member/application/usecase/UpdateMemberProfileUseCase";
 import { UpdateProfileRequestDto, UpdateProfileSchema } from "@/backend/member/application/usecase/dto/UpdateProfileRequestDto";
-import { validate } from "@/utils/validation";
-import { errorResponse } from "@/utils/apiResponse";
-import logger from "@/lib/logger";
+import { validate } from "@/utils/Validation";
+import { errorResponse } from "@/utils/ApiResponse";
+import logger from "@/lib/Logger";
 
 export async function GET() {
     const session = await getServerSession(authOptions);

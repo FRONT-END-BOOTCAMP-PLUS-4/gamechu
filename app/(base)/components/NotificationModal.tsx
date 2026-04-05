@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import ModalWrapper from "@/app/components/ModalWrapper";
-import useModalStore from "@/stores/modalStore";
+import useModalStore from "@/stores/ModalStore";
 import Pager from "@/app/components/Pager";
 import NotificationRecordList from "./NotificationRecordList";
 import { useNotifications } from "@/hooks/useNotifications";

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import useArenaStore from "../useArenaStore";
+import useArenaStore from "../UseArenaStore";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 
 const mockArenaData = {
