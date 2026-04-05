@@ -2,11 +2,11 @@ import { type NextRequest, NextResponse } from "next/server";
 import { GetGameDetailUsecase } from "@/backend/game/application/usecase/GetGameDetailUsecase";
 import { GamePrismaRepository } from "@/backend/game/infra/repositories/prisma/GamePrismaRepository";
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
-import { withCache } from "@/lib/withCache";
-import { gameDetailKey } from "@/lib/cacheKey";
-import logger from "@/lib/logger";
-import { validate, IdSchema } from "@/utils/validation";
-import { errorResponse } from "@/utils/apiResponse";
+import { withCache } from "@/lib/WithCache";
+import { gameDetailKey } from "@/lib/CacheKey";
+import logger from "@/lib/Logger";
+import { validate, IdSchema } from "@/utils/Validation";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function GET(
     _req: NextRequest,

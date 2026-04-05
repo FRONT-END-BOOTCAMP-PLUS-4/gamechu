@@ -7,8 +7,8 @@ import { PrismaMemberRepository } from "@/backend/member/infra/repositories/pris
 import { ScoreRecordRepository } from "@/backend/score-record/domain/repositories/ScoreRecordRepository";
 import { MemberRepository } from "@/backend/member/domain/repositories/MemberRepository";
 import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function GET() {
     const memberId = await getAuthUserId();

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import useModalStore from "@/stores/modalStore";
+import useModalStore from "@/stores/ModalStore";
 import Modals from "@/app/components/Modals";
 
 export default function PagerTestPage() {

@@ -1,7 +1,7 @@
 // hooks/useArenaList.ts
 import { useQuery } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/queryKeys";
-import { fetcher } from "@/lib/fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
+import { fetcher } from "@/lib/Fetcher";
 import type { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 
 type ArenaListResponse = { success: boolean; data?: ArenaDetailDto[] };

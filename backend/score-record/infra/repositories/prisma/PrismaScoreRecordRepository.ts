@@ -7,7 +7,7 @@ import { ScoreRecordFilter } from "@/backend/score-record/domain/repositories/fi
 
 import { ScoreRecordDto } from "@/backend/score-record/application/usecase/dto/ScoreRecordDto";
 import { CreateScoreRecordDto } from "@/backend/score-record/application/usecase/dto/CreateScoreRecordDto";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaScoreRecordRepository implements ScoreRecordRepository {
     private prisma: PrismaClient;

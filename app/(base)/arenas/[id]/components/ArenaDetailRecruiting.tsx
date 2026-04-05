@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/app/components/Button";
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import Image from "next/image";
 import { useState } from "react";

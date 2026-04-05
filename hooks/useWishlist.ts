@@ -1,7 +1,7 @@
 // hooks/useWishlist.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetcher } from "@/lib/fetcher";
-import { queryKeys } from "@/lib/queryKeys";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 
 type WishlistStatus = {
     exists: boolean;

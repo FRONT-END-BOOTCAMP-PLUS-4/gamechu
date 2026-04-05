@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { NextRequest } from "next/server";
 
-vi.mock("@/lib/redis", () => ({
+vi.mock("@/lib/Redis", () => ({
     default: {
         pipeline: vi.fn().mockReturnValue({
             zremrangebyscore: vi.fn().mockReturnThis(),

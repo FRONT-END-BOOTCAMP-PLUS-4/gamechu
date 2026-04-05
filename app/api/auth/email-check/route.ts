@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { EmailCheckUsecase } from "@/backend/member/application/usecase/EmailCheckUsecase";
 import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
-import { validate } from "@/utils/validation";
+import { validate } from "@/utils/Validation";
 import { z } from "zod";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 const emailCheckLimiter = new RateLimiter("email-check", 60_000, 10);
 // 단일 쿼리 파라미터 전용 스키마 — 별도 DTO 파일 불필요 (intentional inline exception)

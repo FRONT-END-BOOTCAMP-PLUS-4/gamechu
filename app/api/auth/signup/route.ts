@@ -3,9 +3,9 @@ import { PrismaMemberRepository } from "@/backend/member/infra/repositories/pris
 import { SignUpUsecase } from "@/backend/member/application/usecase/SignUpUsecase";
 import { SignUpRequestDto, SignUpSchema } from "@/backend/member/application/usecase/dto/SignUpRequestDto";
 import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
-import { validate } from "@/utils/validation";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import { validate } from "@/utils/Validation";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 const signupLimiter = new RateLimiter("signup", 3_600_000, 5);
 

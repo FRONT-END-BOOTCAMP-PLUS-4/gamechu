@@ -4,10 +4,10 @@ import { CreateChattingDto } from "@/backend/chatting/application/usecase/dto/Cr
 import { CreateChattingSchema } from "@/backend/chatting/application/usecase/dto/CreateChattingDto";
 import { PrismaChattingRepository } from "@/backend/chatting/infra/repositories/prisma/PrismaChattingRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { IdSchema, validate } from "@/utils/validation";
+import { IdSchema, validate } from "@/utils/Validation";
 import { NextRequest, NextResponse } from "next/server";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 // 상수 정의 (프론트엔드 훅, 유스케이스와 맞춰야 함)
 const MAX_SEND_COUNT = 5;

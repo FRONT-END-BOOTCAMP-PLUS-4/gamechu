@@ -4,9 +4,9 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaWishListRepository } from "@/backend/wishlist/infra/repositories/prisma/PrismaWishListRepository";
 import { DeleteWishlistUsecase } from "@/backend/wishlist/application/usecase/DeleteWishlistUsecase";
 import { DeleteWishlistDto } from "@/backend/wishlist/application/usecase/dto/DeleteWishlistDto";
-import { validate, IdSchema } from "@/utils/validation";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import { validate, IdSchema } from "@/utils/Validation";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 type RequestParams = {
     params: Promise<{

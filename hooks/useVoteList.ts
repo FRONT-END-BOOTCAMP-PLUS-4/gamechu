@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetcher } from "@/lib/fetcher";
-import { queryKeys } from "@/lib/queryKeys";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import type { VoteDto } from "@/backend/vote/application/usecase/dto/VoteDto";
 
 type UseVoteListProps = {

@@ -5,10 +5,10 @@ import { SubmitVoteSchema } from "@/backend/vote/application/usecase/dto/SubmitV
 import { UpdateVoteUsecase } from "@/backend/vote/application/usecase/UpdateVoteUsecase";
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { validate } from "@/utils/validation";
+import { validate } from "@/utils/Validation";
 import { NextRequest, NextResponse } from "next/server";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function POST(req: NextRequest) {
     const log = logger.child({ route: "/api/member/arenas/[id]/votes", method: "POST" });

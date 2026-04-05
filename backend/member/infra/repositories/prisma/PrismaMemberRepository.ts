@@ -3,7 +3,7 @@ import { MemberRepository } from "@/backend/member/domain/repositories/MemberRep
 import { SignUpRequestDto } from "@/backend/member/application/usecase/dto/SignUpRequestDto";
 import bcrypt from "bcryptjs";
 import { UpdateProfileRequestDto } from "@/backend/member/application/usecase/dto/UpdateProfileRequestDto";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaMemberRepository implements MemberRepository {
     private prisma: PrismaClient;

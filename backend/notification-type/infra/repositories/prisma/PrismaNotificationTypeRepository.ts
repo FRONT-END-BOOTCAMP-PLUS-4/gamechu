@@ -3,7 +3,7 @@ import {
     NotificationTypeRepository,
 } from "@/backend/notification-type/domain/repositories/NotificationTypeRepository";
 import { NotificationType, PrismaClient } from "@/prisma/generated";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaNotificationTypeRepository
     implements NotificationTypeRepository

@@ -3,10 +3,10 @@ import { NotificationRecordRepository } from "@/backend/notification-record/doma
 import { PrismaNotificationRecordRepository } from "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository";
 import { NotificationRecord } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { errorResponse } from "@/utils/apiResponse";
-import { validate, IdSchema } from "@/utils/validation";
+import { errorResponse } from "@/utils/ApiResponse";
+import { validate, IdSchema } from "@/utils/Validation";
 import { NextResponse } from "next/server";
-import logger from "@/lib/logger";
+import logger from "@/lib/Logger";
 
 type RequestParams = {
     params: Promise<{

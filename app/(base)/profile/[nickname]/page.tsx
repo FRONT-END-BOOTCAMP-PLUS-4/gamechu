@@ -6,7 +6,7 @@ import ProfileTierCard from "../components/ProfileTierCard";
 import ProfileSidebar from "../components/ProfileSidebar";
 import ProfileReviewTab from "../components/tabs/ProfileReviewTab";
 import ProfileArenaTab from "./components/tab/ProfileArenaTab";
-import { useLoadingStore } from "@/stores/loadingStore";
+import { useLoadingStore } from "@/stores/LoadingStore";
 import { useRouter } from "next/navigation";
 
 type Review = {

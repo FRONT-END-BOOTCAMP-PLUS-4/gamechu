@@ -3,7 +3,7 @@ import { GameRepository } from "@/backend/game/domain/repositories/GameRepositor
 import { Game, Platform } from "@/prisma/generated";
 import { GetGameDetailDto } from "@/backend/game/application/usecase/dto/GetGameDetailDto";
 import { GameFilter } from "@/backend/game/domain/repositories/filters/GameFilter";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export type GameCard = Game & {
     gamePlatforms: {

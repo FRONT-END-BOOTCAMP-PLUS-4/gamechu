@@ -4,8 +4,8 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaPreferredThemeRepository } from "@/backend/preferred-theme/infra/repositories/prisma/PrismaPreferredThemeRepository";
 import { CreatePreferredThemesUsecase } from "@/backend/preferred-theme/application/usecase/CreatePreferredThemesUsecase";
 import { CreatePreferredThemesDto } from "@/backend/preferred-theme/application/usecase/dto/CreatePreferredThemesDto";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function POST(req: NextRequest) {
     const log = logger.child({ route: "/api/preferred-themes", method: "POST" });

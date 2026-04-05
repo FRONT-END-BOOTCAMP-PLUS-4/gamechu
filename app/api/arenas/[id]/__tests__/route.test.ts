@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@/lib/redis", () => ({
+vi.mock("@/lib/Redis", () => ({
     default: {
         del: vi.fn().mockResolvedValue(1),
         incr: vi.fn().mockResolvedValue(1),
@@ -62,7 +62,7 @@ vi.mock("@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepos
     PrismaScoreRecordRepository: vi.fn(function () {}),
 }));
 
-import redis from "@/lib/redis";
+import redis from "@/lib/Redis";
 import { PATCH, DELETE } from "../route";
 
 const makeParams = (id = "1") => ({ params: Promise.resolve({ id }) });

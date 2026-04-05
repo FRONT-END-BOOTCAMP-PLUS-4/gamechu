@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import { ChattingDto } from "@/backend/chatting/application/usecase/dto/ChattingDto";
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 import Image from "next/image";
 
 type ArenaChatListProps = {

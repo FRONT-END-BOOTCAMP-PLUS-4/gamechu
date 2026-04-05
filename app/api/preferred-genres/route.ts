@@ -4,8 +4,8 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaPreferredGenreRepository } from "@/backend/preferred-genre/infra/repositories/prisma/PrismaPreferredGenreRepository";
 import { CreatePreferredGenresUsecase } from "@/backend/preferred-genre/application/usecase/CreatePreferredGenresUsecase";
 import { CreatePreferredGenresDto } from "@/backend/preferred-genre/application/usecase/dto/CreatePreferredGenresDto";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function POST(req: NextRequest) {
     const log = logger.child({ route: "/api/preferred-genres", method: "POST" });

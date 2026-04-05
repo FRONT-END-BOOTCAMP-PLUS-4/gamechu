@@ -14,13 +14,13 @@ import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/reposi
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { Arena } from "@/prisma/generated";
 import { NextRequest, NextResponse } from "next/server";
-import redis from "@/lib/redis";
-import { withCache } from "@/lib/withCache";
-import { arenaDetailKey, ARENA_LIST_VERSION_KEY } from "@/lib/cacheKey";
-import { validate, IdSchema } from "@/utils/validation";
+import redis from "@/lib/Redis";
+import { withCache } from "@/lib/WithCache";
+import { arenaDetailKey, ARENA_LIST_VERSION_KEY } from "@/lib/CacheKey";
+import { validate, IdSchema } from "@/utils/Validation";
 import type { ArenaStatus } from "@/types/arena-status";
-import { errorResponse } from "@/utils/apiResponse";
-import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/ApiResponse";
+import logger from "@/lib/Logger";
 
 type RequestParams = {
     params: Promise<{ id: string }>;

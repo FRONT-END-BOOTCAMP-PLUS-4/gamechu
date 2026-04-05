@@ -10,7 +10,7 @@ import VotingArenaSection from "./components/VotingArenaSection";
 import WaitingArenaSection from "./components/WaitingArenaSection";
 import SelectedArenaSection from "./components/SelectedArenaSection";
 import Modals from "@/app/components/Modals";
-import { useLoadingStore } from "@/stores/loadingStore";
+import { useLoadingStore } from "@/stores/LoadingStore";
 
 export default function ArenaPage() {
     const searchParams = useSearchParams();

@@ -1,6 +1,6 @@
 "use client";
 import Lottie from "lottie-react";
-import { useLoadingStore } from "@/stores/loadingStore";
+import { useLoadingStore } from "@/stores/LoadingStore";
 import loadingJson from "@/public/loading.json";
 
 export default function LottieLoader() {

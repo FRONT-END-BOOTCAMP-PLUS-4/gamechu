@@ -21,10 +21,10 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { type LexicalEditor, type EditorState } from "lexical";
 import { $getRoot } from "lexical";
 import { sharedNodes } from "./lexical/nodes";
-import { sharedTheme } from "./lexical/sharedTheme";
+import { sharedTheme } from "./lexical/SharedTheme";
 import { ToolbarPlugin } from "./lexical/plugins/ToolbarPlugin";
 import { ImagePlugin } from "./lexical/plugins/ImagePlugin";
-import { AUTOLINK_MATCHERS } from "./lexical/urlMatchers";
+import { AUTOLINK_MATCHERS } from "./lexical/UrlMatchers";
 
 type CommentProps = {
     gameId: string;

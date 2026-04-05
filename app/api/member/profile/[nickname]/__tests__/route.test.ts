@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, vi } from "vitest";
 
-vi.mock("@/lib/redis", () => ({
+vi.mock("@/lib/Redis", () => ({
     default: {
         get: vi.fn().mockResolvedValue(null),
         setex: vi.fn().mockResolvedValue("OK"),

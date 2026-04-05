@@ -4,8 +4,8 @@ import { ApplyAttendanceScoreUsecase } from "@/backend/score-policy/application/
 import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
-import { errorResponse } from "@/utils/apiResponse";
-import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/ApiResponse";
+import logger from "@/lib/Logger";
 
 export async function POST() {
     const memberId = await getAuthUserId();

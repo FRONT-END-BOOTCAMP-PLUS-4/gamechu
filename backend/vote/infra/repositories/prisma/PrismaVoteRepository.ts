@@ -1,7 +1,7 @@
 import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepository";
 import { Vote, Prisma, PrismaClient } from "@/prisma/generated";
 import { VoteFilter } from "@/backend/vote/domain/repositories/filters/VoteFilter";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 type VoteWithoutId = Omit<Vote, "id">;
 export class PrismaVoteRepository implements VoteRepository {

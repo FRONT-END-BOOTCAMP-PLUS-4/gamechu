@@ -3,9 +3,9 @@ import { GetReviewsByGameIdUsecase } from "@/backend/review/application/usecase/
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { errorResponse } from "@/utils/apiResponse";
-import { validate, IdSchema } from "@/utils/validation";
-import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/ApiResponse";
+import { validate, IdSchema } from "@/utils/Validation";
+import logger from "@/lib/Logger";
 
 export async function GET(
     req: NextRequest,

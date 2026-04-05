@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { URL_REGEX } from "../../urlMatchers";
+import { URL_REGEX } from "../../UrlMatchers";
 
 function detectAutoLinkUrl(text: string): string | null {
     const match = URL_REGEX.exec(text);

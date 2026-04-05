@@ -1,7 +1,7 @@
 // hooks/useArenas.ts
 import { useQuery } from "@tanstack/react-query";
-import { fetcher } from "@/lib/fetcher";
-import { queryKeys, type ArenasQueryParams } from "@/lib/queryKeys";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys, type ArenasQueryParams } from "@/lib/QueryKeys";
 import type { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
 
 

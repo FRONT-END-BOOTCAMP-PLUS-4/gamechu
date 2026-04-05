@@ -4,9 +4,9 @@ import { NotificationRecordRepository } from "@/backend/notification-record/doma
 import { PrismaNotificationRecordRepository } from "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository";
 import { CreateNotificationRecordUsecase } from "@/backend/notification-record/application/usecase/CreateNotificationRecordUsecase";
 import { NotificationRecord } from "@/prisma/generated";
-import { validate } from "@/utils/validation";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import { validate } from "@/utils/Validation";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function POST(request: Request) {
     const log = logger.child({ route: "/api/notification-records", method: "POST" });

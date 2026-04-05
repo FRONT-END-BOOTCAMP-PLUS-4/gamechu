@@ -4,7 +4,7 @@ import { WishListRepository } from "../../../domain/repositories/WishListReposit
 import { WishlistFilter } from "../../../domain/filters/WishlistFilter"; // Uncomment if needed
 import { Prisma } from "@/prisma/generated";
 import { CreateWishlistInput } from "../../../domain/repositories/WishListRepository";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/Prisma";
 
 export class PrismaWishListRepository implements WishListRepository {
     private prisma: PrismaClient;

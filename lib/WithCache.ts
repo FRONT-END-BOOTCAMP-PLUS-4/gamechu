@@ -1,5 +1,5 @@
-import redis from "@/lib/redis";
-import logger from "@/lib/logger";
+import redis from "@/lib/Redis";
+import logger from "@/lib/Logger";
 
 export async function withCache<T>(
     key: string,

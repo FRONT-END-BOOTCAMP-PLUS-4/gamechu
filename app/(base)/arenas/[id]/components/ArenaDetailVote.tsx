@@ -1,7 +1,7 @@
 "use client";
 
 import VoteStatusBar from "../../components/VoteStatusBar";
-import useArenaStore from "@/stores/useArenaStore";
+import useArenaStore from "@/stores/UseArenaStore";
 import { useCallback, useEffect, useState } from "react";
 import { useVote } from "@/hooks/useVote";
 import TierBadge from "@/app/components/TierBadge";

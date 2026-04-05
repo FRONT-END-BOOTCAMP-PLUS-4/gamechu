@@ -5,7 +5,7 @@ import GameCardList from "./components/GameCardList";
 import SearchBar from "./components/SearchBar";
 import Pager from "@/app/components/Pager";
 import GameSort from "./components/GameSort";
-import { useLoadingStore } from "@/stores/loadingStore";
+import { useLoadingStore } from "@/stores/LoadingStore";
 import GamePageHeader from "./components/GamePageHeader";
 import GameFilterWrapper from "./components/GameFilterWrapper";
 import { Filter } from "lucide-react";

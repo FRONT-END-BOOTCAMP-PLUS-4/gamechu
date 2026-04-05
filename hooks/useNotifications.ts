@@ -1,7 +1,7 @@
 // hooks/useNotifications.ts
 import { useQuery } from "@tanstack/react-query";
-import { fetcher } from "@/lib/fetcher";
-import { queryKeys } from "@/lib/queryKeys";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import type { NotificationRecordListDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordListDto";
 
 /**

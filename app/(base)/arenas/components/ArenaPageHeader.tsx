@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Button from "@/app/components/Button";
-import useModalStore from "@/stores/modalStore";
+import useModalStore from "@/stores/ModalStore";
 
 export default function ArenaPageHeader() {
     return (

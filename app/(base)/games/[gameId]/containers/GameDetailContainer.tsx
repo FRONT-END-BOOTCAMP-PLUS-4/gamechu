@@ -1,4 +1,4 @@
-import GameHeaderImageSection from "../components/GameHedaerImageSection";
+import GameHeaderImageSection from "../components/GameHeaderImageSection";
 import GameInfoCard from "../components/GameInfoCard";
 import ClientContentWrapper from "../components/ClientContentWrapper";
 import { GetGameDetailUsecase } from "@/backend/game/application/usecase/GetGameDetailUsecase";

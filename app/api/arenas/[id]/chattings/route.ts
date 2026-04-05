@@ -2,9 +2,9 @@ import { GetChattingDto } from "@/backend/chatting/application/usecase/dto/GetCh
 import { GetChattingUsecase } from "@/backend/chatting/application/usecase/GetChattingUsecase";
 import { PrismaChattingRepository } from "@/backend/chatting/infra/repositories/prisma/PrismaChattingRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { IdSchema, validate } from "@/utils/validation";
+import { IdSchema, validate } from "@/utils/Validation";
 import { NextResponse } from "next/server";
-import logger from "@/lib/logger";
+import logger from "@/lib/Logger";
 
 type RequestParams = {
     params: Promise<{

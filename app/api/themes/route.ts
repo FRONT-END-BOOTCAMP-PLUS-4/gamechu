@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { PrismaThemeRepository } from "@/backend/theme/infra/repositories/prisma/PrismaThemeRepository";
 import { GetAllThemesUsecase } from "@/backend/theme/application/usecase/GetAllThemesUsecase";
-import { withCache } from "@/lib/withCache";
-import { themeListKey } from "@/lib/cacheKey";
-import logger from "@/lib/logger";
-import { errorResponse } from "@/utils/apiResponse";
+import { withCache } from "@/lib/WithCache";
+import { themeListKey } from "@/lib/CacheKey";
+import logger from "@/lib/Logger";
+import { errorResponse } from "@/utils/ApiResponse";
 
 export async function GET() {
     const log = logger.child({ route: "/api/themes", method: "GET" });

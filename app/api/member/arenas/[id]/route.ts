@@ -6,9 +6,9 @@ import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaReposi
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
 import { Arena } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
-import { validate, IdSchema } from "@/utils/validation";
+import { validate, IdSchema } from "@/utils/Validation";
 import { NextResponse } from "next/server";
-import logger from "@/lib/logger";
+import logger from "@/lib/Logger";
 
 type RequestParams = {
     params: Promise<{
