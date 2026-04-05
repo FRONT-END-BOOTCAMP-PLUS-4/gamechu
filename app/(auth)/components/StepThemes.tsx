@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
 import { Theme } from "@/prisma/generated";
@@ -11,23 +14,25 @@ type Props = {
 }
 
 export default function StepThemes({ onNext, onBack }: Props) {
-    const [themes, setThemes] = useState<Theme[]>([]);
     const [selectedThemeIds, setSelectedThemeIds] = useState<number[]>([]);
 
-    // ✅ 테마 데이터 가져오기
-    useEffect(() => {
-        const fetchThemes = async () => {
-            try {
-                const res = await fetch("/api/themes");
-                const data: Theme[] = await res.json();
-                setThemes(data);
-            } catch {
-                // fetch error — silently ignored; list remains empty
-            }
-        };
+    const { data: themes = [] } = useQuery<Theme[]>({
+        queryKey: queryKeys.themes(),
+        queryFn: () => fetcher("/api/themes"),
+    });
 
-        fetchThemes();
-    }, []);
+    const { mutate: saveThemes } = useMutation({
+        mutationFn: () =>
+            fetch("/api/preferred-themes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ themeIds: selectedThemeIds }),
+            }).then((res) => {
+                if (!res.ok) throw new Error("선호 테마 저장에 실패했습니다.");
+            }),
+        onSuccess: () => onNext(),
+        onError: () => alert("선호 테마 저장에 실패했습니다."),
+    });
 
     const toggleTheme = (themeId: number) => {
         setSelectedThemeIds((prev) =>
@@ -37,32 +42,12 @@ export default function StepThemes({ onNext, onBack }: Props) {
         );
     };
 
-    const handleNext = async () => {
-        //선택 안했으면 그냥 다음
+    const handleNext = () => {
         if (selectedThemeIds.length === 0) {
             onNext();
             return;
         }
-
-        try {
-            const res = await fetch("/api/preferred-themes", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    themeIds: selectedThemeIds, // ✅ memberId 제거
-                }),
-            });
-
-            if (res.ok) {
-                onNext();
-            } else {
-                alert("선호 테마 저장에 실패했습니다.");
-            }
-        } catch {
-            alert("오류가 발생했습니다.");
-        }
+        saveThemes();
     };
 
     return (

@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import PointHistoryCard from "../PointHistoryCard";
 import Pager from "@/app/components/Pager";
-import { useLoadingStore } from "@/stores/LoadingStore"; // ✅ 전역 로딩 상태 사용
 
 interface ScoreRecord {
     actualScore: number;
@@ -16,10 +18,13 @@ interface ScoreRecord {
 }
 
 export default function ProfilePointHistoryTab() {
-    const { setLoading } = useLoadingStore(); // ✅ 전역 로딩 제어
-    const [records, setRecords] = useState<ScoreRecord[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
+
+    const { data: records = [] } = useQuery<ScoreRecord[]>({
+        queryKey: queryKeys.scoreRecords(),
+        queryFn: () => fetcher("/api/member/scores"),
+    });
 
     const totalItems = records.length;
     const endPage = Math.ceil(totalItems / itemsPerPage);
@@ -29,25 +34,6 @@ export default function ProfilePointHistoryTab() {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
-
-    useEffect(() => {
-        const fetchRecords = async () => {
-            setLoading(true); // ✅ 로딩 시작
-
-            try {
-                const res = await fetch("/api/member/scores");
-                if (!res.ok) throw new Error("스코어 기록 조회 실패");
-                const data = await res.json();
-                setRecords(data);
-            } catch {
-                // fetch error — silently ignored; records remain empty
-            } finally {
-                setLoading(false); // ✅ 로딩 종료
-            }
-        };
-
-        fetchRecords();
-    }, [setLoading]);
 
     return (
         <div className="flex w-full flex-col gap-8 rounded-xl bg-background-400 p-6 shadow">

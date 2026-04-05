@@ -2,6 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/QueryKeys";
 
 import { NotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordDto";
 
@@ -12,6 +14,7 @@ type NotificationRecordItemProps = {
 export default function NotificationRecordItem(
     props: NotificationRecordItemProps
 ) {
+    const queryClient = useQueryClient();
     const notificationRecordDto: NotificationRecordDto =
         props.notificationRecordDto;
     const createdAt = new Date(notificationRecordDto.createdAt);
@@ -22,15 +25,18 @@ export default function NotificationRecordItem(
         String(createdAt.getHours())
     )}:${pad(String(createdAt.getMinutes()))}`;
 
-    const handleDelete = async (id: number) => {
-        await fetch(`api/member/notifications/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                // Authorization: `Bearer ${token}`
-            },
-        });
-    };
+    const { mutate: deleteNotification } = useMutation({
+        mutationFn: (id: number) =>
+            fetch(`/api/member/notification-records/${id}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: queryKeys.notifications(1),
+            });
+        },
+    });
 
     return (
         <div className="relative w-full p-2.5 rounded-lg bg-background-300 hover:outline hover:outline-1 hover:outline-primary-purple-200 transition-colors">
@@ -63,7 +69,7 @@ export default function NotificationRecordItem(
                     <span>{formattedDate}</span>
                     <button
                         className="hover:text-white"
-                        onClick={() => handleDelete(notificationRecordDto.id)}
+                        onClick={() => deleteNotification(notificationRecordDto.id)}
                     >
                         <Image
                             src="/icons/delete.svg"

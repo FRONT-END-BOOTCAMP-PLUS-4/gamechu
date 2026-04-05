@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Input from "@/app/components/Input";
 import Button from "@/app/components/Button";
@@ -17,9 +18,7 @@ type Props = {
 export default function ProfileInfoTab(props: Props) {
     const [isEdit, setIsEdit] = useState(false);
     const [nickname, setNickname] = useState(props.nickname);
-    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<
-        boolean | null
-    >(null);
+    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<boolean | null>(null);
     const [nicknameMessage, setNicknameMessage] = useState<{
         text: string;
         isError: boolean;
@@ -32,51 +31,75 @@ export default function ProfileInfoTab(props: Props) {
     const [, setImageFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const checkNicknameDuplicate = async () => {
+    const { mutate: checkNickname } = useMutation({
+        mutationFn: () =>
+            fetch(`/api/member/nickname-check?nickname=${encodeURIComponent(nickname)}`).then(
+                (res) => res.json().then((data) => ({ status: res.status, ok: res.ok, data }))
+            ),
+        onSuccess: ({ status, ok, data }) => {
+            if (status === 409) {
+                setNicknameMessage({ text: data.message, isError: true });
+                setIsNicknameDuplicate(true);
+                return;
+            }
+            if (!ok) {
+                setNicknameMessage({ text: data.message || "중복 확인 실패", isError: true });
+                setIsNicknameDuplicate(null);
+                return;
+            }
+            setIsNicknameDuplicate(false);
+            setNicknameMessage({ text: data.message, isError: false });
+        },
+        onError: (err) => {
+            const message = err instanceof Error ? err.message : "오류가 발생했습니다.";
+            setNicknameMessage({ text: message, isError: true });
+            setIsNicknameDuplicate(null);
+        },
+    });
+
+    const { mutate: updateProfile } = useMutation({
+        mutationFn: () =>
+            fetch("/api/member/profile", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    nickname,
+                    isMale: gender === "M",
+                    birthDate: birth,
+                    imageUrl: previewImage,
+                }),
+            }).then(async (res) => {
+                if (!res.ok) {
+                    const error = await res.json();
+                    throw new Error(error.message || "프로필 수정 실패");
+                }
+            }),
+        onSuccess: () => {
+            alert("프로필이 수정되었습니다.");
+            setIsEdit(false);
+            setNicknameMessage(null);
+        },
+        onError: (err) => {
+            alert(err instanceof Error ? err.message : "예기치 못한 오류가 발생했습니다.");
+        },
+    });
+
+    const checkNicknameDuplicate = () => {
         setNicknameMessage(null);
 
         if (!nickname) {
-            setNicknameMessage({
-                text: "닉네임을 입력해주세요.",
-                isError: true,
-            });
+            setNicknameMessage({ text: "닉네임을 입력해주세요.", isError: true });
             setIsNicknameDuplicate(null);
             return;
         }
 
         if (nickname.length > 8) {
-            setNicknameMessage({
-                text: "닉네임은 8자 이하여야 합니다.",
-                isError: true,
-            });
+            setNicknameMessage({ text: "닉네임은 8자 이하여야 합니다.", isError: true });
             setIsNicknameDuplicate(null);
             return;
         }
 
-        try {
-            const res = await fetch(
-                `/api/member/nickname-check?nickname=${encodeURIComponent(nickname)}`
-            );
-            const data = await res.json();
-
-            if (res.status === 409) {
-                setNicknameMessage({ text: data.message, isError: true });
-                setIsNicknameDuplicate(true);
-                return;
-            }
-
-            if (!res.ok) {
-                throw new Error(data.message || "중복 확인 실패");
-            }
-
-            setIsNicknameDuplicate(false);
-            setNicknameMessage({ text: data.message, isError: false });
-        } catch (err) {
-            const message =
-                err instanceof Error ? err.message : "오류가 발생했습니다.";
-            setNicknameMessage({ text: message, isError: true });
-            setIsNicknameDuplicate(null);
-        }
+        checkNickname();
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +112,24 @@ export default function ProfileInfoTab(props: Props) {
             };
             reader.readAsDataURL(file);
         }
+    };
+
+    const handleSave = () => {
+        if (nickname !== props.nickname && isNicknameDuplicate === null) {
+            setNicknameMessage({
+                text: "닉네임 중복 검사를 먼저 진행해주세요.",
+                isError: true,
+            });
+            return;
+        }
+        if (isNicknameDuplicate) {
+            setNicknameMessage({
+                text: "이미 사용 중인 닉네임입니다.",
+                isError: true,
+            });
+            return;
+        }
+        updateProfile();
     };
 
     return (
@@ -231,61 +272,7 @@ export default function ProfileInfoTab(props: Props) {
             <div className="flex w-full justify-end gap-2 pt-4">
                 {isEdit ? (
                     <>
-                        <Button
-                            label="수정 완료"
-                            onClick={async () => {
-                                if (
-                                    nickname !== props.nickname &&
-                                    isNicknameDuplicate === null
-                                ) {
-                                    setNicknameMessage({
-                                        text: "닉네임 중복 검사를 먼저 진행해주세요.",
-                                        isError: true,
-                                    });
-                                    return;
-                                }
-                                if (isNicknameDuplicate) {
-                                    setNicknameMessage({
-                                        text: "이미 사용 중인 닉네임입니다.",
-                                        isError: true,
-                                    });
-                                    return;
-                                }
-
-                                try {
-                                    const res = await fetch(
-                                        "/api/member/profile",
-                                        {
-                                            method: "PUT",
-                                            headers: {
-                                                "Content-Type":
-                                                    "application/json",
-                                            },
-                                            body: JSON.stringify({
-                                                nickname,
-                                                isMale: gender === "M",
-                                                birthDate: birth,
-                                                imageUrl: previewImage,
-                                            }),
-                                        }
-                                    );
-
-                                    if (!res.ok) {
-                                        const error = await res.json();
-                                        alert(
-                                            error.message || "프로필 수정 실패"
-                                        );
-                                        return;
-                                    }
-
-                                    alert("프로필이 수정되었습니다.");
-                                    setIsEdit(false);
-                                    setNicknameMessage(null);
-                                } catch {
-                                    alert("예기치 못한 오류가 발생했습니다.");
-                                }
-                            }}
-                        />
+                        <Button label="수정 완료" onClick={handleSave} />
                         <Button
                             label="취소"
                             type="black"

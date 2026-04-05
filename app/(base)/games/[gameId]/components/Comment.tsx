@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useCallback } from "react";
+import { useMutation } from "@tanstack/react-query";
 import StarRating from "@/app/(base)/games/[gameId]/components/StarRating";
 import Button from "@/app/components/Button";
 import { useRouter } from "next/navigation";
@@ -65,7 +66,6 @@ export default function Comment({
         message: "",
         status: "info" as "success" | "error" | "info",
     });
-    const [isLoading, setIsLoading] = useState(false);
     const [charCount, setCharCount] = useState(0);
 
     const editorRef = useRef<LexicalEditor | null>(null);
@@ -97,7 +97,51 @@ export default function Comment({
         imageInputRef.current?.click();
     };
 
-    const handleSubmit = async () => {
+    const { mutate: submitReview, isPending: isLoading } = useMutation({
+        mutationFn: async (payload: { contentJson: string; isEditing: boolean }) => {
+            const res = await fetch(
+                payload.isEditing
+                    ? `/api/member/games/${gameId}/reviews/${editingReviewId}`
+                    : `/api/member/games/${gameId}/reviews/`,
+                {
+                    method: payload.isEditing ? "PATCH" : "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        gameId: Number(gameId),
+                        content: payload.contentJson,
+                        rating: Math.round(rating * 2),
+                    }),
+                }
+            );
+
+            if (!res.ok) {
+                let serverMessage: string | undefined;
+                try {
+                    const errData = await res.json();
+                    serverMessage = typeof errData?.message === "string" ? errData.message : undefined;
+                } catch {
+                    // ignore json parse failure
+                }
+                throw new Error(serverMessage ?? (payload.isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패"));
+            }
+        },
+        onSuccess: () => {
+            setRating(0);
+            onSuccess();
+        },
+        onError: (err) => {
+            setToast({
+                show: true,
+                message: err instanceof Error ? err.message : "리뷰 저장에 실패했습니다.",
+                status: "error",
+            });
+            setTimeout(() => {
+                setToast((prev) => ({ ...prev, show: false }));
+            }, 3000);
+        },
+    });
+
+    const handleSubmit = useCallback(() => {
         if (isLoading) return;
         if (!viewerId || typeof viewerId !== "string") {
             setToast({
@@ -134,51 +178,10 @@ export default function Comment({
         const contentJson = JSON.stringify(editor.getEditorState().toJSON());
         if (!contentJson.trim()) return;
 
-        setIsLoading(true);
-        const isEditing = !!editingReviewId;
+        submitReview({ contentJson, isEditing: !!editingReviewId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoading, viewerId, rating, editingReviewId, submitReview]);
 
-        try {
-            const res = await fetch(
-                isEditing
-                    ? `/api/member/games/${gameId}/reviews/${editingReviewId}`
-                    : `/api/member/games/${gameId}/reviews/`,
-                {
-                    method: isEditing ? "PATCH" : "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        gameId: Number(gameId),
-                        content: contentJson,
-                        rating: Math.round(rating * 2),
-                    }),
-                }
-            );
-
-            if (!res.ok) {
-                let serverMessage: string | undefined;
-                try {
-                    const errData = await res.json();
-                    serverMessage = typeof errData?.message === "string" ? errData.message : undefined;
-                } catch {
-                    // ignore json parse failure
-                }
-                throw new Error(serverMessage ?? (isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패"));
-            }
-
-            setRating(0);
-            onSuccess();
-        } catch (err) {
-            setToast({
-                show: true,
-                message: err instanceof Error ? err.message : "리뷰 저장에 실패했습니다.",
-                status: "error",
-            });
-            setTimeout(() => {
-                setToast((prev) => ({ ...prev, show: false }));
-            }, 3000);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const charCountColor =
         charCount >= MAX_CHARS

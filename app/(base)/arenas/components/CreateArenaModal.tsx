@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import ModalWrapper from "@/app/components/ModalWrapper";
 import useModalStore from "@/stores/ModalStore";
 import { useEffect, useState } from "react";
@@ -21,13 +22,12 @@ export default function CreateArenaModal() {
     const [titleError, setTitleError] = useState<string>("");
     const [descriptionError, setDescriptionError] = useState<string>("");
     const [dateError, setDateError] = useState<string>("");
-    const [submitting, setSubmitting] = useState<boolean>(false);
     const [noticeMessage, setNoticeMessage] = useState(
         "작성 후 수정이 불가능하니 내용을 신중히 작성해주세요.\n도전장 작성 시 100포인트가 차감됩니다."
     );
     const [noticeType, setNoticeType] = useState<"normal" | "error">("normal");
     const [shakeKey, setShakeKey] = useState(0);
-    // 모달 열렸을 때 스크롤 방지
+
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = "hidden";
@@ -65,52 +65,39 @@ export default function CreateArenaModal() {
         return valid;
     };
 
-    const handleSubmit = async () => {
-        if (submitting) return;
-        if (!validate()) return;
-
-        setSubmitting(true);
-
-        try {
-            const arenaResult = await fetch(`/api/member/arenas`, {
+    const { mutate: createArena, isPending } = useMutation({
+        mutationFn: async () => {
+            const arenaResult = await fetch("/api/member/arenas", {
                 method: "POST",
-                body: JSON.stringify({
-                    title,
-                    description,
-                    startDate,
-                }),
+                body: JSON.stringify({ title, description, startDate }),
             });
 
             if (!arenaResult.ok) {
                 const errorData = await arenaResult.json();
-                const errorMessage =
-                    errorData.error || "투기장 생성에 실패했습니다.";
-                setNoticeMessage(errorMessage);
-                setNoticeType("error");
-                setShakeKey((prev) => prev + 1);
-                return;
+                throw new Error(errorData.message || "투기장 생성에 실패했습니다.");
             }
 
-            // 투기장 생성 성공 시에만 점수 차감
-            // TODO: get policyId and actualScore from Score Policy Database
-            const scoreRecordResult = await fetch(`/api/member/scores`, {
+            await fetch("/api/member/scores", {
                 method: "POST",
-                body: JSON.stringify({
-                    policyId: 4,
-                    actualScore: -100,
-                }),
+                body: JSON.stringify({ policyId: 4, actualScore: -100 }),
             });
-            await scoreRecordResult.json();
-            if (scoreRecordResult.ok) {
-                closeModal();
-            }
-            // 새로고침
+        },
+        onSuccess: () => {
+            closeModal();
             window.location.reload();
-        } catch {
-            // arena creation error — silently ignored; user is redirected on success
-        } finally {
-            setSubmitting(false);
-        }
+        },
+        onError: (err) => {
+            const message = err instanceof Error ? err.message : "투기장 생성에 실패했습니다.";
+            setNoticeMessage(message);
+            setNoticeType("error");
+            setShakeKey((prev) => prev + 1);
+        },
+    });
+
+    const handleSubmit = () => {
+        if (isPending) return;
+        if (!validate()) return;
+        createArena();
     };
 
     return (
@@ -209,7 +196,7 @@ export default function CreateArenaModal() {
                             }
                         }}
                         showTimeSelect
-                        timeIntervals={10} // ⏱ 10분 단위
+                        timeIntervals={10}
                         timeCaption="시간"
                         dateFormat="yyyy-MM-dd HH:mm"
                         className={`w-full rounded px-4 py-2 ${
@@ -230,8 +217,9 @@ export default function CreateArenaModal() {
                     />
                     <Button
                         onClick={handleSubmit}
-                        label="작성하기"
+                        label={isPending ? "처리 중..." : "작성하기"}
                         size="small"
+                        disabled={isPending}
                     />
                 </div>
             </div>

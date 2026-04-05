@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import ProfileSummaryCard from "./components/ProfileSummaryCard";
 import ProfileTierCard from "./components/ProfileTierCard";
@@ -41,74 +44,68 @@ type WishlistPageData = {
     totalCount: number;
 };
 
+type MyProfile = {
+    nickname: string;
+    imageUrl: string;
+    score: number;
+    createdAt: string;
+    email: string;
+    password: string;
+    birthDate: string;
+    isMale: boolean;
+};
+
 export default function ProfilePage() {
     const { setLoading } = useLoadingStore();
     const [activeTab, setActiveTab] = useState("reviews");
-    const [reviewCount, setReviewCount] = useState(0);
-    const [wishlistPageData, setWishlistPageData] = useState<WishlistPageData>({
+    const [wishlistPage, setWishlistPage] = useState(1);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        getAuthUserId().then((id) => setIsAuthenticated(!!id));
+    }, []);
+
+    const { data: profile, isLoading: profileLoading } = useQuery<MyProfile>({
+        queryKey: queryKeys.myProfile(),
+        queryFn: () => fetcher("/api/member/profile"),
+        enabled: isAuthenticated,
+    });
+
+    const { data: reviews = [], isLoading: reviewsLoading } = useQuery<Review[]>({
+        queryKey: queryKeys.myReviews(),
+        queryFn: () => fetcher("/api/reviews/member"),
+        enabled: isAuthenticated,
+    });
+
+    const { data: wishlistPageData, isLoading: wishlistLoading } = useQuery<WishlistPageData>({
+        queryKey: queryKeys.myWishlists(wishlistPage),
+        queryFn: () => fetcher(`/api/member/wishlists?page=${wishlistPage}`),
+        enabled: isAuthenticated,
+    });
+
+    const isLoading = profileLoading || reviewsLoading || wishlistLoading;
+
+    useEffect(() => {
+        setLoading(isLoading);
+    }, [isLoading, setLoading]);
+
+    const nickname = profile?.nickname ?? "";
+    const imageUrl = profile?.imageUrl ?? "/icons/arena.svg";
+    const score = profile?.score ?? 0;
+    const createdAt = profile?.createdAt?.slice(0, 10) ?? "";
+    const email = profile?.email ?? "";
+    const password = profile?.password ?? "";
+    const birthDate = profile?.birthDate ?? "";
+    const isMale = profile?.isMale ?? true;
+    const reviewCount = reviews.length;
+    const wishlistData: WishlistPageData = wishlistPageData ?? {
         wishlists: [],
         currentPage: 1,
         pages: [],
         endPage: 1,
         totalCount: 0,
-    });
-
-    const [nickname, setNickname] = useState("");
-    const [imageUrl, setImageUrl] = useState("/icons/arena.svg");
-    const [score, setScore] = useState(0);
-    const [createdAt, setCreatedAt] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [birthDate, setBirthDate] = useState("");
-    const [isMale, setIsMale] = useState(true);
-    const [reviews, setReviews] = useState<Review[]>([]);
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    const fetchWishlistPage = async (page: number) => {
-        const res = await fetch(`/api/member/wishlists?page=${page}`);
-        const data = await res.json();
-        setWishlistPageData(data);
     };
-
-    const fetchProfileData = useCallback(async () => {
-        const id = await getAuthUserId();
-        if (!id) return;
-
-        setLoading(true);
-
-        try {
-            const [reviewRes, profileRes] = await Promise.all([
-                fetch("/api/reviews/member"),
-                fetch("/api/member/profile"),
-            ]);
-
-            const reviews = await reviewRes.json();
-            const profile = await profileRes.json();
-
-            setReviews(reviews);
-            setReviewCount(reviews.length);
-            setNickname(profile.nickname);
-            setImageUrl(profile.imageUrl);
-            setScore(profile.score);
-            setCreatedAt(profile.createdAt.slice(0, 10));
-            setEmail(profile.email);
-            setPassword(profile.password);
-            setBirthDate(profile.birthDate);
-            setIsMale(profile.isMale);
-
-            await fetchWishlistPage(1); // ✅ 1페이지 위시리스트 호출
-
-            setIsLoaded(true);
-        } catch {
-            // profile load error — component will show empty state
-        } finally {
-            setLoading(false);
-        }
-    }, [setLoading]);
-
-    useEffect(() => {
-        fetchProfileData();
-    }, [fetchProfileData]);
+    const isLoaded = !isLoading && !!profile;
 
     return (
         <section className="min-h-screen w-full bg-background-400 px-4 py-4 font-sans text-font-100 md:px-10 md:py-10">
@@ -117,7 +114,7 @@ export default function ProfilePage() {
                 <ProfileSummaryCard
                     isOwnProfile={true}
                     reviewCount={reviewCount}
-                    wishlistCount={wishlistPageData.totalCount}
+                    wishlistCount={wishlistData.totalCount}
                     nickname={nickname}
                     imageUrl={imageUrl}
                     score={score}
@@ -150,11 +147,11 @@ export default function ProfilePage() {
                     )}
                     {activeTab === "wishlists" && isLoaded && (
                         <ProfileWishlistTab
-                            games={wishlistPageData.wishlists}
-                            pages={wishlistPageData.pages}
-                            currentPage={wishlistPageData.currentPage}
-                            endPage={wishlistPageData.endPage}
-                            onPageChange={fetchWishlistPage}
+                            games={wishlistData.wishlists}
+                            pages={wishlistData.pages}
+                            currentPage={wishlistData.currentPage}
+                            endPage={wishlistData.endPage}
+                            onPageChange={setWishlistPage}
                         />
                     )}
                     {activeTab === "score-history" && isLoaded && (

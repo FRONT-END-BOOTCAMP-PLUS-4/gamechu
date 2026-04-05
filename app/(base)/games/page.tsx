@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import GameCardList from "./components/GameCardList";
 import SearchBar from "./components/SearchBar";
 import Pager from "@/app/components/Pager";
@@ -25,12 +28,21 @@ interface OptionItem {
     name: string;
 }
 
+interface GameMeta {
+    genres: OptionItem[];
+    themes: OptionItem[];
+    platforms: OptionItem[];
+}
+
+interface GameListResponse {
+    games: GameCard[];
+    totalCount: number;
+}
+
 export default function GamePage() {
     const { setLoading } = useLoadingStore();
     const [filterIsOpen, setFilterIsOpen] = useState(false);
     const itemsPerPage = 10;
-    const [games, setGames] = useState<GameCard[]>([]);
-    const [totalItems, setTotalItems] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedTag, setSelectedTag] = useState<
         { id: number; type: "genre" | "theme" } | undefined
@@ -38,88 +50,61 @@ export default function GamePage() {
     const [selectedPlatformId, setSelectedPlatformId] = useState<
         number | undefined
     >();
-    const [genres, setGenres] = useState<OptionItem[]>([]);
-    const [themes, setThemes] = useState<OptionItem[]>([]);
-    const [platforms, setPlatforms] = useState<OptionItem[]>([]);
     const [sortBy, setSortBy] = useState<"popular" | "rating" | "latest">(
         "popular"
     );
-    const isFilterReady =
-        Array.isArray(genres) &&
-        genres.length > 0 &&
-        Array.isArray(themes) &&
-        themes.length > 0 &&
-        Array.isArray(platforms) &&
-        platforms.length > 0;
     const [searchQuery, setSearchQuery] = useState("");
-    const endPage = Math.ceil(totalItems / itemsPerPage);
-    const pages = Array.from({ length: endPage }, (_, i) => i + 1);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedTag, selectedPlatformId, searchQuery, sortBy]);
 
-    useEffect(() => {
-        const fetchFilters = async () => {
-            setLoading(true);
-            const res = await fetch("/api/games?meta=true");
-            const data = await res.json();
-            setGenres(data.genres);
-            setThemes(data.themes);
-            setPlatforms(data.platforms);
-        };
-        setTimeout(() => {
-            fetchFilters();
-        }, 0);
+    const { data: meta, isLoading: metaLoading } = useQuery<GameMeta>({
+        queryKey: queryKeys.gameMeta(),
+        queryFn: () => fetcher("/api/games?meta=true"),
+    });
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const genres = meta?.genres ?? [];
+    const themes = meta?.themes ?? [];
+    const platforms = meta?.platforms ?? [];
+    const isFilterReady = genres.length > 0 && themes.length > 0 && platforms.length > 0;
 
-    useEffect(() => {
-        const controller = new AbortController();
+    const gamesParams = {
+        page: currentPage,
+        size: itemsPerPage,
+        ...(selectedTag?.type === "genre" ? { genreId: selectedTag.id } : {}),
+        ...(selectedTag?.type === "theme" ? { themeId: selectedTag.id } : {}),
+        ...(selectedPlatformId ? { platformId: selectedPlatformId } : {}),
+        ...(searchQuery ? { keyword: searchQuery } : {}),
+        ...(sortBy ? { sort: sortBy } : {}),
+    };
 
-        const fetchGames = async () => {
-            setLoading(true);
+    const { data: gameData, isLoading: gamesLoading } = useQuery<GameListResponse>({
+        queryKey: queryKeys.games(gamesParams),
+        queryFn: () => {
             const params = new URLSearchParams();
             if (selectedTag) {
-                const key =
-                    selectedTag.type === "genre" ? "genreId" : "themeId";
-                params.append(key, selectedTag.id.toString());
+                params.append(selectedTag.type === "genre" ? "genreId" : "themeId", selectedTag.id.toString());
             }
-            if (selectedPlatformId) {
-                params.append("platformId", selectedPlatformId.toString());
-            }
+            if (selectedPlatformId) params.append("platformId", selectedPlatformId.toString());
             if (searchQuery) params.append("keyword", searchQuery);
             if (sortBy) params.append("sort", sortBy);
             params.append("page", currentPage.toString());
             params.append("size", itemsPerPage.toString());
+            return fetcher(`/api/games?${params.toString()}`);
+        },
+    });
 
-            try {
-                const res = await fetch(`/api/games?${params.toString()}`, {
-                    signal: controller.signal,
-                });
-                const data = await res.json();
+    const games = Array.isArray(gameData?.games) ? gameData.games : [];
+    const totalItems = gameData?.totalCount ?? 0;
+    const endPage = Math.ceil(totalItems / itemsPerPage);
+    const pages = Array.from({ length: endPage }, (_, i) => i + 1);
 
-                if (Array.isArray(data.games)) {
-                    setGames(data.games);
-                    setTotalItems(data.totalCount);
-                } else {
-                    setGames([]);
-                    setTotalItems(0);
-                }
-            } catch {
-                if (controller.signal.aborted) return;
-            } finally {
-                setLoading(false);
-            }
-        };
+    const isLoading = metaLoading || gamesLoading;
 
-        fetchGames();
-        return () => {
-            controller.abort();
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedTag, selectedPlatformId, searchQuery, sortBy, currentPage]);
+    useEffect(() => {
+        setLoading(isLoading);
+    }, [isLoading, setLoading]);
 
     // 필터 사이드바가 열린 상태에서 메인 화면 스크롤 방지
     useEffect(() => {

@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback, use } from "react";
+import { useState, use, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetcher } from "@/lib/Fetcher";
+import { queryKeys } from "@/lib/QueryKeys";
 import ProfileSummaryCard from "../components/ProfileSummaryCard";
 import ProfileTierCard from "../components/ProfileTierCard";
 import ProfileSidebar from "../components/ProfileSidebar";
@@ -20,66 +23,57 @@ type Review = {
     imageUrl: string | null;
 };
 
+type UserProfile = {
+    id: string;
+    nickname: string;
+    imageUrl: string;
+    score: number;
+};
+
 export default function ProfilePage({
     params,
 }: {
     params: Promise<{ nickname: string }>;
 }) {
     const router = useRouter();
-
     const { nickname: routeNickname } = use(params);
     const { setLoading } = useLoadingStore();
     const [activeTab, setActiveTab] = useState("reviews");
-    const [reviewCount, setReviewCount] = useState(0);
 
-    const [nickname, setNickname] = useState("");
-    const [memberId, setMemberId] = useState<string | null>(null);
+    const {
+        data: profile,
+        isLoading: profileLoading,
+        isError: profileError,
+    } = useQuery<UserProfile>({
+        queryKey: queryKeys.userProfile(routeNickname),
+        queryFn: () => fetcher(`/api/member/profile/${routeNickname}`),
+    });
 
-    const [imageUrl, setImageUrl] = useState("/icons/arena.svg");
-    const [score, setScore] = useState(0);
-    const [reviews, setReviews] = useState<Review[]>([]);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const memberId = profile?.id ?? null;
 
-    const fetchProfileData = useCallback(async () => {
-        setLoading(true);
+    const { data: reviews = [], isLoading: reviewsLoading } = useQuery<Review[]>({
+        queryKey: queryKeys.reviewsByMember(memberId!),
+        queryFn: () => fetcher(`/api/reviews/member/${memberId}`),
+        enabled: !!memberId,
+    });
 
-        try {
-            // 1️⃣ 먼저 프로필 조회 (닉네임 기준)
-            const profileRes = await fetch(
-                `/api/member/profile/${routeNickname}`
-            );
-
-            // ❌ 닉네임 없는 경우
-            if (!profileRes.ok) {
-                router.replace("/not-found");
-                return;
-            }
-
-            const profile = await profileRes.json();
-
-            setNickname(profile.nickname);
-            setImageUrl(profile.imageUrl);
-            setScore(profile.score);
-            setMemberId(profile.id); // ⭐ 추가
-
-            // 2️⃣ memberId로 리뷰 조회
-            const reviewRes = await fetch(`/api/reviews/member/${profile.id}`);
-            const reviews = await reviewRes.json();
-
-            setReviews(reviews);
-            setReviewCount(reviews.length);
-
-            setIsLoaded(true);
-        } catch {
-            // profile load error — component will show empty state
-        } finally {
-            setLoading(false);
-        }
-    }, [routeNickname, setLoading, router]);
+    const isLoading = profileLoading || reviewsLoading;
 
     useEffect(() => {
-        fetchProfileData();
-    }, [fetchProfileData]);
+        setLoading(isLoading);
+    }, [isLoading, setLoading]);
+
+    useEffect(() => {
+        if (profileError) {
+            router.replace("/not-found");
+        }
+    }, [profileError, router]);
+
+    const nickname = profile?.nickname ?? "";
+    const imageUrl = profile?.imageUrl ?? "/icons/arena.svg";
+    const score = profile?.score ?? 0;
+    const reviewCount = reviews.length;
+    const isLoaded = !isLoading && !!profile;
 
     return (
         <section className="min-h-screen w-full bg-background-400 px-4 py-4 font-sans text-font-100 md:px-10 md:py-10">
