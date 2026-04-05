@@ -34,6 +34,10 @@ npm run test:e2e   # Run Playwright E2E tests
 
 - Whenever deals with git(include git, gh, and GitHub mcp), Read `docs/conventions/GIT_COLLABORATION.md`
 
+## Conventions
+
+Full code conventions: `docs/conventions/README.md`
+
 ## Key Rules
 
 - **Prisma singleton**: Always `import prisma from "@/lib/prisma"` — never `new PrismaClient()`
@@ -55,7 +59,7 @@ backend/          # Business logic — Clean Architecture per feature
     application/usecase/   # Use case classes + DTOs
     domain/repositories/   # Repository interfaces + query filters
     infra/repositories/    # Prisma implementations
-    infra/cache/           # Redis cache services (arena only)
+    infra/cache/           # (removed — withCache() used directly in route handlers)
 
 lib/              # Singletons: Prisma client, Redis client, auth config, cache keys
 hooks/            # Custom React hooks (data fetching, sockets, arenas)
@@ -64,9 +68,21 @@ utils/            # Pure utility functions
 types/            # Shared TypeScript types
 prisma/           # schema.prisma + migrations
 docs/
-  CODE_CONVENTIONS.md          # code style, architecture, testing conventions
+  CODE_CONVENTIONS.md          # redirect → conventions/README.md
   conventions/
+    README.md                  # index of all conventions
     GIT_COLLABORATION.md       # git workflow, issue/PR/worktree conventions
+    NAMING.md                  # naming rules (case, variables, React components)
+    BACKEND_ARCHITECTURE.md    # repository, DTO, usecase, API route conventions
+    ERROR_HANDLING.md          # error response shape, catch block, errorResponse helper
+    VALIDATION.md              # Zod schemas, validate() helper, IdSchema
+    LOGGING.md                 # Pino logger, child logger per route, log levels
+    CACHING.md                 # Redis withCache pattern, cacheKey.ts, TTL guidelines
+    FRONTEND.md                # React components, TanStack Query, Zustand
+    TESTING_VITEST.md          # Vitest unit testing conventions
+    TESTING_PLAYWRIGHT.md      # Playwright E2E testing conventions
+    CSS_STYLING.md             # color tokens, typography, animations
+    DEVELOPMENT_ENVIRONMENT.md # file system, DB access rules
   superpowers/
     plans/                     # implementation plans
     specs/                     # design specs
