@@ -8,6 +8,7 @@ import { ScoreRecordRepository } from "@/backend/score-record/domain/repositorie
 import { MemberRepository } from "@/backend/member/domain/repositories/MemberRepository";
 import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
 import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function GET() {
     const memberId = await getAuthUserId();
@@ -25,10 +26,7 @@ export async function GET() {
         return NextResponse.json(result);
     } catch (error) {
         log.error({ userId: memberId, err: error }, "점수 기록 조회 실패");
-        return NextResponse.json(
-            { message: "스코어 기록 조회 실패" },
-            { status: 500 }
-        );
+        return errorResponse("스코어 기록 조회 실패", 500);
     }
 }
 
@@ -38,26 +36,17 @@ export async function POST(request: Request) {
         // body validation
         const body = await request.json();
         if (!body.policyId) {
-            return NextResponse.json(
-                { error: "점수 정책을 찾을 수 없습니다." },
-                { status: 400 }
-            );
+            return errorResponse("점수 정책을 찾을 수 없습니다.", 400);
         }
 
         if (!body.actualScore) {
-            return NextResponse.json(
-                { error: "점수를 찾을 수 없습니다." },
-                { status: 400 }
-            );
+            return errorResponse("점수를 찾을 수 없습니다.", 400);
         }
 
         // member validation
         const memberId: string | null = await getAuthUserId();
         if (!memberId) {
-            return NextResponse.json(
-                { error: "점수 기록 작성 권한이 없습니다." },
-                { status: 401 }
-            );
+            return errorResponse("점수 기록 작성 권한이 없습니다.", 401);
         }
 
         // TODO: apply refactored usecase for scorePolicy
@@ -80,15 +69,7 @@ export async function POST(request: Request) {
         return NextResponse.json(null, { status: 201 });
     } catch (error: unknown) {
         log.error({ err: error }, "점수 기록 생성 실패");
-        if (error instanceof Error) {
-            return NextResponse.json(
-                { message: error.message || "점수 기록 생성 실패" },
-                { status: 400 }
-            );
-        }
-        return NextResponse.json(
-            { message: "알 수 없는 오류 발생" },
-            { status: 500 }
-        );
+        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
     }
 }

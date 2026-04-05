@@ -6,6 +6,7 @@ import { GetVoteUsecase } from "@/backend/vote/application/usecase/GetVoteUsecas
 import { GetVoteDto } from "@/backend/vote/application/usecase/dto/GetVoteDto";
 import { IdSchema, validate } from "@/utils/validation";
 import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 type RequestParams = {
     params: Promise<{
@@ -19,12 +20,7 @@ export async function GET(request: Request, { params }: RequestParams) {
     const { id } = await params;
 
     const idValidation = validate(IdSchema, id);
-    if (!idValidation.success) {
-        return NextResponse.json(
-            { message: "유효하지 않은 투기장 ID입니다." },
-            { status: 400 }
-        );
-    }
+    if (!idValidation.success) return idValidation.response;
     const arenaId = idValidation.data;
 
     // get query parameters from URL
@@ -56,9 +52,6 @@ export async function GET(request: Request, { params }: RequestParams) {
         return NextResponse.json(result);
     } catch (error) {
         log.error({ userId: memberId, err: error }, "투표 정보 조회 실패");
-        return NextResponse.json(
-            { message: "알 수 없는 오류 발생" },
-            { status: 500 }
-        );
+        return errorResponse("알 수 없는 오류 발생", 500);
     }
 }

@@ -7,6 +7,7 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { IdSchema, validate } from "@/utils/validation";
 import { NextRequest, NextResponse } from "next/server";
 import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 // 상수 정의 (프론트엔드 훅, 유스케이스와 맞춰야 함)
 const MAX_SEND_COUNT = 5;
@@ -23,19 +24,11 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
     const log = logger.child({ route: "/api/member/arenas/[id]/chattings", method: "POST" });
 
     if (!memberId) {
-        return NextResponse.json(
-            { message: "권한이 없습니다." },
-            { status: 401 }
-        );
+        return errorResponse("권한이 없습니다.", 401);
     }
 
     const idValidation = validate(IdSchema, id);
-    if (!idValidation.success) {
-        return NextResponse.json(
-            { message: "유효하지 않은 투기장 ID입니다." },
-            { status: 400 }
-        );
-    }
+    if (!idValidation.success) return idValidation.response;
     const arenaId = idValidation.data;
 
     const body = await req.json();
@@ -112,9 +105,6 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
                 return NextResponse.json({ message }, { status: 400 });
             }
         }
-        return NextResponse.json(
-            { message: "알 수 없는 오류가 발생했습니다." },
-            { status: 500 }
-        );
+        return errorResponse("알 수 없는 오류가 발생했습니다.", 500);
     }
 }

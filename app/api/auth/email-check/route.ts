@@ -4,12 +4,15 @@ import { EmailCheckUsecase } from "@/backend/member/application/usecase/EmailChe
 import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
 import { validate } from "@/utils/validation";
 import { z } from "zod";
+import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 const emailCheckLimiter = new RateLimiter("email-check", 60_000, 10);
 // 단일 쿼리 파라미터 전용 스키마 — 별도 DTO 파일 불필요 (intentional inline exception)
 const EmailQuerySchema = z.object({ email: z.string().email("올바른 이메일 형식이 아닙니다.") });
 
 export async function GET(req: NextRequest) {
+    const log = logger.child({ route: "/api/auth/email-check", method: "GET" });
     const ip = getClientIp(req);
     const rateLimit = await emailCheckLimiter.check(ip);
     if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfterMs);
@@ -28,7 +31,8 @@ export async function GET(req: NextRequest) {
         }
         return NextResponse.json({ message: "사용 가능한 이메일입니다." }, { status: 200 });
     } catch (err) {
+        log.error({ err }, "이메일 중복 확인 실패");
         const message = err instanceof Error ? err.message : "서버 오류 발생";
-        return NextResponse.json({ message }, { status: 500 });
+        return errorResponse(message, 500);
     }
 }

@@ -5,6 +5,8 @@ import { PrismaReviewRepository } from "@/backend/review/infra/repositories/pris
 import { withCache } from "@/lib/withCache";
 import { gameDetailKey } from "@/lib/cacheKey";
 import logger from "@/lib/logger";
+import { validate, IdSchema } from "@/utils/validation";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function GET(
     _req: NextRequest,
@@ -12,14 +14,9 @@ export async function GET(
 ) {
     const log = logger.child({ route: "/api/games/[id]", method: "GET" });
     const { id } = await params;
-    const gameId = Number(id);
-
-    if (isNaN(gameId)) {
-        return NextResponse.json(
-            { message: "Invalid game ID" },
-            { status: 400 }
-        );
-    }
+    const idValidated = validate(IdSchema, id);
+    if (!idValidated.success) return idValidated.response;
+    const gameId = idValidated.data;
 
     const usecase = new GetGameDetailUsecase(
         new GamePrismaRepository(),
@@ -35,9 +32,6 @@ export async function GET(
         return NextResponse.json(gameDetail);
     } catch (err) {
         log.error({ err }, "게임 상세 조회 실패");
-        return NextResponse.json(
-            { message: "Game not found" },
-            { status: 404 }
-        );
+        return errorResponse("게임을 찾을 수 없습니다", 404);
     }
 }

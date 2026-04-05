@@ -6,6 +6,7 @@ import { DeleteWishlistUsecase } from "@/backend/wishlist/application/usecase/De
 import { DeleteWishlistDto } from "@/backend/wishlist/application/usecase/dto/DeleteWishlistDto";
 import { validate, IdSchema } from "@/utils/validation";
 import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 type RequestParams = {
     params: Promise<{
@@ -19,20 +20,12 @@ export async function DELETE(req: NextRequest, { params }: RequestParams) {
     const log = logger.child({ route: "/api/member/wishlists/[id]", method: "DELETE" });
     try {
         if (!memberId) {
-            return NextResponse.json(
-                { message: "Unauthorized" },
-                { status: 401 }
-            );
+            return errorResponse("Unauthorized", 401);
         }
 
-        const { id } = await params; // 폴더 이름이 [id]일 경우
+        const { id } = await params;
         const parsed = validate(IdSchema, id);
-        if (!parsed.success) {
-            return NextResponse.json(
-                { message: "Invalid game ID" },
-                { status: 400 }
-            );
-        }
+        if (!parsed.success) return parsed.response;
         const wishlistId = parsed.data;
 
         const wishlistRepo = new PrismaWishListRepository();
@@ -45,9 +38,7 @@ export async function DELETE(req: NextRequest, { params }: RequestParams) {
         return NextResponse.json({ message: "삭제 완료" }, { status: 200 });
     } catch (error) {
         log.error({ userId: memberId, err: error }, "위시리스트 삭제 실패");
-        return NextResponse.json(
-            { message: error instanceof Error ? error.message : "삭제 실패" },
-            { status: 400 }
-        );
+        const message = error instanceof Error ? error.message : "삭제 실패";
+        return errorResponse(message, 500);
     }
 }
