@@ -4,6 +4,7 @@ import { GetAllPlatformsUsecase } from "@/backend/platform/application/usecase/G
 import { withCache } from "@/lib/withCache";
 import { platformListKey } from "@/lib/cacheKey";
 import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function GET() {
     const log = logger.child({ route: "/api/platforms", method: "GET" });
@@ -14,6 +15,6 @@ export async function GET() {
         return NextResponse.json(platforms);
     } catch (e) {
         log.error({ err: e }, "플랫폼 조회 실패");
-        return NextResponse.json({ message: "서버 오류" }, { status: 500 });
+        return errorResponse("서버 오류", 500);
     }
 }

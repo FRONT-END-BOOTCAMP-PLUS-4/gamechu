@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate, IdSchema } from "@/utils/validation";
 import { UpdateReviewSchema } from "@/backend/review/application/usecase/dto/UpdateReviewDto";
+import { errorResponse } from "@/utils/apiResponse";
 
 import { PrismaReviewRepository } from "@/backend/review/infra/repositories/prisma/PrismaReviewRepository";
 import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
@@ -21,7 +22,7 @@ export async function PATCH(
     const userId = await getAuthUserId();
     const log = logger.child({ route: "/api/member/games/[gameId]/reviews/[reviewId]", method: "PATCH" });
     if (!userId) {
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        return errorResponse("Unauthorized", 401);
     }
 
     const { reviewId } = await params;
@@ -39,17 +40,11 @@ export async function PATCH(
     const review = await reviewRepo.findById(reviewIdValidated.data);
 
     if (!review) {
-        return NextResponse.json(
-            { message: "리뷰를 찾을 수 없습니다" },
-            { status: 404 }
-        );
+        return errorResponse("리뷰를 찾을 수 없습니다", 404);
     }
 
     if (review.memberId !== userId) {
-        return NextResponse.json(
-            { message: "수정 권한이 없습니다" },
-            { status: 403 }
-        );
+        return errorResponse("수정 권한이 없습니다", 403);
     }
 
     try {
@@ -60,10 +55,8 @@ export async function PATCH(
         return NextResponse.json(result);
     } catch (err) {
         log.error({ userId, err }, "리뷰 수정 실패");
-        return NextResponse.json(
-            { message: err instanceof Error ? err.message : "Internal Server Error" },
-            { status: 400 }
-        );
+        const message = err instanceof Error ? err.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
     }
 }
 
@@ -78,7 +71,7 @@ export async function DELETE(
 
     const userId = await getAuthUserId();
     if (!userId) {
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        return errorResponse("Unauthorized", 401);
     }
 
     // 의존성 주입
@@ -100,17 +93,11 @@ export async function DELETE(
 
     const review = await reviewRepo.findById(reviewIdValidated.data);
     if (!review) {
-        return NextResponse.json(
-            { message: "리뷰를 찾을 수 없습니다" },
-            { status: 404 }
-        );
+        return errorResponse("리뷰를 찾을 수 없습니다", 404);
     }
 
     if (review.memberId !== userId) {
-        return NextResponse.json(
-            { message: "삭제 권한이 없습니다" },
-            { status: 403 }
-        );
+        return errorResponse("삭제 권한이 없습니다", 403);
     }
 
     await deleteReviewUsecase.execute(reviewIdValidated.data);

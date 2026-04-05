@@ -7,6 +7,7 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate, IdSchema } from "@/utils/validation";
 import { CreateReviewSchema } from "@/backend/review/application/usecase/dto/CreateReviewDto";
 import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function POST(
     req: NextRequest,
@@ -16,7 +17,7 @@ export async function POST(
     const log = logger.child({ route: "/api/member/games/[gameId]/reviews", method: "POST" });
 
     if (!memberId) {
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        return errorResponse("Unauthorized", 401);
     }
 
     const { gameId } = await params;
@@ -37,9 +38,7 @@ export async function POST(
         return NextResponse.json(result);
     } catch (err) {
         log.error({ userId: memberId, err }, "리뷰 작성 실패");
-        return NextResponse.json(
-            { message: err instanceof Error ? err.message : "Internal Server Error" },
-            { status: 400 }
-        );
+        const message = err instanceof Error ? err.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
     }
 }

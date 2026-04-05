@@ -8,6 +8,8 @@ import {
 } from "@/lib/RateLimiter";
 import { validate } from "@/utils/validation";
 import { z } from "zod";
+import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 const nicknameCheckLimiter = new RateLimiter("nickname-check", 60_000, 10);
 const NicknameQuerySchema = z.object({
@@ -18,6 +20,7 @@ const NicknameQuerySchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
+    const log = logger.child({ route: "/api/auth/nickname-check", method: "GET" });
     const ip = getClientIp(req);
     const rateLimit = await nicknameCheckLimiter.check(ip);
     if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfterMs);
@@ -44,7 +47,8 @@ export async function GET(req: NextRequest) {
             { status: 200 }
         );
     } catch (err) {
+        log.error({ err }, "닉네임 중복 확인 실패");
         const message = err instanceof Error ? err.message : "서버 오류 발생";
-        return NextResponse.json({ message }, { status: 500 });
+        return errorResponse(message, 500);
     }
 }

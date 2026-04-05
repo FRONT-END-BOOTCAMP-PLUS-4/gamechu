@@ -8,24 +8,21 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate } from "@/utils/validation";
 import { NextRequest, NextResponse } from "next/server";
 import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function POST(req: NextRequest) {
+    const log = logger.child({ route: "/api/member/arenas/[id]/votes", method: "POST" });
     try {
         const memberId = await getAuthUserId();
 
         if (!memberId) {
-            return NextResponse.json(
-                { message: "로그인이 필요합니다." },
-                { status: 401 }
-            );
+            return errorResponse("로그인이 필요합니다.", 401);
         }
 
         const body = await req.json();
 
         const bodyValidation = validate(SubmitVoteSchema, body);
-        if (!bodyValidation.success) {
-            return bodyValidation.response;
-        }
+        if (!bodyValidation.success) return bodyValidation.response;
 
         const { arenaId, votedTo } = bodyValidation.data;
         const submitVoteDto: SubmitVoteDto = { arenaId, memberId, votedTo };
@@ -40,9 +37,9 @@ export async function POST(req: NextRequest) {
         const result = await createVoteUsecase.execute(submitVoteDto);
         return NextResponse.json(result, { status: 201 });
     } catch (error: unknown) {
-        const errorMessage =
-            error instanceof Error ? error.message : "서버 오류";
-        return NextResponse.json({ message: errorMessage }, { status: 500 });
+        log.error({ err: error }, "투표 생성 실패");
+        const message = error instanceof Error ? error.message : "서버 오류";
+        return errorResponse(message, 500);
     }
 }
 
@@ -53,18 +50,13 @@ export async function PATCH(req: NextRequest) {
         const memberId = await getAuthUserId();
 
         if (!memberId) {
-            return NextResponse.json(
-                { message: "로그인이 필요합니다." },
-                { status: 401 }
-            );
+            return errorResponse("로그인이 필요합니다.", 401);
         }
 
         const body = await req.json();
 
         const bodyValidation = validate(SubmitVoteSchema, body);
-        if (!bodyValidation.success) {
-            return bodyValidation.response;
-        }
+        if (!bodyValidation.success) return bodyValidation.response;
 
         const { arenaId, votedTo } = bodyValidation.data;
         const submitVoteDto: SubmitVoteDto = { arenaId, memberId, votedTo };
@@ -76,8 +68,7 @@ export async function PATCH(req: NextRequest) {
         return NextResponse.json(result, { status: 200 });
     } catch (error: unknown) {
         log.error({ err: error }, "투표 수정 실패");
-        const errorMessage =
-            error instanceof Error ? error.message : "서버 오류";
-        return NextResponse.json({ message: errorMessage }, { status: 500 });
+        const message = error instanceof Error ? error.message : "서버 오류";
+        return errorResponse(message, 500);
     }
 }

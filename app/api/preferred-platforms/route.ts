@@ -4,15 +4,15 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaPreferredPlatformRepository } from "@/backend/preferred-platform/infra/repositories/prisma/PrismaPreferredPlatformRepository";
 import { CreatePreferredPlatformsUsecase } from "@/backend/preferred-platform/application/usecase/CreatePreferredPlatformsUsecase";
 import { CreatePreferredPlatformsDto } from "@/backend/preferred-platform/application/usecase/dto/CreatePreferredPlatformsDto";
+import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function POST(req: NextRequest) {
+    const log = logger.child({ route: "/api/preferred-platforms", method: "POST" });
     try {
         const memberId = await getAuthUserId();
         if (!memberId) {
-            return NextResponse.json(
-                { message: "Unauthorized" },
-                { status: 401 }
-            );
+            return errorResponse("Unauthorized", 401);
         }
 
         const { platformIds } = await req.json();
@@ -27,8 +27,9 @@ export async function POST(req: NextRequest) {
             { status: 200 }
         );
     } catch (err) {
+        log.error({ err }, "선호 플랫폼 저장 실패");
         const message =
             err instanceof Error ? err.message : "서버 오류가 발생했습니다.";
-        return NextResponse.json({ error: message }, { status: 500 });
+        return errorResponse(message, 500);
     }
 }

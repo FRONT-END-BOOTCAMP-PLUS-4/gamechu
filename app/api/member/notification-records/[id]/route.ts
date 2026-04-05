@@ -4,6 +4,7 @@ import { PrismaNotificationRecordRepository } from "@/backend/notification-recor
 import { NotificationRecord } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { errorResponse } from "@/utils/apiResponse";
+import { validate, IdSchema } from "@/utils/validation";
 import { NextResponse } from "next/server";
 import logger from "@/lib/logger";
 
@@ -23,6 +24,9 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         }
 
         const { id }: { id: string } = await params;
+        const idValidated = validate(IdSchema, id);
+        if (!idValidated.success) return idValidated.response;
+        const notificationId = idValidated.data;
 
         const notificationRecordRepository: NotificationRecordRepository =
             new PrismaNotificationRecordRepository();
@@ -31,7 +35,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
 
         // validation of notification record
         const notificationRecord: NotificationRecord | null =
-            await notificationRecordRepository.findById(Number(id));
+            await notificationRecordRepository.findById(notificationId);
 
         if (!notificationRecord) {
             return errorResponse("알림이 존재하지 않습니다.", 404);
@@ -41,7 +45,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         }
 
         // execute usecase
-        await deleteNotificationRecordUsecase.execute(Number(id));
+        await deleteNotificationRecordUsecase.execute(notificationId);
         return NextResponse.json(
             {
                 message: "알림 삭제 성공",
@@ -50,15 +54,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         );
     } catch (error: unknown) {
         log.error({ userId: memberId, err: error }, "알림 기록 삭제 실패");
-        if (error instanceof Error) {
-            return NextResponse.json(
-                { message: error.message || "알림 삭제 실패" },
-                { status: 400 }
-            );
-        }
-        return NextResponse.json(
-            { message: "알 수 없는 오류 발생" },
-            { status: 500 }
-        );
+        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
     }
 }

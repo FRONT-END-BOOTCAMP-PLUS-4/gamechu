@@ -4,6 +4,7 @@ import { GetAllThemesUsecase } from "@/backend/theme/application/usecase/GetAllT
 import { withCache } from "@/lib/withCache";
 import { themeListKey } from "@/lib/cacheKey";
 import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function GET() {
     const log = logger.child({ route: "/api/themes", method: "GET" });
@@ -14,6 +15,6 @@ export async function GET() {
         return NextResponse.json(themes);
     } catch (e) {
         log.error({ err: e }, "테마 조회 실패");
-        return NextResponse.json({ message: "서버 오류" }, { status: 500 });
+        return errorResponse("서버 오류", 500);
     }
 }

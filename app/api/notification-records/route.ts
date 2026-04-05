@@ -6,6 +6,7 @@ import { CreateNotificationRecordUsecase } from "@/backend/notification-record/a
 import { NotificationRecord } from "@/prisma/generated";
 import { validate } from "@/utils/validation";
 import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 export async function POST(request: Request) {
     const log = logger.child({ route: "/api/notification-records", method: "POST" });
@@ -37,15 +38,7 @@ export async function POST(request: Request) {
         return NextResponse.json(newRecord, { status: 201 });
     } catch (error: unknown) {
         log.error({ err: error }, "알림 기록 생성 실패");
-        if (error instanceof Error) {
-            return NextResponse.json(
-                { message: error.message || "알림 생성 실패" },
-                { status: 400 }
-            );
-        }
-        return NextResponse.json(
-            { message: "알 수 없는 오류 발생" },
-            { status: 500 }
-        );
+        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
     }
 }

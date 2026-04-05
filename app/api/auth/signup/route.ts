@@ -4,10 +4,13 @@ import { SignUpUsecase } from "@/backend/member/application/usecase/SignUpUsecas
 import { SignUpRequestDto, SignUpSchema } from "@/backend/member/application/usecase/dto/SignUpRequestDto";
 import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
 import { validate } from "@/utils/validation";
+import logger from "@/lib/logger";
+import { errorResponse } from "@/utils/apiResponse";
 
 const signupLimiter = new RateLimiter("signup", 3_600_000, 5);
 
 export async function POST(req: NextRequest) {
+    const log = logger.child({ route: "/api/auth/signup", method: "POST" });
     const ip = getClientIp(req);
     const rateLimit = await signupLimiter.check(ip);
     if (!rateLimit.allowed) {
@@ -28,7 +31,8 @@ export async function POST(req: NextRequest) {
             { status: 201 }
         );
     } catch (err) {
+        log.error({ err }, "회원가입 실패");
         const message = err instanceof Error ? err.message : "서버 오류가 발생했습니다.";
-        return NextResponse.json({ message }, { status: 400 });
+        return errorResponse(message, 400);
     }
 }

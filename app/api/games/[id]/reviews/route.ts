@@ -4,6 +4,7 @@ import { PrismaReviewRepository } from "@/backend/review/infra/repositories/pris
 import { PrismaReviewLikeRepository } from "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { errorResponse } from "@/utils/apiResponse";
+import { validate, IdSchema } from "@/utils/validation";
 import logger from "@/lib/logger";
 
 export async function GET(
@@ -13,18 +14,16 @@ export async function GET(
     const log = logger.child({ route: "/api/games/[id]/reviews", method: "GET" });
     try {
         const { id } = await params;
-        const gameId = id;
-        const parsedId = Number.parseInt(gameId || "", 10);
-        if (isNaN(parsedId)) {
-            return errorResponse("Invalid gameId", 400);
-        }
+        const idValidated = validate(IdSchema, id);
+        if (!idValidated.success) return idValidated.response;
+        const gameId = idValidated.data;
 
         const viewerId = await getAuthUserId();
         const usecase = new GetReviewsByGameIdUsecase(
             new PrismaReviewRepository(),
             new PrismaReviewLikeRepository()
         );
-        const result = await usecase.execute(parsedId, viewerId || "");
+        const result = await usecase.execute(gameId, viewerId || "");
         return NextResponse.json(result);
     } catch (error: unknown) {
         log.error({ err: error }, "게임 리뷰 조회 실패");
