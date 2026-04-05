@@ -21,8 +21,8 @@ export default function StepGenres({ onNext, onBack }: Props) {
                 const res = await fetch("/api/genres");
                 const data: Genre[] = await res.json();
                 setGenres(data);
-            } catch (e) {
-                console.error("장르 불러오기 실패", e);
+            } catch {
+                // fetch error — silently ignored; list remains empty
             }
         };
 
@@ -60,8 +60,7 @@ export default function StepGenres({ onNext, onBack }: Props) {
             } else {
                 alert("선호 장르 저장에 실패했습니다.");
             }
-        } catch (err) {
-            console.error("API 호출 오류:", err);
+        } catch {
             alert("오류가 발생했습니다.");
         }
     };

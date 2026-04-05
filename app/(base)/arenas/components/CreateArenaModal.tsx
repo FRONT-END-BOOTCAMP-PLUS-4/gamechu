@@ -100,15 +100,14 @@ export default function CreateArenaModal() {
                     actualScore: -100,
                 }),
             });
-            const scoreRecord = await scoreRecordResult.json();
+            await scoreRecordResult.json();
             if (scoreRecordResult.ok) {
                 closeModal();
-                console.log("점수 기록 생성 성공:", scoreRecord);
             }
             // 새로고침
             window.location.reload();
-        } catch (error: unknown) {
-            console.error("Failed to post arena", error);
+        } catch {
+            // arena creation error — silently ignored; user is redirected on success
         } finally {
             setSubmitting(false);
         }

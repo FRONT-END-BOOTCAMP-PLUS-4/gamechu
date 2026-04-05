@@ -143,17 +143,15 @@ export default function CommentCard({
                 body: JSON.stringify({ memberId: viewerId }),
             });
 
-            const data = await res.json();
+            await res.json();
 
             if (!res.ok) {
                 setIsLiked(!newLikedState);
                 setLikeCount((prev) => prev + (newLikedState ? -1 : 1));
-                console.error("좋아요 실패", data);
             }
-        } catch (err) {
+        } catch {
             setIsLiked(!newLikedState);
             setLikeCount((prev) => prev + (newLikedState ? -1 : 1));
-            console.error("좋아요 요청 에러", err);
         } finally {
             setIsLoading(false);
         }

@@ -104,13 +104,11 @@ export default function GamePage() {
                     setGames(data.games);
                     setTotalItems(data.totalCount);
                 } else {
-                    console.error("게임 데이터 응답 이상:", data);
                     setGames([]);
                     setTotalItems(0);
                 }
-            } catch (error) {
+            } catch {
                 if (controller.signal.aborted) return;
-                console.error("게임 데이터 요청 실패:", error);
             } finally {
                 setLoading(false);
             }

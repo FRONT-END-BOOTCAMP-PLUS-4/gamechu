@@ -72,9 +72,8 @@ export default function GlobalAttendanceToast() {
                         path: "/",
                     });
                 }
-            } catch (err) {
+            } catch {
                 // ✅ 실패 시 에러 토스트 표시
-                console.warn("출석 체크 실패:", err);
                 setToast({
                     show: true,
                     status: "error",

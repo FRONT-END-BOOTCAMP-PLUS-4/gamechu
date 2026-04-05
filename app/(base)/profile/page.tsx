@@ -99,8 +99,8 @@ export default function ProfilePage() {
             await fetchWishlistPage(1); // ✅ 1페이지 위시리스트 호출
 
             setIsLoaded(true);
-        } catch (err) {
-            console.error("프로필 데이터 로딩 실패:", err);
+        } catch {
+            // profile load error — component will show empty state
         } finally {
             setLoading(false);
         }

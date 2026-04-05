@@ -50,7 +50,6 @@ export default function ArenaDetailRecruiting() {
             } else if (typeof err === "string") {
                 errorMessage = err;
             } else {
-                console.error("Catch된 알 수 없는 타입의 에러:", err);
             }
             setError(errorMessage);
         } finally {

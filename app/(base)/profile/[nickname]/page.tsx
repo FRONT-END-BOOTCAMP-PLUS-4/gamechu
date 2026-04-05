@@ -70,8 +70,8 @@ export default function ProfilePage({
             setReviewCount(reviews.length);
 
             setIsLoaded(true);
-        } catch (err) {
-            console.error("프로필 데이터 로딩 실패:", err);
+        } catch {
+            // profile load error — component will show empty state
         } finally {
             setLoading(false);
         }

@@ -21,8 +21,8 @@ export default function StepThemes({ onNext, onBack }: Props) {
                 const res = await fetch("/api/themes");
                 const data: Theme[] = await res.json();
                 setThemes(data);
-            } catch (e) {
-                console.error("테마 불러오기 실패", e);
+            } catch {
+                // fetch error — silently ignored; list remains empty
             }
         };
 
@@ -60,8 +60,7 @@ export default function StepThemes({ onNext, onBack }: Props) {
             } else {
                 alert("선호 테마 저장에 실패했습니다.");
             }
-        } catch (err) {
-            console.error("API 호출 오류:", err);
+        } catch {
             alert("오류가 발생했습니다.");
         }
     };

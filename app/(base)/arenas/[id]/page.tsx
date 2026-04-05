@@ -63,8 +63,7 @@ export default function ArenaDetailPage() {
                         data.rightPercent
                     )
                 );
-            } catch (error) {
-                console.error("Error fetching arena detail:", error);
+            } catch {
             } finally {
                 setLoading(false); // ✅ 로딩 종료
             }
