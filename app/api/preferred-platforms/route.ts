@@ -1,11 +1,17 @@
 // 📁 app/api/preferred-platforms/route.ts
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaPreferredPlatformRepository } from "@/backend/preferred-platform/infra/repositories/prisma/PrismaPreferredPlatformRepository";
 import { CreatePreferredPlatformsUsecase } from "@/backend/preferred-platform/application/usecase/CreatePreferredPlatformsUsecase";
 import { CreatePreferredPlatformsDto } from "@/backend/preferred-platform/application/usecase/dto/CreatePreferredPlatformsDto";
 import logger from "@/lib/Logger";
 import { errorResponse } from "@/utils/ApiResponse";
+import { validate } from "@/utils/Validation";
+
+const PreferredPlatformsBodySchema = z.object({
+    platformIds: z.array(z.number().int().positive()),
+});
 
 export async function POST(req: NextRequest) {
     const log = logger.child({ route: "/api/preferred-platforms", method: "POST" });
@@ -15,17 +21,18 @@ export async function POST(req: NextRequest) {
             return errorResponse("Unauthorized", 401);
         }
 
-        const { platformIds } = await req.json();
+        const body = await req.json();
+        const bodyValidation = validate(PreferredPlatformsBodySchema, body);
+        if (!bodyValidation.success) return bodyValidation.response;
+        const { platformIds } = bodyValidation.data;
+
         const dto = new CreatePreferredPlatformsDto(memberId, platformIds);
 
         const repo = new PrismaPreferredPlatformRepository();
         const usecase = new CreatePreferredPlatformsUsecase(repo);
         await usecase.execute(dto);
 
-        return NextResponse.json(
-            { message: "선호 플랫폼 저장 완료" },
-            { status: 200 }
-        );
+        return NextResponse.json({ message: "선호 플랫폼 저장 완료" });
     } catch (err) {
         log.error({ err }, "선호 플랫폼 저장 실패");
         const message =

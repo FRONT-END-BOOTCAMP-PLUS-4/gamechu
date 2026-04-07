@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
 import { GetScoreRecordsUsecase } from "@/backend/score-record/application/usecase/GetScoreRecordsUsecase";
@@ -9,13 +10,19 @@ import { MemberRepository } from "@/backend/member/domain/repositories/MemberRep
 import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase";
 import logger from "@/lib/Logger";
 import { errorResponse } from "@/utils/ApiResponse";
+import { validate } from "@/utils/Validation";
+
+const ScoreBodySchema = z.object({
+    policyId: z.number().int().positive(),
+    actualScore: z.number(),
+});
 
 export async function GET() {
     const memberId = await getAuthUserId();
     const log = logger.child({ route: "/api/member/scores", method: "GET" });
 
     if (!memberId) {
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        return errorResponse("Unauthorized", 401);
     }
 
     const repo = new PrismaScoreRecordRepository();
@@ -33,15 +40,9 @@ export async function GET() {
 export async function POST(request: Request) {
     const log = logger.child({ route: "/api/member/scores", method: "POST" });
     try {
-        // body validation
         const body = await request.json();
-        if (!body.policyId) {
-            return errorResponse("점수 정책을 찾을 수 없습니다.", 400);
-        }
-
-        if (!body.actualScore) {
-            return errorResponse("점수를 찾을 수 없습니다.", 400);
-        }
+        const bodyValidation = validate(ScoreBodySchema, body);
+        if (!bodyValidation.success) return bodyValidation.response;
 
         // member validation
         const memberId: string | null = await getAuthUserId();
