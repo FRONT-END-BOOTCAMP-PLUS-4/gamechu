@@ -2,7 +2,7 @@ import React from "react";
 import GameCard from "./GameCard";
 import Image from "next/image";
 
-interface GameCardData {
+export type GameCardData = {
     id: number;
     platform: string;
     title: string;
@@ -10,11 +10,11 @@ interface GameCardData {
     developer: string;
     thumbnail: string;
     reviewCount: number;
-}
+};
 
-interface GameCardListProps {
+type GameCardListProps = {
     games: GameCardData[];
-}
+};
 
 export default function GameCardList({ games }: GameCardListProps) {
     if (games.length === 0) {
