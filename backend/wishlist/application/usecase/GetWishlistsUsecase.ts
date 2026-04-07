@@ -6,7 +6,7 @@ import { GetWishlistsDto } from "./dto/GetWishlistsDto";
 import { GetWishlistsResultDto } from "./dto/GetWishlistsResultDto";
 import { WishlistFilter } from "../../domain/filters/WishlistFilter";
 
-const ITEMS_PER_PAGE = 4; // 페이지당 아이템 수
+const ITEMS_PER_PAGE = 5; // 페이지당 아이템 수
 
 export class GetWishlistsUsecase {
     constructor(
