@@ -69,32 +69,19 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
                 message.includes("메시지 길이가 너무 깁니다") ||
                 message.includes("length limit")
             ) {
-                return NextResponse.json(
-                    {
-                        message: `메시지 길이는 200자를 초과할 수 없습니다.`,
-                    },
-                    { status: 400 }
-                );
+                return errorResponse("메시지 길이는 200자를 초과할 수 없습니다.", 400);
             }
             if (
                 message.includes("메시지 전송 횟수를 초과했습니다") ||
                 message.includes("send count limit")
             ) {
-                return NextResponse.json(
-                    {
-                        message: `메시지 전송 횟수(${MAX_SEND_COUNT}번)를 모두 사용했습니다.`,
-                    },
-                    { status: 400 }
-                );
+                return errorResponse(`메시지 전송 횟수(${MAX_SEND_COUNT}번)를 모두 사용했습니다.`, 400);
             }
             if (
                 message.includes("참가자가 아닙니다") ||
                 message.includes("Not a participant")
             ) {
-                return NextResponse.json(
-                    { message: "아레나 참가자만 메시지를 보낼 수 있습니다." },
-                    { status: 403 }
-                );
+                return errorResponse("아레나 참가자만 메시지를 보낼 수 있습니다.", 403);
             }
             if (
                 message.includes(
@@ -102,7 +89,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
                 ) ||
                 message.includes("Invalid arena status")
             ) {
-                return NextResponse.json({ message }, { status: 400 });
+                return errorResponse(message, 400);
             }
         }
         return errorResponse("알 수 없는 오류가 발생했습니다.", 500);
