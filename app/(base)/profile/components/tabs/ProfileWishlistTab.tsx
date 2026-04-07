@@ -1,6 +1,6 @@
 "use client";
 
-import GameCard from "@/app/(base)/games/components/GameCard";
+import GameCardList from "@/app/(base)/games/components/GameCardList";
 import Pager from "@/app/components/Pager";
 
 interface Game {
@@ -38,12 +38,7 @@ export default function ProfileWishlistTab({
                 </p>
             ) : (
                 <>
-                    {/* 820px → md 로 교체 */}
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                        {games.map((game) => (
-                            <GameCard key={game.id} {...game} />
-                        ))}
-                    </div>
+                    <GameCardList games={games} />
 
                     {endPage > 1 && (
                         <Pager
