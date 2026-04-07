@@ -60,6 +60,8 @@ describe("ProfileWishlistTab", () => {
             />,
         );
         expect(screen.getByTestId("game-card-list")).toBeDefined();
+        const list = screen.getByTestId("game-card-list");
+        expect(list.getAttribute("data-count")).toBe("2");
     });
 
     it("게임이 있을 때 빈 상태 메시지를 표시하지 않는다", () => {
@@ -74,5 +76,29 @@ describe("ProfileWishlistTab", () => {
         expect(
             screen.queryByText("위시리스트에 등록된 게임이 없습니다."),
         ).toBeNull();
+    });
+
+    it("endPage가 1보다 클 때 Pager를 렌더링한다", () => {
+        render(
+            <ProfileWishlistTab
+                {...defaultProps}
+                games={sampleGames}
+                pages={[1, 2]}
+                endPage={2}
+            />,
+        );
+        expect(screen.getByTestId("pager")).toBeDefined();
+    });
+
+    it("endPage가 1일 때 Pager를 렌더링하지 않는다", () => {
+        render(
+            <ProfileWishlistTab
+                {...defaultProps}
+                games={sampleGames}
+                pages={[1]}
+                endPage={1}
+            />,
+        );
+        expect(screen.queryByTestId("pager")).toBeNull();
     });
 });
