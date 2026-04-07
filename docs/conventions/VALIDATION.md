@@ -31,7 +31,7 @@ export class CreateArenaDto {
 Use `validate<T>()` from `utils/validation.ts` for all body and param validation:
 
 ```typescript
-import { validate, IdSchema } from "@/utils/validation";
+import { validate, IdSchema } from "@/utils/Validation";
 import { CreateArenaSchema } from "@/backend/arena/application/usecase/dto/CreateArenaDto";
 
 export async function POST(request: Request) {
@@ -48,7 +48,7 @@ The helper returns `{ success: true, data: T }` or `{ success: false, response: 
 ## `IdSchema` for path params
 
 ```typescript
-import { validate, IdSchema } from "@/utils/validation";
+import { validate, IdSchema } from "@/utils/Validation";
 
 const { id } = await params;
 const v = validate(IdSchema, id);

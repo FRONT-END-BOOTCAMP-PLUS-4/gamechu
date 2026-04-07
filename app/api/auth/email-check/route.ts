@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     try {
         const result = await usecase.execute(validated.data.email);
         if (result.isDuplicate) {
-            return NextResponse.json({ message: "이미 존재하는 이메일입니다." }, { status: 409 });
+            return errorResponse("이미 존재하는 이메일입니다.", 409);
         }
         return NextResponse.json({ message: "사용 가능한 이메일입니다." }, { status: 200 });
     } catch (err) {

@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Button from "@/app/components/Button";
+import Toast from "@/app/components/Toast";
 import useArenaStore from "@/stores/UseArenaStore";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import Image from "next/image";
 
 export default function ArenaDetailRecruiting() {
     const [error, setError] = useState<string | null>(null);
+    const [toast, setToast] = useState({ show: false, status: "success" as const, message: "" });
     const arenaDetail = useArenaStore((state) => state.arenaData);
 
     const { mutate: joinArena, isPending } = useMutation({
@@ -34,8 +36,8 @@ export default function ArenaDetailRecruiting() {
             }
         },
         onSuccess: () => {
-            alert("참가 요청이 접수되었습니다!");
-            window.location.reload();
+            setToast({ show: true, status: "success", message: "참가 요청이 접수되었습니다!" });
+            setTimeout(() => window.location.reload(), 1500);
         },
         onError: (err) => {
             const message = err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
@@ -45,6 +47,7 @@ export default function ArenaDetailRecruiting() {
 
     return (
         <div className="mt-6 flex min-h-[400px] w-full max-w-[1000px] animate-fade-in-up flex-col items-center justify-center rounded-3xl bg-background-300 px-6 py-12 text-center sm:min-h-[500px] sm:px-10 sm:py-20">
+            <Toast show={toast.show} status={toast.status} message={toast.message} />
             <div className="relative mb-6 flex items-center justify-center">
                 {/* 아이콘 */}
                 <div className="relative flex h-24 w-24 animate-spin items-center justify-center rounded-full bg-background-400/50 ring-2 ring-primary-purple-200/40 [animation-duration:8s] sm:h-40 sm:w-40">

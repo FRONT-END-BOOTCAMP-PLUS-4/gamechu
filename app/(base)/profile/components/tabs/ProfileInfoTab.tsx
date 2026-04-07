@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Input from "@/app/components/Input";
 import Button from "@/app/components/Button";
+import Toast from "@/app/components/Toast";
 
 type Props = {
     nickname: string;
@@ -17,6 +18,7 @@ type Props = {
 
 export default function ProfileInfoTab(props: Props) {
     const [isEdit, setIsEdit] = useState(false);
+    const [toast, setToast] = useState<{ show: boolean; status: "success" | "error"; message: string }>({ show: false, status: "success", message: "" });
     const [nickname, setNickname] = useState(props.nickname);
     const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<boolean | null>(null);
     const [nicknameMessage, setNicknameMessage] = useState<{
@@ -75,12 +77,12 @@ export default function ProfileInfoTab(props: Props) {
                 }
             }),
         onSuccess: () => {
-            alert("프로필이 수정되었습니다.");
+            setToast({ show: true, status: "success", message: "프로필이 수정되었습니다." });
             setIsEdit(false);
             setNicknameMessage(null);
         },
         onError: (err) => {
-            alert(err instanceof Error ? err.message : "예기치 못한 오류가 발생했습니다.");
+            setToast({ show: true, status: "error", message: err instanceof Error ? err.message : "예기치 못한 오류가 발생했습니다." });
         },
     });
 
@@ -134,6 +136,7 @@ export default function ProfileInfoTab(props: Props) {
 
     return (
         <div className="flex w-full flex-col gap-8 rounded-xl bg-background-400 p-6 shadow">
+            <Toast show={toast.show} status={toast.status} message={toast.message} />
             <h2 className="text-lg font-semibold">프로필 정보</h2>
 
             <div className="flex flex-col gap-6">

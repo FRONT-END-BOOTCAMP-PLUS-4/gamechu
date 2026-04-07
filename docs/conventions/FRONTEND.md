@@ -45,10 +45,10 @@ import { useState } from "react";
 
 ### Class composition
 
-Use `cn()` from `utils/tailwindUtil.ts` for any conditional or merged class strings:
+Use `cn()` from `utils/TailwindUtil.ts` for any conditional or merged class strings:
 
 ```typescript
-import { cn } from "@/utils/tailwindUtil";
+import { cn } from "@/utils/TailwindUtil";
 
 <div className={cn("base-class", isActive && "active-class", variant === "primary" && "primary-class")} />
 ```
@@ -63,10 +63,10 @@ Use `useQuery` for reads and `useMutation` for writes — no direct `fetch` call
 
 ### Query keys
 
-Always import from `lib/queryKeys.ts` — never inline string arrays:
+Always import from `lib/QueryKeys.ts` — never inline string arrays:
 
 ```typescript
-import { queryKeys } from "@/lib/queryKeys";
+import { queryKeys } from "@/lib/QueryKeys";
 
 const { data } = useQuery({
     queryKey: queryKeys.reviews(gameId),
@@ -76,12 +76,12 @@ const { data } = useQuery({
 
 ### Fetcher
 
-Use `lib/fetcher.ts` for all `queryFn` GET calls:
+Use `lib/Fetcher.ts` for all `queryFn` GET calls:
 
 ```typescript
-import { fetcher } from "@/lib/fetcher";
+import { fetcher } from "@/lib/Fetcher";
 
-queryFn: () => fetcher<ReviewDto[]>(`/api/games/${gameId}/reviews`)
+queryFn: () => fetcher<ReviewDto[]>(`/api/games/${gameId}/reviews`);
 ```
 
 ### Auth-gated queries
@@ -120,7 +120,7 @@ new QueryClient({
             retry: 1,
         },
     },
-})
+});
 ```
 
 ## Zustand stores

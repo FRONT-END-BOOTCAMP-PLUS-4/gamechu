@@ -9,6 +9,7 @@ import { VoteRepository } from "@/backend/vote/domain/repositories/VoteRepositor
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate } from "@/utils/Validation";
+import { errorResponse } from "@/utils/ApiResponse";
 import { NextResponse } from "next/server";
 import redis from "@/lib/Redis";
 import { withCache } from "@/lib/WithCache";
@@ -27,10 +28,7 @@ export async function GET(request: Request) {
         const { currentPage, status, mine, pageSize, memberId: targetMemberId } = validated.data;
 
         if (!memberId && mine) {
-            return NextResponse.json(
-                { message: "멤버 투기장 조회 권한이 없습니다." },
-                { status: 401 }
-            );
+            return errorResponse("멤버 투기장 조회 권한이 없습니다.", 401);
         }
 
         let effectiveMemberId: string | undefined;
@@ -83,17 +81,8 @@ export async function GET(request: Request) {
         return NextResponse.json(arenaListDto);
     } catch (error: unknown) {
         log.error({ userId: memberId, err: error }, "아레나 목록 조회 실패");
-
-        if (error instanceof Error) {
-            return NextResponse.json(
-                { message: error.message || "투기장 조회 실패" },
-                { status: 400 }
-            );
-        }
-
-        return NextResponse.json(
-            { message: "알 수 없는 오류 발생" },
-            { status: 500 }
-        );
+        const message = error instanceof Error ? error.message || "투기장 조회 실패" : "알 수 없는 오류 발생";
+        const status = error instanceof Error ? 400 : 500;
+        return errorResponse(message, status);
     }
 }
