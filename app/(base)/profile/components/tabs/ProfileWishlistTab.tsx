@@ -1,25 +1,17 @@
 "use client";
 
-import GameCardList from "@/app/(base)/games/components/GameCardList";
+import GameCardList, {
+    GameCardData,
+} from "@/app/(base)/games/components/GameCardList";
 import Pager from "@/app/components/Pager";
 
-interface Game {
-    id: number;
-    title: string;
-    developer: string;
-    thumbnail: string;
-    platform: string;
-    expertRating: number;
-    reviewCount: number;
-}
-
-interface Props {
-    games: Game[];
+type Props = {
+    games: GameCardData[];
     pages: number[];
     currentPage: number;
     endPage: number;
     onPageChange: (page: number) => void;
-}
+};
 
 export default function ProfileWishlistTab({
     games,
