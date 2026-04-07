@@ -5,7 +5,7 @@
 ## Logger singleton
 
 ```typescript
-import logger from "@/lib/logger";
+import logger from "@/lib/Logger";
 ```
 
 Never instantiate Pino directly — always import the singleton.

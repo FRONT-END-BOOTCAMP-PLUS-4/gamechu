@@ -6,6 +6,7 @@ import { fetcher } from "@/lib/Fetcher";
 import { queryKeys } from "@/lib/QueryKeys";
 import SelectionCard from "./SelectionCard";
 import Button from "@/app/components/Button";
+import Toast from "@/app/components/Toast";
 import { Platform } from "@/prisma/generated";
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
 
 export default function StepPlatforms({ onSubmit, onBack }: Props) {
     const [selectedPlatformIds, setSelectedPlatformIds] = useState<number[]>([]);
+    const [toast, setToast] = useState({ show: false, status: "error" as const, message: "" });
 
     const { data: platforms = [] } = useQuery<Platform[]>({
         queryKey: queryKeys.platforms(),
@@ -31,7 +33,7 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
                 if (!res.ok) throw new Error("선호 플랫폼 저장에 실패했습니다.");
             }),
         onSuccess: () => onSubmit(),
-        onError: () => alert("선호 플랫폼 저장에 실패했습니다."),
+        onError: () => setToast({ show: true, status: "error", message: "선호 플랫폼 저장에 실패했습니다." }),
     });
 
     const togglePlatform = (platformId: number) => {
@@ -66,6 +68,8 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
                     />
                 ))}
             </div>
+
+            <Toast show={toast.show} status={toast.status} message={toast.message} />
 
             <div className="flex justify-between mt-8">
                 <Button
