@@ -2,14 +2,13 @@
 
 import {
     DecoratorNode,
-    type LexicalNode,
     type NodeKey,
     type SerializedLexicalNode,
     type Spread,
 } from "lexical";
 import { type JSX } from "react";
 
-export type SerializedImageNode = Spread<
+type SerializedImageNode = Spread<
     {
         src: string;
         alt: string;
@@ -83,8 +82,3 @@ export function $createImageNode(
     return new ImageNode(src, alt, width);
 }
 
-export function $isImageNode(
-    node: LexicalNode | null | undefined
-): node is ImageNode {
-    return node instanceof ImageNode;
-}
