@@ -8,7 +8,7 @@
  * the dependency direction clean: lib/ must not import from hooks/.
  */
 
-export type GamesQueryParams = {
+type GamesQueryParams = {
     page: number;
     size: number;
     genreId?: number;
