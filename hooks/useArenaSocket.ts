@@ -20,14 +20,20 @@ export function useArenaSocket({
         onReceiveRef.current = onReceive; // 최신 onReceive 함수로 업데이트
     }, [onReceive]);
 
-    function onConnect() {
-        socket.io.engine.on("upgrade", () => {});
-    }
-    function onDisconnect() {}
-    function onConnectError() {}
-
     useEffect(() => {
         if (status !== 3) return;
+
+        let cleanupUpgrade: (() => void) | null = null;
+
+        function onConnect() {
+            cleanupUpgrade?.(); // 재연결 시 이전 핸들러 먼저 해제
+            const handleUpgrade = () => {};
+            socket.io.engine.on("upgrade", handleUpgrade);
+            cleanupUpgrade = () => socket.io.engine.off("upgrade", handleUpgrade);
+        }
+        function onDisconnect() {}
+        function onConnectError() {}
+
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
         socket.on("connect_error", onConnectError);
@@ -63,14 +69,11 @@ export function useArenaSocket({
         socket.on("chat message", handleChatMessage); // 서버에서 chat message 이벤트가 오면 실행
         // 클린업 함수: 컴포넌트 언마운트, arenaId/status 변경 시 기존 리스너 해제
         return () => {
+            cleanupUpgrade?.();
             socket.off("connect", onConnect);
             socket.off("disconnect", onDisconnect);
             socket.off("connect_error", onConnectError); // 에러 핸들러 해제
-
             socket.off("chat message", handleChatMessage); // 메시지 수신 핸들러 해제
-
-            // 룸 나가기 이벤트 발생 (필요하다면)
-            // socket.emit("leave room", roomId); // 서버에 룸에서 나간다고 알림
         };
     }, [arenaId, status]);
 }

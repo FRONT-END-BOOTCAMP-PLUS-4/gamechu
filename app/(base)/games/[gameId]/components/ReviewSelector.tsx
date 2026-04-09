@@ -2,8 +2,10 @@
 
 import React from "react";
 import Image from "next/image";
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
 import Rio from "@/public/rio.json";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import { cn } from "@/utils/TailwindUtil";
 
 type ReviewSelectorProps = {

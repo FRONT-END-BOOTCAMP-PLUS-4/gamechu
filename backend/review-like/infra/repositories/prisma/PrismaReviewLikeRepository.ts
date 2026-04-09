@@ -35,4 +35,21 @@ export class PrismaReviewLikeRepository implements ReviewLikeRepository {
             where: { reviewId },
         });
     }
+
+    async countByReviewIds(reviewIds: number[]): Promise<Map<number, number>> {
+        const groups = await this.prisma.reviewLike.groupBy({
+            by: ["reviewId"],
+            where: { reviewId: { in: reviewIds } },
+            _count: { reviewId: true },
+        });
+        return new Map(groups.map((g) => [g.reviewId, g._count.reviewId]));
+    }
+
+    async isLikedByReviewIds(reviewIds: number[], memberId: string): Promise<Set<number>> {
+        const likes = await this.prisma.reviewLike.findMany({
+            where: { reviewId: { in: reviewIds }, memberId },
+            select: { reviewId: true },
+        });
+        return new Set(likes.map((l) => l.reviewId));
+    }
 }

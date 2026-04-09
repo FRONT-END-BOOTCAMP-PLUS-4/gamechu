@@ -4,8 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Button from "@/app/components/Button";
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
 import Like from "@/public/like.json";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 import Toast from "@/app/components/Toast";
 import { useRouter } from "next/navigation";
