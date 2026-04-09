@@ -13,22 +13,21 @@ export class GetReviewsByGameIdUsecase {
     async execute(gameId: number, viewerId: string): Promise<ReviewDto[]> {
         const rawReviews = await this.reviewRepo.findByGameId(gameId);
 
-        const result = await Promise.all(
-            rawReviews.map(async (review) => {
-                const likeCount = await this.likeRepo.count(review.id);
-                const isLiked = await this.likeRepo.isLiked(
-                    review.id,
-                    viewerId
-                );
+        if (rawReviews.length === 0) return [];
 
-                return {
-                    ...review,
-                    likeCount,
-                    isLiked,
-                };
-            })
-        );
+        const reviewIds = rawReviews.map((r) => r.id);
 
-        return result;
+        const [countMap, likedSet] = await Promise.all([
+            this.likeRepo.countByReviewIds(reviewIds),
+            viewerId
+                ? this.likeRepo.isLikedByReviewIds(reviewIds, viewerId)
+                : Promise.resolve(new Set<number>()),
+        ]);
+
+        return rawReviews.map((review) => ({
+            ...review,
+            likeCount: countMap.get(review.id) ?? 0,
+            isLiked: likedSet.has(review.id),
+        }));
     }
 }

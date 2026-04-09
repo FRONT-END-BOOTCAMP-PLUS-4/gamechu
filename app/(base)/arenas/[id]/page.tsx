@@ -4,7 +4,7 @@ import ArenaDetailVote from "./components/ArenaDetailVote";
 import ArenaDetailHeader from "./components/ArenaDetailHeader";
 import ArenaDetailInfo from "./components/ArenaDetailInfo";
 import ArenaDetailContainer from "./components/ArenaDetailContainer";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetcher } from "@/lib/Fetcher";
 import { queryKeys } from "@/lib/QueryKeys";
@@ -33,37 +33,41 @@ export default function ArenaDetailPage() {
         setLoading(isLoading);
     }, [isLoading, setLoading]);
 
+    const arenaDto = useMemo(
+        () =>
+            data
+                ? new ArenaDetailDto(
+                      data.id,
+                      data.creatorId,
+                      data.creatorName,
+                      data.creatorScore,
+                      data.creatorImageUrl,
+                      data.challengerId,
+                      data.challengerName,
+                      data.challengerScore,
+                      data.challengerImageUrl,
+                      data.title,
+                      data.description,
+                      new Date(data.startDate),
+                      new Date(data.endChatting),
+                      new Date(data.endVote),
+                      data.status,
+                      data.voteCount,
+                      data.leftCount,
+                      data.rightCount,
+                      data.leftPercent,
+                      data.rightPercent
+                  )
+                : null,
+        [data]
+    );
+
     useEffect(() => {
-        if (data) {
-            setGlobalArenaData(
-                new ArenaDetailDto(
-                    data.id,
-                    data.creatorId,
-                    data.creatorName,
-                    data.creatorScore,
-                    data.creatorImageUrl,
-                    data.challengerId,
-                    data.challengerName,
-                    data.challengerScore,
-                    data.challengerImageUrl,
-                    data.title,
-                    data.description,
-                    new Date(data.startDate),
-                    new Date(data.endChatting),
-                    new Date(data.endVote),
-                    data.status,
-                    data.voteCount,
-                    data.leftCount,
-                    data.rightCount,
-                    data.leftPercent,
-                    data.rightPercent
-                )
-            );
-        }
+        if (arenaDto) setGlobalArenaData(arenaDto);
         return () => {
             clearGlobalArenaData();
         };
-    }, [data, setGlobalArenaData, clearGlobalArenaData]);
+    }, [arenaDto, setGlobalArenaData, clearGlobalArenaData]);
 
     if (isError) {
         return (

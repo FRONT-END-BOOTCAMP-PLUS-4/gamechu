@@ -1,7 +1,7 @@
 // app/(base)/games/[gameId]/components/ClientContentWrapper.tsx
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import ReviewSelector from "./ReviewSelector";
 import Comment from "./Comment";
@@ -44,11 +44,43 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
         queryClient.invalidateQueries({ queryKey: queryKeys.reviews(gameId) });
     };
 
+    const handleSelectReviewType = useCallback(
+        (type: "expert" | "user") => {
+            setSelectedReviewType(type);
+            setCurrentPage(1);
+        },
+        []
+    );
+
     const myComment = allComments.find(
         (c) => String(c.memberId) === String(viewerId)
     );
-    const expertComments = allComments.filter((c) => isExpertTier(c.score));
-    const userComments = allComments.filter((c) => !isExpertTier(c.score));
+    const expertComments = useMemo(
+        () => allComments.filter((c) => isExpertTier(c.score)),
+        [allComments]
+    );
+    const userComments = useMemo(
+        () => allComments.filter((c) => !isExpertTier(c.score)),
+        [allComments]
+    );
+
+    const expertAvgRating = useMemo(
+        () =>
+            expertComments.length > 0
+                ? expertComments.reduce((a, b) => a + b.rating, 0) /
+                  expertComments.length
+                : 0,
+        [expertComments]
+    );
+
+    const userAvgRating = useMemo(
+        () =>
+            userComments.length > 0
+                ? userComments.reduce((a, b) => a + b.rating, 0) /
+                  userComments.length
+                : 0,
+        [userComments]
+    );
 
     const currentComments =
         selectedReviewType === "expert" ? expertComments : userComments;
@@ -71,24 +103,11 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
             <div className="flex w-full flex-shrink-0 flex-col lg:w-[300px]">
                 <ReviewSelector
                     selected={selectedReviewType}
-                    onSelect={(type) => {
-                        setSelectedReviewType(type);
-                        setCurrentPage(1);
-                    }}
+                    onSelect={handleSelectReviewType}
                     expertReviewCount={expertComments.length}
-                    expertAvgRating={
-                        expertComments.length > 0
-                            ? expertComments.reduce((a, b) => a + b.rating, 0) /
-                              expertComments.length
-                            : 0
-                    }
+                    expertAvgRating={expertAvgRating}
                     userReviewCount={userComments.length}
-                    userAvgRating={
-                        userComments.length > 0
-                            ? userComments.reduce((a, b) => a + b.rating, 0) /
-                              userComments.length
-                            : 0
-                    }
+                    userAvgRating={userAvgRating}
                 />
             </div>
 

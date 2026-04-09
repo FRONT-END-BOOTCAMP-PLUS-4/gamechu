@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -21,7 +22,20 @@ function isLexicalJson(content: string): boolean {
 }
 
 export function ReadOnlyReview({ content }: ReadOnlyReviewProps) {
-    if (!isLexicalJson(content)) {
+    const isLexical = useMemo(() => isLexicalJson(content), [content]);
+    const config = useMemo(
+        () => ({
+            namespace: "review-readonly",
+            editorState: content,
+            editable: false,
+            nodes: sharedNodes,
+            theme: sharedTheme,
+            onError: () => {},
+        }),
+        [content]
+    );
+
+    if (!isLexical) {
         // Fallback: render as plain text for pre-migration HTML reviews or parse errors
         return (
             <p className="prose prose-sm max-w-full break-words text-sm text-font-200">
@@ -29,15 +43,6 @@ export function ReadOnlyReview({ content }: ReadOnlyReviewProps) {
             </p>
         );
     }
-
-    const config = {
-        namespace: "review-readonly",
-        editorState: content,
-        editable: false,
-        nodes: sharedNodes,
-        theme: sharedTheme,
-        onError: () => {},
-    };
 
     return (
         <LexicalComposer initialConfig={config}>

@@ -7,5 +7,7 @@ export function createMockReviewLikeRepository(): ReviewLikeRepository {
         unlike: vi.fn(),
         isLiked: vi.fn(),
         count: vi.fn(),
+        countByReviewIds: vi.fn(),
+        isLikedByReviewIds: vi.fn(),
     };
 }

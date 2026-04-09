@@ -92,7 +92,17 @@ export default function ArenaDetailContainer() {
         <div
             className={`mt-6 flex w-full max-w-[1000px] animate-fade-in-up flex-col gap-4 rounded-3xl bg-background-300 px-4 py-6 ${isInputBoxVisible ? "min-h-[740px]" : "min-h-[500px]"} `}
         >
-            <ArenaDetailChatList chats={chats} ref={chatContainerRef} />
+            <ArenaDetailChatList
+                chats={chats}
+                ref={chatContainerRef}
+                status={arenaDetail?.status}
+                creatorId={arenaDetail?.creatorId}
+                challengerId={arenaDetail?.challengerId}
+                creatorName={arenaDetail?.creatorName}
+                challengerName={arenaDetail?.challengerName}
+                creatorImageUrl={arenaDetail?.creatorImageUrl}
+                challengerImageUrl={arenaDetail?.challengerImageUrl}
+            />
             {isInputBoxVisible ? (
                 <ArenaDetailInputBox
                     content={content}

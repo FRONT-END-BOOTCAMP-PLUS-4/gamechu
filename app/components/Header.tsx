@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -10,6 +10,22 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import useModalStore from "@/stores/ModalStore";
 import Button from "./Button";
 import { Menu, User, X } from "lucide-react";
+
+type MenuLinkProps = { href: string; label: string; pathname: string; onNavigate: () => void; }
+
+function MenuLink({ href, label, pathname, onNavigate }: MenuLinkProps) {
+    return (
+        <Link
+            href={href}
+            onClick={onNavigate}
+            className={`rounded-lg px-16 py-2 text-center text-base font-medium transition-all duration-200 hover:bg-white/10 sm:px-4 sm:py-2 sm:text-2xl ${
+                pathname === href ? "text-primary-purple-100" : "text-white"
+            }`}
+        >
+            {label}
+        </Link>
+    );
+}
 
 export default function Header() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -26,6 +42,7 @@ export default function Header() {
     }, []);
 
     const toggleMenu = () => setMenuOpen((prev) => !prev);
+    const handleNavigate = useCallback(() => setMenuOpen(false), []);
 
     const handleLogout = async () => {
         Cookies.remove("attendance", { path: "/" });
@@ -39,18 +56,6 @@ export default function Header() {
         router.push(`/log-in?callbackUrl=${encodeURIComponent(pathname)}`);
         setMenuOpen(false);
     };
-
-    const MenuLink = ({ href, label }: { href: string; label: string }) => (
-        <Link
-            href={href}
-            onClick={() => setMenuOpen(false)}
-            className={`rounded-lg px-16 py-2 text-center text-base font-medium transition-all duration-200 hover:bg-white/10 sm:px-4 sm:py-2 sm:text-2xl ${
-                pathname === href ? "text-primary-purple-100" : "text-white"
-            }`}
-        >
-            {label}
-        </Link>
-    );
 
     return (
         <header className="relative border-b border-white/10 bg-background-300 text-white shadow-lg">
@@ -82,8 +87,8 @@ export default function Header() {
 
                 {/* 가운데  */}
                 <nav className="hidden whitespace-nowrap sm:flex sm:space-x-8">
-                    <MenuLink href="/games" label="게임" />
-                    <MenuLink href="/arenas" label="투기장" />
+                    <MenuLink href="/games" label="게임" pathname={pathname} onNavigate={handleNavigate} />
+                    <MenuLink href="/arenas" label="투기장" pathname={pathname} onNavigate={handleNavigate} />
                 </nav>
 
                 {/* 오른쪽  */}
@@ -150,8 +155,8 @@ export default function Header() {
                 <div className="flex items-start justify-between px-6 py-4">
                     {/* 왼쪽  */}
                     <nav className="flex flex-col space-y-2">
-                        <MenuLink href="/games" label="게임" />
-                        <MenuLink href="/arenas" label="투기장" />
+                        <MenuLink href="/games" label="게임" pathname={pathname} onNavigate={handleNavigate} />
+                        <MenuLink href="/arenas" label="투기장" pathname={pathname} onNavigate={handleNavigate} />
                     </nav>
 
                     {/* 오른쪽 */}

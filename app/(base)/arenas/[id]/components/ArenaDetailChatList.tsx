@@ -1,34 +1,36 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, memo } from "react";
 import { ChattingDto } from "@/backend/chatting/application/usecase/dto/ChattingDto";
-import useArenaStore from "@/stores/UseArenaStore";
 import Image from "next/image";
 
 type ArenaChatListProps = {
     chats: ChattingDto[];
+    status: number | undefined;
+    creatorId: string | undefined;
+    challengerId: string | null | undefined;
+    creatorName: string | undefined;
+    challengerName: string | null | undefined;
+    creatorImageUrl: string | undefined;
+    challengerImageUrl: string | null | undefined;
 };
 
 function ArenaDetailChatListComponent(
-    { chats }: ArenaChatListProps,
+    { chats, status, creatorId, challengerId, creatorName, challengerName, creatorImageUrl, challengerImageUrl }: ArenaChatListProps,
     ref: React.Ref<HTMLDivElement>
 ) {
-    const arenaDetail = useArenaStore((state) => state.arenaData);
-
     return (
         <div className="custom-scroll max-h-[550px] flex-1 overflow-y-auto pr-2">
             {chats.length === 0 ? (
                 <p className="mt-4 text-center text-font-300">
-                    {arenaDetail?.status === 3
+                    {status === 3
                         ? "채팅이 아직 없습니다. 토론을 시작해보세요!"
                         : "채팅이 없습니다."}
                 </p>
             ) : (
                 chats.map((chat, index) => {
                     const isCreator =
-                        String(chat.memberId) ===
-                        String(arenaDetail?.creatorId);
+                        String(chat.memberId) === String(creatorId);
                     const isChallenger =
-                        String(chat.memberId) ===
-                        String(arenaDetail?.challengerId);
+                        String(chat.memberId) === String(challengerId);
 
                     // 이전 채팅과 같은 사람이 보냈는지 확인
                     const isSameAsPrevious =
@@ -61,7 +63,7 @@ function ArenaDetailChatListComponent(
                                             {isCreator && (
                                                 <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
                                                     <Image
-                                                        src={arenaDetail?.creatorImageUrl || "/icons/teamA.svg"}
+                                                        src={creatorImageUrl || "/icons/teamA.svg"}
                                                         alt="Team A"
                                                         width={32}
                                                         height={32}
@@ -71,13 +73,13 @@ function ArenaDetailChatListComponent(
                                             )}
                                             <span className="text-xs font-bold text-font-200">
                                                 {isCreator
-                                                    ? arenaDetail?.creatorName
-                                                    : arenaDetail?.challengerName}
+                                                    ? creatorName
+                                                    : challengerName}
                                             </span>
                                             {isChallenger && (
                                                 <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
                                                     <Image
-                                                        src={arenaDetail?.challengerImageUrl || "/icons/teamB.svg"}
+                                                        src={challengerImageUrl || "/icons/teamB.svg"}
                                                         alt="Team B"
                                                         width={32}
                                                         height={32}
@@ -126,7 +128,7 @@ function ArenaDetailChatListComponent(
     );
 }
 
-const ArenaDetailChatList = forwardRef(ArenaDetailChatListComponent);
+const ArenaDetailChatList = memo(forwardRef(ArenaDetailChatListComponent));
 
 ArenaDetailChatList.displayName = "ArenaDetailChatList";
 

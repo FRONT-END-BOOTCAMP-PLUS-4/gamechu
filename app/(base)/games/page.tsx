@@ -145,7 +145,7 @@ export default function GamePage() {
                 </div>
 
                 {/* 검색창 */}
-                <SearchBar onSearch={(val) => setSearchQuery(val)} />
+                <SearchBar onSearch={setSearchQuery} />
             </div>
 
             <div className="flex w-full items-start gap-0 px-6 xl:gap-8">

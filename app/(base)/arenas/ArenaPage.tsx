@@ -9,7 +9,6 @@ import RecruitingArenaSection from "./components/RecruitingArenaSection";
 import VotingArenaSection from "./components/VotingArenaSection";
 import WaitingArenaSection from "./components/WaitingArenaSection";
 import SelectedArenaSection from "./components/SelectedArenaSection";
-import Modals from "@/app/components/Modals";
 import { useLoadingStore } from "@/stores/LoadingStore";
 
 export default function ArenaPage() {
@@ -47,7 +46,6 @@ export default function ArenaPage() {
     return (
         <div className="min-h-screen space-y-10 bg-background-400 py-6 text-font-100 sm:py-12">
             <ArenaPageHeader />
-            <Modals />
             {(() => {
                 switch (status) {
                     case 1:
