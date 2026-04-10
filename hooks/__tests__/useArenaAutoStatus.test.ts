@@ -2,17 +2,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useArenaAutoStatus } from "../useArenaAutoStatus";
-import { ArenaDto } from "@/backend/arena/application/usecase/dto/ArenaDto";
-
-const makeArena = (overrides: object) => ({
-    id: 1,
-    status: 2,
-    startDate: null,
-    debateEndDate: null,
-    voteEndDate: null,
-    challengerId: "challenger-1",
-    ...overrides,
-});
+import { createWrapper } from "@/tests/utils/createQueryWrapper";
+import { useQueryClient } from "@tanstack/react-query";
 
 describe("useArenaAutoStatus", () => {
     beforeEach(() => {
@@ -27,119 +18,61 @@ describe("useArenaAutoStatus", () => {
         vi.useRealTimers();
     });
 
-    it("calls PATCH immediately when startDate is in the past (status 2 → 3)", async () => {
-        const pastDate = new Date(Date.now() - 10_000).toISOString();
-
-        renderHook(() =>
-            useArenaAutoStatus({
-                arenaList: [makeArena({ id: 1, status: 2, startDate: pastDate })] as unknown as ArenaDto[],
-            })
+    it("does NOT call fetch — status transitions are handled server-side", async () => {
+        renderHook(
+            () => useArenaAutoStatus({ arenaList: [], onStatusUpdate: vi.fn() }),
+            { wrapper: createWrapper() }
         );
 
         await act(async () => {
-            await vi.runAllTimersAsync();
+            vi.advanceTimersByTime(90_000); // advance past two 30s intervals
         });
 
-        expect(fetch).toHaveBeenCalledWith(
-            "/api/arenas/1",
-            expect.objectContaining({ method: "PATCH" })
-        );
+        expect(fetch).not.toHaveBeenCalled();
     });
 
-    it("fires PATCH after delay when startDate is in the future (status 2 → 3)", async () => {
-        const futureDate = new Date(Date.now() + 5_000).toISOString();
+    it("invalidates arena queries after 30s interval", async () => {
+        let capturedClient: ReturnType<typeof useQueryClient> | null = null;
 
-        renderHook(() =>
-            useArenaAutoStatus({
-                arenaList: [makeArena({ id: 2, status: 2, startDate: futureDate })] as unknown as ArenaDto[],
-            })
+        renderHook(
+            () => {
+                capturedClient = useQueryClient();
+                return useArenaAutoStatus({ arenaList: [] });
+            },
+            { wrapper: createWrapper() }
         );
 
-        expect(fetch).not.toHaveBeenCalled();
+        const spy = vi.spyOn(capturedClient!, "invalidateQueries");
 
         await act(async () => {
-            vi.advanceTimersByTime(6_000);
+            vi.advanceTimersByTime(30_000);
             await Promise.resolve();
         });
 
-        expect(fetch).toHaveBeenCalledWith(
-            "/api/arenas/2",
-            expect.objectContaining({ method: "PATCH" })
+        expect(spy).toHaveBeenCalledWith(
+            expect.objectContaining({ queryKey: ["arenas"] })
         );
     });
 
-    it("calls DELETE immediately for status 1 with no challenger and past startDate", async () => {
-        const pastDate = new Date(Date.now() - 10_000).toISOString();
+    it("clears interval on unmount — no further invalidations", async () => {
+        let capturedClient: ReturnType<typeof useQueryClient> | null = null;
 
-        renderHook(() =>
-            useArenaAutoStatus({
-                arenaList: [
-                    makeArena({ id: 3, status: 1, startDate: pastDate, challengerId: null }),
-                ] as unknown as ArenaDto[],
-            })
+        const { unmount } = renderHook(
+            () => {
+                capturedClient = useQueryClient();
+                return useArenaAutoStatus({ arenaList: [] });
+            },
+            { wrapper: createWrapper() }
         );
 
-        await act(async () => {
-            await vi.runAllTimersAsync();
-        });
-
-        expect(fetch).toHaveBeenCalledWith(
-            "/api/arenas/3",
-            expect.objectContaining({ method: "DELETE" })
-        );
-    });
-
-    it("does not schedule delete for status 1 when challenger exists", async () => {
-        const pastDate = new Date(Date.now() - 10_000).toISOString();
-
-        renderHook(() =>
-            useArenaAutoStatus({
-                arenaList: [
-                    makeArena({ id: 4, status: 1, startDate: pastDate, challengerId: "challenger" }),
-                ] as unknown as ArenaDto[],
-            })
-        );
-
-        await act(async () => {
-            await vi.runAllTimersAsync();
-        });
-
-        expect(fetch).not.toHaveBeenCalled();
-    });
-
-    it("calls onStatusUpdate callback with correct id and new status", async () => {
-        const pastDate = new Date(Date.now() - 10_000).toISOString();
-        const onStatusUpdate = vi.fn();
-
-        renderHook(() =>
-            useArenaAutoStatus({
-                arenaList: [makeArena({ id: 5, status: 2, startDate: pastDate })] as unknown as ArenaDto[],
-                onStatusUpdate,
-            })
-        );
-
-        await act(async () => {
-            await vi.runAllTimersAsync();
-        });
-
-        expect(onStatusUpdate).toHaveBeenCalledWith(5, 3);
-    });
-
-    it("clears timers on unmount", async () => {
-        const futureDate = new Date(Date.now() + 10_000).toISOString();
-
-        const { unmount } = renderHook(() =>
-            useArenaAutoStatus({
-                arenaList: [makeArena({ id: 6, status: 2, startDate: futureDate })] as unknown as ArenaDto[],
-            })
-        );
+        const spy = vi.spyOn(capturedClient!, "invalidateQueries");
 
         unmount();
 
         await act(async () => {
-            vi.advanceTimersByTime(15_000);
+            vi.advanceTimersByTime(60_000);
         });
 
-        expect(fetch).not.toHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
     });
 });

@@ -1,10 +1,30 @@
 import { z } from "zod";
 
+const ALLOWED_IMAGE_HOSTNAMES = [
+    "i.imgur.com",
+    "ko.imgbb.com",
+    "i.namu.wiki",
+    "images.igdb.com",
+    "cdn.cloudflare.steamstatic.com",
+];
+
 export const UpdateProfileSchema = z.object({
     nickname:  z.string().min(1, "닉네임을 입력해주세요.").max(20, "닉네임은 20자 이하여야 합니다.").optional(),
     isMale:    z.boolean().optional(),
     birthDate: z.string().regex(/^\d{8}$/, "날짜는 yyyymmdd 형식이어야 합니다.").optional(),
-    imageUrl:  z.string().url("올바른 URL 형식이 아닙니다.").optional(),
+    imageUrl:  z.string().url("올바른 URL 형식이 아닙니다.")
+        .refine(
+            (url) => {
+                try {
+                    const { hostname } = new URL(url);
+                    return ALLOWED_IMAGE_HOSTNAMES.includes(hostname);
+                } catch {
+                    return false;
+                }
+            },
+            { message: "허용되지 않은 이미지 도메인입니다." }
+        )
+        .optional(),
 }).refine(
     data => Object.values(data).some(v => v !== undefined),
     { message: "수정할 내용을 입력해주세요." }

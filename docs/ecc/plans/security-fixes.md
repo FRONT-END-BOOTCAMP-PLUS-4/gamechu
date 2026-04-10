@@ -89,7 +89,7 @@ return new MemberProfileResponseDto(
 `PATCH /api/member/arenas/:id` confirms the caller is authenticated but never checks whether the caller is the creator or challenger of that arena. Any logged-in user can:
 
 - Change the `description` or `startDate` of any other user's arena
-- Inject themselves (or any user ID) as `challengerId` of any arena they didn't create — bypassing the score-100 requirement check that lives in the *other* arena PATCH route
+- Inject themselves (or any user ID) as `challengerId` of any arena they didn't create — bypassing the score-100 requirement check that lives in the _other_ arena PATCH route
 - Effectively take over any open arena slot
 
 This is a classic IDOR (Insecure Direct Object Reference) — the ID in the URL is trusted without verifying the relationship between the caller and the resource.
@@ -120,19 +120,28 @@ Use distinct status codes for unauthenticated vs unauthorized. Fetch the arena f
 // 1. Check authentication — 401 so the client can redirect to login
 const memberId: string | null = await getAuthUserId();
 if (!memberId) {
-    return NextResponse.json({ message: "로그인이 필요합니다." }, { status: 401 });
+    return NextResponse.json(
+        { message: "로그인이 필요합니다." },
+        { status: 401 }
+    );
 }
 
 // 2. Check resource exists
 const arenaRepository: ArenaRepository = new PrismaArenaRepository();
 const arena = await arenaRepository.findById(arenaId);
 if (!arena) {
-    return NextResponse.json({ message: "투기장이 존재하지 않습니다." }, { status: 404 });
+    return NextResponse.json(
+        { message: "투기장이 존재하지 않습니다." },
+        { status: 404 }
+    );
 }
 
 // 3. Check ownership — 403 (authenticated but not a participant)
 if (arena.creatorId !== memberId && arena.challengerId !== memberId) {
-    return NextResponse.json({ message: "투기장 변경 권한이 없습니다." }, { status: 403 });
+    return NextResponse.json(
+        { message: "투기장 변경 권한이 없습니다." },
+        { status: 403 }
+    );
 }
 ```
 
@@ -178,11 +187,11 @@ export async function DELETE(request: Request, { params }: RequestParams) {
 
 The endpoint is not actually called by an admin or a server process — it is called by **client-side React hooks** (`useArenaAutoStatus`, `useArenaAutoStatusDetail`) running in the browser via `setTimeout`. Because those hooks have no session, the endpoint had to be left open. This is a fundamental design problem:
 
-| Caller | Location | Problem |
-|---|---|---|
-| `useArenaAutoStatus` | Browser (arena list page) | Timers die when user leaves the page |
-| `useArenaAutoStatusDetail` | Browser (arena detail page) | Same |
-| `ArenaDetailRecruiting.tsx` | Browser (join button) | User action bundled with automated transitions |
+| Caller                      | Location                    | Problem                                        |
+| --------------------------- | --------------------------- | ---------------------------------------------- |
+| `useArenaAutoStatus`        | Browser (arena list page)   | Timers die when user leaves the page           |
+| `useArenaAutoStatusDetail`  | Browser (arena detail page) | Same                                           |
+| `ArenaDetailRecruiting.tsx` | Browser (join button)       | User action bundled with automated transitions |
 
 The endpoint serves two completely different concerns through the same route, making it impossible to properly secure either.
 
@@ -205,14 +214,24 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
 
     const arena = await arenaRepository.findById(arenaId.data);
     if (!arena) return errorResponse("투기장이 존재하지 않습니다.", 404);
-    if (arena.challengerId) return errorResponse("이미 다른 유저가 참가 중입니다.", 409);
-    if (arena.creatorId === memberId) return errorResponse("본인이 만든 투기장에는 참가할 수 없습니다.", 403);
+    if (arena.challengerId)
+        return errorResponse("이미 다른 유저가 참가 중입니다.", 409);
+    if (arena.creatorId === memberId)
+        return errorResponse("본인이 만든 투기장에는 참가할 수 없습니다.", 403);
 
     const member = await memberRepository.findById(memberId);
-    if (!member || member.score < 100) return errorResponse("투기장 참여를 위해서는 최소 100점이 필요합니다.", 403);
+    if (!member || member.score < 100)
+        return errorResponse(
+            "투기장 참여를 위해서는 최소 100점이 필요합니다.",
+            403
+        );
 
     // challengerId comes from session — not from the request body
-    await updateArenaUsecase.execute({ id: arenaId.data, challengerId: memberId, status: 2 });
+    await updateArenaUsecase.execute({
+        id: arenaId.data,
+        challengerId: memberId,
+        status: 2,
+    });
 
     return NextResponse.json({ message: "참가 완료" }, { status: 200 });
 }
@@ -229,7 +248,9 @@ Replace client-side `setTimeout` hooks with server-side timers initialized in `i
 // instrumentation.ts (project root)
 export async function register() {
     if (process.env.NEXT_RUNTIME === "nodejs") {
-        const { recoverPendingArenaTimers } = await import("@/lib/ArenaTimerRecovery");
+        const { recoverPendingArenaTimers } = await import(
+            "@/lib/ArenaTimerRecovery"
+        );
         await recoverPendingArenaTimers();
     }
 }
@@ -239,26 +260,40 @@ export async function register() {
 // lib/ArenaTimerRecovery.ts
 export async function recoverPendingArenaTimers() {
     const arenaRepo = new PrismaArenaRepository();
-    const arenas = await arenaRepo.findByStatuses([2, 3, 4]);
 
-    for (const arena of arenas) {
+    // ArenaFilter only accepts a single status — query each active status separately.
+    // Statuses 1-4 have pending transitions; status 5 is already ended.
+    const pending = (
+        await Promise.all(
+            [1, 2, 3, 4].map(s =>
+                arenaRepo.findAll(new ArenaFilter(s, null, "startDate", false, 0, 10_000))
+            )
+        )
+    ).flat();
+
+    for (const arena of pending) {
         scheduleArenaTransitions(arena);
     }
 }
 
 export function scheduleArenaTransitions(arena: Arena) {
     const now = Date.now();
+    const startMs = new Date(arena.startDate).getTime();
+    // debateEndDate and voteEndDate are not stored in DB — compute from startDate.
+    // Matches GetArenaDetailUsecase.ts: endChatting = startDate + 30min, endVote = endChatting + 24h.
+    const debateEndMs = startMs + 30 * 60 * 1000;
+    const voteEndMs   = debateEndMs + 24 * 60 * 60 * 1000;
 
     const schedule = (targetMs: number, newStatus: ArenaStatus) => {
         const delay = Math.max(0, targetMs - now);  // fire immediately if past
         setTimeout(() => transitionArena(arena.id, newStatus), delay);
     };
 
-    if (arena.status === 2) schedule(new Date(arena.startDate).getTime() + 3_600_000, 3);
-    if (arena.status === 3) schedule(new Date(arena.debateEndDate).getTime(), 4);
-    if (arena.status === 4) schedule(new Date(arena.voteEndDate).getTime(), 5);
-    if (arena.status === 1 && arena.startDate && !arena.challengerId) {
-        schedule(new Date(arena.startDate).getTime(), "delete" as any);
+    if (arena.status === 2) schedule(startMs, 3);        // 2→3 at startDate (matches useArenaAutoStatus.ts)
+    if (arena.status === 3) schedule(debateEndMs, 4);    // 3→4 at startDate + 30 min
+    if (arena.status === 4) schedule(voteEndMs, 5);      // 4→5 at startDate + 30 min + 24 h
+    if (arena.status === 1 && !arena.challengerId) {
+        schedule(startMs, "delete" as any);              // 1→delete at startDate if no challenger
     }
 }
 
@@ -308,9 +343,9 @@ stateDiagram-v2
     [*] --> 1 : Arena created
     1 --> 2 : POST /api/member/arenas/[id]/join\n(session required, score ≥ 100)
     1 --> [*] : startDate passed, no challenger\n→ server timer fires DELETE
-    2 --> 3 : server timer fires\n(startDate + 1h)
-    3 --> 4 : server timer fires\n(debateEndDate)
-    4 --> 5 : server timer fires\n(voteEndDate)
+    2 --> 3 : server timer fires\n(startDate)
+    3 --> 4 : server timer fires\n(startDate + 30 min)
+    4 --> 5 : server timer fires\n(startDate + 30 min + 24 h)
     5 --> [*] : scores settled, arena ended
 ```
 
@@ -417,14 +452,34 @@ await usecase.execute(new DeleteWishlistDto(wishlistId));
 
 ### Fix
 
-Fetch the wishlist before deleting and verify ownership. This requires a `findById` method on the wishlist repository.
+Change the URL parameter from `wishlistId` (PK) to `gameId`. `findById(memberId, gameId)` already scopes by the authenticated user — no extra ownership check needed. The frontend has `gameId` in scope and does not need `wishlistId` for the delete URL.
+
+**Route (`app/api/member/wishlists/[id]/route.ts`):**
 
 ```ts
-const wishlist = await wishlistRepo.findById(wishlistId);
-if (!wishlist) return errorResponse("위시리스트를 찾을 수 없습니다.", 404);
-if (wishlist.memberId !== memberId) return errorResponse("삭제 권한이 없습니다.", 403);
+const memberId = await getAuthUserId();
+if (!memberId) return errorResponse("Unauthorized", 401);
 
-await usecase.execute(new DeleteWishlistDto(wishlistId));
+const { id } = await params; // [id] is now gameId, not wishlist PK
+const parsed = validate(IdSchema, id);
+if (!parsed.success) return parsed.response;
+const gameId = parsed.data;
+
+const wishlistRepo = new PrismaWishListRepository();
+const wishlist = await wishlistRepo.findById(memberId, gameId);
+// findById(memberId, gameId) scopes by memberId — returns null if not owned
+if (!wishlist) return errorResponse("위시리스트를 찾을 수 없습니다.", 404);
+
+const usecase = new DeleteWishlistUsecase(wishlistRepo);
+await usecase.execute(new DeleteWishlistDto(wishlist.id));
+```
+
+**Frontend (`hooks/useWishlist.ts`):**
+
+```ts
+// Before: DELETE /api/member/wishlists/${current.wishlistId}
+// After:  DELETE /api/member/wishlists/${gameId}   (gameId is already in hook closure)
+await fetch(`/api/member/wishlists/${gameId}`, { method: "DELETE" });
 ```
 
 ---
@@ -467,6 +522,7 @@ if (existing) return errorResponse("이미 처리된 요청입니다.", 409);
 `POST /api/notification-records` requires no session. Any unauthenticated visitor who knows a valid `memberId` (a UUID, but UUIDs can be obtained from public arena/profile pages) can spam arbitrary notifications into any user's notification feed with any `description` text.
 
 This enables:
+
 - Notification spam / social engineering attacks against users
 - Abuse of the notification system to send misleading messages (e.g., fake "You won the arena!" notifications)
 
@@ -486,12 +542,17 @@ export async function POST(request: Request) {
 Two options depending on who calls this endpoint:
 
 **Option A — Called by the authenticated user for themselves:**
+
 ```ts
 const callerId = await getAuthUserId();
 if (!callerId) return errorResponse("Unauthorized", 401);
 
 // Ignore body memberId — use authenticated caller's ID
-const createDto = new CreateNotificationRecordDto(callerId, typeId, description);
+const createDto = new CreateNotificationRecordDto(
+    callerId,
+    typeId,
+    description
+);
 ```
 
 **Option B — Internal server-to-server call (e.g., triggered by arena end):**
@@ -516,7 +577,7 @@ An attacker can run unlimited login attempts against any account by rotating the
 ```ts
 export function getClientIp(req: NextRequest): string {
     return (
-        req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??  // ← client-controlled
+        req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? // ← client-controlled
         req.headers.get("x-real-ip") ??
         "unknown"
     );
@@ -538,8 +599,8 @@ export function getClientIp(req: NextRequest): string {
     // Option C — Keep x-forwarded-for but take the LAST entry (trusted proxy appends)
     const forwarded = req.headers.get("x-forwarded-for");
     if (forwarded) {
-        const ips = forwarded.split(",").map(ip => ip.trim());
-        return ips[ips.length - 1];  // last = set by your proxy, not the client
+        const ips = forwarded.split(",").map((ip) => ip.trim());
+        return ips[ips.length - 1]; // last = set by your proxy, not the client
     }
     return "unknown";
 }
@@ -638,6 +699,7 @@ export const UpdateProfileSchema = z.object({
 ## MEDIUM-2: No Rate Limiting on Score-Mutating Endpoints
 
 **Files:**
+
 - `app/api/member/attend/route.ts`
 - `app/api/member/review-likes/[reviewId]/route.ts`
 - `app/api/member/scores/route.ts`
@@ -674,15 +736,15 @@ For `attend`, the existing date check is sufficient — rate limiting would be r
 
 ## Implementation Order
 
-| Priority | Issue | Effort | Impact |
-|----------|-------|--------|--------|
-| 1 | CRITICAL-3: Add `POST /api/member/arenas/[id]/join`, move timers to `instrumentation.ts`, delete admin endpoints | High | Critical |
-| 2 | CRITICAL-1: Remove password from profile DTO | Low (2 files) | Critical |
-| 3 | CRITICAL-2: Add ownership check to member arena PATCH | Low | Critical |
-| 4 | HIGH-1: Add ownership check to wishlist DELETE | Low | High |
-| 5 | HIGH-3: Protect notification-records POST | Low | High |
-| 6 | HIGH-4: Fix IP detection in RateLimiter | Low | High |
-| 7 | HIGH-5: Switch CSP to enforced mode | Low (1 word) | High |
-| 8 | HIGH-2: Remove or lock down scores POST | Medium | High |
-| 9 | MEDIUM-1: Add imageUrl domain allow-list | Low | Medium |
-| 10 | MEDIUM-2: Add rate limiting to review-likes/scores | Medium | Medium |
+| Priority | Issue                                                                                                            | Effort        | Impact   |
+| -------- | ---------------------------------------------------------------------------------------------------------------- | ------------- | -------- |
+| 1        | CRITICAL-3: Add `POST /api/member/arenas/[id]/join`, move timers to `instrumentation.ts`, delete admin endpoints | High          | Critical |
+| 2        | CRITICAL-1: Remove password from profile DTO                                                                     | Low (2 files) | Critical |
+| 3        | CRITICAL-2: Add ownership check to member arena PATCH                                                            | Low           | Critical |
+| 4        | HIGH-1: Add ownership check to wishlist DELETE                                                                   | Low           | High     |
+| 5        | HIGH-3: Protect notification-records POST                                                                        | Low           | High     |
+| 6        | HIGH-4: Fix IP detection in RateLimiter                                                                          | Low           | High     |
+| 7        | HIGH-5: Switch CSP to enforced mode                                                                              | Low (1 word)  | High     |
+| 8        | HIGH-2: Remove or lock down scores POST                                                                          | Medium        | High     |
+| 9        | MEDIUM-1: Add imageUrl domain allow-list                                                                         | Low           | Medium   |
+| 10       | MEDIUM-2: Add rate limiting to review-likes/scores                                                               | Medium        | Medium   |

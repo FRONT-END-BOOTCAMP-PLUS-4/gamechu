@@ -1,103 +1,24 @@
 import useArenaStore from "@/stores/UseArenaStore";
-import { ArenaStatus } from "@/types/arena-status";
-import dayjs from "dayjs";
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/QueryKeys";
 
-export function useArenaAutoStatusDetail({
-    onStatusUpdate,
-}: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function useArenaAutoStatusDetail(_props: {
     onStatusUpdate?: (newStatus: number) => void;
 }) {
     const arenaDetail = useArenaStore((state) => state.arenaData);
+    const queryClient = useQueryClient();
 
     useEffect(() => {
-        let timer: NodeJS.Timeout | null = null;
+        if (!arenaDetail?.id) return;
+        const id = arenaDetail.id;
 
-        const schedule = (
-            targetUTC: Date,
-            newStatus: ArenaStatus | "delete"
-        ) => {
-            const targetTime = dayjs(targetUTC);
-            const delay = targetTime.diff(dayjs());
-
-            const run = async () => {
-                try {
-                    if (newStatus === "delete") {
-                        await deleteArena(arenaDetail!.id);
-                    } else await updateStatus(newStatus);
-                } catch {
-                    // auto-status check error — silently ignored
-                }
-            };
-
-            if (delay <= 0) {
-                run();
-                return;
-            }
-            timer = setTimeout(run, delay);
-        };
-
-        if (!arenaDetail?.id || !arenaDetail?.status) return;
-
-        switch (arenaDetail.status) {
-            case 1: {
-                if (arenaDetail.startDate && !arenaDetail.challengerId) {
-                    schedule(new Date(arenaDetail.startDate), "delete");
-                }
-                break;
-            }
-            case 2: {
-                schedule(new Date(arenaDetail.startDate), 3);
-                break;
-            }
-            case 3: {
-                schedule(new Date(arenaDetail.endChatting), 4);
-                break;
-            }
-            case 4: {
-                schedule(new Date(arenaDetail.endVote), 5);
-                break;
-            }
-        }
-
-        return () => {
-            if (timer) clearTimeout(timer);
-        };
-    }, [
-        arenaDetail?.id,
-        arenaDetail?.status,
-        arenaDetail?.startDate,
-        arenaDetail?.endChatting,
-        arenaDetail?.endVote,
-        arenaDetail?.challengerId,
-        onStatusUpdate,
-    ]);
-
-    // 아레나 삭제
-    const deleteArena = async (arenaId: number) => {
-        try {
-            const res = await fetch(`/api/arenas/${arenaId}`, {
-                method: "DELETE",
-            });
-            if (!res.ok) throw new Error("아레나 삭제 실패");
-            onStatusUpdate?.(0);
-        } catch {
-            // arena delete error — silently ignored
-        }
-    };
-
-    // 아레나 상태 업데이트
-    const updateStatus = async (newStatus: ArenaStatus) => {
-        try {
-            const res = await fetch(`/api/arenas/${arenaDetail?.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: newStatus }),
-            });
-            if (!res.ok) throw new Error("상태 변경 실패");
-            onStatusUpdate?.(newStatus);
-        } catch {
-            // status update error — silently ignored
-        }
-    };
+        // Server-side timers handle all status transitions (see lib/ArenaTimerRecovery.ts).
+        // This hook only keeps the UI fresh by periodically re-fetching the arena detail.
+        const interval = setInterval(() => {
+            queryClient.invalidateQueries({ queryKey: queryKeys.arenaDetail(id) });
+        }, 30_000);
+        return () => clearInterval(interval);
+    }, [arenaDetail?.id, queryClient]);
 }

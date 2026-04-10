@@ -88,7 +88,7 @@ describe("useWishlist", () => {
         });
 
         expect(fetch).toHaveBeenCalledWith(
-            expect.stringContaining("/api/member/wishlists/10"),
+            "/api/member/wishlists/1",
             expect.objectContaining({ method: "DELETE" })
         );
     });

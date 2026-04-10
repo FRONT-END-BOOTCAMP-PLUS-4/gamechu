@@ -8,21 +8,30 @@ vi.mock("@/lib/Redis", () => ({
     },
 }));
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByNickname = vi.fn().mockResolvedValue(null);
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByNickname = vi.fn().mockResolvedValue(null);
+        }),
+    })
+);
 
-vi.mock("@/backend/member/application/usecase/GetMemberProfileByNicknameUsecase", () => ({
-    GetMemberProfileByNicknameUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue(null);
-    }),
-}));
+vi.mock(
+    "@/backend/member/application/usecase/GetMemberPublicProfileUsecase",
+    () => ({
+        GetMemberPublicProfileUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue(null);
+        }),
+    })
+);
 
 import { GET } from "../route";
 
-const makeRequest = () => new Request("http://localhost/api/member/profile/testuser");
+const makeRequest = () =>
+    new Request("http://localhost/api/member/profile/testuser");
 const makeParams = (nickname = "testuser") => ({
     params: Promise.resolve({ nickname }),
 });
@@ -36,13 +45,14 @@ describe("GET /api/member/profile/[nickname]", () => {
     });
 
     it("returns 500 when usecase throws", async () => {
-        const { GetMemberProfileByNicknameUsecase } = await import(
-            "@/backend/member/application/usecase/GetMemberProfileByNicknameUsecase"
-        );
-        vi.mocked(GetMemberProfileByNicknameUsecase).mockImplementationOnce(
+        const { GetMemberPublicProfileUsecase: GetMemberPublicProfileUsecase } =
+            await import(
+                "@/backend/member/application/usecase/GetMemberPublicProfileUsecase"
+            );
+        vi.mocked(GetMemberPublicProfileUsecase).mockImplementationOnce(
             function (this: Record<string, unknown>) {
                 this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
-            } as unknown as typeof GetMemberProfileByNicknameUsecase
+            } as unknown as typeof GetMemberPublicProfileUsecase
         );
 
         const response = await GET(makeRequest() as never, makeParams());

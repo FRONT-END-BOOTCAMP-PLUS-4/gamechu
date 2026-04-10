@@ -4,18 +4,21 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
     getAuthUserId: vi.fn().mockResolvedValue("owner-id"),
 }));
 
-vi.mock("@/backend/arena/infra/repositories/prisma/PrismaArenaRepository", () => ({
-    PrismaArenaRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findById = vi.fn().mockResolvedValue({
-            id: 1,
-            creatorId: "owner-id",
-            challengerId: null,
-            status: 1,
-        });
-        this.deleteById = vi.fn().mockResolvedValue(undefined);
-        this.update = vi.fn().mockResolvedValue(undefined);
-    }),
-}));
+vi.mock(
+    "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository",
+    () => ({
+        PrismaArenaRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findById = vi.fn().mockResolvedValue({
+                id: 1,
+                creatorId: "owner-id",
+                challengerId: null,
+                status: 1,
+            });
+            this.deleteById = vi.fn().mockResolvedValue(undefined);
+            this.update = vi.fn().mockResolvedValue(undefined);
+        }),
+    })
+);
 
 vi.mock("@/backend/arena/application/usecase/DeleteArenaUsecase", () => ({
     DeleteArenaUsecase: vi.fn(function (this: Record<string, unknown>) {
@@ -57,6 +60,19 @@ describe("PATCH /api/member/arenas/[id]", () => {
         expect(response.status).toBe(400);
     });
 
+    it("PATCH by non-owner returns 403", async () => {
+        const { getAuthUserId } = await import("@/utils/GetAuthUserId.server");
+        vi.mocked(getAuthUserId).mockResolvedValueOnce("non-owner-id");
+
+        const req = new Request("http://localhost/api/member/arenas/1", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ description: "unauthorized edit" }),
+        });
+        const response = await PATCH(req, { params });
+        expect(response.status).toBe(403);
+    });
+
     it("PATCH with valid body and auth returns 200", async () => {
         const req = new Request("http://localhost/api/member/arenas/1", {
             method: "PATCH",
@@ -80,7 +96,7 @@ describe("DELETE /api/member/arenas/[id]", () => {
         expect(response.status).toBe(401);
     });
 
-    it("DELETE by non-owner returns 401", async () => {
+    it("DELETE by non-owner returns 403", async () => {
         const { getAuthUserId } = await import("@/utils/GetAuthUserId.server");
         vi.mocked(getAuthUserId).mockResolvedValueOnce("other-user-id");
 
@@ -88,7 +104,7 @@ describe("DELETE /api/member/arenas/[id]", () => {
             method: "DELETE",
         });
         const response = await DELETE(req, { params });
-        expect(response.status).toBe(401);
+        expect(response.status).toBe(403);
     });
 
     it("DELETE by owner returns 200", async () => {

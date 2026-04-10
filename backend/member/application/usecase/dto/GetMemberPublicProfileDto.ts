@@ -1,5 +1,4 @@
-// ✅ /backend/member/application/usecase/dto/MemberProfileByNicknameResponseDto.ts
-export class MemberProfileByNicknameResponseDto {
+export class GetMemberPublicProfileDto {
     constructor(
         public id: string,
         public nickname: string,
