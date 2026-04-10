@@ -17,15 +17,26 @@ import logger from "@/lib/Logger";
 
 const log = logger.child({ module: "ArenaTimerRecovery" });
 
+// Module-level timer registry — prevents duplicate setTimeout chains per arena.
+const scheduledTimers = new Map<number, NodeJS.Timeout[]>();
+
 export async function recoverPendingArenaTimers(): Promise<void> {
     const arenaRepo = new PrismaArenaRepository();
 
     // ArenaFilter accepts a single status — query each active status separately.
+    // Use Number.MAX_SAFE_INTEGER so no active arenas are silently truncated.
     const pending = (
         await Promise.all(
             [1, 2, 3, 4].map((s) =>
                 arenaRepo.findAll(
-                    new ArenaFilter(s, null, "startDate", false, 0, 10_000)
+                    new ArenaFilter(
+                        s,
+                        null,
+                        "startDate",
+                        false,
+                        0,
+                        Number.MAX_SAFE_INTEGER
+                    )
                 )
             )
         )
@@ -42,6 +53,12 @@ export async function recoverPendingArenaTimers(): Promise<void> {
 }
 
 export function scheduleArenaTransitions(arena: Arena): void {
+    // Skip if timers are already registered for this arena (e.g. startup + join race).
+    if (scheduledTimers.has(arena.id)) {
+        log.info({ arenaId: arena.id }, "타이머 중복 스케줄 방지: 이미 등록됨");
+        return;
+    }
+
     const now = Date.now();
     const startMs = new Date(arena.startDate).getTime();
     // debateEndDate and voteEndDate are not stored in DB — compute from startDate.
@@ -49,9 +66,17 @@ export function scheduleArenaTransitions(arena: Arena): void {
     const debateEndMs = startMs + 30 * 60 * 1000;
     const voteEndMs = debateEndMs + 24 * 60 * 60 * 1000;
 
+    const timers: NodeJS.Timeout[] = [];
+
     const schedule = (targetMs: number, newStatus: ArenaStatus | "delete") => {
         const delay = Math.max(0, targetMs - now); // fire immediately if past
-        setTimeout(() => transitionArena(arena.id, newStatus), delay);
+        const t = setTimeout(() => {
+            transitionArena(arena.id, newStatus).finally(() => {
+                // Clean up registry after the last timer fires.
+                scheduledTimers.delete(arena.id);
+            });
+        }, delay);
+        timers.push(t);
     };
 
     if (arena.status === 2) schedule(startMs, 3); // 2→3 at startDate
@@ -59,6 +84,10 @@ export function scheduleArenaTransitions(arena: Arena): void {
     if (arena.status === 4) schedule(voteEndMs, 5); // 4→5 at startDate + 30 min + 24 h
     if (arena.status === 1 && !arena.challengerId) {
         schedule(startMs, "delete"); // 1→delete at startDate if no challenger
+    }
+
+    if (timers.length > 0) {
+        scheduledTimers.set(arena.id, timers);
     }
 }
 

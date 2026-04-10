@@ -15,20 +15,22 @@ type GameFilterWrapperProps = {
 
     isOpen: boolean;
     onClose: () => void;
-}
+};
 
 export default function GameFilterWrapper(props: GameFilterWrapperProps) {
+    const { onClose } = props;
+
     // 화면 크기 변경 감지 -> lg 이상이면 drawer 닫기
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 1280) {
-                props.onClose();
+                onClose();
             }
         };
 
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
-    }, [props.onClose]);
+    }, [onClose]);
 
     return (
         <div className="relative">

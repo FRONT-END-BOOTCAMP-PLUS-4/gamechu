@@ -11,7 +11,7 @@ import useArenaStore from "@/stores/UseArenaStore";
 type UseArenaChatManagementProps = {
     arenaId: number | undefined;
     status: ArenaStatus | undefined;
-}
+};
 
 interface UseArenaChatManagementReturn {
     chats: ChattingDto[];
@@ -99,7 +99,7 @@ export function useArenaChatManagement({
         } finally {
             setLoadingChats(false);
         }
-    }, [arenaId, status, userId, arenaDetail?.status]);
+    }, [arenaId, userId, arenaDetail?.status]);
 
     useEffect(() => {
         fetchChats();
@@ -180,7 +180,7 @@ export function useArenaChatManagement({
                 setErrorChats(errorMessage);
             }
         },
-        [arenaId, userId]
+        [arenaId, userId, remainingSends]
     );
     return {
         chats,
