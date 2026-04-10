@@ -12,12 +12,13 @@
 
 ## File Structure
 
-| 파일 | 역할 | 작업 |
-|------|------|------|
-| `app/(base)/profile/components/tabs/ProfileWishlistTab.tsx` | 위시리스트 탭 UI 컴포넌트 | **수정** — `GameCard` → `GameCardList` 교체 |
-| `app/(base)/profile/components/tabs/__tests__/ProfileWishlistTab.test.tsx` | `ProfileWishlistTab` 단위 테스트 | **신규 생성** |
+| 파일                                                                       | 역할                             | 작업                                        |
+| -------------------------------------------------------------------------- | -------------------------------- | ------------------------------------------- |
+| `app/(base)/profile/components/tabs/ProfileWishlistTab.tsx`                | 위시리스트 탭 UI 컴포넌트        | **수정** — `GameCard` → `GameCardList` 교체 |
+| `app/(base)/profile/components/tabs/__tests__/ProfileWishlistTab.test.tsx` | `ProfileWishlistTab` 단위 테스트 | **신규 생성**                               |
 
 참고 파일 (수정 없음):
+
 - `app/(base)/games/components/GameCardList.tsx` — 재사용할 그리드 컴포넌트
 - `app/(base)/games/components/GameCard.tsx` — `GameCardList` 내부에서 사용
 
@@ -26,6 +27,7 @@
 ### Task 1: 실패하는 테스트 작성
 
 **Files:**
+
 - Create: `app/(base)/profile/components/tabs/__tests__/ProfileWishlistTab.test.tsx`
 
 - [ ] **Step 1: `__tests__` 디렉토리를 확인하고 테스트 파일 생성**
@@ -79,7 +81,7 @@ describe("ProfileWishlistTab", () => {
     it("게임이 없을 때 위시리스트 고유 빈 상태 메시지를 표시한다", () => {
         render(<ProfileWishlistTab {...defaultProps} />);
         expect(
-            screen.getByText("위시리스트에 등록된 게임이 없습니다."),
+            screen.getByText("위시리스트에 등록된 게임이 없습니다.")
         ).toBeDefined();
     });
 
@@ -90,7 +92,7 @@ describe("ProfileWishlistTab", () => {
                 games={sampleGames}
                 pages={[1]}
                 endPage={1}
-            />,
+            />
         );
         expect(screen.getByTestId("game-card-list")).toBeDefined();
     });
@@ -102,10 +104,10 @@ describe("ProfileWishlistTab", () => {
                 games={sampleGames}
                 pages={[1]}
                 endPage={1}
-            />,
+            />
         );
         expect(
-            screen.queryByText("위시리스트에 등록된 게임이 없습니다."),
+            screen.queryByText("위시리스트에 등록된 게임이 없습니다.")
         ).toBeNull();
     });
 });
@@ -118,6 +120,7 @@ npx vitest run app/\(base\)/profile/components/tabs/__tests__/ProfileWishlistTab
 ```
 
 Expected output:
+
 ```
 FAIL  app/(base)/profile/components/tabs/__tests__/ProfileWishlistTab.test.tsx
  × 게임이 있을 때 GameCardList를 렌더링한다
@@ -130,6 +133,7 @@ FAIL  app/(base)/profile/components/tabs/__tests__/ProfileWishlistTab.test.tsx
 ### Task 2: ProfileWishlistTab 구현 수정
 
 **Files:**
+
 - Modify: `app/(base)/profile/components/tabs/ProfileWishlistTab.tsx`
 
 - [ ] **Step 3: `ProfileWishlistTab.tsx` 수정**
@@ -195,6 +199,7 @@ export default function ProfileWishlistTab({
 ```
 
 핵심 변경점:
+
 - `import GameCard from "@/app/(base)/games/components/GameCard"` → 삭제
 - `import GameCardList from "@/app/(base)/games/components/GameCardList"` → 추가
 - `<div className="grid grid-cols-1 gap-6 md:grid-cols-2"> ... </div>` → `<GameCardList games={games} />` 로 교체
@@ -206,6 +211,7 @@ npx vitest run app/\(base\)/profile/components/tabs/__tests__/ProfileWishlistTab
 ```
 
 Expected output:
+
 ```
 PASS  app/(base)/profile/components/tabs/__tests__/ProfileWishlistTab.test.tsx
  ✓ 게임이 없을 때 위시리스트 고유 빈 상태 메시지를 표시한다
@@ -245,10 +251,10 @@ git commit -m "[style/#296] 위시리스트 탭 게임 카드 레이아웃을 Ga
 
 ### Spec Coverage 확인
 
-| 스펙 요구사항 | 커버 Task |
-|--------------|-----------|
-| `ProfileWishlistTab`에서 수동 grid div + GameCard 반복 렌더링을 `GameCardList`로 교체 | Task 2, Step 3 |
-| 빈 상태 메시지("위시리스트에 등록된 게임이 없습니다")는 위시리스트 고유 메시지 유지 | Task 1 (테스트로 보호), Task 2 (구현 유지) |
+| 스펙 요구사항                                                                         | 커버 Task                                  |
+| ------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `ProfileWishlistTab`에서 수동 grid div + GameCard 반복 렌더링을 `GameCardList`로 교체 | Task 2, Step 3                             |
+| 빈 상태 메시지("위시리스트에 등록된 게임이 없습니다")는 위시리스트 고유 메시지 유지   | Task 1 (테스트로 보호), Task 2 (구현 유지) |
 
 ### Placeholder 스캔
 

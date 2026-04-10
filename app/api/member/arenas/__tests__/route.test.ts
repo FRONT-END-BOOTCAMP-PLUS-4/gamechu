@@ -4,15 +4,23 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
     getAuthUserId: vi.fn().mockResolvedValue("test-user-id"),
 }));
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findById = vi.fn().mockResolvedValue({ id: "test-user-id", score: 200 });
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findById = vi
+                .fn()
+                .mockResolvedValue({ id: "test-user-id", score: 200 });
+        }),
+    })
+);
 
-vi.mock("@/backend/arena/infra/repositories/prisma/PrismaArenaRepository", () => ({
-    PrismaArenaRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository",
+    () => ({
+        PrismaArenaRepository: vi.fn(function () {}),
+    })
+);
 
 const mockArena = {
     id: 1,

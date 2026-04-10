@@ -1,1 +1,74 @@
-[{"id":1,"memberId":"c5a98ef5-3150-4aaf-b385-af215af3aa2e","gameId":1,"content":"<p>이게 뭔겜임?</p>","rating":5,"createdAt":"2025-11-18T08:45:07.738","updatedAt":null}, {"id":3,"memberId":"c5a98ef5-3150-4aaf-b385-af215af3aa2e","gameId":230,"content":"<p>갓 근본 게임</p><p>추억의 재밌는 유즈맵들이 너무 많다.</p>","rating":10,"createdAt":"2025-11-27T15:58:01.487","updatedAt":null}, {"id":4,"memberId":"32834eec-21c2-4722-926f-fb99ba9e25a9","gameId":115,"content":"<p></p><p></p><p><br><br>팀빨ㅈ망겜.아니 그러고도 ㅅㅂ 이게 맞나 모르겠나.</p><p></p><p>아오 진짜 이딴겜 만드는 라이엇 수준 꼬라지 하고는 니들이 그러니까 이 겜이 안되는거 아냐 진짜 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ.</p><p></p><p>에라이 섭종해라 핵쟁이도 안잡고 이게 말이되는 거냐 이게</p>","rating":6,"createdAt":"2025-12-03T06:05:41.649","updatedAt":null}, {"id":2,"memberId":"c5a98ef5-3150-4aaf-b385-af215af3aa2e","gameId":115,"content":"<p>아이템, 룬, 특성 조합에 따라 한 챔피언으로도 다양한 전략을 만들 수 있다는 점이 롤의 재미 포인트라고 생각함<br>여러 게임을 해봐도 결국 다시 롤로 돌아오게 된다.</p><p>인정하면 개추</p>","rating":10,"createdAt":"2025-11-27T15:52:41.142","updatedAt":null}, {"id":5,"memberId":"c5a98ef5-3150-4aaf-b385-af215af3aa2e","gameId":72,"content":"<p>포탈2 ㄹㅇ 갓겜 ㅇㅈ?</p><p>어 ㅇㅈ</p>","rating":10,"createdAt":"2025-12-05T08:41:43.775","updatedAt":null}, {"id":8,"memberId":"c5a98ef5-3150-4aaf-b385-af215af3aa2e","gameId":13,"content":"<p>Fallout: A Post Nuclear Role Playing Game은<br>단순한 RPG가 아니라,<br>**“핵전쟁 이후 인간은 어떤 선택을 하는가”**라는 질문을 던지는 작품이다.</p><p>플레이어는 Vault 13에서 나와<br>사막처럼 황폐해진 세계를 탐험하며<br>물과 생존, 그리고 인간 사회의 잔재를 마주하게 된다.</p><p>이 게임의 가장 큰 매력은<br>선과 악으로 단순히 나뉘지 않는 선택들이다.<br>모든 결정은 결과를 낳고,<br>그 결과는 때로 잔인할 정도로 현실적이다.</p><p>턴제 전투와 고전적인 인터페이스는<br>요즘 기준으로는 불편할 수 있지만,<br>그 속도감 없는 진행이 오히려<br>세계의 무게감을 더 강하게 전달한다.</p><p>블랙 유머로 가득한 대사와<br>기괴하면서도 씁쓸한 퀘스트들은<br>웃음을 주는 동시에 깊은 허무함을 남긴다.</p><p>Fallout은 플레이어를 영웅으로 떠받들지 않는다.<br>그저 살아남은 한 인간으로서<br>이 부서진 세계에 어떤 흔적을 남길지 묻는다.</p><p>그래서 이 게임은 오래되었음에도<br>지금까지도 “Fallout다움”의 기준으로<br>여전히 회자되는 명작이다.</p>","rating":10,"createdAt":"2025-12-22T11:42:30.251","updatedAt":null}, {"id":9,"memberId":"03a05aac-a2de-4e5b-ada7-fabc465bf7d2","gameId":115,"content":"<p><span><strong><span>롤을 아직도 함?</span></strong></span></p><p><strong>롤을 아직도 함?</strong></p><p><span><strong><span>롤을 아직도 함?</span></strong></span></p><p></p><p></p><p></p><p><span><strong><span>나도 함</span></strong></span></p>","rating":10,"createdAt":"2025-12-22T19:48:45.572","updatedAt":null}, {"id":10,"memberId":"c5a98ef5-3150-4aaf-b385-af215af3aa2e","gameId":254,"content":"<p>롤러코스터 타이쿤 이거 흥미도 좋은 롤러코스터 만드려고 고생 많이 했었는데 추억이 새록새록한 게임</p>","rating":10,"createdAt":"2026-02-12T18:47:54.546","updatedAt":null}]
+[
+    {
+        "id": 1,
+        "memberId": "c5a98ef5-3150-4aaf-b385-af215af3aa2e",
+        "gameId": 1,
+        "content": "<p>이게 뭔겜임?</p>",
+        "rating": 5,
+        "createdAt": "2025-11-18T08:45:07.738",
+        "updatedAt": null
+    },
+    {
+        "id": 3,
+        "memberId": "c5a98ef5-3150-4aaf-b385-af215af3aa2e",
+        "gameId": 230,
+        "content": "<p>갓 근본 게임</p><p>추억의 재밌는 유즈맵들이 너무 많다.</p>",
+        "rating": 10,
+        "createdAt": "2025-11-27T15:58:01.487",
+        "updatedAt": null
+    },
+    {
+        "id": 4,
+        "memberId": "32834eec-21c2-4722-926f-fb99ba9e25a9",
+        "gameId": 115,
+        "content": "<p></p><p></p><p><br><br>팀빨ㅈ망겜.아니 그러고도 ㅅㅂ 이게 맞나 모르겠나.</p><p></p><p>아오 진짜 이딴겜 만드는 라이엇 수준 꼬라지 하고는 니들이 그러니까 이 겜이 안되는거 아냐 진짜 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ.</p><p></p><p>에라이 섭종해라 핵쟁이도 안잡고 이게 말이되는 거냐 이게</p>",
+        "rating": 6,
+        "createdAt": "2025-12-03T06:05:41.649",
+        "updatedAt": null
+    },
+    {
+        "id": 2,
+        "memberId": "c5a98ef5-3150-4aaf-b385-af215af3aa2e",
+        "gameId": 115,
+        "content": "<p>아이템, 룬, 특성 조합에 따라 한 챔피언으로도 다양한 전략을 만들 수 있다는 점이 롤의 재미 포인트라고 생각함<br>여러 게임을 해봐도 결국 다시 롤로 돌아오게 된다.</p><p>인정하면 개추</p>",
+        "rating": 10,
+        "createdAt": "2025-11-27T15:52:41.142",
+        "updatedAt": null
+    },
+    {
+        "id": 5,
+        "memberId": "c5a98ef5-3150-4aaf-b385-af215af3aa2e",
+        "gameId": 72,
+        "content": "<p>포탈2 ㄹㅇ 갓겜 ㅇㅈ?</p><p>어 ㅇㅈ</p>",
+        "rating": 10,
+        "createdAt": "2025-12-05T08:41:43.775",
+        "updatedAt": null
+    },
+    {
+        "id": 8,
+        "memberId": "c5a98ef5-3150-4aaf-b385-af215af3aa2e",
+        "gameId": 13,
+        "content": "<p>Fallout: A Post Nuclear Role Playing Game은<br>단순한 RPG가 아니라,<br>**“핵전쟁 이후 인간은 어떤 선택을 하는가”**라는 질문을 던지는 작품이다.</p><p>플레이어는 Vault 13에서 나와<br>사막처럼 황폐해진 세계를 탐험하며<br>물과 생존, 그리고 인간 사회의 잔재를 마주하게 된다.</p><p>이 게임의 가장 큰 매력은<br>선과 악으로 단순히 나뉘지 않는 선택들이다.<br>모든 결정은 결과를 낳고,<br>그 결과는 때로 잔인할 정도로 현실적이다.</p><p>턴제 전투와 고전적인 인터페이스는<br>요즘 기준으로는 불편할 수 있지만,<br>그 속도감 없는 진행이 오히려<br>세계의 무게감을 더 강하게 전달한다.</p><p>블랙 유머로 가득한 대사와<br>기괴하면서도 씁쓸한 퀘스트들은<br>웃음을 주는 동시에 깊은 허무함을 남긴다.</p><p>Fallout은 플레이어를 영웅으로 떠받들지 않는다.<br>그저 살아남은 한 인간으로서<br>이 부서진 세계에 어떤 흔적을 남길지 묻는다.</p><p>그래서 이 게임은 오래되었음에도<br>지금까지도 “Fallout다움”의 기준으로<br>여전히 회자되는 명작이다.</p>",
+        "rating": 10,
+        "createdAt": "2025-12-22T11:42:30.251",
+        "updatedAt": null
+    },
+    {
+        "id": 9,
+        "memberId": "03a05aac-a2de-4e5b-ada7-fabc465bf7d2",
+        "gameId": 115,
+        "content": "<p><span><strong><span>롤을 아직도 함?</span></strong></span></p><p><strong>롤을 아직도 함?</strong></p><p><span><strong><span>롤을 아직도 함?</span></strong></span></p><p></p><p></p><p></p><p><span><strong><span>나도 함</span></strong></span></p>",
+        "rating": 10,
+        "createdAt": "2025-12-22T19:48:45.572",
+        "updatedAt": null
+    },
+    {
+        "id": 10,
+        "memberId": "c5a98ef5-3150-4aaf-b385-af215af3aa2e",
+        "gameId": 254,
+        "content": "<p>롤러코스터 타이쿤 이거 흥미도 좋은 롤러코스터 만드려고 고생 많이 했었는데 추억이 새록새록한 게임</p>",
+        "rating": 10,
+        "createdAt": "2026-02-12T18:47:54.546",
+        "updatedAt": null
+    }
+]

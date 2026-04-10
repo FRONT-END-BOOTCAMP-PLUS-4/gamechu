@@ -2,11 +2,7 @@
 import NextAuth from "next-auth";
 import { NextRequest } from "next/server";
 import { authOptions } from "@/lib/auth/authOptions";
-import {
-    RateLimiter,
-    getClientIp,
-    rateLimitResponse,
-} from "@/lib/RateLimiter";
+import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
 
 const handler = NextAuth(authOptions);
 const loginLimiter = new RateLimiter("login", 60_000, 10);

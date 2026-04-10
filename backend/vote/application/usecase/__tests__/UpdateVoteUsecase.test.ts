@@ -12,7 +12,10 @@ describe("UpdateVoteUsecase", () => {
             memberId: "voter-1",
             votedTo: "creator-1",
         } as unknown as Vote;
-        const updatedVote = { ...existingVote, votedTo: "challenger-1" } as unknown as Vote;
+        const updatedVote = {
+            ...existingVote,
+            votedTo: "challenger-1",
+        } as unknown as Vote;
 
         vi.mocked(voteRepo.findAll).mockResolvedValue([existingVote]);
         vi.mocked(voteRepo.update).mockResolvedValue(updatedVote);
@@ -36,7 +39,11 @@ describe("UpdateVoteUsecase", () => {
 
         const usecase = new UpdateVoteUsecase(voteRepo);
         await expect(
-            usecase.execute({ arenaId: 1, memberId: "voter-1", votedTo: "challenger-1" })
+            usecase.execute({
+                arenaId: 1,
+                memberId: "voter-1",
+                votedTo: "challenger-1",
+            })
         ).rejects.toThrow("투표 내역이 없습니다.");
     });
 });

@@ -1,4 +1,7 @@
-import { GetNotificationRecordDto, GetNotificationRecordSchema } from "@/backend/notification-record/application/usecase/dto/GetNotificationRecordDto";
+import {
+    GetNotificationRecordDto,
+    GetNotificationRecordSchema,
+} from "@/backend/notification-record/application/usecase/dto/GetNotificationRecordDto";
 import { NotificationRecordListDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordListDto";
 import { GetNotificationRecordUsecase } from "@/backend/notification-record/application/usecase/GetNotificationRecordUsecase";
 import { NotificationRecordRepository } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
@@ -12,7 +15,10 @@ import logger from "@/lib/Logger";
 
 export async function GET(request: Request) {
     const memberId: string | null = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/notification-records", method: "GET" });
+    const log = logger.child({
+        route: "/api/member/notification-records",
+        method: "GET",
+    });
     try {
         // member validation
         if (!memberId) {
@@ -24,7 +30,10 @@ export async function GET(request: Request) {
 
         // get query parameters from URL
         const url = new URL(request.url);
-        const parsed = validate(GetNotificationRecordSchema, Object.fromEntries(url.searchParams));
+        const parsed = validate(
+            GetNotificationRecordSchema,
+            Object.fromEntries(url.searchParams)
+        );
         if (!parsed.success) return parsed.response;
 
         const { currentPage } = parsed.data;

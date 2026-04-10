@@ -7,7 +7,17 @@ const validLexicalJson = JSON.stringify({
     root: {
         children: [
             {
-                children: [{ detail: 0, format: 0, mode: "normal", style: "", text: "Updated content", type: "text", version: 1 }],
+                children: [
+                    {
+                        detail: 0,
+                        format: 0,
+                        mode: "normal",
+                        style: "",
+                        text: "Updated content",
+                        type: "text",
+                        version: 1,
+                    },
+                ],
                 direction: "ltr",
                 format: "",
                 indent: 0,
@@ -145,7 +155,17 @@ describe("UpdateReviewUsecase", () => {
             root: {
                 children: [
                     {
-                        children: [{ detail: 0, format: 0, mode: "normal", style: "", text: longText, type: "text", version: 1 }],
+                        children: [
+                            {
+                                detail: 0,
+                                format: 0,
+                                mode: "normal",
+                                style: "",
+                                text: longText,
+                                type: "text",
+                                version: 1,
+                            },
+                        ],
                         direction: "ltr",
                         format: "",
                         indent: 0,

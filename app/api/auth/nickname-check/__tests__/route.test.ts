@@ -6,7 +6,11 @@ vi.mock("@/lib/Redis", () => ({
 
 vi.mock("@/lib/RateLimiter", () => ({
     RateLimiter: vi.fn(function (this: Record<string, unknown>) {
-        this.check = vi.fn().mockResolvedValue({ allowed: true, remaining: 9, retryAfterMs: 0 });
+        this.check = vi.fn().mockResolvedValue({
+            allowed: true,
+            remaining: 9,
+            retryAfterMs: 0,
+        });
     }),
     getClientIp: vi.fn().mockReturnValue("127.0.0.1"),
     rateLimitResponse: vi.fn(),
@@ -14,11 +18,14 @@ vi.mock("@/lib/RateLimiter", () => ({
 
 const mockFindByNickname = vi.fn().mockResolvedValue(null);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByNickname = mockFindByNickname;
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByNickname = mockFindByNickname;
+        }),
+    })
+);
 
 import { GET } from "../route";
 
@@ -37,7 +44,10 @@ describe("GET /api/auth/nickname-check", () => {
     });
 
     it("409: 이미 사용 중인 닉네임", async () => {
-        mockFindByNickname.mockResolvedValueOnce({ id: "member-1", nickname: "hello" });
+        mockFindByNickname.mockResolvedValueOnce({
+            id: "member-1",
+            nickname: "hello",
+        });
 
         const req = new Request(
             "http://localhost/api/auth/nickname-check?nickname=hello"

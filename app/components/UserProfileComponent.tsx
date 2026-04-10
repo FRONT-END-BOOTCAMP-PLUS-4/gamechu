@@ -10,7 +10,7 @@ type UserProfileComponentProps = {
     profileImage: string;
     nickname: string;
     score?: number;
-}
+};
 
 export default function UserProfileComponent({
     profileImage,

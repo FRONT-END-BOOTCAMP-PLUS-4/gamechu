@@ -69,11 +69,13 @@ Action-based activation where user describes what they want to do rather than th
 ### Examples
 
 **Database Work:**
+
 - User prompt: "add user tracking feature"
 - Matches: `(add).*?(feature)`
 - Activates: `database-verification`, `error-tracking`
 
 **Component Creation:**
+
 - User prompt: "create a dashboard widget"
 - Matches: `(create).*?(component)` (if component in pattern)
 - Activates: `frontend-dev-guidelines`
@@ -138,9 +140,9 @@ Domain/area-specific activation based on file location in the project.
 - `**` = Any number of directories (including zero)
 - `*` = Any characters within a directory name
 - Examples:
-  - `frontend/src/**/*.tsx` = All .tsx files in frontend/src and subdirs
-  - `**/schema.prisma` = schema.prisma anywhere in project
-  - `form/src/**/*.ts` = All .ts files in form/src subdirs
+    - `frontend/src/**/*.tsx` = All .tsx files in frontend/src and subdirs
+    - `**/schema.prisma` = schema.prisma anywhere in project
+    - `form/src/**/*.ts` = All .ts files in form/src subdirs
 
 ### Example
 
@@ -212,11 +214,13 @@ Technology-specific activation based on what the code imports or uses (Prisma, c
 ### Examples
 
 **Prisma Detection:**
+
 - File contains: `import { PrismaService } from '@project/database'`
 - Matches: `import.*[Pp]risma`
 - Activates: `database-verification`
 
 **Controller Detection:**
+
 - File contains: `export class UserController {`
 - Matches: `export class.*Controller`
 - Activates: `error-tracking`
@@ -262,6 +266,7 @@ useState|useEffect              # React hooks
 ## Best Practices Summary
 
 ### DO:
+
 ✅ Use specific, unambiguous keywords
 ✅ Test all patterns with real examples
 ✅ Include common variations
@@ -271,6 +276,7 @@ useState|useEffect              # React hooks
 ✅ Make file path patterns narrow and specific
 
 ### DON'T:
+
 ❌ Use overly generic keywords ("system", "work")
 ❌ Make intent patterns too broad (false positives)
 ❌ Make patterns too specific (false negatives)
@@ -281,12 +287,14 @@ useState|useEffect              # React hooks
 ### Testing Your Triggers
 
 **Test keyword/intent triggers:**
+
 ```bash
 echo '{"session_id":"test","prompt":"your test prompt"}' | \
   npx tsx .claude/hooks/skill-activation-prompt.ts
 ```
 
 **Test file path/content triggers:**
+
 ```bash
 cat <<'EOF' | npx tsx .claude/hooks/skill-verification-guard.ts
 {
@@ -300,6 +308,7 @@ EOF
 ---
 
 **Related Files:**
+
 - [SKILL.md](SKILL.md) - Main skill guide
 - [SKILL_RULES_REFERENCE.md](SKILL_RULES_REFERENCE.md) - Complete skill-rules.json schema
 - [PATTERNS_LIBRARY.md](PATTERNS_LIBRARY.md) - Ready-to-use pattern library

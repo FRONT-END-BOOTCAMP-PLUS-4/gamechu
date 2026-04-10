@@ -6,7 +6,11 @@ vi.mock("@/lib/Redis", () => ({
 
 vi.mock("@/lib/RateLimiter", () => ({
     RateLimiter: vi.fn(function (this: Record<string, unknown>) {
-        this.check = vi.fn().mockResolvedValue({ allowed: true, remaining: 9, retryAfterMs: 0 });
+        this.check = vi.fn().mockResolvedValue({
+            allowed: true,
+            remaining: 9,
+            retryAfterMs: 0,
+        });
     }),
     getClientIp: vi.fn().mockReturnValue("127.0.0.1"),
     rateLimitResponse: vi.fn(),
@@ -14,11 +18,14 @@ vi.mock("@/lib/RateLimiter", () => ({
 
 const mockFindByEmail = vi.fn().mockResolvedValue(null);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByEmail = mockFindByEmail;
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByEmail = mockFindByEmail;
+        }),
+    })
+);
 
 import { GET } from "../route";
 
@@ -38,7 +45,10 @@ describe("GET /api/auth/email-check", () => {
     });
 
     it("returns 409 with taken message when email already exists", async () => {
-        mockFindByEmail.mockResolvedValueOnce({ id: "existing-user", email: "taken@example.com" });
+        mockFindByEmail.mockResolvedValueOnce({
+            id: "existing-user",
+            email: "taken@example.com",
+        });
 
         const req = new Request(
             "http://localhost/api/auth/email-check?email=taken@example.com"

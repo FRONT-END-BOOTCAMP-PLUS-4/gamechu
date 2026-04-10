@@ -11,7 +11,10 @@ import logger from "@/lib/Logger";
 import { errorResponse } from "@/utils/ApiResponse";
 
 export async function POST(req: NextRequest) {
-    const log = logger.child({ route: "/api/member/arenas/[id]/votes", method: "POST" });
+    const log = logger.child({
+        route: "/api/member/arenas/[id]/votes",
+        method: "POST",
+    });
     try {
         const memberId = await getAuthUserId();
 
@@ -44,7 +47,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-    const log = logger.child({ route: "/api/member/arenas/[id]/votes", method: "PATCH" });
+    const log = logger.child({
+        route: "/api/member/arenas/[id]/votes",
+        method: "PATCH",
+    });
     try {
         //TODO: Patch나 Delete의 경우 우선 해당 데이터가 존재하는지 확인하고, 없을 경우 에러를 출력하는 로직을 먼저 넣어주세요.
         const memberId = await getAuthUserId();

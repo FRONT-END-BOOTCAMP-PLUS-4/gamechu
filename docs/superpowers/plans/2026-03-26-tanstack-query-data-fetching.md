@@ -12,37 +12,38 @@
 
 ## File Map
 
-| File | Action |
-|---|---|
-| `lib/fetcher.ts` | Create — shared GET fetcher for all `queryFn`s |
-| `lib/queryKeys.ts` | Create — typed cache key factories, `ArenasQueryParams` type |
-| `app/components/QueryProvider.tsx` | Create — `"use client"` wrapper for `QueryClientProvider` |
-| `app/layout.tsx` | Modify — wrap children in `<QueryProvider>` |
-| `tests/utils/createQueryWrapper.tsx` | Create — shared test utility for all hook tests |
-| `hooks/useArenas.ts` | Migrate to `useQuery` |
-| `hooks/useArenaList.ts` | Migrate to `useQuery` |
-| `hooks/useVote.ts` | Migrate to `useQuery + useMutation`; `submitVote` signature → object params |
-| `hooks/useVoteList.ts` | Migrate to `useQuery` |
-| `hooks/useNotifications.ts` | Create — extracted from `NotificationModal.tsx` |
-| `hooks/useGameReviews.ts` | Create — extracted from `ClientContentWrapper.tsx` |
-| `hooks/useWishlist.ts` | Create — extracted from `WishlistButtonClient.tsx` |
-| `app/(base)/components/NotificationModal.tsx` | Modify — use `useNotifications` |
-| `app/(base)/games/[gameId]/components/WishlistButtonClient.tsx` | Modify — use `useWishlist` |
-| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx` | Modify — use `useGameReviews` |
-| `app/(base)/arenas/[id]/components/ArenaDetailVote.tsx` | Modify — update `submitVote` call site |
-| `hooks/__tests__/useArenas.test.ts` | Rewrite |
-| `hooks/__tests__/useArenaList.test.ts` | Rewrite |
-| `hooks/__tests__/useVote.test.ts` | Rewrite |
-| `hooks/__tests__/useVoteList.test.ts` | Rewrite |
-| `hooks/__tests__/useNotifications.test.ts` | Create |
-| `hooks/__tests__/useGameReviews.test.ts` | Create |
-| `hooks/__tests__/useWishlist.test.ts` | Create |
+| File                                                            | Action                                                                      |
+| --------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `lib/fetcher.ts`                                                | Create — shared GET fetcher for all `queryFn`s                              |
+| `lib/queryKeys.ts`                                              | Create — typed cache key factories, `ArenasQueryParams` type                |
+| `app/components/QueryProvider.tsx`                              | Create — `"use client"` wrapper for `QueryClientProvider`                   |
+| `app/layout.tsx`                                                | Modify — wrap children in `<QueryProvider>`                                 |
+| `tests/utils/createQueryWrapper.tsx`                            | Create — shared test utility for all hook tests                             |
+| `hooks/useArenas.ts`                                            | Migrate to `useQuery`                                                       |
+| `hooks/useArenaList.ts`                                         | Migrate to `useQuery`                                                       |
+| `hooks/useVote.ts`                                              | Migrate to `useQuery + useMutation`; `submitVote` signature → object params |
+| `hooks/useVoteList.ts`                                          | Migrate to `useQuery`                                                       |
+| `hooks/useNotifications.ts`                                     | Create — extracted from `NotificationModal.tsx`                             |
+| `hooks/useGameReviews.ts`                                       | Create — extracted from `ClientContentWrapper.tsx`                          |
+| `hooks/useWishlist.ts`                                          | Create — extracted from `WishlistButtonClient.tsx`                          |
+| `app/(base)/components/NotificationModal.tsx`                   | Modify — use `useNotifications`                                             |
+| `app/(base)/games/[gameId]/components/WishlistButtonClient.tsx` | Modify — use `useWishlist`                                                  |
+| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx` | Modify — use `useGameReviews`                                               |
+| `app/(base)/arenas/[id]/components/ArenaDetailVote.tsx`         | Modify — update `submitVote` call site                                      |
+| `hooks/__tests__/useArenas.test.ts`                             | Rewrite                                                                     |
+| `hooks/__tests__/useArenaList.test.ts`                          | Rewrite                                                                     |
+| `hooks/__tests__/useVote.test.ts`                               | Rewrite                                                                     |
+| `hooks/__tests__/useVoteList.test.ts`                           | Rewrite                                                                     |
+| `hooks/__tests__/useNotifications.test.ts`                      | Create                                                                      |
+| `hooks/__tests__/useGameReviews.test.ts`                        | Create                                                                      |
+| `hooks/__tests__/useWishlist.test.ts`                           | Create                                                                      |
 
 ---
 
 ## Task 1: Install dependency + test utility
 
 **Files:**
+
 - Modify: `package.json` (via npm install)
 - Create: `tests/utils/createQueryWrapper.tsx`
 
@@ -96,6 +97,7 @@ git commit -m "[refactor/#282] @tanstack/react-query 설치, createQueryWrapper 
 ## Task 2: Create `lib/fetcher.ts`
 
 **Files:**
+
 - Create: `lib/fetcher.ts`
 
 - [ ] **Step 1: Write failing test**
@@ -176,7 +178,9 @@ export async function fetcher<T>(url: string): Promise<T> {
     const res = await fetch(url);
     if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error((body as { message?: string }).message ?? `HTTP ${res.status}`);
+        throw new Error(
+            (body as { message?: string }).message ?? `HTTP ${res.status}`
+        );
     }
     return res.json() as Promise<T>;
 }
@@ -204,6 +208,7 @@ git commit -m "[refactor/#282] lib/fetcher.ts 추가 — 공통 GET fetcher"
 ## Task 3: Create `lib/queryKeys.ts`
 
 **Files:**
+
 - Create: `lib/queryKeys.ts`
 
 No unit tests needed — pure type definitions and key factory functions. Correctness is verified by TypeScript and by the hook tests that use them.
@@ -295,6 +300,7 @@ git commit -m "[refactor/#282] lib/queryKeys.ts 추가 — 타입 안전 캐시 
 ## Task 4: QueryProvider + layout
 
 **Files:**
+
 - Create: `app/components/QueryProvider.tsx`
 - Modify: `app/layout.tsx`
 
@@ -338,6 +344,7 @@ export default function QueryProvider({ children }: { children: ReactNode }) {
 - [ ] **Step 2: Modify `app/layout.tsx`**
 
 Current `app/layout.tsx`:
+
 ```tsx
 import { Press_Start_2P } from "next/font/google";
 import Modals from "./components/Modals";
@@ -368,6 +375,7 @@ export default function RootLayout({
 ```
 
 Replace with:
+
 ```tsx
 import { Press_Start_2P } from "next/font/google";
 import Modals from "./components/Modals";
@@ -422,6 +430,7 @@ git commit -m "[refactor/#282] QueryProvider 추가, layout.tsx에 QueryClientPr
 ## Task 5: Migrate `hooks/useArenas.ts`
 
 **Files:**
+
 - Modify: `hooks/useArenas.ts`
 - Modify: `hooks/__tests__/useArenas.test.ts`
 
@@ -595,8 +604,15 @@ export default function useFetchArenas({
     }
 
     const { data, error, isLoading } = useQuery<ArenaListDto>({
-        queryKey: queryKeys.arenas({ currentPage, status, mine, pageSize, targetMemberId }),
-        queryFn: () => fetcher<ArenaListDto>(`/api/arenas?${params.toString()}`),
+        queryKey: queryKeys.arenas({
+            currentPage,
+            status,
+            mine,
+            pageSize,
+            targetMemberId,
+        }),
+        queryFn: () =>
+            fetcher<ArenaListDto>(`/api/arenas?${params.toString()}`),
     });
 
     return {
@@ -630,6 +646,7 @@ git commit -m "[refactor/#282] useArenas — TanStack Query useQuery로 마이�
 ## Task 6: Migrate `hooks/useArenaList.ts`
 
 **Files:**
+
 - Modify: `hooks/useArenaList.ts`
 - Modify: `hooks/__tests__/useArenaList.test.ts`
 
@@ -785,6 +802,7 @@ git commit -m "[refactor/#282] useArenaList — TanStack Query useQuery로 마�
 ## Task 7: Migrate `hooks/useVote.ts` + update call site
 
 **Files:**
+
 - Modify: `hooks/useVote.ts`
 - Modify: `hooks/__tests__/useVote.test.ts`
 - Modify: `app/(base)/arenas/[id]/components/ArenaDetailVote.tsx`
@@ -1010,6 +1028,7 @@ Expected: 5 passed
 In `app/(base)/arenas/[id]/components/ArenaDetailVote.tsx`:
 
 Change the destructuring (line 12-21):
+
 ```typescript
 // Before
 const {
@@ -1023,6 +1042,7 @@ const {
     mine: true,
 });
 ```
+
 ```typescript
 // After — refetch removed; onSuccess invalidation handles cache refresh
 const { existingVote, loading, error, submitVote } = useVote({
@@ -1032,6 +1052,7 @@ const { existingVote, loading, error, submitVote } = useVote({
 ```
 
 Change `handleVote` (line 58-71):
+
 ```typescript
 // Before
 const handleVote = async (votedTo: string | null) => {
@@ -1049,6 +1070,7 @@ const handleVote = async (votedTo: string | null) => {
     }
 };
 ```
+
 ```typescript
 // After
 const handleVote = async (votedTo: string | null) => {
@@ -1094,6 +1116,7 @@ git commit -m "[refactor/#282] useVote — useQuery + useMutation 마이그레�
 ## Task 8: Migrate `hooks/useVoteList.ts`
 
 **Files:**
+
 - Modify: `hooks/useVoteList.ts`
 - Modify: `hooks/__tests__/useVoteList.test.ts`
 
@@ -1119,10 +1142,9 @@ describe("useVoteList", () => {
             json: () => Promise.resolve(mockVote),
         } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useVoteList({ arenaIds: [1, 2] }),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useVoteList({ arenaIds: [1, 2] }), {
+            wrapper: createWrapper(),
+        });
 
         await waitFor(() => expect(result.current.loading).toBe(false));
         expect(fetch).toHaveBeenCalledTimes(2);
@@ -1130,10 +1152,9 @@ describe("useVoteList", () => {
     });
 
     it("returns empty array and loading=false when arenaIds is empty", async () => {
-        const { result } = renderHook(
-            () => useVoteList({ arenaIds: [] }),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useVoteList({ arenaIds: [] }), {
+            wrapper: createWrapper(),
+        });
 
         await waitFor(() => expect(result.current.loading).toBe(false));
         expect(result.current.voteResult).toEqual([]);
@@ -1147,10 +1168,9 @@ describe("useVoteList", () => {
             json: () => Promise.resolve({ message: "오류" }),
         } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useVoteList({ arenaIds: [1] }),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useVoteList({ arenaIds: [1] }), {
+            wrapper: createWrapper(),
+        });
 
         await waitFor(() => expect(result.current.loading).toBe(false));
         expect(result.current.error).toBeInstanceOf(Error);
@@ -1254,6 +1274,7 @@ git commit -m "[refactor/#282] useVoteList — TanStack Query useQuery로 마이
 ## Task 9: New `hooks/useNotifications.ts` + update `NotificationModal`
 
 **Files:**
+
 - Create: `hooks/useNotifications.ts`
 - Create: `hooks/__tests__/useNotifications.test.ts`
 - Modify: `app/(base)/components/NotificationModal.tsx`
@@ -1398,7 +1419,7 @@ export default function NotificationModal() {
 
     return (
         <ModalWrapper isOpen={isOpen} onClose={closeModal}>
-            <div className="w-[480px] max-h-[80vh] flex flex-col gap-4">
+            <div className="flex max-h-[80vh] w-[480px] flex-col gap-4">
                 {data && (
                     <div>
                         <NotificationRecordList
@@ -1443,6 +1464,7 @@ git commit -m "[refactor/#282] useNotifications 추가, NotificationModal 인라
 ## Task 10: New `hooks/useGameReviews.ts` + update `ClientContentWrapper`
 
 **Files:**
+
 - Create: `hooks/useGameReviews.ts`
 - Create: `hooks/__tests__/useGameReviews.test.ts`
 - Modify: `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx`
@@ -1515,9 +1537,7 @@ describe("useGameReviews", () => {
         });
 
         expect(fetch).toHaveBeenCalledWith(
-            expect.stringContaining(
-                "/api/member/games/115/reviews/42"
-            ),
+            expect.stringContaining("/api/member/games/115/reviews/42"),
             expect.objectContaining({ method: "DELETE" })
         );
     });
@@ -1598,7 +1618,9 @@ export function useGameReviews(gameId: number) {
     const { data, isLoading } = useQuery<Review[]>({
         queryKey: queryKeys.reviews(gameId),
         queryFn: async () => {
-            const raw = await fetcher<RawReview[]>(`/api/games/${gameId}/reviews`);
+            const raw = await fetcher<RawReview[]>(
+                `/api/games/${gameId}/reviews`
+            );
             return raw.map(enrichReview);
         },
         refetchOnWindowFocus: false,
@@ -1612,7 +1634,8 @@ export function useGameReviews(gameId: number) {
                 if (!res.ok) {
                     const body = await res.json().catch(() => ({}));
                     throw new Error(
-                        (body as { message?: string }).message ?? "댓글 삭제 실패"
+                        (body as { message?: string }).message ??
+                            "댓글 삭제 실패"
                     );
                 }
             }),
@@ -1842,11 +1865,13 @@ git commit -m "[refactor/#282] useGameReviews 추가, ClientContentWrapper 인�
 ## Task 11: New `hooks/useWishlist.ts` + update `WishlistButtonClient`
 
 **Files:**
+
 - Create: `hooks/useWishlist.ts`
 - Create: `hooks/__tests__/useWishlist.test.ts`
 - Modify: `app/(base)/games/[gameId]/components/WishlistButtonClient.tsx`
 
 Key notes:
+
 - `enabled: !!viewerId` — endpoint returns 401 for unauthenticated users
 - `viewerId` param type is `string` (caller passes `""` when unauthenticated, which is falsy — `!!""` = `false`)
 - `wishlistId` for DELETE is read synchronously from current cache data before mutation fires
@@ -1874,10 +1899,9 @@ describe("useWishlist", () => {
             json: () => Promise.resolve({ exists: true, wishlistId: 10 }),
         } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useWishlist(1, "user-abc"),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useWishlist(1, "user-abc"), {
+            wrapper: createWrapper(),
+        });
 
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(result.current.isWished).toBe(true);
@@ -1887,10 +1911,9 @@ describe("useWishlist", () => {
     });
 
     it("does NOT fetch when viewerId is empty string", async () => {
-        const { result } = renderHook(
-            () => useWishlist(1, ""),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useWishlist(1, ""), {
+            wrapper: createWrapper(),
+        });
 
         // enabled=false — TQ skips fetching, isLoading stays false
         await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -1902,17 +1925,17 @@ describe("useWishlist", () => {
         vi.mocked(fetch)
             .mockResolvedValueOnce({
                 ok: true,
-                json: () => Promise.resolve({ exists: false, wishlistId: null }),
+                json: () =>
+                    Promise.resolve({ exists: false, wishlistId: null }),
             } as unknown as Response)
             .mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve({ wishlistId: 99 }),
             } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useWishlist(1, "user-abc"),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useWishlist(1, "user-abc"), {
+            wrapper: createWrapper(),
+        });
         await waitFor(() => expect(result.current.isLoading).toBe(false));
 
         await act(async () => {
@@ -1936,10 +1959,9 @@ describe("useWishlist", () => {
                 json: () => Promise.resolve({}),
             } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useWishlist(1, "user-abc"),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useWishlist(1, "user-abc"), {
+            wrapper: createWrapper(),
+        });
         await waitFor(() => expect(result.current.isLoading).toBe(false));
 
         await act(async () => {

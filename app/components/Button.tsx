@@ -15,7 +15,7 @@ type ButtonProps = {
     htmlType?: "button" | "submit" | "reset";
     disabled?: boolean;
     icon?: ReactNode; // 추가
-}
+};
 
 const sizeClasses: Record<ButtonSize, string> = {
     xs: "w-[32px] h-[32px]",

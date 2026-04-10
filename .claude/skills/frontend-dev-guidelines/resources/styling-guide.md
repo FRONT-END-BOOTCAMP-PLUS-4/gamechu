@@ -126,13 +126,13 @@ Use Tailwind's responsive prefixes:
 
 ### Breakpoints
 
-| Prefix | Min Width | Use Case |
-|--------|-----------|----------|
-| (none) | 0px | Mobile default |
-| `sm:` | 640px | Small tablets |
-| `md:` | 768px | Tablets |
-| `lg:` | 1024px | Desktop |
-| `xl:` | 1280px | Large desktop |
+| Prefix | Min Width | Use Case       |
+| ------ | --------- | -------------- |
+| (none) | 0px       | Mobile default |
+| `sm:`  | 640px     | Small tablets  |
+| `md:`  | 768px     | Tablets        |
+| `lg:`  | 1024px    | Desktop        |
+| `xl:`  | 1280px    | Large desktop  |
 
 ### Common Responsive Patterns
 
@@ -282,6 +282,7 @@ const StyledDiv = styled.div`padding: 16px;`;
 ## Summary
 
 **Styling Checklist:**
+
 - TailwindCSS utility classes in `className`
 - `cn()` for conditional classes
 - Custom design tokens: `background-*`, `font-*`, `primary-purple-*`, `line-*`
@@ -292,5 +293,6 @@ const StyledDiv = styled.div`padding: 16px;`;
 - No inline styles, CSS modules, or CSS-in-JS
 
 **See Also:**
+
 - [component-patterns.md](component-patterns.md) - Component structure
 - [complete-examples.md](complete-examples.md) - Full styling examples

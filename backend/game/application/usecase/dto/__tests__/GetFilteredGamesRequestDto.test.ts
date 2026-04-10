@@ -13,11 +13,15 @@ describe("GetFilteredGamesSchema", () => {
     });
 
     it("sort=latest 통과", () => {
-        expect(GetFilteredGamesSchema.safeParse({ sort: "latest" }).success).toBe(true);
+        expect(
+            GetFilteredGamesSchema.safeParse({ sort: "latest" }).success
+        ).toBe(true);
     });
 
     it("sort=invalid → 실패", () => {
-        expect(GetFilteredGamesSchema.safeParse({ sort: "newest" }).success).toBe(false);
+        expect(
+            GetFilteredGamesSchema.safeParse({ sort: "newest" }).success
+        ).toBe(false);
     });
 
     it("genreId 문자열 숫자 → 숫자 변환", () => {
@@ -27,6 +31,8 @@ describe("GetFilteredGamesSchema", () => {
     });
 
     it("keyword 있으면 통과", () => {
-        expect(GetFilteredGamesSchema.safeParse({ keyword: "zelda" }).success).toBe(true);
+        expect(
+            GetFilteredGamesSchema.safeParse({ keyword: "zelda" }).success
+        ).toBe(true);
     });
 });

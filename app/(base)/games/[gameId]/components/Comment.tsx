@@ -34,7 +34,7 @@ type CommentProps = {
     defaultRating?: number;
     onSuccess: () => void;
     viewerId?: string | null;
-}
+};
 
 const MAX_CHARS = 10_000;
 
@@ -98,7 +98,10 @@ export default function Comment({
     };
 
     const { mutate: submitReview, isPending: isLoading } = useMutation({
-        mutationFn: async (payload: { contentJson: string; isEditing: boolean }) => {
+        mutationFn: async (payload: {
+            contentJson: string;
+            isEditing: boolean;
+        }) => {
             const res = await fetch(
                 payload.isEditing
                     ? `/api/member/games/${gameId}/reviews/${editingReviewId}`
@@ -118,11 +121,19 @@ export default function Comment({
                 let serverMessage: string | undefined;
                 try {
                     const errData = await res.json();
-                    serverMessage = typeof errData?.message === "string" ? errData.message : undefined;
+                    serverMessage =
+                        typeof errData?.message === "string"
+                            ? errData.message
+                            : undefined;
                 } catch {
                     // ignore json parse failure
                 }
-                throw new Error(serverMessage ?? (payload.isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패"));
+                throw new Error(
+                    serverMessage ??
+                        (payload.isEditing
+                            ? "리뷰 수정 실패"
+                            : "리뷰 등록 실패")
+                );
             }
         },
         onSuccess: () => {
@@ -132,7 +143,10 @@ export default function Comment({
         onError: (err) => {
             setToast({
                 show: true,
-                message: err instanceof Error ? err.message : "리뷰 저장에 실패했습니다.",
+                message:
+                    err instanceof Error
+                        ? err.message
+                        : "리뷰 저장에 실패했습니다.",
                 status: "error",
             });
             setTimeout(() => {
@@ -179,9 +193,8 @@ export default function Comment({
         if (!contentJson.trim()) return;
 
         submitReview({ contentJson, isEditing: !!editingReviewId });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoading, viewerId, rating, editingReviewId, submitReview]);
-
 
     const charCountColor =
         charCount >= MAX_CHARS

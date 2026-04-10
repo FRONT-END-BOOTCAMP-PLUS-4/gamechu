@@ -20,11 +20,13 @@ npx playwright test e2e/smoke.spec.ts  # 단일 spec
 ```
 
 **체크 항목**:
+
 - HTTP 500/404 없음
 - 콘솔 에러 없음 (`page.on("console", ...)`)
 - 주요 UI 요소 렌더링
 
 **보고 양식**:
+
 ```
 ✅ smoke.spec.ts — 홈 로드, 콘솔 에러 없음
 ✅ auth.spec.ts — /log-in 폼 렌더링
@@ -38,6 +40,7 @@ npx playwright test e2e/smoke.spec.ts  # 단일 spec
 3. 관찰 결과를 바탕으로 `e2e/*.spec.ts` 작성
 
 **Playwright MCP 등록**:
+
 ```bash
 claude mcp add playwright npx @playwright/mcp@latest
 ```
@@ -87,6 +90,7 @@ test("API 응답 확인", async ({ request }) => {
 ## DB 없는 환경
 
 빈 상태(empty state) UI 렌더링 여부로 검증:
+
 ```typescript
 // DB 없이도 body가 보임 — 빈 상태 허용
 await expect(page.locator("body")).toBeVisible();

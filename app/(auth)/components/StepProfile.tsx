@@ -12,10 +12,17 @@ type Props = {
 
 export default function StepProfile({ onNext }: Props) {
     const [nickname, setNickname] = useState("");
-    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<boolean | null>(null);
-    const [nicknameMessage, setNicknameMessage] = useState<{ text: string; isError: boolean } | null>(null);
+    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<
+        boolean | null
+    >(null);
+    const [nicknameMessage, setNicknameMessage] = useState<{
+        text: string;
+        isError: boolean;
+    } | null>(null);
     const [email, setEmail] = useState("");
-    const [isEmailDuplicate, setIsEmailDuplicate] = useState<boolean | null>(null);
+    const [isEmailDuplicate, setIsEmailDuplicate] = useState<boolean | null>(
+        null
+    );
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
     const [gender, setGender] = useState<"M" | "F" | null>(null);
@@ -25,8 +32,12 @@ export default function StepProfile({ onNext }: Props) {
 
     const { mutate: checkNickname } = useMutation({
         mutationFn: () =>
-            fetch(`/api/auth/nickname-check?nickname=${encodeURIComponent(nickname)}`).then(
-                (res) => res.json().then((data) => ({ status: res.status, ok: res.ok, data }))
+            fetch(
+                `/api/auth/nickname-check?nickname=${encodeURIComponent(nickname)}`
+            ).then((res) =>
+                res
+                    .json()
+                    .then((data) => ({ status: res.status, ok: res.ok, data }))
             ),
         onSuccess: ({ status, ok, data }) => {
             if (status === 409) {
@@ -35,7 +46,10 @@ export default function StepProfile({ onNext }: Props) {
                 return;
             }
             if (!ok) {
-                setNicknameMessage({ text: data.message || "중복 확인 실패", isError: true });
+                setNicknameMessage({
+                    text: data.message || "중복 확인 실패",
+                    isError: true,
+                });
                 setIsNicknameDuplicate(null);
                 return;
             }
@@ -43,7 +57,8 @@ export default function StepProfile({ onNext }: Props) {
             setNicknameMessage({ text: data.message, isError: false });
         },
         onError: (err) => {
-            const message = err instanceof Error ? err.message : "오류가 발생했습니다.";
+            const message =
+                err instanceof Error ? err.message : "오류가 발생했습니다.";
             setNicknameMessage({ text: message, isError: true });
             setIsNicknameDuplicate(null);
         },
@@ -51,8 +66,12 @@ export default function StepProfile({ onNext }: Props) {
 
     const { mutate: checkEmail } = useMutation({
         mutationFn: () =>
-            fetch(`/api/auth/email-check?email=${encodeURIComponent(email)}`).then(
-                (res) => res.json().then((data) => ({ status: res.status, ok: res.ok, data }))
+            fetch(
+                `/api/auth/email-check?email=${encodeURIComponent(email)}`
+            ).then((res) =>
+                res
+                    .json()
+                    .then((data) => ({ status: res.status, ok: res.ok, data }))
             ),
         onSuccess: ({ status, ok, data }) => {
             if (status === 409) {
@@ -61,7 +80,10 @@ export default function StepProfile({ onNext }: Props) {
                 return;
             }
             if (!ok) {
-                setFieldErrors((prev) => ({ ...prev, email: data.message || "중복 확인 실패" }));
+                setFieldErrors((prev) => ({
+                    ...prev,
+                    email: data.message || "중복 확인 실패",
+                }));
                 setIsEmailDuplicate(null);
                 return;
             }
@@ -69,7 +91,8 @@ export default function StepProfile({ onNext }: Props) {
             setSuccessMessage(data.message);
         },
         onError: (err) => {
-            const message = err instanceof Error ? err.message : "오류가 발생했습니다.";
+            const message =
+                err instanceof Error ? err.message : "오류가 발생했습니다.";
             setFieldErrors((prev) => ({ ...prev, email: message }));
             setIsEmailDuplicate(null);
         },
@@ -80,7 +103,13 @@ export default function StepProfile({ onNext }: Props) {
             fetch("/api/auth/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nickname, email, password, birthDate: birth, gender }),
+                body: JSON.stringify({
+                    nickname,
+                    email,
+                    password,
+                    birthDate: birth,
+                    gender,
+                }),
             }).then(async (res) => {
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.message || "회원가입 실패");
@@ -96,11 +125,14 @@ export default function StepProfile({ onNext }: Props) {
                 setSuccessMessage("회원가입 및 로그인 성공!");
                 onNext();
             } else {
-                setFieldErrors({ general: "회원가입은 성공했지만 로그인에 실패했습니다." });
+                setFieldErrors({
+                    general: "회원가입은 성공했지만 로그인에 실패했습니다.",
+                });
             }
         },
         onError: (err) => {
-            const message = err instanceof Error ? err.message : "회원가입 중 오류 발생";
+            const message =
+                err instanceof Error ? err.message : "회원가입 중 오류 발생";
             setFieldErrors({ general: message });
         },
     });
@@ -124,13 +156,19 @@ export default function StepProfile({ onNext }: Props) {
         setNicknameMessage(null);
 
         if (!nickname) {
-            setNicknameMessage({ text: "닉네임을 입력해주세요.", isError: true });
+            setNicknameMessage({
+                text: "닉네임을 입력해주세요.",
+                isError: true,
+            });
             setIsNicknameDuplicate(null);
             return;
         }
 
         if (nickname.length > 8) {
-            setNicknameMessage({ text: "닉네임은 8자 이하여야 합니다.", isError: true });
+            setNicknameMessage({
+                text: "닉네임은 8자 이하여야 합니다.",
+                isError: true,
+            });
             setIsNicknameDuplicate(null);
             return;
         }
@@ -143,7 +181,10 @@ export default function StepProfile({ onNext }: Props) {
         setFieldErrors((prev) => ({ ...prev, email: "" }));
 
         if (!validateEmailFormat(email)) {
-            setFieldErrors((prev) => ({ ...prev, email: "올바른 이메일 형식이 아닙니다." }));
+            setFieldErrors((prev) => ({
+                ...prev,
+                email: "올바른 이메일 형식이 아닙니다.",
+            }));
             setIsEmailDuplicate(null);
             return;
         }
@@ -156,22 +197,37 @@ export default function StepProfile({ onNext }: Props) {
         const errors: Record<string, string> = {};
 
         if (!nickname) {
-            setNicknameMessage({ text: "닉네임을 입력해주세요.", isError: true });
+            setNicknameMessage({
+                text: "닉네임을 입력해주세요.",
+                isError: true,
+            });
             errors.nickname = "error";
         } else if (nickname.length > 8) {
-            setNicknameMessage({ text: "닉네임은 8자 이하여야 합니다.", isError: true });
+            setNicknameMessage({
+                text: "닉네임은 8자 이하여야 합니다.",
+                isError: true,
+            });
             errors.nickname = "error";
         } else if (isNicknameDuplicate === null) {
-            setNicknameMessage({ text: "닉네임 중복 검사를 진행해주세요.", isError: true });
+            setNicknameMessage({
+                text: "닉네임 중복 검사를 진행해주세요.",
+                isError: true,
+            });
             errors.nickname = "error";
         } else if (isNicknameDuplicate) {
-            setNicknameMessage({ text: "이미 사용 중인 닉네임입니다.", isError: true });
+            setNicknameMessage({
+                text: "이미 사용 중인 닉네임입니다.",
+                isError: true,
+            });
             errors.nickname = "error";
         }
         if (!email) errors.email = "이메일을 입력해주세요.";
-        else if (!validateEmailFormat(email)) errors.email = "올바른 이메일 형식이 아닙니다.";
-        else if (isEmailDuplicate === null) errors.email = "이메일 중복 검사를 진행해주세요.";
-        else if (isEmailDuplicate) errors.email = "이미 사용 중인 이메일입니다.";
+        else if (!validateEmailFormat(email))
+            errors.email = "올바른 이메일 형식이 아닙니다.";
+        else if (isEmailDuplicate === null)
+            errors.email = "이메일 중복 검사를 진행해주세요.";
+        else if (isEmailDuplicate)
+            errors.email = "이미 사용 중인 이메일입니다.";
 
         if (!password) errors.password = "비밀번호를 입력해주세요.";
         if (!confirm) errors.confirm = "비밀번호 확인을 입력해주세요.";

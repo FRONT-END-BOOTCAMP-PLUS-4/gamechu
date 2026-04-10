@@ -20,7 +20,9 @@ describe("UpdateArenaUsecase", () => {
         vi.mocked(arenaRepo.findById).mockResolvedValue(null);
 
         const usecase = new UpdateArenaUsecase(arenaRepo);
-        await expect(usecase.execute({ id: 1 })).rejects.toThrow("Arena not found");
+        await expect(usecase.execute({ id: 1 })).rejects.toThrow(
+            "Arena not found"
+        );
     });
 
     it("status update: status in dto → arena.status mutated, update called with modified arena", async () => {

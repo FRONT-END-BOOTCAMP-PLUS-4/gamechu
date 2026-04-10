@@ -123,6 +123,7 @@ app/(base)/arenas/[id]/
 ```
 
 **When to create page-specific components:**
+
 - Page exceeds 200 lines
 - Multiple distinct sections
 - Components only used by this page
@@ -146,6 +147,7 @@ hooks/
 ```
 
 **Naming Convention:**
+
 - `use` prefix + feature name (camelCase)
 - `.ts` extension (not `.tsx` unless returning JSX)
 
@@ -164,6 +166,7 @@ stores/
 ```
 
 **Naming Convention:**
+
 - PascalCase or camelCase + `Store.ts`
 - Export `use[Name]Store` or `use[Name]`
 
@@ -184,9 +187,9 @@ types/
 
 ## Import Alias
 
-| Alias | Resolves To | Example |
-|-------|-------------|---------|
-| `@/` | Project root | `import Button from "@/app/components/Button"` |
+| Alias | Resolves To  | Example                                        |
+| ----- | ------------ | ---------------------------------------------- |
+| `@/`  | Project root | `import Button from "@/app/components/Button"` |
 
 ```typescript
 // ✅ PREFERRED — Use @/ alias for absolute imports
@@ -208,22 +211,28 @@ import Button from "../../../../app/components/Button";
 ## File Naming Conventions
 
 ### Pages
+
 - `page.tsx` (Next.js convention)
 - `layout.tsx` (Next.js convention)
 
 ### Components
+
 - **PascalCase** with `.tsx`: `Button.tsx`, `ArenaDetailHeader.tsx`
 
 ### Hooks
+
 - **camelCase** with `use` prefix, `.ts`: `useArenaList.ts`, `useVote.ts`
 
 ### Stores
+
 - **camelCase or PascalCase** + `Store.ts`: `AuthStore.ts`, `loadingStore.ts`
 
 ### Utilities
+
 - **camelCase** `.ts`: `tailwindUtil.ts`, `GetAuthUserId.server.ts`
 
 ### Types
+
 - **camelCase** `.ts`: `arena.ts`, `game.ts`
 
 ---
@@ -231,22 +240,27 @@ import Button from "../../../../app/components/Button";
 ## When to Create What
 
 ### New Page → `app/(base)/[feature]/page.tsx`
+
 - New route in the app
 - May need `components/` subdirectory for sub-sections
 
 ### New Shared Component → `app/components/`
+
 - Used across 3+ pages
 - Generic UI primitive (no feature logic)
 
 ### New Hook → `hooks/`
+
 - Reusable data-fetching or behavior logic
 - Used across multiple components
 
 ### New Store → `stores/`
+
 - Global state shared across unrelated components
 - Keep stores minimal and focused
 
 ### New API Route → `app/api/[feature]/route.ts`
+
 - Backend endpoint for client-side fetching
 
 ---
@@ -288,6 +302,7 @@ import ArenaCard from "./components/ArenaCard";
 ## Summary
 
 **Key Principles:**
+
 1. **app/(base)/**: Pages with Header + Footer layout
 2. **app/(auth)/**: Auth pages with minimal layout
 3. **app/components/**: Shared UI components
@@ -297,6 +312,7 @@ import ArenaCard from "./components/ArenaCard";
 7. **@/ alias**: Always use for absolute imports
 
 **See Also:**
+
 - [component-patterns.md](component-patterns.md) - Component structure
 - [routing-guide.md](routing-guide.md) - Next.js App Router routing
 - [complete-examples.md](complete-examples.md) - Full examples

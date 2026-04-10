@@ -7,7 +7,7 @@ type GameInfoCardProps = {
     themes: string[];
     wishCount: number;
     reviewCount: number;
-}
+};
 
 export default function GameInfoCard({
     platforms,

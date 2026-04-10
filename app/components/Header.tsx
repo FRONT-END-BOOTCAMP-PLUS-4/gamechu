@@ -11,7 +11,12 @@ import useModalStore from "@/stores/ModalStore";
 import Button from "./Button";
 import { Menu, User, X } from "lucide-react";
 
-type MenuLinkProps = { href: string; label: string; pathname: string; onNavigate: () => void; }
+type MenuLinkProps = {
+    href: string;
+    label: string;
+    pathname: string;
+    onNavigate: () => void;
+};
 
 function MenuLink({ href, label, pathname, onNavigate }: MenuLinkProps) {
     return (
@@ -87,8 +92,18 @@ export default function Header() {
 
                 {/* 가운데  */}
                 <nav className="hidden whitespace-nowrap sm:flex sm:space-x-8">
-                    <MenuLink href="/games" label="게임" pathname={pathname} onNavigate={handleNavigate} />
-                    <MenuLink href="/arenas" label="투기장" pathname={pathname} onNavigate={handleNavigate} />
+                    <MenuLink
+                        href="/games"
+                        label="게임"
+                        pathname={pathname}
+                        onNavigate={handleNavigate}
+                    />
+                    <MenuLink
+                        href="/arenas"
+                        label="투기장"
+                        pathname={pathname}
+                        onNavigate={handleNavigate}
+                    />
                 </nav>
 
                 {/* 오른쪽  */}
@@ -155,8 +170,18 @@ export default function Header() {
                 <div className="flex items-start justify-between px-6 py-4">
                     {/* 왼쪽  */}
                     <nav className="flex flex-col space-y-2">
-                        <MenuLink href="/games" label="게임" pathname={pathname} onNavigate={handleNavigate} />
-                        <MenuLink href="/arenas" label="투기장" pathname={pathname} onNavigate={handleNavigate} />
+                        <MenuLink
+                            href="/games"
+                            label="게임"
+                            pathname={pathname}
+                            onNavigate={handleNavigate}
+                        />
+                        <MenuLink
+                            href="/arenas"
+                            label="투기장"
+                            pathname={pathname}
+                            onNavigate={handleNavigate}
+                        />
                     </nav>
 
                     {/* 오른쪽 */}

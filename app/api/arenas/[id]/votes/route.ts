@@ -16,7 +16,10 @@ type RequestParams = {
 
 export async function GET(request: Request, { params }: RequestParams) {
     const memberId = await getAuthUserId();
-    const log = logger.child({ route: "/api/arenas/[id]/votes", method: "GET" });
+    const log = logger.child({
+        route: "/api/arenas/[id]/votes",
+        method: "GET",
+    });
     const { id } = await params;
 
     const idValidation = validate(IdSchema, id);

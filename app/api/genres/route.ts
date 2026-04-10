@@ -11,7 +11,9 @@ export async function GET() {
     try {
         const repo = new PrismaGenreRepository();
         const usecase = new GetAllGenresUsecase(repo);
-        const genres = await withCache(genreListKey(), 3600, () => usecase.execute());
+        const genres = await withCache(genreListKey(), 3600, () =>
+            usecase.execute()
+        );
         return NextResponse.json(genres);
     } catch (e) {
         log.error({ err: e }, "장르 조회 실패");

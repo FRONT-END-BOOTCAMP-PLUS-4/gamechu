@@ -12,6 +12,7 @@ Establish consistency and best practices for GameChu's backend: Next.js 15 API r
 ## When to Use This Skill
 
 Automatically activates when working on:
+
 - Creating or modifying API route handlers (`app/api/`)
 - Building usecases, repositories, DTOs (`backend/`)
 - Database operations with Prisma
@@ -96,6 +97,7 @@ utils/                            # Utilities
 ```
 
 **Naming Conventions (from `docs/CODE_CONVENTIONS.md`):**
+
 - Folders: `kebab-case`
 - Files: `PascalCase` (e.g., `GetArenaUsecase.ts`, `PrismaArenaRepository.ts`)
 - Variables & functions: `camelCase`
@@ -117,7 +119,10 @@ export async function GET(request: Request) {
 
         const arenaRepository = new PrismaArenaRepository();
         const memberRepository = new PrismaMemberRepository();
-        const getArenaUsecase = new GetArenaUsecase(arenaRepository, memberRepository);
+        const getArenaUsecase = new GetArenaUsecase(
+            arenaRepository,
+            memberRepository
+        );
 
         const dto = new GetArenaDto({ currentPage }, memberId);
         const result = await getArenaUsecase.execute(dto);
@@ -245,15 +250,15 @@ import { z } from "zod";
 
 ### HTTP Status Codes
 
-| Code | Use Case |
-|------|----------|
-| 200 | Success (GET, PATCH, DELETE) |
-| 201 | Created (POST) |
-| 400 | Bad Request / Validation Error |
-| 401 | Unauthorized (not logged in) |
-| 403 | Forbidden (insufficient permissions/score) |
-| 404 | Not Found |
-| 500 | Server Error |
+| Code | Use Case                                   |
+| ---- | ------------------------------------------ |
+| 200  | Success (GET, PATCH, DELETE)               |
+| 201  | Created (POST)                             |
+| 400  | Bad Request / Validation Error             |
+| 401  | Unauthorized (not logged in)               |
+| 403  | Forbidden (insufficient permissions/score) |
+| 404  | Not Found                                  |
+| 500  | Server Error                               |
 
 ### Feature Module Template
 
@@ -274,51 +279,61 @@ Use `backend/arena/` as the reference implementation — it has all layers inclu
 
 ## Navigation Guide
 
-| Need to... | Read this |
-|------------|-----------|
-| Understand architecture | [architecture-overview.md](architecture-overview.md) |
-| Create API routes | [routing-and-controllers.md](routing-and-controllers.md) |
+| Need to...                | Read this                                                    |
+| ------------------------- | ------------------------------------------------------------ |
+| Understand architecture   | [architecture-overview.md](architecture-overview.md)         |
+| Create API routes         | [routing-and-controllers.md](routing-and-controllers.md)     |
 | Organize usecases & repos | [services-and-repositories.md](services-and-repositories.md) |
-| Validate input | [validation-patterns.md](validation-patterns.md) |
-| Create middleware | [middleware-guide.md](middleware-guide.md) |
-| Database access | [database-patterns.md](database-patterns.md) |
-| Manage config | [configuration.md](configuration.md) |
-| Handle async/errors | [async-and-errors.md](async-and-errors.md) |
-| Write tests | [testing-guide.md](testing-guide.md) |
-| See examples | [complete-examples.md](complete-examples.md) |
+| Validate input            | [validation-patterns.md](validation-patterns.md)             |
+| Create middleware         | [middleware-guide.md](middleware-guide.md)                   |
+| Database access           | [database-patterns.md](database-patterns.md)                 |
+| Manage config             | [configuration.md](configuration.md)                         |
+| Handle async/errors       | [async-and-errors.md](async-and-errors.md)                   |
+| Write tests               | [testing-guide.md](testing-guide.md)                         |
+| See examples              | [complete-examples.md](complete-examples.md)                 |
 
 ---
 
 ## Resource Files
 
 ### [architecture-overview.md](architecture-overview.md)
+
 Clean Architecture + DDD layers, request lifecycle, separation of concerns
 
 ### [routing-and-controllers.md](routing-and-controllers.md)
+
 Next.js API route handlers, request params, query strings, error handling
 
 ### [services-and-repositories.md](services-and-repositories.md)
+
 Usecase patterns, repository interfaces, Prisma implementations, caching
 
 ### [validation-patterns.md](validation-patterns.md)
+
 Zod schemas (future), DTO validation patterns
 
 ### [middleware-guide.md](middleware-guide.md)
+
 Next.js middleware, auth patterns, NextAuth.js integration
 
 ### [database-patterns.md](database-patterns.md)
+
 Prisma client, repositories, raw queries, PostgreSQL specifics
 
 ### [configuration.md](configuration.md)
+
 Environment variables, singleton patterns, lib/ structure
 
 ### [async-and-errors.md](async-and-errors.md)
+
 Async patterns, unified error handling, custom errors
 
 ### [testing-guide.md](testing-guide.md)
+
 Testing strategy (no framework yet), manual testing patterns
 
 ### [complete-examples.md](complete-examples.md)
+
 Full feature examples based on arena module
 
 ---

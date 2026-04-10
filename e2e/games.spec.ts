@@ -12,13 +12,17 @@ test("/games 페이지 유효 UI 렌더링", async ({ page }) => {
 test("/games 페이지 헤더 '게임 탐색' 제목 렌더링", async ({ page }) => {
     await page.goto("/games");
 
-    await expect(page.getByRole("heading", { name: "게임 탐색" })).toBeVisible();
+    await expect(
+        page.getByRole("heading", { name: "게임 탐색" })
+    ).toBeVisible();
 });
 
 test("/games 페이지 검색창 렌더링", async ({ page }) => {
     await page.goto("/games");
 
-    await expect(page.getByRole("textbox", { name: "제목 또는 개발사 검색 (영문)" })).toBeVisible();
+    await expect(
+        page.getByRole("textbox", { name: "제목 또는 개발사 검색 (영문)" })
+    ).toBeVisible();
 });
 
 test("/games 페이지 게임 필터 버튼 렌더링", async ({ page }) => {

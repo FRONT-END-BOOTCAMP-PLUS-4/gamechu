@@ -60,7 +60,9 @@ export function useGameReviews(gameId: number) {
     const { data, isLoading } = useQuery<Review[]>({
         queryKey: queryKeys.reviews(gameId),
         queryFn: async () => {
-            const raw = await fetcher<RawReview[]>(`/api/games/${gameId}/reviews`);
+            const raw = await fetcher<RawReview[]>(
+                `/api/games/${gameId}/reviews`
+            );
             return raw.map(enrichReview);
         },
         refetchOnWindowFocus: false,
@@ -74,7 +76,8 @@ export function useGameReviews(gameId: number) {
                 if (!res.ok) {
                     const body = await res.json().catch(() => ({}));
                     throw new Error(
-                        (body as { message?: string }).message ?? "댓글 삭제 실패"
+                        (body as { message?: string }).message ??
+                            "댓글 삭제 실패"
                     );
                 }
             }),

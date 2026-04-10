@@ -7,7 +7,7 @@ type ArenaSocketProps = {
     arenaId: number | undefined;
     status: ArenaStatus | undefined;
     onReceive: (chat: ChattingDto) => void;
-}
+};
 
 export function useArenaSocket({
     arenaId,
@@ -29,7 +29,8 @@ export function useArenaSocket({
             cleanupUpgrade?.(); // 재연결 시 이전 핸들러 먼저 해제
             const handleUpgrade = () => {};
             socket.io.engine.on("upgrade", handleUpgrade);
-            cleanupUpgrade = () => socket.io.engine.off("upgrade", handleUpgrade);
+            cleanupUpgrade = () =>
+                socket.io.engine.off("upgrade", handleUpgrade);
         }
         function onDisconnect() {}
         function onConnectError() {}

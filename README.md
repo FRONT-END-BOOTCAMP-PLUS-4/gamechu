@@ -53,19 +53,19 @@
 ## 🧭 기획 의도
 
 - **인플레이션과 관세 등 다양한 요인으로 인한 게임 가격 상승**
-  <p align="center">
-    <img src="https://github.com/user-attachments/assets/6c055908-0ce4-4c65-b8d9-c32522536899" width="800"/>
-  </p>
+      <p align="center">
+        <img src="https://github.com/user-attachments/assets/6c055908-0ce4-4c65-b8d9-c32522536899" width="800"/>
+      </p>
 
 - **게임 이용률 감소 현상**
-  <p align="center">
-    <img src="https://github.com/user-attachments/assets/0d66e218-bad4-4ddb-abea-17c2c056a747" width="800"/>
-  </p>
+      <p align="center">
+        <img src="https://github.com/user-attachments/assets/0d66e218-bad4-4ddb-abea-17c2c056a747" width="800"/>
+      </p>
 
 - **메타크리틱, 스팀 리뷰, IGN 등 외부 평점 서비스에 대한 의존도 증가**
-  <p align="center">
-    <img src="https://github.com/user-attachments/assets/482e0900-cb91-45ea-8d70-f78117ce08af" width="800"/>
-  </p>
+      <p align="center">
+        <img src="https://github.com/user-attachments/assets/482e0900-cb91-45ea-8d70-f78117ce08af" width="800"/>
+      </p>
 
 - **기존 플랫폼의 한계 극복**
     - 리뷰의 질과 신뢰도를 판단하기 어려움. 어뷰징이나 단순한 별점 테러 등으로 정보 왜곡 가능성 존재

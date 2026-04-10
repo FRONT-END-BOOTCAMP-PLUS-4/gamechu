@@ -9,13 +9,13 @@
 
 ## 변경 범위 요약
 
-| 번호 | 중요도 | 항목 |
-|------|--------|------|
-| 1 | 🔴 필수 | `/api/member/nickname-check` DB 이중 쿼리 제거 |
-| 2 | 🟡 권장 | 두 라우트에 Zod 입력 검증 적용 |
-| 3 | 🟡 권장 | 테스트 파일 3개 추가 |
-| 4 | 🟡 권장 | usecase 레이어에 8자 제한 검증 추가 |
-| 5 | ⚪ 선택 | `StepProfile` UI 상태를 `ProfileInfoTab` 패턴으로 통일 |
+| 번호 | 중요도  | 항목                                                   |
+| ---- | ------- | ------------------------------------------------------ |
+| 1    | 🔴 필수 | `/api/member/nickname-check` DB 이중 쿼리 제거         |
+| 2    | 🟡 권장 | 두 라우트에 Zod 입력 검증 적용                         |
+| 3    | 🟡 권장 | 테스트 파일 3개 추가                                   |
+| 4    | 🟡 권장 | usecase 레이어에 8자 제한 검증 추가                    |
+| 5    | ⚪ 선택 | `StepProfile` UI 상태를 `ProfileInfoTab` 패턴으로 통일 |
 
 ---
 
@@ -39,6 +39,7 @@ if (result.isDuplicate) {
 `NicknameCheckResponseDto`에 `foundMemberId: string | null` 필드를 추가하여 usecase에서 member 객체를 이미 조회하는 김에 ID까지 반환한다. route는 반환된 ID와 세션 ID를 비교하면 되므로 추가 쿼리가 불필요해진다.
 
 **변경 파일**:
+
 - `backend/member/application/usecase/dto/NicknameCheckResponseDto.ts` — `foundMemberId` 필드 추가
 - `backend/member/application/usecase/NicknameCheckUsecase.ts` — member.id를 DTO에 포함
 - `app/api/member/nickname-check/route.ts` — 이중 쿼리 제거, `result.foundMemberId` 사용
@@ -81,11 +82,15 @@ const NicknameQuerySchema = z.object({
         .min(1, "닉네임이 누락되었습니다.")
         .max(8, "닉네임은 8자 이하여야 합니다."),
 });
-const validated = validate(NicknameQuerySchema, Object.fromEntries(searchParams));
+const validated = validate(
+    NicknameQuerySchema,
+    Object.fromEntries(searchParams)
+);
 if (!validated.success) return validated.response;
 ```
 
 **변경 파일**:
+
 - `app/api/auth/nickname-check/route.ts`
 - `app/api/member/nickname-check/route.ts`
 
@@ -106,6 +111,7 @@ async execute(nickname: string): Promise<NicknameCheckResponseDto> {
 ```
 
 **변경 파일**:
+
 - `backend/member/application/usecase/NicknameCheckUsecase.ts`
 
 ---
@@ -116,22 +122,22 @@ async execute(nickname: string): Promise<NicknameCheckResponseDto> {
 
 ### 4-1. `NicknameCheckUsecase.test.ts`
 
-| 케이스 | 설명 |
-|--------|------|
-| 사용 가능 | `findByNickname → null` → `isDuplicate: false`, `foundMemberId: null` |
-| 중복 | `findByNickname → member` → `isDuplicate: true`, `foundMemberId: member.id` |
-| 8자 초과 | `execute("123456789")` → Error throw |
+| 케이스    | 설명                                                                        |
+| --------- | --------------------------------------------------------------------------- |
+| 사용 가능 | `findByNickname → null` → `isDuplicate: false`, `foundMemberId: null`       |
+| 중복      | `findByNickname → member` → `isDuplicate: true`, `foundMemberId: member.id` |
+| 8자 초과  | `execute("123456789")` → Error throw                                        |
 
 **파일**: `backend/member/application/usecase/__tests__/NicknameCheckUsecase.test.ts`
 
 ### 4-2. `app/api/auth/nickname-check/__tests__/route.test.ts`
 
-| 케이스 | 기대 상태 |
-|--------|----------|
-| 사용 가능 닉네임 | 200 |
-| 중복 닉네임 | 409 |
-| nickname 파라미터 누락 | 400 |
-| 8자 초과 | 400 |
+| 케이스                 | 기대 상태 |
+| ---------------------- | --------- |
+| 사용 가능 닉네임       | 200       |
+| 중복 닉네임            | 409       |
+| nickname 파라미터 누락 | 400       |
+| 8자 초과               | 400       |
 
 패턴: `email-check` route 테스트와 동일 (RateLimiter mock, PrismaMemberRepository mock)
 
@@ -139,14 +145,14 @@ async execute(nickname: string): Promise<NicknameCheckResponseDto> {
 
 ### 4-3. `app/api/member/nickname-check/__tests__/route.test.ts`
 
-| 케이스 | 기대 상태 |
-|--------|----------|
-| 사용 가능 닉네임 | 200 |
-| 중복 닉네임 (타인) | 409 |
-| nickname 파라미터 누락 | 400 |
-| 8자 초과 | 400 |
-| 본인 닉네임 (foundMemberId === sessionId) | 200 |
-| 인증 없음 | 401 |
+| 케이스                                    | 기대 상태 |
+| ----------------------------------------- | --------- |
+| 사용 가능 닉네임                          | 200       |
+| 중복 닉네임 (타인)                        | 409       |
+| nickname 파라미터 누락                    | 400       |
+| 8자 초과                                  | 400       |
+| 본인 닉네임 (foundMemberId === sessionId) | 200       |
+| 인증 없음                                 | 401       |
 
 추가 mock: `getServerSession` (next-auth)
 
@@ -157,28 +163,31 @@ async execute(nickname: string): Promise<NicknameCheckResponseDto> {
 ## 5. StepProfile UI 상태 패턴 통일 (⚪ 선택)
 
 `StepProfile`은 닉네임 상태를 두 개의 state로 관리한다:
+
 - `isNicknameDuplicate: boolean | null`
 - `nicknameSuccessMessage: string`
 
 `ProfileInfoTab`은 하나로 통합한다:
+
 - `nicknameMessage: { text: string; isError: boolean } | null`
 
 `ProfileInfoTab` 방식으로 `StepProfile`을 통일한다. 버그는 아니지만 코드베이스 일관성을 위해 반영한다.
 
 **변경 파일**:
+
 - `app/(auth)/components/StepProfile.tsx` — `nicknameSuccessMessage` 제거, `nicknameMessage` 통합
 
 ---
 
 ## 변경 파일 목록
 
-| 파일 | 변경 유형 |
-|------|----------|
-| `backend/member/application/usecase/dto/NicknameCheckResponseDto.ts` | 수정 |
-| `backend/member/application/usecase/NicknameCheckUsecase.ts` | 수정 |
-| `app/api/member/nickname-check/route.ts` | 수정 |
-| `app/api/auth/nickname-check/route.ts` | 수정 |
-| `app/(auth)/components/StepProfile.tsx` | 수정 |
-| `backend/member/application/usecase/__tests__/NicknameCheckUsecase.test.ts` | 신규 |
-| `app/api/auth/nickname-check/__tests__/route.test.ts` | 신규 |
-| `app/api/member/nickname-check/__tests__/route.test.ts` | 신규 |
+| 파일                                                                        | 변경 유형 |
+| --------------------------------------------------------------------------- | --------- |
+| `backend/member/application/usecase/dto/NicknameCheckResponseDto.ts`        | 수정      |
+| `backend/member/application/usecase/NicknameCheckUsecase.ts`                | 수정      |
+| `app/api/member/nickname-check/route.ts`                                    | 수정      |
+| `app/api/auth/nickname-check/route.ts`                                      | 수정      |
+| `app/(auth)/components/StepProfile.tsx`                                     | 수정      |
+| `backend/member/application/usecase/__tests__/NicknameCheckUsecase.test.ts` | 신규      |
+| `app/api/auth/nickname-check/__tests__/route.test.ts`                       | 신규      |
+| `app/api/member/nickname-check/__tests__/route.test.ts`                     | 신규      |

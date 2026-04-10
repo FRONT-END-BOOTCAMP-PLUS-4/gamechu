@@ -51,7 +51,9 @@ export default function ProfilePage({
 
     const memberId = profile?.id ?? null;
 
-    const { data: reviews = [], isLoading: reviewsLoading } = useQuery<Review[]>({
+    const { data: reviews = [], isLoading: reviewsLoading } = useQuery<
+        Review[]
+    >({
         queryKey: queryKeys.reviewsByMember(memberId!),
         queryFn: () => fetcher(`/api/reviews/member/${memberId}`),
         enabled: !!memberId,
@@ -93,7 +95,10 @@ export default function ProfilePage({
             <div className="flex flex-col md:flex-row md:items-start md:space-x-10">
                 {/* 사이드바 */}
                 <div className="mb-6 w-full md:mb-0 md:w-[250px]">
-                    <ProfileSidebar isOwnProfile={false} onSelect={setActiveTab} />
+                    <ProfileSidebar
+                        isOwnProfile={false}
+                        onSelect={setActiveTab}
+                    />
                 </div>
 
                 {/* 컨텐츠 영역 */}

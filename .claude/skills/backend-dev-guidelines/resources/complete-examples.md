@@ -39,7 +39,9 @@ export async function GET(request: Request) {
         const voteRepository = new PrismaVoteRepository();
 
         const getArenaUsecase = new GetArenaUsecase(
-            arenaRepository, memberRepository, voteRepository
+            arenaRepository,
+            memberRepository,
+            voteRepository
         );
 
         const dto = new GetArenaDto(
@@ -85,7 +87,7 @@ export class GetArenaUsecase {
     constructor(
         private arenaRepository: ArenaRepository,
         private memberRepository: MemberRepository,
-        private voteRepository: VoteRepository,
+        private voteRepository: VoteRepository
     ) {}
 
     async execute(dto: GetArenaDto): Promise<ArenaListDto> {
@@ -205,10 +207,7 @@ export async function POST(request: Request) {
             where: { id: memberId },
         });
         if (!member || member.score < 100) {
-            return NextResponse.json(
-                { error: "점수 부족" },
-                { status: 403 }
-            );
+            return NextResponse.json({ error: "점수 부족" }, { status: 403 });
         }
 
         // ❌ Business logic in handler
@@ -237,6 +236,7 @@ export async function POST(request: Request) {
 ### AFTER: Clean Separation ✅
 
 **1. Clean Route Handler:**
+
 ```typescript
 // app/api/arenas/route.ts
 export async function POST(request: Request) {
@@ -253,7 +253,8 @@ export async function POST(request: Request) {
         const arenaRepository = new PrismaArenaRepository();
         const memberRepository = new PrismaMemberRepository();
         const createArenaUsecase = new CreateArenaUsecase(
-            arenaRepository, memberRepository
+            arenaRepository,
+            memberRepository
         );
 
         const dto = new CreateArenaDto(body, memberId);
@@ -266,12 +267,13 @@ export async function POST(request: Request) {
 ```
 
 **2. Usecase:**
+
 ```typescript
 // backend/arena/application/usecase/CreateArenaUsecase.ts
 export class CreateArenaUsecase {
     constructor(
         private arenaRepository: ArenaRepository,
-        private memberRepository: MemberRepository,
+        private memberRepository: MemberRepository
     ) {}
 
     async execute(dto: CreateArenaDto): Promise<Arena> {
@@ -290,6 +292,7 @@ export class CreateArenaUsecase {
 ```
 
 **Result:**
+
 - Route handler: ~20 lines (parse + delegate)
 - Usecase: ~15 lines (business logic)
 - **Testable, maintainable, reusable!**
@@ -301,6 +304,7 @@ export class CreateArenaUsecase {
 ### Complete Feature Module (Arena Pattern)
 
 **1. DTO:**
+
 ```typescript
 // backend/arena/application/usecase/dto/CreateArenaDto.ts
 export class CreateArenaDto {
@@ -308,7 +312,10 @@ export class CreateArenaDto {
     public description: string;
     public memberId: string;
 
-    constructor(body: { title: string; description: string }, memberId: string) {
+    constructor(
+        body: { title: string; description: string },
+        memberId: string
+    ) {
         this.title = body.title;
         this.description = body.description;
         this.memberId = memberId;
@@ -317,6 +324,7 @@ export class CreateArenaDto {
 ```
 
 **2. Domain Repository Interface:**
+
 ```typescript
 // backend/arena/domain/repositories/ArenaRepository.ts
 export interface ArenaRepository {
@@ -328,6 +336,7 @@ export interface ArenaRepository {
 ```
 
 **3. Prisma Implementation:**
+
 ```typescript
 // backend/arena/infra/repositories/prisma/PrismaArenaRepository.ts
 export class PrismaArenaRepository implements ArenaRepository {
@@ -344,6 +353,7 @@ export class PrismaArenaRepository implements ArenaRepository {
 ```
 
 **4. Usecase:**
+
 ```typescript
 // backend/arena/application/usecase/CreateArenaUsecase.ts
 export class CreateArenaUsecase {
@@ -360,6 +370,7 @@ export class CreateArenaUsecase {
 ```
 
 **5. Route Handler:**
+
 ```typescript
 // app/api/arenas/route.ts
 export async function POST(request: Request) {
@@ -371,7 +382,9 @@ export async function POST(request: Request) {
         const memberRepo = new PrismaMemberRepository();
         const usecase = new CreateArenaUsecase(arenaRepo, memberRepo);
 
-        const result = await usecase.execute(new CreateArenaDto(body, memberId));
+        const result = await usecase.execute(
+            new CreateArenaDto(body, memberId)
+        );
         return NextResponse.json(result, { status: 201 });
     } catch (error: unknown) {
         // unified error handling
@@ -380,6 +393,7 @@ export async function POST(request: Request) {
 ```
 
 **Complete Request Flow:**
+
 ```
 POST /api/arenas
   ↓
@@ -405,6 +419,7 @@ NextResponse.json(result, { status: 201 })
 ---
 
 **Related Files:**
+
 - [SKILL.md](SKILL.md)
 - [routing-and-controllers.md](routing-and-controllers.md)
 - [services-and-repositories.md](services-and-repositories.md)

@@ -8,7 +8,17 @@ const validLexicalJson = JSON.stringify({
     root: {
         children: [
             {
-                children: [{ detail: 0, format: 0, mode: "normal", style: "", text: "Great game", type: "text", version: 1 }],
+                children: [
+                    {
+                        detail: 0,
+                        format: 0,
+                        mode: "normal",
+                        style: "",
+                        text: "Great game",
+                        type: "text",
+                        version: 1,
+                    },
+                ],
                 direction: "ltr",
                 format: "",
                 indent: 0,
@@ -93,7 +103,11 @@ describe("CreateReviewUsecase", () => {
     it("error: duplicate review for same game throws", async () => {
         const repo = createMockReviewRepository();
         vi.mocked(repo.findByMemberId).mockResolvedValue([
-            { gameId: 10, id: 99, memberId: "m1" } as unknown as ReviewByMembersDto,
+            {
+                gameId: 10,
+                id: 99,
+                memberId: "m1",
+            } as unknown as ReviewByMembersDto,
         ]);
 
         const usecase = new CreateReviewUsecase(repo);
@@ -147,7 +161,11 @@ describe("CreateReviewUsecase", () => {
         const repo = createMockReviewRepository();
         const usecase = new CreateReviewUsecase(repo);
         await expect(
-            usecase.execute("m1", { gameId: 10, content: emptyLexicalJson, rating: 3 })
+            usecase.execute("m1", {
+                gameId: 10,
+                content: emptyLexicalJson,
+                rating: 3,
+            })
         ).rejects.toThrow("리뷰 내용을 입력해주세요.");
     });
 
@@ -155,7 +173,11 @@ describe("CreateReviewUsecase", () => {
         const repo = createMockReviewRepository();
         const usecase = new CreateReviewUsecase(repo);
         await expect(
-            usecase.execute("m1", { gameId: 10, content: base64ImageLexicalJson, rating: 3 })
+            usecase.execute("m1", {
+                gameId: 10,
+                content: base64ImageLexicalJson,
+                rating: 3,
+            })
         ).rejects.toThrow("이미지는 URL 형식으로만 삽입할 수 있습니다.");
     });
 
@@ -179,7 +201,17 @@ describe("CreateReviewUsecase", () => {
             root: {
                 children: [
                     {
-                        children: [{ detail: 0, format: 0, mode: "normal", style: "", text: longText, type: "text", version: 1 }],
+                        children: [
+                            {
+                                detail: 0,
+                                format: 0,
+                                mode: "normal",
+                                style: "",
+                                text: longText,
+                                type: "text",
+                                version: 1,
+                            },
+                        ],
                         direction: "ltr",
                         format: "",
                         indent: 0,

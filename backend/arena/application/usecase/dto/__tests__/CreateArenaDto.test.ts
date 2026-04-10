@@ -13,18 +13,31 @@ describe("CreateArenaSchema", () => {
     });
 
     it("제목 빈 문자열 → 실패", () => {
-        expect(CreateArenaSchema.safeParse({ ...valid, title: "" }).success).toBe(false);
+        expect(
+            CreateArenaSchema.safeParse({ ...valid, title: "" }).success
+        ).toBe(false);
     });
 
     it("제목 100자 초과 → 실패", () => {
-        expect(CreateArenaSchema.safeParse({ ...valid, title: "a".repeat(101) }).success).toBe(false);
+        expect(
+            CreateArenaSchema.safeParse({ ...valid, title: "a".repeat(101) })
+                .success
+        ).toBe(false);
     });
 
     it("설명 500자 초과 → 실패", () => {
-        expect(CreateArenaSchema.safeParse({ ...valid, description: "a".repeat(501) }).success).toBe(false);
+        expect(
+            CreateArenaSchema.safeParse({
+                ...valid,
+                description: "a".repeat(501),
+            }).success
+        ).toBe(false);
     });
 
     it("잘못된 날짜 형식 → 실패", () => {
-        expect(CreateArenaSchema.safeParse({ ...valid, startDate: "2026-04-01" }).success).toBe(false);
+        expect(
+            CreateArenaSchema.safeParse({ ...valid, startDate: "2026-04-01" })
+                .success
+        ).toBe(false);
     });
 });

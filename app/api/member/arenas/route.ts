@@ -39,7 +39,8 @@ export async function POST(request: Request) {
         if (member.score < 100) {
             return NextResponse.json(
                 {
-                    message: "투기장 작성을 위해서는 최소 100점 이상의 점수가 필요합니다.",
+                    message:
+                        "투기장 작성을 위해서는 최소 100점 이상의 점수가 필요합니다.",
                 },
                 { status: 403 }
             );

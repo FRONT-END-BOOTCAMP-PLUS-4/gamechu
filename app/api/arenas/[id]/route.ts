@@ -29,10 +29,8 @@ export async function GET(request: Request, { params }: RequestParams) {
     );
     const getArenaDetailDto = new GetArenaDetailDto(arenaId);
     try {
-        const result = await withCache(
-            arenaDetailKey(arenaId),
-            120,
-            () => getArenaDetailusecase.execute(getArenaDetailDto)
+        const result = await withCache(arenaDetailKey(arenaId), 120, () =>
+            getArenaDetailusecase.execute(getArenaDetailDto)
         );
         return NextResponse.json(result, { status: 200 });
     } catch (error: unknown) {
@@ -45,4 +43,3 @@ export async function GET(request: Request, { params }: RequestParams) {
         return errorResponse(`Failed to fetch participants: ${error}`, 500);
     }
 }
-

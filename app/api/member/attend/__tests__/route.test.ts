@@ -8,25 +8,40 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
 const mockGetLastAttendedDate = vi.fn().mockResolvedValue(null);
 const mockIncrementScore = vi.fn().mockResolvedValue(undefined);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.getLastAttendedDate = mockGetLastAttendedDate;
-        this.incrementScore = mockIncrementScore;
-        this.findById = vi.fn().mockResolvedValue({ id: "test-member-id", score: 100 });
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.getLastAttendedDate = mockGetLastAttendedDate;
+            this.incrementScore = mockIncrementScore;
+            this.findById = vi
+                .fn()
+                .mockResolvedValue({ id: "test-member-id", score: 100 });
+        }),
+    })
+);
 
-vi.mock("@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository", () => ({
-    PrismaScoreRecordRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.save = vi.fn().mockResolvedValue(undefined);
-    }),
-}));
+vi.mock(
+    "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository",
+    () => ({
+        PrismaScoreRecordRepository: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.save = vi.fn().mockResolvedValue(undefined);
+        }),
+    })
+);
 
-vi.mock("@/backend/score-policy/application/usecase/ApplyAttendanceScoreUsecase", () => ({
-    ApplyAttendanceScoreUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue(undefined);
-    }),
-}));
+vi.mock(
+    "@/backend/score-policy/application/usecase/ApplyAttendanceScoreUsecase",
+    () => ({
+        ApplyAttendanceScoreUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue(undefined);
+        }),
+    })
+);
 
 vi.mock("@/backend/score-policy/domain/ScorePolicy", () => ({
     ScorePolicy: vi.fn(function () {}),
@@ -55,7 +70,9 @@ describe("POST /api/member/attend", () => {
     });
 
     it("returns 200 with attendedDate as a non-empty Korean locale string when last attended date exists", async () => {
-        mockGetLastAttendedDate.mockResolvedValueOnce(new Date("2026-03-14T00:00:00.000Z"));
+        mockGetLastAttendedDate.mockResolvedValueOnce(
+            new Date("2026-03-14T00:00:00.000Z")
+        );
 
         const response = await POST();
         expect(response.status).toBe(200);
@@ -70,11 +87,11 @@ describe("POST /api/member/attend", () => {
         const { ApplyAttendanceScoreUsecase } = await import(
             "@/backend/score-policy/application/usecase/ApplyAttendanceScoreUsecase"
         );
-        vi.mocked(ApplyAttendanceScoreUsecase).mockImplementationOnce(
-            function (this: Record<string, unknown>) {
-                this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
-            } as unknown as typeof ApplyAttendanceScoreUsecase
-        );
+        vi.mocked(ApplyAttendanceScoreUsecase).mockImplementationOnce(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
+        } as unknown as typeof ApplyAttendanceScoreUsecase);
 
         const response = await POST();
         expect(response.status).toBe(500);

@@ -7,8 +7,9 @@ Claude Code hooks that enable skill auto-activation, file tracking, and validati
 ## What Are Hooks?
 
 Hooks are scripts that run at specific points in Claude's workflow:
+
 - **UserPromptSubmit**: When user submits a prompt
-- **PreToolUse**: Before a tool executes  
+- **PreToolUse**: Before a tool executes
 - **PostToolUse**: After a tool completes
 - **Stop**: When user requests to stop
 
@@ -23,6 +24,7 @@ Hooks are scripts that run at specific points in Claude's workflow:
 **Purpose:** Automatically suggests relevant skills based on user prompts and file context
 
 **How it works:**
+
 1. Reads `skill-rules.json`
 2. Matches user prompt against trigger patterns
 3. Checks which files user is working with
@@ -31,6 +33,7 @@ Hooks are scripts that run at specific points in Claude's workflow:
 **Why it's essential:** This is THE hook that makes skills auto-activate.
 
 **Integration:**
+
 ```bash
 # Copy both files
 cp skill-activation-prompt.sh your-project/.claude/hooks/
@@ -45,20 +48,21 @@ npm install
 ```
 
 **Add to settings.json:**
+
 ```json
 {
-  "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/skill-activation-prompt.sh"
-          }
+    "hooks": {
+        "UserPromptSubmit": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/skill-activation-prompt.sh"
+                    }
+                ]
+            }
         ]
-      }
-    ]
-  }
+    }
 }
 ```
 
@@ -71,6 +75,7 @@ npm install
 **Purpose:** Tracks file changes to maintain context across sessions
 
 **How it works:**
+
 1. Monitors Edit/Write/MultiEdit tool calls
 2. Records which files were modified
 3. Creates cache for context management
@@ -79,6 +84,7 @@ npm install
 **Why it's essential:** Helps Claude understand what parts of your codebase are active.
 
 **Integration:**
+
 ```bash
 # Copy file
 cp post-tool-use-tracker.sh your-project/.claude/hooks/
@@ -88,21 +94,22 @@ chmod +x your-project/.claude/hooks/post-tool-use-tracker.sh
 ```
 
 **Add to settings.json:**
+
 ```json
 {
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|MultiEdit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-tool-use-tracker.sh"
-          }
+    "hooks": {
+        "PostToolUse": [
+            {
+                "matcher": "Edit|MultiEdit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-tool-use-tracker.sh"
+                    }
+                ]
+            }
         ]
-      }
-    ]
-  }
+    }
 }
 ```
 
@@ -121,17 +128,19 @@ chmod +x your-project/.claude/hooks/post-tool-use-tracker.sh
 **Integration:**
 
 **First, determine if this is right for you:**
+
 - ✅ Use if: Multi-service TypeScript monorepo
 - ❌ Skip if: Single-service project or different build setup
 
 **If using:**
+
 1. Copy tsc-check.sh
 2. **EDIT the service detection (line ~28):**
-   ```bash
-   # Replace example services with YOUR services:
-   case "$repo" in
-       api|web|auth|payments|...)  # ← Your actual services
-   ```
+    ```bash
+    # Replace example services with YOUR services:
+    case "$repo" in
+        api|web|auth|payments|...)  # ← Your actual services
+    ```
 3. Test manually before adding to settings.json
 
 **Customization:** ⚠️⚠️⚠️ Heavy
@@ -154,10 +163,10 @@ chmod +x your-project/.claude/hooks/post-tool-use-tracker.sh
 
 1. **Read [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)** first
 2. **Always start with the two essential hooks**
-3. **Ask before adding Stop hooks** - they can block if misconfigured  
+3. **Ask before adding Stop hooks** - they can block if misconfigured
 4. **Verify after setup:**
-   ```bash
-   ls -la .claude/hooks/*.sh | grep rwx
-   ```
+    ```bash
+    ls -la .claude/hooks/*.sh | grep rwx
+    ```
 
 **Questions?** See [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)

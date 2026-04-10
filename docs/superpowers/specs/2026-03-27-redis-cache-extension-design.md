@@ -10,12 +10,14 @@ Extend Redis caching to all uncached read endpoints and refactor the existing ar
 ## Background
 
 Current state:
+
 - `GET /api/games` (list): cached inline in route handler, 24h TTL — left as-is
 - `GET /api/arenas` (list): cached inside `GetArenaUsecase`, 60s TTL, invalidated via SCAN
 - `GET /api/arenas/[id]` (detail): cached inside `GetArenaDetailUsecase`, 120s TTL, invalidated on write
 - All other read endpoints: uncached
 
 Problems with the arena cache:
+
 - Cache logic lives in usecases (application layer), violating Clean Architecture
 - `ArenaCacheService` is a stateless class wrapping Redis — unnecessary abstraction
 - `invalidateUserArenaCache` is dead code (never called)
@@ -25,21 +27,21 @@ Problems with the arena cache:
 
 ### New caching (TTL-only via `withCache`)
 
-| Endpoint | Cache key | TTL |
-|---|---|---|
-| `GET /api/games/[id]` | `game:detail:{id}` | 600s |
-| `GET /api/games?meta=true` | `game:meta` | 3600s |
-| `GET /api/genres` | `genre:list` | 3600s |
-| `GET /api/platforms` | `platform:list` | 3600s |
-| `GET /api/themes` | `theme:list` | 3600s |
-| `GET /api/member/profile/[nickname]` | `member:profile:{nickname}` | 120s |
+| Endpoint                             | Cache key                   | TTL   |
+| ------------------------------------ | --------------------------- | ----- |
+| `GET /api/games/[id]`                | `game:detail:{id}`          | 600s  |
+| `GET /api/games?meta=true`           | `game:meta`                 | 3600s |
+| `GET /api/genres`                    | `genre:list`                | 3600s |
+| `GET /api/platforms`                 | `platform:list`             | 3600s |
+| `GET /api/themes`                    | `theme:list`                | 3600s |
+| `GET /api/member/profile/[nickname]` | `member:profile:{nickname}` | 120s  |
 
 ### Refactored (arena — version-based invalidation)
 
-| Endpoint | Cache key | TTL | Invalidation |
-|---|---|---|---|
-| `GET /api/arenas` | `arena:list:v{version}:{status}:{userId}:{pageSize}:{page}` | 60s | Version increment |
-| `GET /api/arenas/[id]` | `arena:detail:{id}` | 120s | Explicit `del` on PATCH/DELETE |
+| Endpoint               | Cache key                                                   | TTL  | Invalidation                   |
+| ---------------------- | ----------------------------------------------------------- | ---- | ------------------------------ |
+| `GET /api/arenas`      | `arena:list:v{version}:{status}:{userId}:{pageSize}:{page}` | 60s  | Version increment              |
+| `GET /api/arenas/[id]` | `arena:detail:{id}`                                         | 120s | Explicit `del` on PATCH/DELETE |
 
 ### Refactored (game list — inline → `withCache`)
 
@@ -124,14 +126,17 @@ interface ArenaListKeyParams {
     pageSize: number;
 }
 
-export function gameDetailKey(id: number): string
-export function genreListKey(): string
-export function platformListKey(): string
-export function themeListKey(): string
-export function gameMetaKey(): string
-export function memberProfileKey(nickname: string): string
-export function arenaListKey(version: string, params: ArenaListKeyParams): string
-export function arenaDetailKey(id: number): string
+export function gameDetailKey(id: number): string;
+export function genreListKey(): string;
+export function platformListKey(): string;
+export function themeListKey(): string;
+export function gameMetaKey(): string;
+export function memberProfileKey(nickname: string): string;
+export function arenaListKey(
+    version: string,
+    params: ArenaListKeyParams
+): string;
+export function arenaDetailKey(id: number): string;
 ```
 
 `arenaListKey` accepts the version as a parameter — the caller fetches it from Redis. This keeps `cacheKey.ts` free of Redis imports and synchronous/pure.
@@ -150,8 +155,15 @@ return NextResponse.json(data);
 
 ```ts
 const version = (await redis.get(ARENA_LIST_VERSION_KEY)) ?? "0";
-const key = arenaListKey(version, { currentPage, status, targetMemberId: effectiveMemberId, pageSize });
-const result = await withCache(key, 60, () => getArenaUsecase.execute(getArenaDto));
+const key = arenaListKey(version, {
+    currentPage,
+    status,
+    targetMemberId: effectiveMemberId,
+    pageSize,
+});
+const result = await withCache(key, 60, () =>
+    getArenaUsecase.execute(getArenaDto)
+);
 return NextResponse.json(result);
 ```
 

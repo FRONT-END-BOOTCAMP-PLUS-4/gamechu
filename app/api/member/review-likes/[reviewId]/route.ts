@@ -19,7 +19,10 @@ export async function POST(
     { params }: { params: Promise<{ reviewId: string }> }
 ) {
     const userId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/review-likes/[reviewId]", method: "POST" });
+    const log = logger.child({
+        route: "/api/member/review-likes/[reviewId]",
+        method: "POST",
+    });
     try {
         if (!userId) return errorResponse("Unauthorized", 401);
 
@@ -55,7 +58,8 @@ export async function POST(
         return NextResponse.json(result);
     } catch (err: unknown) {
         log.error({ userId, err }, "리뷰 좋아요 토글 실패");
-        const message = err instanceof Error ? err.message : "알 수 없는 오류 발생";
+        const message =
+            err instanceof Error ? err.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }

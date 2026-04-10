@@ -67,7 +67,8 @@ export default function GamePage() {
     const genres = meta?.genres ?? [];
     const themes = meta?.themes ?? [];
     const platforms = meta?.platforms ?? [];
-    const isFilterReady = genres.length > 0 && themes.length > 0 && platforms.length > 0;
+    const isFilterReady =
+        genres.length > 0 && themes.length > 0 && platforms.length > 0;
 
     const gamesParams = {
         page: currentPage,
@@ -79,21 +80,26 @@ export default function GamePage() {
         ...(sortBy ? { sort: sortBy } : {}),
     };
 
-    const { data: gameData, isLoading: gamesLoading } = useQuery<GameListResponse>({
-        queryKey: queryKeys.games(gamesParams),
-        queryFn: () => {
-            const params = new URLSearchParams();
-            if (selectedTag) {
-                params.append(selectedTag.type === "genre" ? "genreId" : "themeId", selectedTag.id.toString());
-            }
-            if (selectedPlatformId) params.append("platformId", selectedPlatformId.toString());
-            if (searchQuery) params.append("keyword", searchQuery);
-            if (sortBy) params.append("sort", sortBy);
-            params.append("page", currentPage.toString());
-            params.append("size", itemsPerPage.toString());
-            return fetcher(`/api/games?${params.toString()}`);
-        },
-    });
+    const { data: gameData, isLoading: gamesLoading } =
+        useQuery<GameListResponse>({
+            queryKey: queryKeys.games(gamesParams),
+            queryFn: () => {
+                const params = new URLSearchParams();
+                if (selectedTag) {
+                    params.append(
+                        selectedTag.type === "genre" ? "genreId" : "themeId",
+                        selectedTag.id.toString()
+                    );
+                }
+                if (selectedPlatformId)
+                    params.append("platformId", selectedPlatformId.toString());
+                if (searchQuery) params.append("keyword", searchQuery);
+                if (sortBy) params.append("sort", sortBy);
+                params.append("page", currentPage.toString());
+                params.append("size", itemsPerPage.toString());
+                return fetcher(`/api/games?${params.toString()}`);
+            },
+        });
 
     const games = Array.isArray(gameData?.games) ? gameData.games : [];
     const totalItems = gameData?.totalCount ?? 0;

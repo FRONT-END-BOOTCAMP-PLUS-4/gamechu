@@ -25,7 +25,7 @@ type GameFilterProps = {
     genres: FilterItem[];
     themes: FilterItem[];
     platforms: FilterItem[];
-}
+};
 
 const tagNameMap: Record<string, string> = {
     "4X (explore, expand, exploit, and exterminate)": "4X Strategy",

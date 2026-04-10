@@ -18,16 +18,19 @@ Complete guide to input validation using Zod schemas for type-safe validation in
 ### Benefits
 
 **Type Safety:**
+
 - ✅ Full TypeScript inference
 - ✅ Runtime + compile-time validation
 - ✅ Automatic type generation with `z.infer<>`
 
 **Developer Experience:**
+
 - ✅ Intuitive API
 - ✅ Composable schemas
 - ✅ Excellent error messages
 
 **Performance:**
+
 - ✅ Fast validation
 - ✅ Small bundle size
 - ✅ Tree-shakeable
@@ -39,7 +42,7 @@ Complete guide to input validation using Zod schemas for type-safe validation in
 ### Primitive Types
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 // Strings
 const nameSchema = z.string();
@@ -61,7 +64,7 @@ const activeSchema = z.boolean();
 const dateSchema = z.string().datetime(); // ISO 8601 string
 
 // Enums
-const statusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
+const statusSchema = z.enum(["PENDING", "APPROVED", "REJECTED"]);
 ```
 
 ### Objects
@@ -132,7 +135,10 @@ export async function POST(request: Request) {
     } catch (error: unknown) {
         if (error instanceof z.ZodError) {
             return NextResponse.json(
-                { message: "입력 데이터가 올바르지 않습니다.", errors: error.errors },
+                {
+                    message: "입력 데이터가 올바르지 않습니다.",
+                    errors: error.errors,
+                },
                 { status: 400 }
             );
         }
@@ -179,7 +185,7 @@ export async function GET(request: Request) {
 ### Type Inference from Schemas
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 // Define schema
 const createArenaSchema = z.object({
@@ -291,7 +297,9 @@ catch (error: unknown) {
 ```typescript
 const arenaSchema = z.object({
     title: z.string().min(1, { message: "제목을 입력해주세요." }),
-    description: z.string().max(500, { message: "설명은 500자 이내여야 합니다." }),
+    description: z
+        .string()
+        .max(500, { message: "설명은 500자 이내여야 합니다." }),
     gameId: z.number({ message: "게임을 선택해주세요." }),
 });
 ```
@@ -303,21 +311,23 @@ const arenaSchema = z.object({
 ### Conditional Validation
 
 ```typescript
-const submissionSchema = z.object({
-    type: z.enum(['NEW', 'UPDATE']),
-    arenaId: z.number().optional(),
-}).refine(
-    (data) => {
-        if (data.type === 'UPDATE') {
-            return data.arenaId !== undefined;
+const submissionSchema = z
+    .object({
+        type: z.enum(["NEW", "UPDATE"]),
+        arenaId: z.number().optional(),
+    })
+    .refine(
+        (data) => {
+            if (data.type === "UPDATE") {
+                return data.arenaId !== undefined;
+            }
+            return true;
+        },
+        {
+            message: "arenaId is required for UPDATE type",
+            path: ["arenaId"],
         }
-        return true;
-    },
-    {
-        message: 'arenaId is required for UPDATE type',
-        path: ['arenaId'],
-    }
-);
+    );
 ```
 
 ### Transform Data
@@ -340,13 +350,13 @@ const inputSchema = z.object({
 
 ```typescript
 // Discriminated unions
-const notificationSchema = z.discriminatedUnion('type', [
+const notificationSchema = z.discriminatedUnion("type", [
     z.object({
-        type: z.literal('arena'),
+        type: z.literal("arena"),
         arenaId: z.number(),
     }),
     z.object({
-        type: z.literal('game'),
+        type: z.literal("game"),
         gameId: z.number(),
     }),
 ]);
@@ -371,6 +381,7 @@ const arenaListQuerySchema = paginationSchema.extend({
 ---
 
 **Related Files:**
+
 - [SKILL.md](SKILL.md) - Main guide
 - [routing-and-controllers.md](routing-and-controllers.md) - Using validation in route handlers
 - [services-and-repositories.md](services-and-repositories.md) - Using DTOs in usecases

@@ -14,7 +14,7 @@ type LandingCardProps = {
     animationDelay?: string;
     animationClassName: string;
     buttonLabel?: string;
-}
+};
 
 export default function LandingCard({
     href,

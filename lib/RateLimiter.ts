@@ -56,7 +56,10 @@ export class RateLimiter {
                 retryAfterMs: 0,
             };
         } catch (error) {
-            logger.warn({ prefix: this.prefix, err: error }, "레이트 리미터 Redis 오류 — 요청 허용");
+            logger.warn(
+                { prefix: this.prefix, err: error },
+                "레이트 리미터 Redis 오류 — 요청 허용"
+            );
             return {
                 allowed: true,
                 remaining: this.maxRequests,

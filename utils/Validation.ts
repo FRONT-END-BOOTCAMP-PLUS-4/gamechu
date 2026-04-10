@@ -4,7 +4,9 @@ import { NextResponse } from "next/server";
 export function validate<T>(
     schema: z.ZodSchema<T>,
     data: unknown
-): { success: true; data: T } | { success: false; response: NextResponse<{ message: string }> } {
+):
+    | { success: true; data: T }
+    | { success: false; response: NextResponse<{ message: string }> } {
     const result = schema.safeParse(data);
     if (!result.success) {
         return {

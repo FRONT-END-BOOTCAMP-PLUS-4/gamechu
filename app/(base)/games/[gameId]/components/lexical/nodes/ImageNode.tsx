@@ -81,4 +81,3 @@ export function $createImageNode(
 ): ImageNode {
     return new ImageNode(src, alt, width);
 }
-

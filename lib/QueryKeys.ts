@@ -86,7 +86,8 @@ export const queryKeys = {
     myReviews: () => ["myReviews"] as const,
 
     /** Reviews by a specific member. */
-    reviewsByMember: (memberId: string) => ["reviewsByMember", memberId] as const,
+    reviewsByMember: (memberId: string) =>
+        ["reviewsByMember", memberId] as const,
 
     /** Current user's wishlists (paginated). */
     myWishlists: (page: number) => ["myWishlists", page] as const,

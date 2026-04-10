@@ -12,10 +12,10 @@
 
 ## File Map
 
-| 파일 | 상태 | 역할 |
-|------|------|------|
-| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx` | **수정** | `listComments` 필터링 추가 (L53-65) |
-| `app/(base)/games/[gameId]/components/__tests__/ClientContentWrapper.test.tsx` | **신규** | 중복 렌더링 방지 회귀 테스트 |
+| 파일                                                                           | 상태     | 역할                                |
+| ------------------------------------------------------------------------------ | -------- | ----------------------------------- |
+| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx`                | **수정** | `listComments` 필터링 추가 (L53-65) |
+| `app/(base)/games/[gameId]/components/__tests__/ClientContentWrapper.test.tsx` | **신규** | 중복 렌더링 방지 회귀 테스트        |
 
 ---
 
@@ -25,10 +25,10 @@
 
 - [x] **Step 1: 이슈 확인** — GitHub Issue #214 내용 파악
 - [x] **Step 2: 렌더링 흐름 추적**
-  - `ClientContentWrapper.tsx` 필터링 로직 읽기
-  - `myComment` → 상단 렌더링 경로 확인
-  - `commentsForPage` → 목록 렌더링 경로 확인
-  - `myComment`가 `currentComments`에서 제외되지 않음을 확인
+    - `ClientContentWrapper.tsx` 필터링 로직 읽기
+    - `myComment` → 상단 렌더링 경로 확인
+    - `commentsForPage` → 목록 렌더링 경로 확인
+    - `myComment`가 `currentComments`에서 제외되지 않음을 확인
 
 ---
 
@@ -37,21 +37,22 @@
 **Goal:** 버그를 재현하는 자동화 테스트.
 
 - [x] **Step 1: 테스트 파일 생성**
-  - `ClientContentWrapper.test.tsx` 신규 작성
-  - `useGameReviews`, `@tanstack/react-query`, 자식 컴포넌트 mock 설정
-  - `CommentCard`를 `data-testid="comment-card-{memberId}"` 형태로 mock
+    - `ClientContentWrapper.test.tsx` 신규 작성
+    - `useGameReviews`, `@tanstack/react-query`, 자식 컴포넌트 mock 설정
+    - `CommentCard`를 `data-testid="comment-card-{memberId}"` 형태로 mock
 
 - [x] **Step 2: 테스트 케이스 작성**
-  ```ts
-  it("내 리뷰가 상단에 표시될 때 목록에는 중복되지 않는다")
-  it("내 리뷰가 없으면 목록에 모든 리뷰가 표시된다")
-  ```
+
+    ```ts
+    it("내 리뷰가 상단에 표시될 때 목록에는 중복되지 않는다");
+    it("내 리뷰가 없으면 목록에 모든 리뷰가 표시된다");
+    ```
 
 - [x] **Step 3: RED 검증**
-  ```bash
-  npx vitest run "ClientContentWrapper"
-  ```
-  결과: 1번 케이스 실패 — `expected length 1, got 2` ✅
+    ```bash
+    npx vitest run "ClientContentWrapper"
+    ```
+    결과: 1번 케이스 실패 — `expected length 1, got 2` ✅
 
 ---
 
@@ -61,29 +62,31 @@
 
 - [x] **Step 1: `ClientContentWrapper.tsx` 수정**
 
-  ```ts
-  // 수정 전
-  const commentsForPage = currentComments.slice(...)
+    ```ts
+    // 수정 전
+    const commentsForPage = currentComments.slice(...)
 
-  // 수정 후
-  const listComments = myComment
-      ? currentComments.filter((c) => c.id !== myComment.id)
-      : currentComments;
-  const totalItems = listComments.length;
-  const commentsForPage = listComments.slice(...)
-  ```
+    // 수정 후
+    const listComments = myComment
+        ? currentComments.filter((c) => c.id !== myComment.id)
+        : currentComments;
+    const totalItems = listComments.length;
+    const commentsForPage = listComments.slice(...)
+    ```
 
 - [x] **Step 2: GREEN 검증**
-  ```bash
-  npx vitest run "ClientContentWrapper"
-  ```
-  결과: 2/2 passed ✅
+
+    ```bash
+    npx vitest run "ClientContentWrapper"
+    ```
+
+    결과: 2/2 passed ✅
 
 - [x] **Step 3: 전체 회귀 테스트**
-  ```bash
-  npm test
-  ```
-  결과: 315/315 passed ✅
+    ```bash
+    npm test
+    ```
+    결과: 315/315 passed ✅
 
 ---
 
@@ -91,10 +94,10 @@
 
 - [x] **Step 1: 브랜치 생성** — `fix/#214`
 - [x] **Step 2: 커밋**
-  ```
-  [fix/#214] 사용자 리뷰 중복 표시 버그 수정
-  ```
-  빌드 성공 (pre-commit hook 통과)
+    ```
+    [fix/#214] 사용자 리뷰 중복 표시 버그 수정
+    ```
+    빌드 성공 (pre-commit hook 통과)
 - [x] **Step 3: PR 생성** — PR #295 (`fix/#214` → `dev`)
 
 ---

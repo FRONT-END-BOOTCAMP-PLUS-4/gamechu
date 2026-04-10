@@ -1,1 +1,20 @@
-[{"game_id":1,"theme_id":1}, {"game_id":1,"theme_id":17}, {"game_id":1,"theme_id":23}, {"game_id":5,"theme_id":17}, {"game_id":5,"theme_id":38}, {"game_id":13,"theme_id":18}, {"game_id":13,"theme_id":21}, {"game_id":13,"theme_id":23}, {"game_id":13,"theme_id":38}, {"game_id":72,"theme_id":1}, {"game_id":72,"theme_id":18}, {"game_id":72,"theme_id":27}, {"game_id":115,"theme_id":1}, {"game_id":115,"theme_id":17}, {"game_id":230,"theme_id":18}, {"game_id":230,"theme_id":39}, {"game_id":254,"theme_id":28}, {"game_id":254,"theme_id":33}]
+[
+    { "game_id": 1, "theme_id": 1 },
+    { "game_id": 1, "theme_id": 17 },
+    { "game_id": 1, "theme_id": 23 },
+    { "game_id": 5, "theme_id": 17 },
+    { "game_id": 5, "theme_id": 38 },
+    { "game_id": 13, "theme_id": 18 },
+    { "game_id": 13, "theme_id": 21 },
+    { "game_id": 13, "theme_id": 23 },
+    { "game_id": 13, "theme_id": 38 },
+    { "game_id": 72, "theme_id": 1 },
+    { "game_id": 72, "theme_id": 18 },
+    { "game_id": 72, "theme_id": 27 },
+    { "game_id": 115, "theme_id": 1 },
+    { "game_id": 115, "theme_id": 17 },
+    { "game_id": 230, "theme_id": 18 },
+    { "game_id": 230, "theme_id": 39 },
+    { "game_id": 254, "theme_id": 28 },
+    { "game_id": 254, "theme_id": 33 }
+]

@@ -12,22 +12,23 @@
 
 ## 변경 파일 목록
 
-| 파일 | 유형 |
-|------|------|
-| `backend/member/application/usecase/dto/NicknameCheckResponseDto.ts` | 수정 |
-| `backend/member/application/usecase/NicknameCheckUsecase.ts` | 수정 |
+| 파일                                                                        | 유형 |
+| --------------------------------------------------------------------------- | ---- |
+| `backend/member/application/usecase/dto/NicknameCheckResponseDto.ts`        | 수정 |
+| `backend/member/application/usecase/NicknameCheckUsecase.ts`                | 수정 |
 | `backend/member/application/usecase/__tests__/NicknameCheckUsecase.test.ts` | 신규 |
-| `app/api/auth/nickname-check/route.ts` | 수정 |
-| `app/api/auth/nickname-check/__tests__/route.test.ts` | 신규 |
-| `app/api/member/nickname-check/route.ts` | 수정 |
-| `app/api/member/nickname-check/__tests__/route.test.ts` | 신규 |
-| `app/(auth)/components/StepProfile.tsx` | 수정 |
+| `app/api/auth/nickname-check/route.ts`                                      | 수정 |
+| `app/api/auth/nickname-check/__tests__/route.test.ts`                       | 신규 |
+| `app/api/member/nickname-check/route.ts`                                    | 수정 |
+| `app/api/member/nickname-check/__tests__/route.test.ts`                     | 신규 |
+| `app/(auth)/components/StepProfile.tsx`                                     | 수정 |
 
 ---
 
 ## Task 1: NicknameCheckResponseDto + NicknameCheckUsecase 수정 (TDD)
 
 **Files:**
+
 - Modify: `backend/member/application/usecase/dto/NicknameCheckResponseDto.ts`
 - Modify: `backend/member/application/usecase/NicknameCheckUsecase.ts`
 - Create: `backend/member/application/usecase/__tests__/NicknameCheckUsecase.test.ts`
@@ -96,7 +97,7 @@ Expected: FAIL — `foundMemberId` 프로퍼티가 없으므로 타입 에러 �
 export class NicknameCheckResponseDto {
     constructor(
         public readonly isDuplicate: boolean,
-        public readonly foundMemberId: string | null,
+        public readonly foundMemberId: string | null
     ) {}
 }
 ```
@@ -144,6 +145,7 @@ git commit -m "[feat/#271] NicknameCheckResponseDto foundMemberId 추가, usecas
 ## Task 2: /api/auth/nickname-check route 수정 (TDD)
 
 **Files:**
+
 - Modify: `app/api/auth/nickname-check/route.ts`
 - Create: `app/api/auth/nickname-check/__tests__/route.test.ts`
 
@@ -160,7 +162,11 @@ vi.mock("@/lib/redis", () => ({
 
 vi.mock("@/lib/RateLimiter", () => ({
     RateLimiter: vi.fn(function (this: Record<string, unknown>) {
-        this.check = vi.fn().mockResolvedValue({ allowed: true, remaining: 9, retryAfterMs: 0 });
+        this.check = vi.fn().mockResolvedValue({
+            allowed: true,
+            remaining: 9,
+            retryAfterMs: 0,
+        });
     }),
     getClientIp: vi.fn().mockReturnValue("127.0.0.1"),
     rateLimitResponse: vi.fn(),
@@ -168,11 +174,14 @@ vi.mock("@/lib/RateLimiter", () => ({
 
 const mockFindByNickname = vi.fn().mockResolvedValue(null);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByNickname = mockFindByNickname;
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByNickname = mockFindByNickname;
+        }),
+    })
+);
 
 import { GET } from "../route";
 
@@ -191,7 +200,10 @@ describe("GET /api/auth/nickname-check", () => {
     });
 
     it("409: 이미 사용 중인 닉네임", async () => {
-        mockFindByNickname.mockResolvedValueOnce({ id: "member-1", nickname: "hello" });
+        mockFindByNickname.mockResolvedValueOnce({
+            id: "member-1",
+            nickname: "hello",
+        });
 
         const req = new Request(
             "http://localhost/api/auth/nickname-check?nickname=hello"
@@ -239,11 +251,7 @@ Expected: 일부 FAIL (Zod 미적용으로 400 케이스 동작 다를 수 있�
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { NicknameCheckUsecase } from "@/backend/member/application/usecase/NicknameCheckUsecase";
-import {
-    RateLimiter,
-    getClientIp,
-    rateLimitResponse,
-} from "@/lib/RateLimiter";
+import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
 import { validate } from "@/utils/validation";
 import { z } from "zod";
 
@@ -261,7 +269,10 @@ export async function GET(req: NextRequest) {
     if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfterMs);
 
     const { searchParams } = new URL(req.url);
-    const validated = validate(NicknameQuerySchema, Object.fromEntries(searchParams));
+    const validated = validate(
+        NicknameQuerySchema,
+        Object.fromEntries(searchParams)
+    );
     if (!validated.success) return validated.response;
 
     const repo = new PrismaMemberRepository();
@@ -309,6 +320,7 @@ git commit -m "[feat/#271] /api/auth/nickname-check Zod 검증 적용 및 테스
 ## Task 3: /api/member/nickname-check route 수정 (TDD)
 
 **Files:**
+
 - Modify: `app/api/member/nickname-check/route.ts`
 - Create: `app/api/member/nickname-check/__tests__/route.test.ts`
 
@@ -325,7 +337,11 @@ vi.mock("@/lib/redis", () => ({
 
 vi.mock("@/lib/RateLimiter", () => ({
     RateLimiter: vi.fn(function (this: Record<string, unknown>) {
-        this.check = vi.fn().mockResolvedValue({ allowed: true, remaining: 9, retryAfterMs: 0 });
+        this.check = vi.fn().mockResolvedValue({
+            allowed: true,
+            remaining: 9,
+            retryAfterMs: 0,
+        });
     }),
     getClientIp: vi.fn().mockReturnValue("127.0.0.1"),
     rateLimitResponse: vi.fn(),
@@ -333,11 +349,14 @@ vi.mock("@/lib/RateLimiter", () => ({
 
 const mockFindByNickname = vi.fn().mockResolvedValue(null);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByNickname = mockFindByNickname;
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByNickname = mockFindByNickname;
+        }),
+    })
+);
 
 vi.mock("next-auth", () => ({
     getServerSession: vi.fn(),
@@ -382,7 +401,10 @@ describe("GET /api/member/nickname-check", () => {
         vi.mocked(getServerSession).mockResolvedValueOnce({
             user: { id: "session-user-1" },
         } as never);
-        mockFindByNickname.mockResolvedValueOnce({ id: "other-user", nickname: "hello" });
+        mockFindByNickname.mockResolvedValueOnce({
+            id: "other-user",
+            nickname: "hello",
+        });
 
         const req = new Request(
             "http://localhost/api/member/nickname-check?nickname=hello"
@@ -398,7 +420,10 @@ describe("GET /api/member/nickname-check", () => {
         vi.mocked(getServerSession).mockResolvedValueOnce({
             user: { id: "session-user-1" },
         } as never);
-        mockFindByNickname.mockResolvedValueOnce({ id: "session-user-1", nickname: "myname" });
+        mockFindByNickname.mockResolvedValueOnce({
+            id: "session-user-1",
+            nickname: "myname",
+        });
 
         const req = new Request(
             "http://localhost/api/member/nickname-check?nickname=myname"
@@ -456,11 +481,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { NicknameCheckUsecase } from "@/backend/member/application/usecase/NicknameCheckUsecase";
-import {
-    RateLimiter,
-    getClientIp,
-    rateLimitResponse,
-} from "@/lib/RateLimiter";
+import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
 import { validate } from "@/utils/validation";
 import { z } from "zod";
 
@@ -490,7 +511,10 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
-    const validated = validate(NicknameQuerySchema, Object.fromEntries(searchParams));
+    const validated = validate(
+        NicknameQuerySchema,
+        Object.fromEntries(searchParams)
+    );
     if (!validated.success) return validated.response;
 
     const repo = new PrismaMemberRepository();
@@ -552,6 +576,7 @@ git commit -m "[feat/#271] /api/member/nickname-check DB 이중쿼리 제거, Zo
 ## Task 4: StepProfile UI 상태 패턴 통일
 
 **Files:**
+
 - Modify: `app/(auth)/components/StepProfile.tsx`
 
 `ProfileInfoTab`의 `nicknameMessage: { text: string; isError: boolean } | null` 단일 상태 패턴으로 `StepProfile`의 `isNicknameDuplicate` + `nicknameSuccessMessage` 두 상태를 통합한다.
@@ -561,18 +586,20 @@ git commit -m "[feat/#271] /api/member/nickname-check DB 이중쿼리 제거, Zo
 `app/(auth)/components/StepProfile.tsx`의 닉네임 관련 상태 및 로직을 아래와 같이 교체:
 
 **변경 전 상태 선언:**
+
 ```ts
-const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<
-    boolean | null
->(null);
+const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<boolean | null>(
+    null
+);
 const [nicknameSuccessMessage, setNicknameSuccessMessage] = useState("");
 ```
 
 **변경 후 상태 선언:**
+
 ```ts
-const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<
-    boolean | null
->(null);
+const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<boolean | null>(
+    null
+);
 const [nicknameMessage, setNicknameMessage] = useState<{
     text: string;
     isError: boolean;
@@ -580,6 +607,7 @@ const [nicknameMessage, setNicknameMessage] = useState<{
 ```
 
 **변경 전 `checkNicknameDuplicate` 함수:**
+
 ```ts
 const checkNicknameDuplicate = async () => {
     setNicknameSuccessMessage("");
@@ -634,6 +662,7 @@ const checkNicknameDuplicate = async () => {
 ```
 
 **변경 후 `checkNicknameDuplicate` 함수:**
+
 ```ts
 const checkNicknameDuplicate = async () => {
     setNicknameMessage(null);
@@ -645,7 +674,10 @@ const checkNicknameDuplicate = async () => {
     }
 
     if (nickname.length > 8) {
-        setNicknameMessage({ text: "닉네임은 8자 이하여야 합니다.", isError: true });
+        setNicknameMessage({
+            text: "닉네임은 8자 이하여야 합니다.",
+            isError: true,
+        });
         setIsNicknameDuplicate(null);
         return;
     }
@@ -678,6 +710,7 @@ const checkNicknameDuplicate = async () => {
 ```
 
 **onChange에서 상태 초기화 변경:**
+
 ```ts
 // 변경 전
 onChange={(e) => {
@@ -695,31 +728,42 @@ onChange={(e) => {
 ```
 
 **닉네임 메시지 렌더링 변경 (JSX 부분):**
-```tsx
-{/* 변경 전 */}
-{fieldErrors.nickname && (
-    <p className="mt-1 text-caption text-state-error">
-        {fieldErrors.nickname}
-    </p>
-)}
-{!fieldErrors.nickname && nicknameSuccessMessage && (
-    <p className="text-state-success mt-1 text-caption">
-        {nicknameSuccessMessage}
-    </p>
-)}
 
-{/* 변경 후 */}
-{nicknameMessage && (
-    <p
-        className={`mt-1 text-caption ${
-            nicknameMessage.isError
-                ? "text-state-error"
-                : "text-state-success"
-        }`}
-    >
-        {nicknameMessage.text}
-    </p>
-)}
+```tsx
+{
+    /* 변경 전 */
+}
+{
+    fieldErrors.nickname && (
+        <p className="mt-1 text-caption text-state-error">
+            {fieldErrors.nickname}
+        </p>
+    );
+}
+{
+    !fieldErrors.nickname && nicknameSuccessMessage && (
+        <p className="text-state-success mt-1 text-caption">
+            {nicknameSuccessMessage}
+        </p>
+    );
+}
+
+{
+    /* 변경 후 */
+}
+{
+    nicknameMessage && (
+        <p
+            className={`mt-1 text-caption ${
+                nicknameMessage.isError
+                    ? "text-state-error"
+                    : "text-state-success"
+            }`}
+        >
+            {nicknameMessage.text}
+        </p>
+    );
+}
 ```
 
 `handleNext` 내부의 닉네임 에러도 `nicknameMessage` 기반으로 동작은 그대로이므로 `fieldErrors.nickname`은 다른 필드(이메일, 비밀번호 등)에서 계속 사용된다. `isNicknameDuplicate` 상태는 그대로 유지한다.

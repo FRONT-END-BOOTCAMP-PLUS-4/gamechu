@@ -103,7 +103,10 @@ export default function ArenaDetailVote() {
                             )}
                             <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full sm:h-16 sm:w-16">
                                 <Image
-                                    src={arenaDetail?.creatorImageUrl || "/icons/teamA.svg"}
+                                    src={
+                                        arenaDetail?.creatorImageUrl ||
+                                        "/icons/teamA.svg"
+                                    }
                                     alt="게시자"
                                     width={40}
                                     height={40}
@@ -157,7 +160,10 @@ export default function ArenaDetailVote() {
                             )}
                             <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full sm:h-16 sm:w-16">
                                 <Image
-                                    src={arenaDetail?.challengerImageUrl || "/icons/teamB.svg"}
+                                    src={
+                                        arenaDetail?.challengerImageUrl ||
+                                        "/icons/teamB.svg"
+                                    }
                                     alt="도전자"
                                     width={40}
                                     height={40}

@@ -351,6 +351,7 @@ useEffect(() => {
 7. **Error Handling**: Try/catch with console.error, conditional not-found rendering
 
 **See Also:**
+
 - [component-patterns.md](component-patterns.md) - Server vs Client Components
 - [loading-and-error-states.md](loading-and-error-states.md) - Loading/error UI
 - [complete-examples.md](complete-examples.md) - Full working examples

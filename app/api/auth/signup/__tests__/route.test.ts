@@ -7,7 +7,11 @@ vi.mock("@/lib/Redis", () => ({
             zremrangebyscore: vi.fn().mockReturnThis(),
             zcard: vi.fn().mockReturnThis(),
             pexpire: vi.fn().mockReturnThis(),
-            exec: vi.fn().mockResolvedValue([[null, 0], [null, 0], [null, 1]]),
+            exec: vi.fn().mockResolvedValue([
+                [null, 0],
+                [null, 0],
+                [null, 1],
+            ]),
         }),
         zrange: vi.fn().mockResolvedValue([]),
         zadd: vi.fn().mockResolvedValue(1),
@@ -15,15 +19,18 @@ vi.mock("@/lib/Redis", () => ({
     },
 }));
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByEmail = vi.fn().mockResolvedValue(null);
-        this.create = vi.fn().mockResolvedValue({
-            id: "new-user-id",
-            email: "test@example.com",
-        });
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByEmail = vi.fn().mockResolvedValue(null);
+            this.create = vi.fn().mockResolvedValue({
+                id: "new-user-id",
+                email: "test@example.com",
+            });
+        }),
+    })
+);
 
 import { POST } from "../route";
 

@@ -39,7 +39,7 @@ Replaced in `StepGenres.tsx`, `StepThemes.tsx`, `StepPlatforms.tsx`, `ProfileInf
 
 Pre-existing. Track via GitHub issue if intentional.
 
-#### L-2: `type Props = {}` in Step* components
+#### L-2: `type Props = {}` in Step\* components
 
 Unambiguous locally but harder to grep. Non-blocking.
 
@@ -63,34 +63,34 @@ Unambiguous locally but harder to grep. Non-blocking.
 
 ## Validation Results
 
-| Check | Result |
-|-------|--------|
-| Type check (build) | Pass |
-| Lint | Pass (5 pre-existing warnings, 0 errors) |
-| Tests | Pass — 316/316 across 74 files |
-| Build | Pass |
+| Check              | Result                                   |
+| ------------------ | ---------------------------------------- |
+| Type check (build) | Pass                                     |
+| Lint               | Pass (5 pre-existing warnings, 0 errors) |
+| Tests              | Pass — 316/316 across 74 files           |
+| Build              | Pass                                     |
 
 ---
 
 ## Files Reviewed (sampled)
 
-| File | Task | Status |
-|------|------|--------|
-| `app/api/arenas/route.ts` | 1+2+5 | ✓ errorResponse applied |
-| `app/api/auth/email-check/route.ts` | 1+2+5 | ✓ errorResponse applied |
-| `app/api/member/scores/route.ts` | 10 | ✓ (TODO comment noted) |
-| `app/(auth)/components/StepGenres.tsx` | 9 | ✓ alert → Toast |
-| `app/(auth)/components/StepThemes.tsx` | 9 | ✓ alert → Toast |
-| `app/(auth)/components/StepPlatforms.tsx` | 9 | ✓ alert → Toast |
+| File                                                          | Task    | Status                          |
+| ------------------------------------------------------------- | ------- | ------------------------------- |
+| `app/api/arenas/route.ts`                                     | 1+2+5   | ✓ errorResponse applied         |
+| `app/api/auth/email-check/route.ts`                           | 1+2+5   | ✓ errorResponse applied         |
+| `app/api/member/scores/route.ts`                              | 10      | ✓ (TODO comment noted)          |
+| `app/(auth)/components/StepGenres.tsx`                        | 9       | ✓ alert → Toast                 |
+| `app/(auth)/components/StepThemes.tsx`                        | 9       | ✓ alert → Toast                 |
+| `app/(auth)/components/StepPlatforms.tsx`                     | 9       | ✓ alert → Toast                 |
 | `app/(base)/arenas/[id]/components/ArenaDetailRecruiting.tsx` | 9 + fix | ✓ Toast visible, delayed reload |
-| `app/(base)/profile/components/tabs/ProfileInfoTab.tsx` | 9 + fix | ✓ Explicit generic useState |
-| `docs/conventions/ERROR_HANDLING.md` | — | ✓ PascalCase paths |
-| `docs/conventions/FRONTEND.md` | — | ✓ PascalCase paths |
-| `docs/conventions/LOGGING.md` | — | ✓ PascalCase paths |
-| `docs/conventions/VALIDATION.md` | — | ✓ PascalCase paths |
-| `tests/mocks/` | 6 | ✓ createMockXxx in place |
-| `hooks/` | 3 | ✓ No console.* remaining |
-| `backend/` | 3 | ✓ No console.* remaining |
+| `app/(base)/profile/components/tabs/ProfileInfoTab.tsx`       | 9 + fix | ✓ Explicit generic useState     |
+| `docs/conventions/ERROR_HANDLING.md`                          | —       | ✓ PascalCase paths              |
+| `docs/conventions/FRONTEND.md`                                | —       | ✓ PascalCase paths              |
+| `docs/conventions/LOGGING.md`                                 | —       | ✓ PascalCase paths              |
+| `docs/conventions/VALIDATION.md`                              | —       | ✓ PascalCase paths              |
+| `tests/mocks/`                                                | 6       | ✓ createMockXxx in place        |
+| `hooks/`                                                      | 3       | ✓ No console.\* remaining       |
+| `backend/`                                                    | 3       | ✓ No console.\* remaining       |
 
 ---
 

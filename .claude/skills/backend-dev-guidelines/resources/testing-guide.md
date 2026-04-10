@@ -19,12 +19,12 @@ Complete guide to testing backend services with Jest and best practices.
 
 ```typescript
 // services/userService.test.ts
-import { UserService } from './userService';
-import { UserRepository } from '../repositories/UserRepository';
+import { UserService } from "./userService";
+import { UserRepository } from "../repositories/UserRepository";
 
-jest.mock('../repositories/UserRepository');
+jest.mock("../repositories/UserRepository");
 
-describe('UserService', () => {
+describe("UserService", () => {
     let service: UserService;
     let mockRepository: jest.Mocked<UserRepository>;
 
@@ -42,29 +42,29 @@ describe('UserService', () => {
         jest.clearAllMocks();
     });
 
-    describe('create', () => {
-        it('should throw error if email exists', async () => {
-            mockRepository.findByEmail.mockResolvedValue({ id: '123' } as any);
+    describe("create", () => {
+        it("should throw error if email exists", async () => {
+            mockRepository.findByEmail.mockResolvedValue({ id: "123" } as any);
 
             await expect(
-                service.create({ email: 'test@test.com' })
-            ).rejects.toThrow('Email already in use');
+                service.create({ email: "test@test.com" })
+            ).rejects.toThrow("Email already in use");
         });
 
-        it('should create user if email is unique', async () => {
+        it("should create user if email is unique", async () => {
             mockRepository.findByEmail.mockResolvedValue(null);
-            mockRepository.create.mockResolvedValue({ id: '123' } as any);
+            mockRepository.create.mockResolvedValue({ id: "123" } as any);
 
             const user = await service.create({
-                email: 'test@test.com',
-                firstName: 'John',
-                lastName: 'Doe',
+                email: "test@test.com",
+                firstName: "John",
+                lastName: "Doe",
             });
 
             expect(user).toBeDefined();
             expect(mockRepository.create).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    email: 'test@test.com'
+                    email: "test@test.com",
                 })
             );
         });
@@ -79,17 +79,17 @@ describe('UserService', () => {
 ### Test with Real Database
 
 ```typescript
-import { PrismaService } from '@project-lifecycle-portal/database';
+import { PrismaService } from "@project-lifecycle-portal/database";
 
-describe('UserService Integration', () => {
+describe("UserService Integration", () => {
     let testUser: any;
 
     beforeAll(async () => {
         // Create test data
         testUser = await PrismaService.main.user.create({
             data: {
-                email: 'test@test.com',
-                profile: { create: { firstName: 'Test', lastName: 'User' } },
+                email: "test@test.com",
+                profile: { create: { firstName: "Test", lastName: "User" } },
             },
         });
     });
@@ -99,10 +99,10 @@ describe('UserService Integration', () => {
         await PrismaService.main.user.delete({ where: { id: testUser.id } });
     });
 
-    it('should find user by email', async () => {
-        const user = await userService.findByEmail('test@test.com');
+    it("should find user by email", async () => {
+        const user = await userService.findByEmail("test@test.com");
         expect(user).toBeDefined();
-        expect(user?.email).toBe('test@test.com');
+        expect(user?.email).toBe("test@test.com");
     });
 });
 ```
@@ -114,7 +114,7 @@ describe('UserService Integration', () => {
 ### Mock PrismaService
 
 ```typescript
-jest.mock('@project-lifecycle-portal/database', () => ({
+jest.mock("@project-lifecycle-portal/database", () => ({
     PrismaService: {
         main: {
             user: {
@@ -146,13 +146,17 @@ const mockUserService = {
 ### Setup and Teardown
 
 ```typescript
-describe('PermissionService', () => {
+describe("PermissionService", () => {
     let instanceId: number;
 
     beforeAll(async () => {
         // Create test post
         const post = await PrismaService.main.post.create({
-            data: { title: 'Test Post', content: 'Test', authorId: 'test-user' },
+            data: {
+                title: "Test Post",
+                content: "Test",
+                authorId: "test-user",
+            },
         });
         instanceId = post.id;
     });
@@ -169,11 +173,11 @@ describe('PermissionService', () => {
         permissionService.clearCache();
     });
 
-    it('should check permissions', async () => {
+    it("should check permissions", async () => {
         const hasPermission = await permissionService.checkPermission(
-            'user-id',
+            "user-id",
             instanceId,
-            'VIEW_WORKFLOW'
+            "VIEW_WORKFLOW"
         );
         expect(hasPermission).toBeDefined();
     });
@@ -198,12 +202,12 @@ node scripts/test-auth-route.js http://localhost:3002/form/api/users POST '{"ema
 
 ```typescript
 // Mock auth middleware
-jest.mock('../middleware/SSOMiddleware', () => ({
+jest.mock("../middleware/SSOMiddleware", () => ({
     SSOMiddlewareClient: {
         verifyLoginStatus: (req, res, next) => {
             res.locals.claims = {
-                sub: 'test-user-id',
-                preferred_username: 'testuser',
+                sub: "test-user-id",
+                preferred_username: "testuser",
             };
             next();
         },
@@ -230,6 +234,7 @@ npm test -- --coverage
 ---
 
 **Related Files:**
+
 - [SKILL.md](SKILL.md)
 - [services-and-repositories.md](services-and-repositories.md)
 - [complete-examples.md](complete-examples.md)

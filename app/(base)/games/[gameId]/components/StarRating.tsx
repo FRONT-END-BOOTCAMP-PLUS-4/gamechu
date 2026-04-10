@@ -9,7 +9,7 @@ type StarRatingProps = {
     onChange?: (value: number) => void;
     readOnly?: boolean;
     variant?: "withText" | "noText";
-}
+};
 
 export default function StarRating({
     value,

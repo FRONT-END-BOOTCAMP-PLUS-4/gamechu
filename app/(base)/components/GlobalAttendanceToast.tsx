@@ -28,7 +28,11 @@ export default function GlobalAttendanceToast() {
             const alreadyAttended = data.attendedDate === today;
 
             if (!alreadyAttended) {
-                setToast({ show: true, status: "success", message: "✅ 출석 체크 완료!" });
+                setToast({
+                    show: true,
+                    status: "success",
+                    message: "✅ 출석 체크 완료!",
+                });
             }
 
             if (data.attendedDate) {
@@ -45,7 +49,11 @@ export default function GlobalAttendanceToast() {
             }
         },
         onError: () => {
-            setToast({ show: true, status: "error", message: "⚠️ 출석 체크 실패" });
+            setToast({
+                show: true,
+                status: "error",
+                message: "⚠️ 출석 체크 실패",
+            });
         },
     });
 

@@ -17,7 +17,10 @@ type RequestParams = {
 // DELETE 요청 핸들러
 export async function DELETE(req: NextRequest, { params }: RequestParams) {
     const memberId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/wishlists/[id]", method: "DELETE" });
+    const log = logger.child({
+        route: "/api/member/wishlists/[id]",
+        method: "DELETE",
+    });
     try {
         if (!memberId) {
             return errorResponse("Unauthorized", 401);
@@ -30,7 +33,8 @@ export async function DELETE(req: NextRequest, { params }: RequestParams) {
 
         const wishlistRepo = new PrismaWishListRepository();
         const wishlist = await wishlistRepo.findById(memberId, gameId);
-        if (!wishlist) return errorResponse("위시리스트를 찾을 수 없습니다.", 404);
+        if (!wishlist)
+            return errorResponse("위시리스트를 찾을 수 없습니다.", 404);
 
         const usecase = new DeleteWishlistUsecase(wishlistRepo);
         const deleteWishlistDto = new DeleteWishlistDto(wishlist.id);

@@ -6,7 +6,7 @@ import { getTier } from "@/utils/GetTiers";
 type TierBadgeProps = {
     score: number;
     iconOnly?: boolean; // ✅ 아이콘만 출력할지 여부
-}
+};
 
 export default function TierBadge({ score, iconOnly = false }: TierBadgeProps) {
     const tier = getTier(score);

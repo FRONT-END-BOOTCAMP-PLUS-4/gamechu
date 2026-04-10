@@ -1,1 +1,44 @@
-[{"id":1,"memberId":"c5a98ef5-3150-4aaf-b385-af215af3aa2e","arenaId":3,"votedTo":"36f1c136-590a-4c20-8a7d-647a88338531"}, {"id":2,"memberId":"249d9e5d-fec0-41e1-b918-c2c6b531b32a","arenaId":38,"votedTo":"c5a98ef5-3150-4aaf-b385-af215af3aa2e"}, {"id":3,"memberId":"249d9e5d-fec0-41e1-b918-c2c6b531b32a","arenaId":46,"votedTo":"c5a98ef5-3150-4aaf-b385-af215af3aa2e"}, {"id":7,"memberId":"03a05aac-a2de-4e5b-ada7-fabc465bf7d2","arenaId":41,"votedTo":"c5a98ef5-3150-4aaf-b385-af215af3aa2e"}, {"id":6,"memberId":"03a05aac-a2de-4e5b-ada7-fabc465bf7d2","arenaId":46,"votedTo":"725d52db-501d-41ff-980e-fb26d6a5338b"}, {"id":5,"memberId":"32834eec-21c2-4722-926f-fb99ba9e25a9","arenaId":46,"votedTo":"725d52db-501d-41ff-980e-fb26d6a5338b"}, {"id":4,"memberId":"249d9e5d-fec0-41e1-b918-c2c6b531b32a","arenaId":39,"votedTo":"c5a98ef5-3150-4aaf-b385-af215af3aa2e"}]
+[
+    {
+        "id": 1,
+        "memberId": "c5a98ef5-3150-4aaf-b385-af215af3aa2e",
+        "arenaId": 3,
+        "votedTo": "36f1c136-590a-4c20-8a7d-647a88338531"
+    },
+    {
+        "id": 2,
+        "memberId": "249d9e5d-fec0-41e1-b918-c2c6b531b32a",
+        "arenaId": 38,
+        "votedTo": "c5a98ef5-3150-4aaf-b385-af215af3aa2e"
+    },
+    {
+        "id": 3,
+        "memberId": "249d9e5d-fec0-41e1-b918-c2c6b531b32a",
+        "arenaId": 46,
+        "votedTo": "c5a98ef5-3150-4aaf-b385-af215af3aa2e"
+    },
+    {
+        "id": 7,
+        "memberId": "03a05aac-a2de-4e5b-ada7-fabc465bf7d2",
+        "arenaId": 41,
+        "votedTo": "c5a98ef5-3150-4aaf-b385-af215af3aa2e"
+    },
+    {
+        "id": 6,
+        "memberId": "03a05aac-a2de-4e5b-ada7-fabc465bf7d2",
+        "arenaId": 46,
+        "votedTo": "725d52db-501d-41ff-980e-fb26d6a5338b"
+    },
+    {
+        "id": 5,
+        "memberId": "32834eec-21c2-4722-926f-fb99ba9e25a9",
+        "arenaId": 46,
+        "votedTo": "725d52db-501d-41ff-980e-fb26d6a5338b"
+    },
+    {
+        "id": 4,
+        "memberId": "249d9e5d-fec0-41e1-b918-c2c6b531b32a",
+        "arenaId": 39,
+        "votedTo": "c5a98ef5-3150-4aaf-b385-af215af3aa2e"
+    }
+]

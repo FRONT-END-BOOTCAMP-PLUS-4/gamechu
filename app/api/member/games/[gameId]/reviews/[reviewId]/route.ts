@@ -20,7 +20,10 @@ export async function PATCH(
     { params }: { params: Promise<{ gameId: string; reviewId: string }> }
 ) {
     const userId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/games/[gameId]/reviews/[reviewId]", method: "PATCH" });
+    const log = logger.child({
+        route: "/api/member/games/[gameId]/reviews/[reviewId]",
+        method: "PATCH",
+    });
     if (!userId) {
         return errorResponse("Unauthorized", 401);
     }
@@ -55,7 +58,8 @@ export async function PATCH(
         return NextResponse.json(result);
     } catch (err) {
         log.error({ userId, err }, "리뷰 수정 실패");
-        const message = err instanceof Error ? err.message : "Internal Server Error";
+        const message =
+            err instanceof Error ? err.message : "Internal Server Error";
         return errorResponse(message, 400);
     }
 }

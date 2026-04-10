@@ -10,6 +10,7 @@
 `app/(base)/profile/` and `app/(base)/profile/[nickname]/` maintain near-identical component sets, resulting in 10 duplicated files across 8 component types. Any UI change must be applied twice, and the two copies can silently diverge.
 
 **Duplicated files:**
+
 - `ProfileSidebar.tsx` × 2
 - `ProfileSummaryCard.tsx` × 2
 - `ProfileTierCard.tsx` × 2
@@ -50,7 +51,7 @@ app/(base)/profile/[nickname]/components/
 
 ```tsx
 type ProfileSidebarProps = {
-  isOwnProfile: boolean;
+    isOwnProfile: boolean;
 };
 // isOwnProfile=true  → 5 tabs: Reviews, Wishlists, Point History, Arena, Account
 // isOwnProfile=false → 2 tabs: Reviews, Arena
@@ -62,23 +63,23 @@ Uses a discriminated union to prevent private fields from being passed in the ot
 
 ```tsx
 type ProfileSummaryCardProps =
-  | {
-      isOwnProfile: true;
-      nickname: string;
-      imageUrl: string | null;
-      score: number;
-      reviewCount: number;
-      wishlistCount: number;  // own-profile only
-      createdAt: string;      // own-profile only
-    }
-  | {
-      isOwnProfile: false;
-      nickname: string;
-      imageUrl: string | null;
-      score: number;
-      reviewCount: number;
-      // wishlistCount and createdAt are structurally absent — compile error if passed
-    };
+    | {
+          isOwnProfile: true;
+          nickname: string;
+          imageUrl: string | null;
+          score: number;
+          reviewCount: number;
+          wishlistCount: number; // own-profile only
+          createdAt: string; // own-profile only
+      }
+    | {
+          isOwnProfile: false;
+          nickname: string;
+          imageUrl: string | null;
+          score: number;
+          reviewCount: number;
+          // wishlistCount and createdAt are structurally absent — compile error if passed
+      };
 // isOwnProfile=true  → 320px height, shows wishlistCount + createdAt
 // isOwnProfile=false → 270px height, omits both fields
 ```
@@ -87,8 +88,8 @@ type ProfileSummaryCardProps =
 
 ```tsx
 type ProfileTierCardProps = {
-  score: number;
-  isOwnProfile: boolean;
+    score: number;
+    isOwnProfile: boolean;
 };
 // isOwnProfile=true  → heading="나의 티어", shows PointHelpModal button
 // isOwnProfile=false → heading="현재 티어", no modal
@@ -98,7 +99,7 @@ type ProfileTierCardProps = {
 
 ```tsx
 type ArenaListProps = {
-  memberId?: string;
+    memberId?: string;
 };
 // memberId absent  → fetches mine: true
 // memberId present → fetches targetMemberId: memberId

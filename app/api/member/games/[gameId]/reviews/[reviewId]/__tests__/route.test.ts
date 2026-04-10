@@ -8,9 +8,7 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
 vi.mock(
     "@/backend/review/infra/repositories/prisma/PrismaReviewRepository",
     () => ({
-        PrismaReviewRepository: vi.fn(function (
-            this: Record<string, unknown>
-        ) {
+        PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
             this.findById = vi.fn().mockResolvedValue({
                 id: 1,
                 memberId: "test-user-id",
@@ -29,32 +27,22 @@ vi.mock(
     })
 );
 
-vi.mock(
-    "@/backend/review/application/usecase/UpdateReviewUsecase",
-    () => ({
-        UpdateReviewUsecase: vi.fn(function (
-            this: Record<string, unknown>
-        ) {
-            this.execute = vi.fn().mockResolvedValue({
-                id: 1,
-                gameId: 10,
-                content: "{}",
-                rating: 5,
-            });
-        }),
-    })
-);
+vi.mock("@/backend/review/application/usecase/UpdateReviewUsecase", () => ({
+    UpdateReviewUsecase: vi.fn(function (this: Record<string, unknown>) {
+        this.execute = vi.fn().mockResolvedValue({
+            id: 1,
+            gameId: 10,
+            content: "{}",
+            rating: 5,
+        });
+    }),
+}));
 
-vi.mock(
-    "@/backend/review/application/usecase/DeleteReviewUsecase",
-    () => ({
-        DeleteReviewUsecase: vi.fn(function (
-            this: Record<string, unknown>
-        ) {
-            this.execute = vi.fn().mockResolvedValue(undefined);
-        }),
-    })
-);
+vi.mock("@/backend/review/application/usecase/DeleteReviewUsecase", () => ({
+    DeleteReviewUsecase: vi.fn(function (this: Record<string, unknown>) {
+        this.execute = vi.fn().mockResolvedValue(undefined);
+    }),
+}));
 
 vi.mock(
     "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository",
@@ -70,9 +58,7 @@ vi.mock(
 vi.mock(
     "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
     () => ({
-        PrismaMemberRepository: vi.fn(function (
-            this: Record<string, unknown>
-        ) {
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
             this.findById = vi.fn().mockResolvedValue(null);
         }),
     })
@@ -161,15 +147,21 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
         vi.mocked(UpdateReviewUsecase).mockImplementation(function (
             this: Record<string, unknown>
         ) {
-            this.execute = vi
-                .fn()
-                .mockResolvedValue({ id: 1, gameId: 10, content: "{}", rating: 5 });
+            this.execute = vi.fn().mockResolvedValue({
+                id: 1,
+                gameId: 10,
+                content: "{}",
+                rating: 5,
+            });
         });
     });
 
     it("PATCH without auth returns 401", async () => {
         vi.mocked(getAuthUserId).mockResolvedValueOnce(null);
-        const res = await PATCH(makePatchRequest("1", validBody), patchParams("1"));
+        const res = await PATCH(
+            makePatchRequest("1", validBody),
+            patchParams("1")
+        );
         expect(res.status).toBe(401);
     });
 
@@ -179,7 +171,10 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
         ) {
             this.findById = vi.fn().mockResolvedValue(null);
         });
-        const res = await PATCH(makePatchRequest("1", validBody), patchParams("1"));
+        const res = await PATCH(
+            makePatchRequest("1", validBody),
+            patchParams("1")
+        );
         expect(res.status).toBe(404);
     });
 
@@ -195,7 +190,10 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
                 rating: 5,
             });
         });
-        const res = await PATCH(makePatchRequest("1", validBody), patchParams("1"));
+        const res = await PATCH(
+            makePatchRequest("1", validBody),
+            patchParams("1")
+        );
         expect(res.status).toBe(403);
     });
 
@@ -205,10 +203,15 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
         ) {
             this.execute = vi
                 .fn()
-                .mockRejectedValue(new Error("유효하지 않은 콘텐츠 형식입니다."));
+                .mockRejectedValue(
+                    new Error("유효하지 않은 콘텐츠 형식입니다.")
+                );
         });
         const res = await PATCH(
-            makePatchRequest("1", { content: "<script>alert(1)</script>", rating: 5 }),
+            makePatchRequest("1", {
+                content: "<script>alert(1)</script>",
+                rating: 5,
+            }),
             patchParams("1")
         );
         expect(res.status).toBe(400);
@@ -217,7 +220,10 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
     });
 
     it("PATCH with valid body returns 200", async () => {
-        const res = await PATCH(makePatchRequest("1", validBody), patchParams("1"));
+        const res = await PATCH(
+            makePatchRequest("1", validBody),
+            patchParams("1")
+        );
         expect(res.status).toBe(200);
     });
 });

@@ -2,7 +2,7 @@ import GameDetailContainer from "./containers/GameDetailContainer";
 
 type PageProps = {
     params: Promise<{ gameId: string }>;
-}
+};
 
 export default async function GameDetailPage(props: PageProps) {
     const resolvedParams = await props.params;

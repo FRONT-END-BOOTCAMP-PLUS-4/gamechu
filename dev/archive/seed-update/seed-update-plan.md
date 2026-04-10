@@ -83,12 +83,12 @@
 4. **ScorePolicy 시드 활성화** — 앱에서 실제 사용하는 정책 데이터 (명시적 ID 포함)
 5. **NotificationType 시드 활성화** — 알림 유형 5개
 6. **샘플 데이터 JSON 임포트** — `prisma/seed-data/*.json` 파일에서 import하여 `createMany`로 삽입
-   - Member, Game, GameGenre/Platform/Theme(7개 샘플), Arena, Chatting, Review, ReviewLike, Wishlist, Vote, Preferred*, ScoreRecord 전체
-   - bcrypt 비밀번호, 유효한 FK, actualScore 등 모두 JSON에 포함됨
-   - 기존 주석 처리된 하드코딩 샘플 데이터 제거
-14. **실행 순서 수정** — FK 의존성에 따른 올바른 순서 (Member → Game 관련 → 나머지)
-15. **IGDB 임포트 분리** — seed.ts → scripts/import-games.ts
-16. **중복 안전성** — `skipDuplicates: true` + 명시적 ID + Junction 처리
+    - Member, Game, GameGenre/Platform/Theme(7개 샘플), Arena, Chatting, Review, ReviewLike, Wishlist, Vote, Preferred\*, ScoreRecord 전체
+    - bcrypt 비밀번호, 유효한 FK, actualScore 등 모두 JSON에 포함됨
+    - 기존 주석 처리된 하드코딩 샘플 데이터 제거
+7. **실행 순서 수정** — FK 의존성에 따른 올바른 순서 (Member → Game 관련 → 나머지)
+8. **IGDB 임포트 분리** — seed.ts → scripts/import-games.ts
+9. **중복 안전성** — `skipDuplicates: true` + 명시적 ID + Junction 처리
 
 ## Implementation Phases
 
@@ -108,17 +108,20 @@ seed.ts에서 이 JSON 파일을 import하여 `createMany({ skipDuplicates: true
 **JSON 파일 목록:** `members.json`, `games.json`, `game_genres.json`, `game_platforms.json`, `game_themes.json`, `arenas.json`, `chattings.json`, `reviews.json`, `review_likes.json`, `wishlists.json`, `votes.json`, `preferred_genres.json`, `preferred_platforms.json`, `preferred_themes.json`, `score_records.json` (notification_records.json은 비어 있어 스킵)
 
 **장점:**
+
 - bcrypt 해싱 비밀번호 포함 (seed.ts에서 bcrypt 호출 불필요)
 - 모든 FK가 실제 데이터 간 유효한 참조 (gameId: 0 같은 무효 참조 없음)
 - `actualScore` 필드 이미 포함 (score_records.json)
-- 실제 IGDB Platform/Genre/Theme ID 참조 (preferred_*.json)
+- 실제 IGDB Platform/Genre/Theme ID 참조 (preferred\_\*.json)
 
 **필요 작업:**
+
 - members.json 스키마 동기화 확인 (`isAttended` → `lastAttendedDate` 필드 매핑)
 - seed.ts 실행 순서를 FK 의존성에 맞게 재배치
 - 기존 주석 처리된 하드코딩 샘플 데이터 제거 (JSON으로 대체)
 
 **실행 순서 재배치 (FK 의존성 기준):**
+
 ```
 1. Genre, Platform, Theme, ScorePolicy, NotificationType  (참조 데이터 — 개별 upsert)
 2. Member                                                   (members.json)
@@ -149,19 +152,33 @@ scripts/
 ```typescript
 const BATCH_SIZE = 500; // IGDB max limit
 const DELAY_MS = 350; // rate limit safety margin
-let lastId = startId ?? await getMaxGameId(); // DB에서 MAX(id) 조회
+let lastId = startId ?? (await getMaxGameId()); // DB에서 MAX(id) 조회
 
 while (true) {
     // keyset pagination: offset 대신 id 기반 (IGDB offset 10,000 제한 회피)
-    const games = await fetchIGDB(`where id > ${lastId} & platforms = (...); sort id asc; limit ${BATCH_SIZE}`);
+    const games = await fetchIGDB(
+        `where id > ${lastId} & platforms = (...); sort id asc; limit ${BATCH_SIZE}`
+    );
     if (games.length === 0) break;
 
-    await prisma.$transaction(async (tx) => {
-        await tx.game.createMany({ data: gameData, skipDuplicates: true });
-        await tx.gameGenre.createMany({ data: junctionData, skipDuplicates: true });
-        await tx.gamePlatform.createMany({ data: junctionData, skipDuplicates: true });
-        await tx.gameTheme.createMany({ data: junctionData, skipDuplicates: true });
-    }, { timeout: 30000 }); // interactive transaction, 30s timeout
+    await prisma.$transaction(
+        async (tx) => {
+            await tx.game.createMany({ data: gameData, skipDuplicates: true });
+            await tx.gameGenre.createMany({
+                data: junctionData,
+                skipDuplicates: true,
+            });
+            await tx.gamePlatform.createMany({
+                data: junctionData,
+                skipDuplicates: true,
+            });
+            await tx.gameTheme.createMany({
+                data: junctionData,
+                skipDuplicates: true,
+            });
+        },
+        { timeout: 30000 }
+    ); // interactive transaction, 30s timeout
 
     lastId = games[games.length - 1].id;
     console.log(`Imported up to ID ${lastId} (${totalCount} games)...`);
@@ -177,7 +194,7 @@ while (true) {
 
 - **Game 테이블**: `createMany({ skipDuplicates: true })` — PK 충돌 방지
 - **Junction 테이블**: compound unique constraint (Phase 0) + `skipDuplicates`로 충분 (delete-reinsert 불필요)
-  - Known limitation: IGDB에서 연결이 제거된 경우 로컬 DB에 반영되지 않음
+    - Known limitation: IGDB에서 연결이 제거된 경우 로컬 DB에 반영되지 않음
 
 ### Phase 5: 실행 및 검증
 
@@ -197,20 +214,20 @@ npx tsx scripts/import-games.ts --limit 2000
 
 ## Risk Assessment
 
-| Risk                                           | Severity     | Mitigation                                                                  |
-| ---------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
-| Genre/Platform/Theme ID가 IGDB ID와 불일치     | **high**     | IGDB ID를 그대로 사용 (autoincrement 아닌 수동 ID 할당)                     |
-| 기존 DB에 데이터 존재 시 PK 충돌               | medium       | `skipDuplicates: true` 사용 (DB reset 금지)                                 |
-| IGDB rate limit 초과                           | medium       | 요청 간 350ms delay + 429 응답 시 exponential backoff                       |
-| IGDB offset 상한 10,000                        | **critical** | keyset pagination (`where id > lastId; sort id asc`) 사용                   |
-| Twitch token 만료                              | medium       | 스크립트 시작 시 매번 새 토큰 발급                                          |
-| 네트워크 끊김으로 임포트 중단                  | medium       | lastId 로깅으로 재시작 지원 (`--start-id` CLI arg)                          |
-| Junction FK 누락 (Genre/Platform/Theme 미시딩) | **high**     | seed.ts 먼저 실행하여 참조 데이터 확보                                      |
-| ScorePolicy 중복 생성                          | **high**     | 시드 데이터에 명시적 ID(1-8) 지정 + skipDuplicates                          |
-| `@/` path alias tsx 미지원                     | **critical** | 모든 import를 상대 경로로 변경                                              |
-| `tsx` 미설치                                   | **critical** | `npm install -D tsx` 사전 실행                                              |
-| Interactive transaction timeout (기본 5s)      | medium       | `$transaction({}, { timeout: 30000 })` 명시                                 |
-| Game 메타데이터 stale                          | low          | known limitation으로 문서화 (향후 upsert 전환 가능)                         |
+| Risk                                           | Severity     | Mitigation                                                |
+| ---------------------------------------------- | ------------ | --------------------------------------------------------- |
+| Genre/Platform/Theme ID가 IGDB ID와 불일치     | **high**     | IGDB ID를 그대로 사용 (autoincrement 아닌 수동 ID 할당)   |
+| 기존 DB에 데이터 존재 시 PK 충돌               | medium       | `skipDuplicates: true` 사용 (DB reset 금지)               |
+| IGDB rate limit 초과                           | medium       | 요청 간 350ms delay + 429 응답 시 exponential backoff     |
+| IGDB offset 상한 10,000                        | **critical** | keyset pagination (`where id > lastId; sort id asc`) 사용 |
+| Twitch token 만료                              | medium       | 스크립트 시작 시 매번 새 토큰 발급                        |
+| 네트워크 끊김으로 임포트 중단                  | medium       | lastId 로깅으로 재시작 지원 (`--start-id` CLI arg)        |
+| Junction FK 누락 (Genre/Platform/Theme 미시딩) | **high**     | seed.ts 먼저 실행하여 참조 데이터 확보                    |
+| ScorePolicy 중복 생성                          | **high**     | 시드 데이터에 명시적 ID(1-8) 지정 + skipDuplicates        |
+| `@/` path alias tsx 미지원                     | **critical** | 모든 import를 상대 경로로 변경                            |
+| `tsx` 미설치                                   | **critical** | `npm install -D tsx` 사전 실행                            |
+| Interactive transaction timeout (기본 5s)      | medium       | `$transaction({}, { timeout: 30000 })` 명시               |
+| Game 메타데이터 stale                          | low          | known limitation으로 문서화 (향후 upsert 전환 가능)       |
 
 ## Success Metrics
 
@@ -236,14 +253,14 @@ npx tsx scripts/import-games.ts --limit 2000
 
 ## Timeline Estimate
 
-| Phase     | Effort | Description                                                        |
-| --------- | ------ | ------------------------------------------------------------------ |
+| Phase     | Effort | Description                                                                              |
+| --------- | ------ | ---------------------------------------------------------------------------------------- |
 | Phase 0   | **S**  | tsx 설치(^4.0.0), prisma generate 확인, DB 백업, Junction unique constraint 마이그레이션 |
-| Phase 1   | **M**  | Genre, Platform, Theme, ScorePolicy, NotificationType 시드 활성화  |
-| Phase 2   | **M**  | JSON 샘플 데이터 임포트 + 스키마 동기화 + 실행 순서 재배치         |
-| Phase 3   | **M**  | IGDB 임포트 스크립트 분리 (`scripts/import-games.ts`)              |
-| Phase 4   | **S**  | 실행 및 검증                                                       |
-| **Total** | **XL** | ~3-4시간                                                           |
+| Phase 1   | **M**  | Genre, Platform, Theme, ScorePolicy, NotificationType 시드 활성화                        |
+| Phase 2   | **M**  | JSON 샘플 데이터 임포트 + 스키마 동기화 + 실행 순서 재배치                               |
+| Phase 3   | **M**  | IGDB 임포트 스크립트 분리 (`scripts/import-games.ts`)                                    |
+| Phase 4   | **S**  | 실행 및 검증                                                                             |
+| **Total** | **XL** | ~3-4시간                                                                                 |
 
 ---
 

@@ -12,9 +12,9 @@
 
 ## File Map
 
-| Action | File | What changes |
-|---|---|---|
-| Modify | `middleware.ts` | Add CSRF origin check block + extend `config.matcher` |
+| Action | File               | What changes                                                            |
+| ------ | ------------------ | ----------------------------------------------------------------------- |
+| Modify | `middleware.ts`    | Add CSRF origin check block + extend `config.matcher`                   |
 | Create | `e2e/csrf.spec.ts` | Two E2E tests: cross-origin blocked (403), same-origin passed (not 403) |
 
 No other files change. No new dependencies.
@@ -49,6 +49,7 @@ git checkout -b fix/#271   # replace 271 with actual issue number
 ## Task 2: Write failing E2E tests (TDD)
 
 **Files:**
+
 - Create: `e2e/csrf.spec.ts`
 
 The `request` fixture used here is Playwright's Node.js HTTP client — NOT `page.evaluate(fetch(...))`. This distinction matters: browsers silently drop manually-set `Origin` headers (Fetch spec forbidden header), which would make the cross-origin test pass vacuously. The `request` fixture has no such restriction.
@@ -58,7 +59,9 @@ The `request` fixture used here is Playwright's Node.js HTTP client — NOT `pag
 ```ts
 import { test, expect } from "@playwright/test";
 
-test("POST /api/member/attend with cross-origin Origin → 403", async ({ request }) => {
+test("POST /api/member/attend with cross-origin Origin → 403", async ({
+    request,
+}) => {
     const response = await request.post("/api/member/attend", {
         headers: { origin: "https://evil.com" },
     });
@@ -67,7 +70,9 @@ test("POST /api/member/attend with cross-origin Origin → 403", async ({ reques
     expect(body.message).toBe("Forbidden");
 });
 
-test("POST /api/member/attend with same-origin Origin → not 403", async ({ request }) => {
+test("POST /api/member/attend with same-origin Origin → not 403", async ({
+    request,
+}) => {
     const response = await request.post("/api/member/attend", {
         headers: { origin: "http://localhost:3000" },
     });
@@ -88,6 +93,7 @@ npx playwright test e2e/csrf.spec.ts --project=unauthenticated
 ```
 
 Expected output:
+
 ```
 ✗ POST /api/member/attend with cross-origin Origin → 403
   Error: expect(received).toBe(expected)
@@ -104,9 +110,11 @@ One failure is correct. The failing test is the TDD driver.
 ## Task 3: Implement CSRF check in middleware
 
 **Files:**
+
 - Modify: `middleware.ts`
 
 Current file (for reference):
+
 ```ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -203,6 +211,7 @@ export const config = {
 ```
 
 Key decisions in this code:
+
 - CSRF check runs **before** `getToken()` — cross-origin requests are rejected without touching the JWT. This is intentional: no reason to do expensive JWT verification if the origin is wrong.
 - `origin === null` (header absent) → allowed. Covers curl, server-to-server, and most same-origin browser requests.
 - `"null"` string (sandboxed iframe null-origin) → `new URL("null")` throws → caught → 403.
@@ -221,6 +230,7 @@ npx playwright test e2e/csrf.spec.ts --project=unauthenticated
 ```
 
 Expected output:
+
 ```
 ✓ POST /api/member/attend with cross-origin Origin → 403
 ✓ POST /api/member/attend with same-origin Origin → not 403

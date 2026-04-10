@@ -24,6 +24,7 @@ useEffect(() => {
 ```
 
 Symptoms:
+
 - No caching — same endpoint re-fetched on every mount
 - No deduplication — multiple components mounting simultaneously issue duplicate requests
 - No background revalidation
@@ -50,12 +51,12 @@ Shared GET fetcher used as `queryFn` in all read queries. Throws on non-OK respo
 
 ```typescript
 export async function fetcher<T>(url: string): Promise<T> {
-    const res = await fetch(url)
+    const res = await fetch(url);
     if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
-        throw new Error(body.message ?? `HTTP ${res.status}`)
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.message ?? `HTTP ${res.status}`);
     }
-    return res.json()
+    return res.json();
 }
 ```
 
@@ -69,29 +70,31 @@ Typed key factories — single source of truth for all cache keys. All hooks and
 
 ```typescript
 export type ArenasQueryParams = {
-    currentPage?: number
-    status: number
-    mine: boolean
-    pageSize: number
-    targetMemberId?: string
-}
+    currentPage?: number;
+    status: number;
+    mine: boolean;
+    pageSize: number;
+    targetMemberId?: string;
+};
 
 export const queryKeys = {
-    arenas: (params: ArenasQueryParams) => ['arenas', params] as const,
+    arenas: (params: ArenasQueryParams) => ["arenas", params] as const,
     // 'arenaList' is a distinct key from 'arenas' — used by useArenaList
     // which expects ArenaDetailDto[] from resData.data, not the paginated ArenaListDto
-    arenaList: () => ['arenaList'] as const,
+    arenaList: () => ["arenaList"] as const,
     // arenaVotes prefix-matches arenaVotesMine:
     // invalidateQueries({ queryKey: arenaVotes(id) }) invalidates BOTH variants
-    arenaVotes: (arenaId: number) => ['arenas', arenaId, 'votes'] as const,
-    arenaVotesMine: (arenaId: number) => ['arenas', arenaId, 'votes', 'mine'] as const,
+    arenaVotes: (arenaId: number) => ["arenas", arenaId, "votes"] as const,
+    arenaVotesMine: (arenaId: number) =>
+        ["arenas", arenaId, "votes", "mine"] as const,
     // arenaIds are sorted before building the key so [1,2] and [2,1] share the same entry.
     // Callers must stabilise the array with useMemo to avoid unnecessary re-fetches.
-    voteList: (sortedArenaIds: number[]) => ['votes', sortedArenaIds] as const,
-    reviews: (gameId: number) => ['reviews', gameId] as const,
-    wishlist: (gameId: number) => ['wishlist', gameId] as const,
-    notifications: (currentPage: number) => ['notifications', currentPage] as const,
-}
+    voteList: (sortedArenaIds: number[]) => ["votes", sortedArenaIds] as const,
+    reviews: (gameId: number) => ["reviews", gameId] as const,
+    wishlist: (gameId: number) => ["wishlist", gameId] as const,
+    notifications: (currentPage: number) =>
+        ["notifications", currentPage] as const,
+};
 ```
 
 #### `app/components/QueryProvider.tsx`
@@ -122,6 +125,7 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
 > Follow-up: devtools can be added to `QueryProvider` behind `process.env.NODE_ENV !== 'production'` when needed.
 
 `app/layout.tsx` wraps its children:
+
 ```typescript
 // app/layout.tsx (Server Component — no "use client" needed)
 import QueryProvider from "@/app/components/QueryProvider"
@@ -146,6 +150,7 @@ export default function RootLayout({ children }) {
 ### Existing hooks (4 migrated)
 
 #### `hooks/useArenas.ts`
+
 - **Type:** query only
 - **Signature:** unchanged — consumers see no diff. `FetchArenasParams` is renamed to `ArenasQueryParams`, re-exported from `lib/queryKeys.ts`.
 - `queryKey`: `queryKeys.arenas(params)`
@@ -153,23 +158,26 @@ export default function RootLayout({ children }) {
 - `refetchOnWindowFocus`: default (`true`) — arena status changes frequently, refetch on focus is desirable.
 
 #### `hooks/useArenaList.ts`
+
 - **Type:** query only
 - **Signature:** unchanged
 - `queryKey`: `queryKeys.arenaList()` — **distinct from `queryKeys.arenas()`** because this hook expects `ArenaDetailDto[]` from `resData.data`, while `useArenas` expects the full paginated `ArenaListDto`. Sharing a key would cause shape mismatches.
 - `queryFn`: fetches `/api/arenas`, reads `data.data` array
 
 #### `hooks/useVote.ts`
+
 - **Type:** query + mutation
 - **Signature:** `submitVote` changes to an **object parameter** form: `submitVote({ arenaId, votedTo, existingVote })`. This is more explicit and consistent with TanStack Query's `mutationFn` convention. Update all call sites.
 - Query key when `mine === true`: `queryKeys.arenaVotesMine(arenaId)` → `['arenas', arenaId, 'votes', 'mine']`
 - Query key when `mine === false`: `queryKeys.arenaVotes(arenaId)` → `['arenas', arenaId, 'votes']`
 - Mutation `onSuccess`: `invalidateQueries({ queryKey: queryKeys.arenaVotes(arenaId) })`
-  - **Prefix-match behaviour:** TanStack Query's `invalidateQueries` matches all keys whose prefix equals the given key. `['arenas', arenaId, 'votes']` is a prefix of `['arenas', arenaId, 'votes', 'mine']`, so a single `invalidateQueries` call refreshes both the aggregate vote counts and the user's own vote — this is intentional.
+    - **Prefix-match behaviour:** TanStack Query's `invalidateQueries` matches all keys whose prefix equals the given key. `['arenas', arenaId, 'votes']` is a prefix of `['arenas', arenaId, 'votes', 'mine']`, so a single `invalidateQueries` call refreshes both the aggregate vote counts and the user's own vote — this is intentional.
 - `loading` combines `isLoading || isPending`
 - `error` remains `string | null` (`.message` from TQ error)
 - Return shape: `{ voteData, existingVote, loading, error, submitVote }`
 
 #### `hooks/useVoteList.ts`
+
 - **Type:** query only
 - `queryKey`: `queryKeys.voteList(sortedIds)` — IDs are sorted ascending inside the hook before building the key, matching the existing `[...arenaIds].sort()` behaviour. Callers must wrap `arenaIds` in `useMemo` to avoid creating a new array reference on every render (otherwise the sort produces a new array each time, defeating the deduplication).
 - `enabled`: `arenaIds.length > 0`
@@ -180,6 +188,7 @@ export default function RootLayout({ children }) {
 ### New hooks extracted from components (3 created)
 
 #### `hooks/useNotifications.ts`
+
 - Extracted from: `app/(base)/components/NotificationModal.tsx`
 - **Type:** query only
 - **Endpoint:** `GET /api/member/notification-records?currentPage={page}` (param name is `currentPage`, not `page` — confirmed in route handler)
@@ -190,18 +199,20 @@ export default function RootLayout({ children }) {
 - Returns: `{ data: NotificationRecordListDto | undefined, isLoading }`
 
 #### `hooks/useGameReviews.ts`
+
 - Extracted from: `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx`
 - **Type:** query + delete mutation
 - **Endpoint (query):** `GET /api/games/${gameId}/reviews`
 - `queryKey`: `queryKeys.reviews(gameId)`
 - `queryFn`: `fetcher(...)` + client-side enrichment (date formatting, profile image fallback, rating halving) — same logic as current `fetchComments`, moved into hook
 - **Delete mutation:** `DELETE /api/member/games/${gameId}/reviews/${reviewId}`
-  - `onSuccess`: `queryClient.invalidateQueries({ queryKey: queryKeys.reviews(gameId) })`
+    - `onSuccess`: `queryClient.invalidateQueries({ queryKey: queryKeys.reviews(gameId) })`
 - `refetchOnWindowFocus`: `false` — review content is heavy (Lexical JSON); window focus refetch is unnecessary.
 - Returns: `{ reviews: Review[], isLoading, refetch, deleteReview }`
-  - `refetch` is exposed because `Comment`'s `onSuccess` callback (called after create/edit) currently calls `fetchComments()` directly. After migration it will call `queryClient.invalidateQueries({ queryKey: queryKeys.reviews(gameId) })` instead — `refetch` on the return value is therefore **not needed** and will be omitted. `Comment` receives `onSuccess` as a prop; the prop implementation in `ClientContentWrapper` will call `invalidateQueries` directly using `useQueryClient()`.
+    - `refetch` is exposed because `Comment`'s `onSuccess` callback (called after create/edit) currently calls `fetchComments()` directly. After migration it will call `queryClient.invalidateQueries({ queryKey: queryKeys.reviews(gameId) })` instead — `refetch` on the return value is therefore **not needed** and will be omitted. `Comment` receives `onSuccess` as a prop; the prop implementation in `ClientContentWrapper` will call `invalidateQueries` directly using `useQueryClient()`.
 
 #### `hooks/useWishlist.ts`
+
 - Extracted from: `app/(base)/games/[gameId]/components/WishlistButtonClient.tsx`
 - **Type:** query + toggle mutation
 - **Endpoint (query):** `GET /api/member/wishlists?gameId=${gameId}`
@@ -216,11 +227,11 @@ export default function RootLayout({ children }) {
 
 ## Component Changes
 
-| Component | Change |
-|---|---|
-| `app/layout.tsx` | Wrap children in `<QueryProvider>` |
-| `NotificationModal.tsx` | Replace `useState + useEffect + fetch` with `useNotifications(currentPage)` |
-| `WishlistButtonClient.tsx` | Replace ~140 lines of fetch/state with `useWishlist(gameId, viewerId)` |
+| Component                  | Change                                                                                                                                                         |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/layout.tsx`           | Wrap children in `<QueryProvider>`                                                                                                                             |
+| `NotificationModal.tsx`    | Replace `useState + useEffect + fetch` with `useNotifications(currentPage)`                                                                                    |
+| `WishlistButtonClient.tsx` | Replace ~140 lines of fetch/state with `useWishlist(gameId, viewerId)`                                                                                         |
 | `ClientContentWrapper.tsx` | Replace `fetchComments` + `useEffect` with `useGameReviews(gameId)`; `Comment.onSuccess` calls `queryClient.invalidateQueries` directly via `useQueryClient()` |
 
 ---
@@ -251,86 +262,95 @@ export function createWrapper() {
 ```typescript
 // Query test — inside it() block
 it("returns arenaListDto on successful fetch", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(mockArenaListDto),
-    }))
+    vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(mockArenaListDto),
+        })
+    );
 
     const { result } = renderHook(
         () => useFetchArenas({ status: 1, mine: false, pageSize: 10 }),
-        { wrapper: createWrapper() }   // createWrapper() called inside test
-    )
+        { wrapper: createWrapper() } // createWrapper() called inside test
+    );
 
-    await waitFor(() => expect(result.current.loading).toBe(false))
-    expect(result.current.arenaListDto).toEqual(mockArenaListDto)
-})
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.arenaListDto).toEqual(mockArenaListDto);
+});
 
 // Mutation test — object-param form for submitVote
 it("submitVote calls POST when no existingVote", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve({}),
-    }))
+    vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve({}),
+        })
+    );
 
-    const { result } = renderHook(
-        () => useVote({ arenaId: 1, mine: true }),
-        { wrapper: createWrapper() }
-    )
-    await waitFor(() => expect(result.current.loading).toBe(false))
+    const { result } = renderHook(() => useVote({ arenaId: 1, mine: true }), {
+        wrapper: createWrapper(),
+    });
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     await act(async () => {
-        await result.current.submitVote({ arenaId: 1, votedTo: "A", existingVote: null })
-    })
+        await result.current.submitVote({
+            arenaId: 1,
+            votedTo: "A",
+            existingVote: null,
+        });
+    });
 
     expect(fetch).toHaveBeenCalledWith(
         expect.stringContaining("/api/member/arenas/1/votes"),
         expect.objectContaining({ method: "POST" })
-    )
-})
+    );
+});
 ```
 
 ### Test file inventory
 
-| File | Status |
-|---|---|
-| `hooks/__tests__/useArenas.test.ts` | Rewrite |
-| `hooks/__tests__/useArenaList.test.ts` | Rewrite |
-| `hooks/__tests__/useVote.test.ts` | Rewrite |
-| `hooks/__tests__/useVoteList.test.ts` | Rewrite |
-| `hooks/__tests__/useArenaAutoStatus.test.ts` | No change |
+| File                                               | Status    |
+| -------------------------------------------------- | --------- |
+| `hooks/__tests__/useArenas.test.ts`                | Rewrite   |
+| `hooks/__tests__/useArenaList.test.ts`             | Rewrite   |
+| `hooks/__tests__/useVote.test.ts`                  | Rewrite   |
+| `hooks/__tests__/useVoteList.test.ts`              | Rewrite   |
+| `hooks/__tests__/useArenaAutoStatus.test.ts`       | No change |
 | `hooks/__tests__/useArenaAutoStatusDetail.test.ts` | No change |
-| `hooks/__tests__/useNotifications.test.ts` | Create |
-| `hooks/__tests__/useGameReviews.test.ts` | Create |
-| `hooks/__tests__/useWishlist.test.ts` | Create |
+| `hooks/__tests__/useNotifications.test.ts`         | Create    |
+| `hooks/__tests__/useGameReviews.test.ts`           | Create    |
+| `hooks/__tests__/useWishlist.test.ts`              | Create    |
 
 ---
 
 ## Full File Map
 
-| File | Action |
-|---|---|
-| `lib/fetcher.ts` | Create |
-| `lib/queryKeys.ts` | Create |
-| `app/components/QueryProvider.tsx` | Create |
-| `app/layout.tsx` | Modify |
-| `hooks/useArenas.ts` | Migrate |
-| `hooks/useArenaList.ts` | Migrate |
-| `hooks/useVote.ts` | Migrate — `submitVote` signature changes to object params |
-| `hooks/useVoteList.ts` | Migrate |
-| `hooks/useNotifications.ts` | Create |
-| `hooks/useGameReviews.ts` | Create |
-| `hooks/useWishlist.ts` | Create |
-| `app/(base)/components/NotificationModal.tsx` | Modify |
-| `app/(base)/games/[gameId]/components/WishlistButtonClient.tsx` | Modify |
-| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx` | Modify |
-| `hooks/__tests__/useArenas.test.ts` | Rewrite |
-| `hooks/__tests__/useArenaList.test.ts` | Rewrite |
-| `hooks/__tests__/useVote.test.ts` | Rewrite |
-| `hooks/__tests__/useVoteList.test.ts` | Rewrite |
-| `hooks/__tests__/useNotifications.test.ts` | Create |
-| `hooks/__tests__/useGameReviews.test.ts` | Create |
-| `hooks/__tests__/useWishlist.test.ts` | Create |
-| `tests/utils/createQueryWrapper.tsx` | Create |
+| File                                                            | Action                                                    |
+| --------------------------------------------------------------- | --------------------------------------------------------- |
+| `lib/fetcher.ts`                                                | Create                                                    |
+| `lib/queryKeys.ts`                                              | Create                                                    |
+| `app/components/QueryProvider.tsx`                              | Create                                                    |
+| `app/layout.tsx`                                                | Modify                                                    |
+| `hooks/useArenas.ts`                                            | Migrate                                                   |
+| `hooks/useArenaList.ts`                                         | Migrate                                                   |
+| `hooks/useVote.ts`                                              | Migrate — `submitVote` signature changes to object params |
+| `hooks/useVoteList.ts`                                          | Migrate                                                   |
+| `hooks/useNotifications.ts`                                     | Create                                                    |
+| `hooks/useGameReviews.ts`                                       | Create                                                    |
+| `hooks/useWishlist.ts`                                          | Create                                                    |
+| `app/(base)/components/NotificationModal.tsx`                   | Modify                                                    |
+| `app/(base)/games/[gameId]/components/WishlistButtonClient.tsx` | Modify                                                    |
+| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx` | Modify                                                    |
+| `hooks/__tests__/useArenas.test.ts`                             | Rewrite                                                   |
+| `hooks/__tests__/useArenaList.test.ts`                          | Rewrite                                                   |
+| `hooks/__tests__/useVote.test.ts`                               | Rewrite                                                   |
+| `hooks/__tests__/useVoteList.test.ts`                           | Rewrite                                                   |
+| `hooks/__tests__/useNotifications.test.ts`                      | Create                                                    |
+| `hooks/__tests__/useGameReviews.test.ts`                        | Create                                                    |
+| `hooks/__tests__/useWishlist.test.ts`                           | Create                                                    |
+| `tests/utils/createQueryWrapper.tsx`                            | Create                                                    |
 
 ---
 

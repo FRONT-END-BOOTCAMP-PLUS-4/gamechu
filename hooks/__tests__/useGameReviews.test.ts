@@ -59,9 +59,7 @@ describe("useGameReviews", () => {
         });
 
         expect(fetch).toHaveBeenCalledWith(
-            expect.stringContaining(
-                "/api/member/games/115/reviews/42"
-            ),
+            expect.stringContaining("/api/member/games/115/reviews/42"),
             expect.objectContaining({ method: "DELETE" })
         );
     });

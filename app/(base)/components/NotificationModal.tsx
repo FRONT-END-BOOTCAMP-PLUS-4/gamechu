@@ -19,11 +19,8 @@ export default function NotificationModal() {
             onClose={closeModal}
             labelId="notification-modal-title"
         >
-            <div className="w-[480px] max-h-[80vh] flex flex-col gap-4">
-                <h2
-                    id="notification-modal-title"
-                    className="sr-only"
-                >
+            <div className="flex max-h-[80vh] w-[480px] flex-col gap-4">
+                <h2 id="notification-modal-title" className="sr-only">
                     알림
                 </h2>
                 {data && (

@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 type Props = {
     onLoaded?: () => void; // ✅ 로딩 완료 시 호출되는 콜백
-}
+};
 
 export default function RecruitingArenaSection({ onLoaded }: Props) {
     const status: number = 1;

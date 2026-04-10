@@ -71,16 +71,17 @@ export async function GET(request: Request, { params }: RequestParams) {
         // 4. Execute
         const result = await usecase.execute(id.data, memberId);
         return successResponse(result);
-
     } catch (error: unknown) {
         console.error("[route] error:", error);
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
 ```
 
 Rules:
+
 - Auth guard and param validation return early **before** instantiation — no wasted work on bad requests
 - Domain-level 404/403 are returned **explicitly** inside the try block, not via thrown exceptions
 - catch block always returns 500 — it is the unexpected-error fallback only
@@ -92,11 +93,11 @@ Rules:
 
 All fixes applied in a single pass per file:
 
-| Fix | Files |
-|-----|-------|
-| `{ error }` → `{ message }` | `app/api/member/attend/route.ts` *(also missing try-catch — see below)*<br>`app/api/member/notification-records/[id]/route.ts` *(only the three early-return guards on auth/404/403 need fixing; catch block already uses `{ message }`)*<br>`app/api/arenas/[id]/route.ts` |
-| Add missing try-catch | `app/api/games/[id]/reviews/route.ts` *(also closes the §2.1 critical bug)*<br>`app/api/member/attend/route.ts` *(no try-catch at all — fix alongside `{ error }` change)*<br>`app/api/member/profile/[nickname]/route.ts`<br>`app/api/reviews/member/route.ts` |
-| Move instantiation inside handler | `app/api/games/[id]/reviews/route.ts`<br>`app/api/member/wishlists/route.ts` *(repos only at module scope — usecases are already instantiated inside handlers)*<br>`app/api/member/review-likes/[reviewId]/route.ts`<br>`app/api/member/profile/route.ts`<br>`app/api/member/profile/[nickname]/route.ts`<br>`app/api/reviews/member/route.ts`<br>`app/api/reviews/member/[memberId]/route.ts` |
+| Fix                               | Files                                                                                                                                                                                                                                                                                                                                                                                          |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{ error }` → `{ message }`       | `app/api/member/attend/route.ts` _(also missing try-catch — see below)_<br>`app/api/member/notification-records/[id]/route.ts` _(only the three early-return guards on auth/404/403 need fixing; catch block already uses `{ message }`)_<br>`app/api/arenas/[id]/route.ts`                                                                                                                    |
+| Add missing try-catch             | `app/api/games/[id]/reviews/route.ts` _(also closes the §2.1 critical bug)_<br>`app/api/member/attend/route.ts` _(no try-catch at all — fix alongside `{ error }` change)_<br>`app/api/member/profile/[nickname]/route.ts`<br>`app/api/reviews/member/route.ts`                                                                                                                                |
+| Move instantiation inside handler | `app/api/games/[id]/reviews/route.ts`<br>`app/api/member/wishlists/route.ts` _(repos only at module scope — usecases are already instantiated inside handlers)_<br>`app/api/member/review-likes/[reviewId]/route.ts`<br>`app/api/member/profile/route.ts`<br>`app/api/member/profile/[nickname]/route.ts`<br>`app/api/reviews/member/route.ts`<br>`app/api/reviews/member/[memberId]/route.ts` |
 
 **~10 route files total.** No business logic changes — structural cleanup only.
 

@@ -9,7 +9,7 @@ import GameHeaderInfoSection from "../components/GameHeaderInfoSection";
 
 type Props = {
     gameId: number;
-}
+};
 
 export default async function GameDetailContainer({ gameId }: Props) {
     const viewerId = await getAuthUserId();

@@ -10,7 +10,7 @@ import { sharedTheme } from "./SharedTheme";
 
 type ReadOnlyReviewProps = {
     content: string;
-}
+};
 
 function isLexicalJson(content: string): boolean {
     try {

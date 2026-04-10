@@ -25,17 +25,26 @@ vi.mock("@/backend/arena/application/usecase/GetArenaUsecase", () => ({
     }),
 }));
 
-vi.mock("@/backend/arena/infra/repositories/prisma/PrismaArenaRepository", () => ({
-    PrismaArenaRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository",
+    () => ({
+        PrismaArenaRepository: vi.fn(function () {}),
+    })
+);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function () {}),
+    })
+);
 
-vi.mock("@/backend/vote/infra/repositories/prisma/PrismaVoteRepository", () => ({
-    PrismaVoteRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository",
+    () => ({
+        PrismaVoteRepository: vi.fn(function () {}),
+    })
+);
 
 import { GET } from "../route";
 

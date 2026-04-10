@@ -8,6 +8,8 @@ describe("GetNotificationRecordSchema", () => {
         if (r.success) expect(r.data.currentPage).toBe(1);
     });
     it("currentPage=0 → 실패", () => {
-        expect(GetNotificationRecordSchema.safeParse({ currentPage: "0" }).success).toBe(false);
+        expect(
+            GetNotificationRecordSchema.safeParse({ currentPage: "0" }).success
+        ).toBe(false);
     });
 });

@@ -39,12 +39,12 @@ export default function NotificationRecordItem(
     });
 
     return (
-        <div className="relative w-full p-2.5 rounded-lg bg-background-300 hover:outline hover:outline-1 hover:outline-primary-purple-200 transition-colors">
+        <div className="relative w-full rounded-lg bg-background-300 p-2.5 transition-colors hover:outline hover:outline-1 hover:outline-primary-purple-200">
             {/* 메시지와 우측 정보 영역을 flex로 정렬 */}
-            <div className="flex justify-between items-start gap-4">
+            <div className="flex items-start justify-between gap-4">
                 {/* 왼쪽: 아이콘 + 메시지 */}
-                <div className="flex gap-4 items-start">
-                    <div className="w-6 h-6 min-w-[24px] min-h-[24px] mt-1">
+                <div className="flex items-start gap-4">
+                    <div className="mt-1 h-6 min-h-[24px] w-6 min-w-[24px]">
                         <Image
                             src={notificationRecordDto.typeImageUrl}
                             alt="알림 아이콘"
@@ -55,21 +55,23 @@ export default function NotificationRecordItem(
                     </div>
 
                     <div className="flex flex-col gap-1 text-font-100">
-                        <span className="font-semibold text-body">
+                        <span className="text-body font-semibold">
                             {notificationRecordDto.typeName}
                         </span>
-                        <span className="font-small text-font-200 text-caption">
+                        <span className="font-small text-caption text-font-200">
                             {notificationRecordDto.description}
                         </span>
                     </div>
                 </div>
 
                 {/* 오른쪽: 날짜 + 삭제 버튼 (중앙 정렬) */}
-                <div className="flex flex-col items-end justify-center text-font-200 text-caption gap-2 min-w-max">
+                <div className="flex min-w-max flex-col items-end justify-center gap-2 text-caption text-font-200">
                     <span>{formattedDate}</span>
                     <button
                         className="hover:text-white"
-                        onClick={() => deleteNotification(notificationRecordDto.id)}
+                        onClick={() =>
+                            deleteNotification(notificationRecordDto.id)
+                        }
                     >
                         <Image
                             src="/icons/delete.svg"

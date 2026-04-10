@@ -49,18 +49,29 @@ describe("CreateVoteUsecase", () => {
 
         const usecase = new CreateVoteUsecase(voteRepo, arenaRepo);
         await expect(
-            usecase.execute({ arenaId: 99, memberId: "voter-1", votedTo: "creator-1" })
+            usecase.execute({
+                arenaId: 99,
+                memberId: "voter-1",
+                votedTo: "creator-1",
+            })
         ).rejects.toThrow("해당 아레나가 존재하지 않습니다.");
     });
 
     it("throws if arena status is not 4", async () => {
         const voteRepo = createMockVoteRepository();
         const arenaRepo = createMockArenaRepository();
-        vi.mocked(arenaRepo.findById).mockResolvedValue({ ...arena, status: 3 });
+        vi.mocked(arenaRepo.findById).mockResolvedValue({
+            ...arena,
+            status: 3,
+        });
 
         const usecase = new CreateVoteUsecase(voteRepo, arenaRepo);
         await expect(
-            usecase.execute({ arenaId: 1, memberId: "voter-1", votedTo: "creator-1" })
+            usecase.execute({
+                arenaId: 1,
+                memberId: "voter-1",
+                votedTo: "creator-1",
+            })
         ).rejects.toThrow("투표 가능한 상태가 아닙니다.");
     });
 
@@ -71,7 +82,11 @@ describe("CreateVoteUsecase", () => {
 
         const usecase = new CreateVoteUsecase(voteRepo, arenaRepo);
         await expect(
-            usecase.execute({ arenaId: 1, memberId: "creator-1", votedTo: "challenger-1" })
+            usecase.execute({
+                arenaId: 1,
+                memberId: "creator-1",
+                votedTo: "challenger-1",
+            })
         ).rejects.toThrow("참여자는 투표할 수 없습니다.");
     });
 
@@ -83,7 +98,11 @@ describe("CreateVoteUsecase", () => {
 
         const usecase = new CreateVoteUsecase(voteRepo, arenaRepo);
         await expect(
-            usecase.execute({ arenaId: 1, memberId: "voter-1", votedTo: "creator-1" })
+            usecase.execute({
+                arenaId: 1,
+                memberId: "voter-1",
+                votedTo: "creator-1",
+            })
         ).rejects.toThrow("이미 투표한 사용자입니다.");
     });
 });

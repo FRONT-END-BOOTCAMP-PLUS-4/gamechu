@@ -24,4 +24,3 @@ export async function GET() {
         return errorResponse("스코어 기록 조회 실패", 500);
     }
 }
-

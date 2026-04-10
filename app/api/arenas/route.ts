@@ -1,5 +1,8 @@
 import { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
-import { GetArenaDto, GetArenaSchema } from "@/backend/arena/application/usecase/dto/GetArenaDto";
+import {
+    GetArenaDto,
+    GetArenaSchema,
+} from "@/backend/arena/application/usecase/dto/GetArenaDto";
 import { GetArenaUsecase } from "@/backend/arena/application/usecase/GetArenaUsecase";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
@@ -20,12 +23,20 @@ export async function GET(request: Request) {
     const log = logger.child({ route: "/api/arenas", method: "GET" });
     const memberId = await getAuthUserId();
     try {
-
         const url = new URL(request.url);
-        const validated = validate(GetArenaSchema, Object.fromEntries(url.searchParams));
+        const validated = validate(
+            GetArenaSchema,
+            Object.fromEntries(url.searchParams)
+        );
         if (!validated.success) return validated.response;
 
-        const { currentPage, status, mine, pageSize, memberId: targetMemberId } = validated.data;
+        const {
+            currentPage,
+            status,
+            mine,
+            pageSize,
+            memberId: targetMemberId,
+        } = validated.data;
 
         if (!memberId && mine) {
             return errorResponse("멤버 투기장 조회 권한이 없습니다.", 401);
@@ -65,7 +76,10 @@ export async function GET(request: Request) {
         try {
             version = (await redis.get(ARENA_LIST_VERSION_KEY)) ?? "0";
         } catch {
-            log.warn({ key: ARENA_LIST_VERSION_KEY }, "아레나 버전 키 캐시 읽기 실패");
+            log.warn(
+                { key: ARENA_LIST_VERSION_KEY },
+                "아레나 버전 키 캐시 읽기 실패"
+            );
         }
         const key = arenaListKey(version, {
             currentPage,
@@ -81,7 +95,10 @@ export async function GET(request: Request) {
         return NextResponse.json(arenaListDto);
     } catch (error: unknown) {
         log.error({ userId: memberId, err: error }, "아레나 목록 조회 실패");
-        const message = error instanceof Error ? error.message || "투기장 조회 실패" : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error
+                ? error.message || "투기장 조회 실패"
+                : "알 수 없는 오류 발생";
         const status = error instanceof Error ? 400 : 500;
         return errorResponse(message, status);
     }

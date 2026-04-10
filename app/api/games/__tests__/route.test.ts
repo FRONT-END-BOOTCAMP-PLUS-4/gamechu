@@ -12,31 +12,50 @@ const mockGames = [{ id: 1, title: "Game 1" }];
 
 vi.mock("@/backend/game/application/usecase/GetFilteredGamesUsecase", () => ({
     GetFilteredGamesUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue({ data: mockGames, totalCount: 1 });
+        this.execute = vi
+            .fn()
+            .mockResolvedValue({ data: mockGames, totalCount: 1 });
     }),
 }));
 
 vi.mock("@/backend/game/application/usecase/GetGameMetaDataUsecase", () => ({
     GetGameMetaDataUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue({ genres: [], themes: [], platforms: [] });
+        this.execute = vi
+            .fn()
+            .mockResolvedValue({ genres: [], themes: [], platforms: [] });
     }),
 }));
 
-vi.mock("@/backend/game/infra/repositories/prisma/GamePrismaRepository", () => ({
-    GamePrismaRepository: vi.fn(function () {}),
-}));
-vi.mock("@/backend/review/infra/repositories/prisma/PrismaReviewRepository", () => ({
-    PrismaReviewRepository: vi.fn(function () {}),
-}));
-vi.mock("@/backend/genre/infra/repositories/prisma/PrismaGenreRepository", () => ({
-    PrismaGenreRepository: vi.fn(function () {}),
-}));
-vi.mock("@/backend/theme/infra/repositories/prisma/PrismaThemeRepository", () => ({
-    PrismaThemeRepository: vi.fn(function () {}),
-}));
-vi.mock("@/backend/platform/infra/repositories/prisma/PrismaPlatformRepository", () => ({
-    PrismaPlatformRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/game/infra/repositories/prisma/GamePrismaRepository",
+    () => ({
+        GamePrismaRepository: vi.fn(function () {}),
+    })
+);
+vi.mock(
+    "@/backend/review/infra/repositories/prisma/PrismaReviewRepository",
+    () => ({
+        PrismaReviewRepository: vi.fn(function () {}),
+    })
+);
+vi.mock(
+    "@/backend/genre/infra/repositories/prisma/PrismaGenreRepository",
+    () => ({
+        PrismaGenreRepository: vi.fn(function () {}),
+    })
+);
+vi.mock(
+    "@/backend/theme/infra/repositories/prisma/PrismaThemeRepository",
+    () => ({
+        PrismaThemeRepository: vi.fn(function () {}),
+    })
+);
+vi.mock(
+    "@/backend/platform/infra/repositories/prisma/PrismaPlatformRepository",
+    () => ({
+        PrismaPlatformRepository: vi.fn(function () {}),
+    })
+);
 
 import { GET } from "../route";
 

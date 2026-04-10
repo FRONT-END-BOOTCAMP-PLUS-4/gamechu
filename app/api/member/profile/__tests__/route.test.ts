@@ -11,24 +11,34 @@ vi.mock("@/lib/auth/authOptions", () => ({
     authOptions: {},
 }));
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findById = vi.fn();
-        this.update = vi.fn();
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findById = vi.fn();
+            this.update = vi.fn();
+        }),
+    })
+);
 
 vi.mock("@/backend/member/application/usecase/GetMemberProfileUsecase", () => ({
     GetMemberProfileUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue({ id: "test-member-id", nickname: "TestUser" });
+        this.execute = vi
+            .fn()
+            .mockResolvedValue({ id: "test-member-id", nickname: "TestUser" });
     }),
 }));
 
-vi.mock("@/backend/member/application/usecase/UpdateMemberProfileUseCase", () => ({
-    UpdateMemberProfileUseCase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue(undefined);
-    }),
-}));
+vi.mock(
+    "@/backend/member/application/usecase/UpdateMemberProfileUseCase",
+    () => ({
+        UpdateMemberProfileUseCase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue(undefined);
+        }),
+    })
+);
 
 import { GET, PUT } from "../route";
 
@@ -47,11 +57,11 @@ describe("GET /api/member/profile", () => {
         const { GetMemberProfileUsecase } = await import(
             "@/backend/member/application/usecase/GetMemberProfileUsecase"
         );
-        vi.mocked(GetMemberProfileUsecase).mockImplementationOnce(
-            function (this: Record<string, unknown>) {
-                this.execute = vi.fn().mockResolvedValue(null);
-            } as unknown as typeof GetMemberProfileUsecase
-        );
+        vi.mocked(GetMemberProfileUsecase).mockImplementationOnce(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue(null);
+        } as unknown as typeof GetMemberProfileUsecase);
 
         const response = await GET();
         expect(response.status).toBe(404);
@@ -70,11 +80,11 @@ describe("GET /api/member/profile", () => {
         const { GetMemberProfileUsecase } = await import(
             "@/backend/member/application/usecase/GetMemberProfileUsecase"
         );
-        vi.mocked(GetMemberProfileUsecase).mockImplementationOnce(
-            function (this: Record<string, unknown>) {
-                this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
-            } as unknown as typeof GetMemberProfileUsecase
-        );
+        vi.mocked(GetMemberProfileUsecase).mockImplementationOnce(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
+        } as unknown as typeof GetMemberProfileUsecase);
 
         const response = await GET();
         expect(response.status).toBe(500);
@@ -115,11 +125,13 @@ describe("PUT /api/member/profile", () => {
         const { UpdateMemberProfileUseCase } = await import(
             "@/backend/member/application/usecase/UpdateMemberProfileUseCase"
         );
-        vi.mocked(UpdateMemberProfileUseCase).mockImplementationOnce(
-            function (this: Record<string, unknown>) {
-                this.execute = vi.fn().mockRejectedValue(new Error("Validation failed"));
-            } as unknown as typeof UpdateMemberProfileUseCase
-        );
+        vi.mocked(UpdateMemberProfileUseCase).mockImplementationOnce(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi
+                .fn()
+                .mockRejectedValue(new Error("Validation failed"));
+        } as unknown as typeof UpdateMemberProfileUseCase);
 
         const req = new Request("http://localhost/api/member/profile", {
             method: "PUT",

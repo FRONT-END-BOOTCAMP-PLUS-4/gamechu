@@ -50,11 +50,13 @@ export default function ArenaList({ arenas, searchTerm }: Props) {
 ```
 
 **When to use useMemo:**
+
 - Filtering/sorting large arrays
 - Complex calculations
 - Transforming data structures
 
 **When NOT to use useMemo:**
+
 - Simple string concatenation
 - Basic arithmetic
 - Small arrays (<50 items)
@@ -83,11 +85,13 @@ export default function Parent({ items }: Props) {
 ```
 
 **When to use useCallback:**
+
 - Functions passed as props to children
 - Functions used as dependencies in useEffect
 - Event handlers in lists
 
 **When NOT to use useCallback:**
+
 - Inline handlers not passed to children: `onClick={() => setOpen(true)}`
 
 ---
@@ -119,6 +123,7 @@ export default ArenaCard;
 ```
 
 **When to use React.memo:**
+
 - List items that re-render frequently
 - Components with expensive rendering
 - Props don't change often
@@ -166,6 +171,7 @@ export default function GameSearch() {
 ```
 
 **Optimal Debounce Timing:**
+
 - **300ms**: Search/filtering
 - **1000ms**: Auto-save
 - **100ms**: Real-time validation
@@ -182,7 +188,7 @@ useEffect(() => {
         // periodic action
     }, 5000);
 
-    return () => clearInterval(intervalId);  // Cleanup!
+    return () => clearInterval(intervalId); // Cleanup!
 }, []);
 ```
 
@@ -190,10 +196,12 @@ useEffect(() => {
 
 ```typescript
 useEffect(() => {
-    const handleResize = () => { /* ... */ };
+    const handleResize = () => {
+        /* ... */
+    };
     window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener("resize", handleResize);  // Cleanup!
+    return () => window.removeEventListener("resize", handleResize); // Cleanup!
 }, []);
 ```
 
@@ -210,7 +218,7 @@ useEffect(() => {
             if (err.name !== "AbortError") console.error(err);
         });
 
-    return () => controller.abort();  // Cancel fetch on unmount
+    return () => controller.abort(); // Cancel fetch on unmount
 }, [id]);
 ```
 
@@ -309,6 +317,7 @@ export default function ArenaList({ arenas }: Props) {
 ## Summary
 
 **Performance Checklist:**
+
 - Server Components by default (zero client JS)
 - `useMemo` for expensive computations
 - `useCallback` for functions passed to children
@@ -320,6 +329,7 @@ export default function ArenaList({ arenas }: Props) {
 - Stable keys in lists
 
 **See Also:**
+
 - [component-patterns.md](component-patterns.md) - Server vs Client Components
 - [data-fetching.md](data-fetching.md) - Fetch optimization
 - [complete-examples.md](complete-examples.md) - Full examples

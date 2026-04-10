@@ -65,10 +65,7 @@
                     "app/api/**/*.ts",
                     "lib/**/*.ts"
                 ],
-                "pathExclusions": [
-                    "**/*.test.ts",
-                    "**/*.spec.ts"
-                ],
+                "pathExclusions": ["**/*.test.ts", "**/*.spec.ts"],
                 "contentPatterns": [
                     "router\\.",
                     "app\\.(get|post|put|delete|patch)",
@@ -155,10 +152,7 @@
                 ]
             },
             "fileTriggers": {
-                "pathPatterns": [
-                    "e2e/**/*.spec.ts",
-                    "playwright.config.ts"
-                ]
+                "pathPatterns": ["e2e/**/*.spec.ts", "playwright.config.ts"]
             }
         },
         "route-tester": {
@@ -185,10 +179,7 @@
                 ]
             },
             "fileTriggers": {
-                "pathPatterns": [
-                    "app/api/**/*.ts",
-                    "app/api/**/route.ts"
-                ],
+                "pathPatterns": ["app/api/**/*.ts", "app/api/**/route.ts"],
                 "contentPatterns": [
                     "NextRequest",
                     "NextResponse",

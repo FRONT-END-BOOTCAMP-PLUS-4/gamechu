@@ -11,15 +11,15 @@ Finalize the completed dev-docs task and execute the full GitHub workflow for: *
 
 - Read `dev/active/$ARGUMENTS/$ARGUMENTS-tasks.md`
 - Verify that **all** checkboxes are checked (`[x]`).
-  - If any are unchecked (`[ ]`), list them and **stop** — ask the user whether to proceed anyway or finish the remaining tasks first.
+    - If any are unchecked (`[ ]`), list them and **stop** — ask the user whether to proceed anyway or finish the remaining tasks first.
 
 ### 2. Update task documentation
 
 - Update `dev/active/$ARGUMENTS/$ARGUMENTS-tasks.md`: ensure all completed items are `[x]`
 - Update `dev/active/$ARGUMENTS/$ARGUMENTS-context.md`:
-  - Set status to "COMPLETED" or "READY FOR PR"
-  - Update "Last Updated" timestamp
-  - Fill in any remaining verification results or notes
+    - Set status to "COMPLETED" or "READY FOR PR"
+    - Update "Last Updated" timestamp
+    - Fill in any remaining verification results or notes
 
 ### 3. Execute Git & GitHub Workflow
 
@@ -61,6 +61,7 @@ gh pr create --base dev \
 ### 4. Report
 
 After PR creation, output:
+
 - Issue URL (from context.md)
 - PR URL (newly created)
 - Branch name

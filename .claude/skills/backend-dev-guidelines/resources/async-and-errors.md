@@ -50,9 +50,9 @@ export async function GET(request: Request) {
 // ❌ AVOID: Promise chains
 function processData() {
     return fetchData()
-        .then(data => transform(data))
-        .then(transformed => save(transformed))
-        .catch(error => console.error(error));
+        .then((data) => transform(data))
+        .then((transformed) => save(transformed))
+        .catch((error) => console.error(error));
 }
 
 // ✅ PREFER: Async/await
@@ -95,7 +95,7 @@ const results = await Promise.allSettled([
 ]);
 
 results.forEach((result, index) => {
-    if (result.status === 'rejected') {
+    if (result.status === "rejected") {
         console.error(`Operation ${index} failed:`, result.reason);
     }
 });
@@ -112,7 +112,7 @@ results.forEach((result, index) => {
 export class AppError extends Error {
     constructor(
         message: string,
-        public statusCode: number = 400,
+        public statusCode: number = 400
     ) {
         super(message);
         this.name = this.constructor.name;
@@ -120,15 +120,21 @@ export class AppError extends Error {
 }
 
 export class NotFoundError extends AppError {
-    constructor(message: string) { super(message, 404); }
+    constructor(message: string) {
+        super(message, 404);
+    }
 }
 
 export class ForbiddenError extends AppError {
-    constructor(message: string) { super(message, 403); }
+    constructor(message: string) {
+        super(message, 403);
+    }
 }
 
 export class ConflictError extends AppError {
-    constructor(message: string) { super(message, 409); }
+    constructor(message: string) {
+        super(message, 409);
+    }
 }
 ```
 
@@ -228,7 +234,7 @@ export async function POST(request: Request) {
 // ✅ OR: Intentional background task with error handling
 export async function POST(request: Request) {
     const result = await usecase.execute(dto);
-    sendNotification(result).catch(error => {
+    sendNotification(result).catch((error) => {
         console.error("Notification failed:", error);
     });
     return NextResponse.json(result);
@@ -256,6 +262,7 @@ export async function DELETE(request: Request, { params }) {
 ---
 
 **Related Files:**
+
 - [SKILL.md](SKILL.md)
 - [routing-and-controllers.md](routing-and-controllers.md)
 - [complete-examples.md](complete-examples.md)

@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { NicknameCheckUsecase } from "@/backend/member/application/usecase/NicknameCheckUsecase";
-import {
-    RateLimiter,
-    getClientIp,
-    rateLimitResponse,
-} from "@/lib/RateLimiter";
+import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
 import { validate } from "@/utils/Validation";
 import { z } from "zod";
 import logger from "@/lib/Logger";
@@ -20,13 +16,19 @@ const NicknameQuerySchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
-    const log = logger.child({ route: "/api/auth/nickname-check", method: "GET" });
+    const log = logger.child({
+        route: "/api/auth/nickname-check",
+        method: "GET",
+    });
     const ip = getClientIp(req);
     const rateLimit = await nicknameCheckLimiter.check(ip);
     if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfterMs);
 
     const { searchParams } = new URL(req.url);
-    const validated = validate(NicknameQuerySchema, Object.fromEntries(searchParams));
+    const validated = validate(
+        NicknameQuerySchema,
+        Object.fromEntries(searchParams)
+    );
     if (!validated.success) return validated.response;
 
     const repo = new PrismaMemberRepository();

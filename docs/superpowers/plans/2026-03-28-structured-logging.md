@@ -13,9 +13,11 @@
 ## File Map
 
 **New:**
+
 - `lib/logger.ts` — pino singleton
 
 **Modified (use cases — remove try-catch):**
+
 - `backend/arena/application/usecase/GetArenaUsecase.ts`
 - `backend/chatting/application/usecase/CreateChattingUsecase.ts`
 - `backend/notification-record/application/usecase/GetNotificationRecordUsecase.ts`
@@ -25,10 +27,12 @@
 - `backend/review/infra/repositories/prisma/PrismaReviewRepository.ts`
 
 **Modified (lib files — console → pino warn):**
+
 - `lib/withCache.ts`
 - `lib/RateLimiter.ts`
 
 **Modified (API routes — console → pino, 29 files):**
+
 - `app/api/arenas/route.ts`
 - `app/api/arenas/[id]/route.ts`
 - `app/api/arenas/[id]/chattings/route.ts`
@@ -64,6 +68,7 @@
 ## Task 1: Install pino and create lib/logger.ts
 
 **Files:**
+
 - Create: `lib/logger.ts`
 
 - [ ] **Step 1: Install pino and pino-pretty**
@@ -78,18 +83,18 @@ Expected: `added N packages` — no errors.
 - [ ] **Step 2: Create lib/logger.ts**
 
 ```typescript
-import pino from "pino"
+import pino from "pino";
 
-const isDev = process.env.NODE_ENV === "development"
+const isDev = process.env.NODE_ENV === "development";
 
 const logger = pino({
-  level: isDev ? "debug" : "info",
-  transport: isDev
-    ? { target: "pino-pretty", options: { colorize: true } }
-    : undefined,
-})
+    level: isDev ? "debug" : "info",
+    transport: isDev
+        ? { target: "pino-pretty", options: { colorize: true } }
+        : undefined,
+});
 
-export default logger
+export default logger;
 ```
 
 - [ ] **Step 3: Verify TypeScript sees the module**
@@ -114,6 +119,7 @@ git commit -m "feat: pino logger singleton 추가"
 Each file wraps its entire method body in `try { ... } catch (error) { console.error(...); throw new Error(...) }`. Remove the outer try-catch so the method body is at the top level. Prisma errors bubble with full stack.
 
 **Files:**
+
 - Modify: `backend/arena/application/usecase/GetArenaUsecase.ts`
 - Modify: `backend/chatting/application/usecase/CreateChattingUsecase.ts`
 - Modify: `backend/notification-record/application/usecase/GetNotificationRecordUsecase.ts`
@@ -491,6 +497,7 @@ git commit -m "refactor: 유스케이스 try-catch-rethrow 패턴 제거 (에러
 Replace `console.error`/`console.warn` with `logger.warn` — these are graceful degradation sites.
 
 **Files:**
+
 - Modify: `lib/withCache.ts`
 - Modify: `lib/RateLimiter.ts`
 
@@ -509,7 +516,7 @@ export async function withCache<T>(
         const cached = await redis.get(key);
         if (cached) return JSON.parse(cached) as T;
     } catch {
-        logger.warn({ key }, "캐시 읽기 실패 — DB로 폴백")
+        logger.warn({ key }, "캐시 읽기 실패 — DB로 폴백");
     }
 
     const data = await fn();
@@ -517,7 +524,7 @@ export async function withCache<T>(
     try {
         await redis.setex(key, ttl, JSON.stringify(data));
     } catch {
-        logger.warn({ key }, "캐시 쓰기 실패")
+        logger.warn({ key }, "캐시 쓰기 실패");
     }
 
     return data;
@@ -529,31 +536,36 @@ export async function withCache<T>(
 In `RateLimiter.ts`, make two replacements:
 
 Replace (around line 44):
+
 ```typescript
-            console.warn(
-                `[RateLimiter] ${this.prefix} limit exceeded for ${key}`
-            );
+console.warn(`[RateLimiter] ${this.prefix} limit exceeded for ${key}`);
 ```
+
 With:
+
 ```typescript
-            logger.warn({ prefix: this.prefix, key }, "레이트 리밋 초과")
+logger.warn({ prefix: this.prefix, key }, "레이트 리밋 초과");
 ```
 
 Replace (around line 56-58 in the catch block):
+
 ```typescript
-            console.error(
-                `[RateLimiter] Redis error for ${this.prefix}:`,
-                error
-            );
+console.error(`[RateLimiter] Redis error for ${this.prefix}:`, error);
 ```
+
 With:
+
 ```typescript
-            logger.warn({ prefix: this.prefix, err: error }, "레이트 리미터 Redis 오류 — 요청 허용")
+logger.warn(
+    { prefix: this.prefix, err: error },
+    "레이트 리미터 Redis 오류 — 요청 허용"
+);
 ```
 
 Also add the import at the top of `lib/RateLimiter.ts`:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 - [ ] **Step 3: Build check**
@@ -578,6 +590,7 @@ git commit -m "refactor: withCache/RateLimiter console → pino warn (graceful d
 14 route files. Pattern for each: add `import logger`, add `const log = logger.child(...)` at the top of the handler (before try), replace `console.error` with `log.error`, move `getAuthUserId()` before the try block when needed.
 
 **Files:**
+
 - Modify: `app/api/arenas/route.ts`
 - Modify: `app/api/arenas/[id]/route.ts`
 - Modify: `app/api/arenas/[id]/chattings/route.ts`
@@ -596,22 +609,32 @@ git commit -m "refactor: withCache/RateLimiter console → pino warn (graceful d
 - [ ] **Step 1: app/api/arenas/route.ts**
 
 Add import at top:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Rewrite the `GET` handler. Move `memberId` before the outer try block and add the child logger:
 
 ```typescript
 export async function GET(request: Request) {
-    const log = logger.child({ route: "/api/arenas", method: "GET" })
+    const log = logger.child({ route: "/api/arenas", method: "GET" });
     const memberId = await getAuthUserId();
     try {
         const url = new URL(request.url);
-        const validated = validate(GetArenaSchema, Object.fromEntries(url.searchParams));
+        const validated = validate(
+            GetArenaSchema,
+            Object.fromEntries(url.searchParams)
+        );
         if (!validated.success) return validated.response;
 
-        const { currentPage, status, mine, pageSize, memberId: targetMemberId } = validated.data;
+        const {
+            currentPage,
+            status,
+            mine,
+            pageSize,
+            memberId: targetMemberId,
+        } = validated.data;
 
         if (!memberId && mine) {
             return NextResponse.json(
@@ -654,7 +677,7 @@ export async function GET(request: Request) {
         try {
             version = (await redis.get(ARENA_LIST_VERSION_KEY)) ?? "0";
         } catch {
-            log.warn({}, "아레나 버전 키 캐시 읽기 실패")
+            log.warn({}, "아레나 버전 키 캐시 읽기 실패");
         }
         const key = arenaListKey(version, {
             currentPage,
@@ -669,7 +692,7 @@ export async function GET(request: Request) {
 
         return NextResponse.json(arenaListDto);
     } catch (error: unknown) {
-        log.error({ userId: memberId, err: error }, "아레나 목록 조회 실패")
+        log.error({ userId: memberId, err: error }, "아레나 목록 조회 실패");
 
         if (error instanceof Error) {
             return NextResponse.json(
@@ -689,11 +712,13 @@ export async function GET(request: Request) {
 - [ ] **Step 2: app/api/arenas/[id]/route.ts — PATCH handler**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 In the PATCH handler, add child logger at the top of the function (before existing code):
+
 ```typescript
 export async function PATCH(req: NextRequest, { params }: RequestParams) {
     const log = logger.child({ route: "/api/arenas/[id]", method: "PATCH" })
@@ -704,6 +729,7 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
 ```
 
 In the DELETE handler, add child logger:
+
 ```typescript
 export async function DELETE(request: Request, { params }: RequestParams) {
     const log = logger.child({ route: "/api/arenas/[id]", method: "DELETE" })
@@ -718,8 +744,9 @@ Remove the two `console.error` lines.
 - [ ] **Step 3: app/api/arenas/[id]/chattings/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 `memberId` is already declared before the try block (line 16). Add child logger and replace console.error:
@@ -728,14 +755,17 @@ import logger from "@/lib/logger"
 export async function GET(req: Request, { params }: RequestParams) {
     const { id } = await params;
     const memberId: string | null = await getAuthUserId();
-    const log = logger.child({ route: "/api/arenas/[id]/chattings", method: "GET" })
+    const log = logger.child({
+        route: "/api/arenas/[id]/chattings",
+        method: "GET",
+    });
 
     // ... existing validation ...
 
     try {
         // ... existing code ...
     } catch (error) {
-        log.error({ userId: memberId, err: error }, "채팅 조회 실패")
+        log.error({ userId: memberId, err: error }, "채팅 조회 실패");
         return NextResponse.json(
             { message: "알 수 없는 오류 발생" },
             { status: 500 }
@@ -747,8 +777,9 @@ export async function GET(req: Request, { params }: RequestParams) {
 - [ ] **Step 4: app/api/arenas/[id]/votes/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 `memberId` is already before the try block. Add child logger and replace console.error:
@@ -757,14 +788,17 @@ import logger from "@/lib/logger"
 export async function GET(request: Request, { params }: RequestParams) {
     const memberId = await getAuthUserId();
     const { id } = await params;
-    const log = logger.child({ route: "/api/arenas/[id]/votes", method: "GET" })
+    const log = logger.child({
+        route: "/api/arenas/[id]/votes",
+        method: "GET",
+    });
 
     // ... existing validation ...
 
     try {
         // ... existing code ...
     } catch (error) {
-        log.error({ userId: memberId, err: error }, "투표 정보 조회 실패")
+        log.error({ userId: memberId, err: error }, "투표 정보 조회 실패");
         return NextResponse.json(
             { message: "알 수 없는 오류 발생" },
             { status: 500 }
@@ -776,19 +810,20 @@ export async function GET(request: Request, { params }: RequestParams) {
 - [ ] **Step 5: app/api/games/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 In the GET handler, add child logger at the top. Collapse the two `console.error` branches into one `log.error` before the if/else:
 
 ```typescript
 export async function GET(req: NextRequest) {
-    const log = logger.child({ route: "/api/games", method: "GET" })
+    const log = logger.child({ route: "/api/games", method: "GET" });
     try {
         // ... existing code unchanged ...
     } catch (error: unknown) {
-        log.error({ err: error }, "게임 목록 조회 실패")
+        log.error({ err: error }, "게임 목록 조회 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: "게임 목록 조회 중 오류가 발생했습니다." },
@@ -796,7 +831,10 @@ export async function GET(req: NextRequest) {
             );
         } else {
             return NextResponse.json(
-                { message: "게임 목록 조회 중 알 수 없는 오류가 발생했습니다." },
+                {
+                    message:
+                        "게임 목록 조회 중 알 수 없는 오류가 발생했습니다.",
+                },
                 { status: 500 }
             );
         }
@@ -809,8 +847,9 @@ export async function GET(req: NextRequest) {
 - [ ] **Step 6: app/api/games/[id]/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Add child logger and replace console.error:
@@ -820,12 +859,12 @@ export async function GET(
     _req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const log = logger.child({ route: "/api/games/[id]", method: "GET" })
+    const log = logger.child({ route: "/api/games/[id]", method: "GET" });
     // ... existing code ...
     try {
         // ...
     } catch (err) {
-        log.error({ err }, "게임 상세 조회 실패")
+        log.error({ err }, "게임 상세 조회 실패");
         return NextResponse.json(
             { message: "Game not found" },
             { status: 404 }
@@ -837,8 +876,9 @@ export async function GET(
 - [ ] **Step 7: app/api/games/[id]/reviews/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 `viewerId` is available inside the try block (line 20). No need to move it since we won't log it (it's not the authenticated user per se). Add child logger at the top of GET:
@@ -848,12 +888,16 @@ export async function GET(
     req: NextRequest,
     { params }: { params: Promise<Record<string, string>> }
 ) {
-    const log = logger.child({ route: "/api/games/[id]/reviews", method: "GET" })
+    const log = logger.child({
+        route: "/api/games/[id]/reviews",
+        method: "GET",
+    });
     try {
         // ... existing code ...
     } catch (error: unknown) {
-        log.error({ err: error }, "게임 리뷰 조회 실패")
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        log.error({ err: error }, "게임 리뷰 조회 실패");
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -862,18 +906,20 @@ export async function GET(
 - [ ] **Step 8: app/api/genres/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Replace:
+
 ```typescript
 export async function GET() {
-    const log = logger.child({ route: "/api/genres", method: "GET" })
+    const log = logger.child({ route: "/api/genres", method: "GET" });
     try {
         // ... existing code ...
     } catch (e) {
-        log.error({ err: e }, "장르 조회 실패")
+        log.error({ err: e }, "장르 조회 실패");
         return NextResponse.json({ message: "서버 오류" }, { status: 500 });
     }
 }
@@ -882,13 +928,14 @@ export async function GET() {
 - [ ] **Step 9: app/api/platforms/route.ts**
 
 Same pattern as genres:
+
 ```typescript
 export async function GET() {
-    const log = logger.child({ route: "/api/platforms", method: "GET" })
+    const log = logger.child({ route: "/api/platforms", method: "GET" });
     try {
         // ... existing code ...
     } catch (e) {
-        log.error({ err: e }, "플랫폼 조회 실패")
+        log.error({ err: e }, "플랫폼 조회 실패");
         return NextResponse.json({ message: "서버 오류" }, { status: 500 });
     }
 }
@@ -899,13 +946,14 @@ Add `import logger from "@/lib/logger"`.
 - [ ] **Step 10: app/api/themes/route.ts**
 
 Same pattern:
+
 ```typescript
 export async function GET() {
-    const log = logger.child({ route: "/api/themes", method: "GET" })
+    const log = logger.child({ route: "/api/themes", method: "GET" });
     try {
         // ... existing code ...
     } catch (e) {
-        log.error({ err: e }, "테마 조회 실패")
+        log.error({ err: e }, "테마 조회 실패");
         return NextResponse.json({ message: "서버 오류" }, { status: 500 });
     }
 }
@@ -916,18 +964,23 @@ Add `import logger from "@/lib/logger"`.
 - [ ] **Step 11: app/api/notification-records/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Add child logger and replace:
+
 ```typescript
 export async function POST(request: Request) {
-    const log = logger.child({ route: "/api/notification-records", method: "POST" })
+    const log = logger.child({
+        route: "/api/notification-records",
+        method: "POST",
+    });
     try {
         // ... existing code ...
     } catch (error: unknown) {
-        log.error({ err: error }, "알림 기록 생성 실패")
+        log.error({ err: error }, "알림 기록 생성 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "알림 생성 실패" },
@@ -945,15 +998,19 @@ export async function POST(request: Request) {
 - [ ] **Step 12: app/api/preferred-themes/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Move `memberId` before try and add child logger:
 
 ```typescript
 export async function POST(req: NextRequest) {
-    const log = logger.child({ route: "/api/preferred-themes", method: "POST" })
+    const log = logger.child({
+        route: "/api/preferred-themes",
+        method: "POST",
+    });
     const memberId = await getAuthUserId();
     try {
         if (!memberId) {
@@ -975,7 +1032,7 @@ export async function POST(req: NextRequest) {
             { status: 200 }
         );
     } catch (err) {
-        log.error({ userId: memberId, err }, "선호 테마 저장 실패")
+        log.error({ userId: memberId, err }, "선호 테마 저장 실패");
         const message =
             err instanceof Error ? err.message : "서버 오류가 발생했습니다.";
         return NextResponse.json({ error: message }, { status: 500 });
@@ -986,27 +1043,31 @@ export async function POST(req: NextRequest) {
 - [ ] **Step 13: app/api/reviews/member/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Move `memberId` before try, add child logger:
 
 ```typescript
 export async function GET() {
-    const log = logger.child({ route: "/api/reviews/member", method: "GET" })
+    const log = logger.child({ route: "/api/reviews/member", method: "GET" });
     const memberId = await getAuthUserId();
     try {
         if (!memberId) {
             return errorResponse("Unauthorized", 401);
         }
 
-        const usecase = new GetReviewsByMemberIdUsecase(new PrismaReviewRepository());
+        const usecase = new GetReviewsByMemberIdUsecase(
+            new PrismaReviewRepository()
+        );
         const result = await usecase.execute(memberId);
         return NextResponse.json(result);
     } catch (error: unknown) {
-        log.error({ userId: memberId, err: error }, "본인 리뷰 목록 조회 실패")
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        log.error({ userId: memberId, err: error }, "본인 리뷰 목록 조회 실패");
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -1015,8 +1076,9 @@ export async function GET() {
 - [ ] **Step 14: app/api/reviews/member/[memberId]/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Add child logger (no userId here — memberId is a path param, not auth):
@@ -1026,12 +1088,16 @@ export async function GET(
     request: Request,
     { params }: { params: Promise<{ memberId: string }> }
 ) {
-    const log = logger.child({ route: "/api/reviews/member/[memberId]", method: "GET" })
+    const log = logger.child({
+        route: "/api/reviews/member/[memberId]",
+        method: "GET",
+    });
     try {
         // ... existing code ...
     } catch (error: unknown) {
-        log.error({ err: error }, "회원 리뷰 목록 조회 실패")
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        log.error({ err: error }, "회원 리뷰 목록 조회 실패");
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -1072,6 +1138,7 @@ git commit -m "refactor: public API 라우트 console.error → pino logger"
 15 route files. Same pattern as Task 4.
 
 **Files:**
+
 - Modify: `app/api/member/arenas/route.ts`
 - Modify: `app/api/member/arenas/[id]/route.ts`
 - Modify: `app/api/member/arenas/[id]/chattings/route.ts`
@@ -1091,15 +1158,16 @@ git commit -m "refactor: public API 라우트 console.error → pino logger"
 - [ ] **Step 1: app/api/member/arenas/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Move `memberId` before try, add child logger:
 
 ```typescript
 export async function POST(request: Request) {
-    const log = logger.child({ route: "/api/member/arenas", method: "POST" })
+    const log = logger.child({ route: "/api/member/arenas", method: "POST" });
     const memberId: string | null = await getAuthUserId();
     try {
         // member validation
@@ -1127,7 +1195,8 @@ export async function POST(request: Request) {
         if (member.score < 100) {
             return NextResponse.json(
                 {
-                    message: "투기장 작성을 위해서는 최소 100점 이상의 점수가 필요합니다.",
+                    message:
+                        "투기장 작성을 위해서는 최소 100점 이상의 점수가 필요합니다.",
                 },
                 { status: 403 }
             );
@@ -1149,7 +1218,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json(newArena, { status: 201 });
     } catch (error: unknown) {
-        log.error({ userId: memberId, err: error }, "아레나 생성 실패")
+        log.error({ userId: memberId, err: error }, "아레나 생성 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "투기장 생성 실패" },
@@ -1167,19 +1236,23 @@ export async function POST(request: Request) {
 - [ ] **Step 2: app/api/member/arenas/[id]/route.ts — DELETE handler**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 The DELETE handler has `console.error("Error deleting arenas:", error)`. The `memberId` is declared inside the try block (line 95), so it's not accessible at catch time. Add child logger at the top of DELETE and replace:
 
 ```typescript
 export async function DELETE(request: Request, { params }: RequestParams) {
-    const log = logger.child({ route: "/api/member/arenas/[id]", method: "DELETE" })
+    const log = logger.child({
+        route: "/api/member/arenas/[id]",
+        method: "DELETE",
+    });
     try {
         // ... existing code unchanged ...
     } catch (error: unknown) {
-        log.error({ err: error }, "아레나 삭제 실패")
+        log.error({ err: error }, "아레나 삭제 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "투기장 삭제 실패" },
@@ -1199,8 +1272,9 @@ export async function DELETE(request: Request, { params }: RequestParams) {
 - [ ] **Step 3: app/api/member/arenas/[id]/chattings/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 `memberId` is already before the try block (line 21). Add child logger after memberId and replace the multi-line console.error:
@@ -1209,14 +1283,20 @@ import logger from "@/lib/logger"
 export async function POST(req: NextRequest, { params }: RequestParams) {
     const { id } = await params;
     const memberId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/arenas/[id]/chattings", method: "POST" })
+    const log = logger.child({
+        route: "/api/member/arenas/[id]/chattings",
+        method: "POST",
+    });
 
     // ... existing auth/validation unchanged ...
 
     try {
         // ... existing code ...
     } catch (error: unknown) {
-        log.error({ userId: memberId, arenaId, err: error }, "채팅 메시지 전송 실패")
+        log.error(
+            { userId: memberId, arenaId, err: error },
+            "채팅 메시지 전송 실패"
+        );
         // ... existing response logic unchanged (the if/typeof checks) ...
     }
 }
@@ -1227,19 +1307,23 @@ Note: `arenaId` is declared before the try block (line 37), so it is accessible 
 - [ ] **Step 4: app/api/member/arenas/[id]/votes/route.ts — PATCH handler**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 The PATCH handler has `console.error("🔥 PATCH vote error:", error)`. `memberId` is inside the try block (line 51), so it's not accessible at catch. Add child logger:
 
 ```typescript
 export async function PATCH(req: NextRequest) {
-    const log = logger.child({ route: "/api/member/arenas/[id]/votes", method: "PATCH" })
+    const log = logger.child({
+        route: "/api/member/arenas/[id]/votes",
+        method: "PATCH",
+    });
     try {
         // ... existing code unchanged ...
     } catch (error: unknown) {
-        log.error({ err: error }, "투표 수정 실패")
+        log.error({ err: error }, "투표 수정 실패");
         const errorMessage =
             error instanceof Error ? error.message : "서버 오류";
         return NextResponse.json({ message: errorMessage }, { status: 500 });
@@ -1252,15 +1336,16 @@ export async function PATCH(req: NextRequest) {
 - [ ] **Step 5: app/api/member/attend/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Move `memberId` before try, add child logger:
 
 ```typescript
 export async function POST() {
-    const log = logger.child({ route: "/api/member/attend", method: "POST" })
+    const log = logger.child({ route: "/api/member/attend", method: "POST" });
     const memberId = await getAuthUserId();
     try {
         if (!memberId) {
@@ -1280,9 +1365,12 @@ export async function POST() {
 
         let attendedDateStr: string | null = null;
         if (lastAttendedDate) {
-            attendedDateStr = new Date(lastAttendedDate).toLocaleDateString("ko-KR", {
-                timeZone: "Asia/Seoul",
-            });
+            attendedDateStr = new Date(lastAttendedDate).toLocaleDateString(
+                "ko-KR",
+                {
+                    timeZone: "Asia/Seoul",
+                }
+            );
         }
 
         return NextResponse.json({
@@ -1290,8 +1378,9 @@ export async function POST() {
             attendedDate: attendedDateStr,
         });
     } catch (error: unknown) {
-        log.error({ userId: memberId, err: error }, "출석 체크 실패")
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        log.error({ userId: memberId, err: error }, "출석 체크 실패");
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -1300,8 +1389,9 @@ export async function POST() {
 - [ ] **Step 6: app/api/member/games/[gameId]/reviews/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 `memberId` is already before the try block (line 14). Add child logger and replace:
@@ -1312,7 +1402,10 @@ export async function POST(
     { params }: { params: Promise<{ gameId: string }> }
 ) {
     const memberId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/games/[gameId]/reviews", method: "POST" })
+    const log = logger.child({
+        route: "/api/member/games/[gameId]/reviews",
+        method: "POST",
+    });
 
     if (!memberId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -1327,9 +1420,14 @@ export async function POST(
         });
         return NextResponse.json(result);
     } catch (err) {
-        log.error({ userId: memberId, err }, "리뷰 작성 실패")
+        log.error({ userId: memberId, err }, "리뷰 작성 실패");
         return NextResponse.json(
-            { message: err instanceof Error ? err.message : "Internal Server Error" },
+            {
+                message:
+                    err instanceof Error
+                        ? err.message
+                        : "Internal Server Error",
+            },
             { status: 400 }
         );
     }
@@ -1339,8 +1437,9 @@ export async function POST(
 - [ ] **Step 7: app/api/member/games/[gameId]/reviews/[reviewId]/route.ts — PATCH handler**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 `userId` is already before the try block in PATCH (line 20). Add child logger and replace:
@@ -1351,7 +1450,10 @@ export async function PATCH(
     { params }: { params: Promise<{ gameId: string; reviewId: string }> }
 ) {
     const userId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/games/[gameId]/reviews/[reviewId]", method: "PATCH" })
+    const log = logger.child({
+        route: "/api/member/games/[gameId]/reviews/[reviewId]",
+        method: "PATCH",
+    });
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -1365,9 +1467,14 @@ export async function PATCH(
         );
         return NextResponse.json(result);
     } catch (err) {
-        log.error({ userId, err }, "리뷰 수정 실패")
+        log.error({ userId, err }, "리뷰 수정 실패");
         return NextResponse.json(
-            { message: err instanceof Error ? err.message : "Internal Server Error" },
+            {
+                message:
+                    err instanceof Error
+                        ? err.message
+                        : "Internal Server Error",
+            },
             { status: 400 }
         );
     }
@@ -1379,15 +1486,19 @@ export async function PATCH(
 - [ ] **Step 8: app/api/member/notification-records/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Move `memberId` before try, add child logger:
 
 ```typescript
 export async function GET(request: Request) {
-    const log = logger.child({ route: "/api/member/notification-records", method: "GET" })
+    const log = logger.child({
+        route: "/api/member/notification-records",
+        method: "GET",
+    });
     const memberId: string | null = await getAuthUserId();
     try {
         // member validation
@@ -1400,7 +1511,10 @@ export async function GET(request: Request) {
 
         // get query parameters from URL
         const url = new URL(request.url);
-        const parsed = validate(GetNotificationRecordSchema, Object.fromEntries(url.searchParams));
+        const parsed = validate(
+            GetNotificationRecordSchema,
+            Object.fromEntries(url.searchParams)
+        );
         if (!parsed.success) return parsed.response;
 
         const { currentPage } = parsed.data;
@@ -1429,7 +1543,7 @@ export async function GET(request: Request) {
 
         return NextResponse.json(notificationRecordListDto);
     } catch (error: unknown) {
-        log.error({ userId: memberId, err: error }, "알림 기록 조회 실패")
+        log.error({ userId: memberId, err: error }, "알림 기록 조회 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "알림 조회 실패" },
@@ -1447,15 +1561,19 @@ export async function GET(request: Request) {
 - [ ] **Step 9: app/api/member/notification-records/[id]/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Move `memberId` before try, add child logger:
 
 ```typescript
 export async function DELETE(request: Request, { params }: RequestParams) {
-    const log = logger.child({ route: "/api/member/notification-records/[id]", method: "DELETE" })
+    const log = logger.child({
+        route: "/api/member/notification-records/[id]",
+        method: "DELETE",
+    });
     const memberId: string | null = await getAuthUserId();
     try {
         // member validation
@@ -1490,7 +1608,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
             { status: 200 }
         );
     } catch (error: unknown) {
-        log.error({ userId: memberId, err: error }, "알림 기록 삭제 실패")
+        log.error({ userId: memberId, err: error }, "알림 기록 삭제 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "알림 삭제 실패" },
@@ -1508,30 +1626,32 @@ export async function DELETE(request: Request, { params }: RequestParams) {
 - [ ] **Step 10: app/api/member/profile/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 For GET: move session/memberId before try, add child logger:
 
 ```typescript
 export async function GET() {
-    const log = logger.child({ route: "/api/member/profile", method: "GET" })
+    const log = logger.child({ route: "/api/member/profile", method: "GET" });
     const session = await getServerSession(authOptions);
     const memberId = session?.user?.id;
     try {
-        if (!memberId)
-            return errorResponse("Unauthorized", 401);
+        if (!memberId) return errorResponse("Unauthorized", 401);
 
-        const getUsecase = new GetMemberProfileUsecase(new PrismaMemberRepository());
+        const getUsecase = new GetMemberProfileUsecase(
+            new PrismaMemberRepository()
+        );
         const profile = await getUsecase.execute(memberId);
-        if (!profile)
-            return errorResponse("Not found", 404);
+        if (!profile) return errorResponse("Not found", 404);
 
         return NextResponse.json(profile);
     } catch (error: unknown) {
-        log.error({ userId: memberId, err: error }, "프로필 조회 실패")
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        log.error({ userId: memberId, err: error }, "프로필 조회 실패");
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -1541,12 +1661,11 @@ For PUT: move session/memberId before try, add child logger:
 
 ```typescript
 export async function PUT(req: Request) {
-    const log = logger.child({ route: "/api/member/profile", method: "PUT" })
+    const log = logger.child({ route: "/api/member/profile", method: "PUT" });
     const session = await getServerSession(authOptions);
     const memberId = session?.user?.id;
     try {
-        if (!memberId)
-            return errorResponse("Unauthorized", 401);
+        if (!memberId) return errorResponse("Unauthorized", 401);
 
         const body = await req.json();
 
@@ -1567,9 +1686,11 @@ export async function PUT(req: Request) {
 
         await updateUsecase.execute(dto);
 
-        return NextResponse.json({ message: "프로필이 성공적으로 수정되었습니다." });
+        return NextResponse.json({
+            message: "프로필이 성공적으로 수정되었습니다.",
+        });
     } catch (err: unknown) {
-        log.error({ userId: memberId, err }, "프로필 수정 실패")
+        log.error({ userId: memberId, err }, "프로필 수정 실패");
         const message = err instanceof Error ? err.message : "프로필 수정 실패";
         return errorResponse(message, 500);
     }
@@ -1579,8 +1700,9 @@ export async function PUT(req: Request) {
 - [ ] **Step 11: app/api/member/profile/[nickname]/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Add child logger (no userId — public nickname lookup):
@@ -1590,12 +1712,16 @@ export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ nickname: string }> }
 ) {
-    const log = logger.child({ route: "/api/member/profile/[nickname]", method: "GET" })
+    const log = logger.child({
+        route: "/api/member/profile/[nickname]",
+        method: "GET",
+    });
     try {
         // ... existing code unchanged ...
     } catch (error: unknown) {
-        log.error({ err: error }, "닉네임 프로필 조회 실패")
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        log.error({ err: error }, "닉네임 프로필 조회 실패");
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -1604,8 +1730,9 @@ export async function GET(
 - [ ] **Step 12: app/api/member/review-likes/[reviewId]/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Move `userId` before try, add child logger:
@@ -1615,16 +1742,19 @@ export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ reviewId: string }> }
 ) {
-    const log = logger.child({ route: "/api/member/review-likes/[reviewId]", method: "POST" })
+    const log = logger.child({
+        route: "/api/member/review-likes/[reviewId]",
+        method: "POST",
+    });
     const userId = await getAuthUserId();
     try {
         if (!userId) return errorResponse("Unauthorized", 401);
 
         // ... existing code unchanged ...
-
     } catch (err: unknown) {
-        log.error({ userId, err }, "리뷰 좋아요 토글 실패")
-        const message = err instanceof Error ? err.message : "알 수 없는 오류 발생";
+        log.error({ userId, err }, "리뷰 좋아요 토글 실패");
+        const message =
+            err instanceof Error ? err.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -1633,24 +1763,25 @@ export async function POST(
 - [ ] **Step 13: app/api/member/wishlists/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 For GET: move `memberId` before try, add child logger:
 
 ```typescript
 export async function GET(req: NextRequest) {
-    const log = logger.child({ route: "/api/member/wishlists", method: "GET" })
+    const log = logger.child({ route: "/api/member/wishlists", method: "GET" });
     const memberId = await getAuthUserId();
     try {
         if (!memberId) return errorResponse("Unauthorized", 401);
 
         // ... existing code unchanged ...
-
     } catch (error: unknown) {
-        log.error({ userId: memberId, err: error }, "위시리스트 조회 실패")
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        log.error({ userId: memberId, err: error }, "위시리스트 조회 실패");
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -1660,16 +1791,19 @@ For POST: move `memberId` before try, add child logger:
 
 ```typescript
 export async function POST(req: NextRequest) {
-    const log = logger.child({ route: "/api/member/wishlists", method: "POST" })
+    const log = logger.child({
+        route: "/api/member/wishlists",
+        method: "POST",
+    });
     const memberId = await getAuthUserId();
     try {
         if (!memberId) return errorResponse("Unauthorized", 401);
 
         // ... existing code unchanged ...
-
     } catch (error: unknown) {
-        log.error({ userId: memberId, err: error }, "위시리스트 추가 실패")
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        log.error({ userId: memberId, err: error }, "위시리스트 추가 실패");
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -1678,15 +1812,19 @@ export async function POST(req: NextRequest) {
 - [ ] **Step 14: app/api/member/wishlists/[id]/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 Move `memberId` before try, add child logger:
 
 ```typescript
 export async function DELETE(req: NextRequest, { params }: RequestParams) {
-    const log = logger.child({ route: "/api/member/wishlists/[id]", method: "DELETE" })
+    const log = logger.child({
+        route: "/api/member/wishlists/[id]",
+        method: "DELETE",
+    });
     const memberId = await getAuthUserId();
     try {
         if (!memberId) {
@@ -1697,9 +1835,8 @@ export async function DELETE(req: NextRequest, { params }: RequestParams) {
         }
 
         // ... existing code unchanged ...
-
     } catch (error) {
-        log.error({ userId: memberId, err: error }, "위시리스트 삭제 실패")
+        log.error({ userId: memberId, err: error }, "위시리스트 삭제 실패");
         return NextResponse.json(
             { message: error instanceof Error ? error.message : "삭제 실패" },
             { status: 400 }
@@ -1711,8 +1848,9 @@ export async function DELETE(req: NextRequest, { params }: RequestParams) {
 - [ ] **Step 15: app/api/member/scores/route.ts**
 
 Add import:
+
 ```typescript
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 ```
 
 For GET: `memberId` is already before the try block (line 12). Add child logger, replace console.error:
@@ -1720,7 +1858,7 @@ For GET: `memberId` is already before the try block (line 12). Add child logger,
 ```typescript
 export async function GET() {
     const memberId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/scores", method: "GET" })
+    const log = logger.child({ route: "/api/member/scores", method: "GET" });
 
     if (!memberId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -1733,7 +1871,7 @@ export async function GET() {
         const result = await usecase.execute(memberId);
         return NextResponse.json(result);
     } catch (error) {
-        log.error({ userId: memberId, err: error }, "점수 기록 조회 실패")
+        log.error({ userId: memberId, err: error }, "점수 기록 조회 실패");
         return NextResponse.json(
             { message: "스코어 기록 조회 실패" },
             { status: 500 }
@@ -1746,11 +1884,11 @@ For POST: `memberId` is inside the try block (line 52). Add child logger and rep
 
 ```typescript
 export async function POST(request: Request) {
-    const log = logger.child({ route: "/api/member/scores", method: "POST" })
+    const log = logger.child({ route: "/api/member/scores", method: "POST" });
     try {
         // ... existing code unchanged ...
     } catch (error: unknown) {
-        log.error({ err: error }, "점수 기록 생성 실패")
+        log.error({ err: error }, "점수 기록 생성 실패");
         if (error instanceof Error) {
             return NextResponse.json(
                 { message: error.message || "점수 기록 생성 실패" },

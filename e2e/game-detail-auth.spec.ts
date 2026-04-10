@@ -38,7 +38,9 @@ async function gotoAndWaitForEditor(page: import("@playwright/test").Page) {
     // create-mode editor appears. isVisible() has no wait — use waitFor instead.
     let hasExistingReview = false;
     try {
-        await page.locator(".glow-border").waitFor({ state: "visible", timeout: 8_000 });
+        await page
+            .locator(".glow-border")
+            .waitFor({ state: "visible", timeout: 8_000 });
         hasExistingReview = true;
     } catch {
         hasExistingReview = false;
@@ -81,10 +83,7 @@ async function gotoAndWaitForCommentCard(
 }
 
 /** Click the nth star (0-indexed) in the Comment editor star rating. */
-async function clickStar(
-    page: import("@playwright/test").Page,
-    index: number
-) {
+async function clickStar(page: import("@playwright/test").Page, index: number) {
     // Stars are in the flex-shrink-0 container alongside the submit button.
     // cursor-pointer distinguishes editable stars from read-only ones.
     const starDivs = page
@@ -111,7 +110,9 @@ async function gotoForFormatTest(page: import("@playwright/test").Page) {
 
     let hasExistingReview = false;
     try {
-        await page.locator(".glow-border").waitFor({ state: "visible", timeout: 8_000 });
+        await page
+            .locator(".glow-border")
+            .waitFor({ state: "visible", timeout: 8_000 });
         hasExistingReview = true;
     } catch {
         hasExistingReview = false;
@@ -120,7 +121,10 @@ async function gotoForFormatTest(page: import("@playwright/test").Page) {
     if (hasExistingReview) {
         // Delete the existing review so we land in create mode
         page.once("dialog", (dialog) => dialog.accept());
-        await page.locator(".glow-border button.rounded-lg.p-2").first().click();
+        await page
+            .locator(".glow-border button.rounded-lg.p-2")
+            .first()
+            .click();
 
         const deleteResponse = page.waitForResponse(
             (resp) =>
@@ -262,10 +266,7 @@ test("5-H: 내 댓글 수정 클릭 → Comment 에디터 전환 + 기존 내용
     await gotoAndWaitForCommentCard(page);
 
     // MoreVertical 메뉴 열기
-    await page
-        .locator(".glow-border button.rounded-lg.p-2")
-        .first()
-        .click();
+    await page.locator(".glow-border button.rounded-lg.p-2").first().click();
 
     // "수정" 버튼 클릭
     await page.getByRole("button", { name: "수정" }).click();
@@ -276,10 +277,7 @@ test("5-H: 내 댓글 수정 클릭 → Comment 에디터 전환 + 기존 내용
     ).toBeVisible({ timeout: 10_000 });
 
     // 에디터에 기존 내용이 로드됐는지 확인
-    const editorContent = await page
-        .getByRole("textbox")
-        .first()
-        .innerText();
+    const editorContent = await page.getByRole("textbox").first().innerText();
     expect(editorContent.trim().length).toBeGreaterThan(0);
 });
 
@@ -293,10 +291,7 @@ test("5-H: 내 댓글 삭제 → confirm → CommentCard 사라짐", async ({ pa
     page.on("dialog", (dialog) => dialog.accept());
 
     // MoreVertical 메뉴 열기
-    await page
-        .locator(".glow-border button.rounded-lg.p-2")
-        .first()
-        .click();
+    await page.locator(".glow-border button.rounded-lg.p-2").first().click();
 
     const deleteResponse = page.waitForResponse(
         (resp) =>

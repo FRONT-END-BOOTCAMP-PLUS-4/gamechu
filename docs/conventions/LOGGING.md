@@ -23,12 +23,12 @@ export async function GET(request: Request) {
 
 ## Log levels
 
-| Level | When to use |
-|-------|-------------|
-| `error` | Unhandled exceptions in catch blocks |
-| `warn` | Graceful degradation — cache miss, rate limit Redis failure, recoverable errors |
-| `info` | Significant business events (optional, production only) |
-| `debug` | Development detail — removed or gated before commit |
+| Level   | When to use                                                                     |
+| ------- | ------------------------------------------------------------------------------- |
+| `error` | Unhandled exceptions in catch blocks                                            |
+| `warn`  | Graceful degradation — cache miss, rate limit Redis failure, recoverable errors |
+| `info`  | Significant business events (optional, production only)                         |
+| `debug` | Development detail — removed or gated before commit                             |
 
 Level config: `debug` in development, `info` in production (set via `NODE_ENV` in `lib/logger.ts`).
 
@@ -51,6 +51,7 @@ log.info({ userId, arenaId }, "투기장 생성 완료");
 **API routes and backend code** — never use `console.error` or `console.log`. Use the logger.
 
 **Client components** — never use `console.error` or `console.log`:
+
 - User-facing errors (failed API call, form validation) → Toast notification
 - Debug logs → remove entirely before commit
 

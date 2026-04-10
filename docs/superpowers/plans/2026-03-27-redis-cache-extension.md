@@ -12,33 +12,34 @@
 
 ## File Map
 
-| Action | File | Responsibility |
-|---|---|---|
-| Create | `lib/withCache.ts` | Generic `withCache<T>` utility |
-| Create | `lib/__tests__/withCache.test.ts` | Unit tests for withCache |
-| Modify | `lib/cacheKey.ts` | Remove arena-specific generators; add new key functions |
-| Modify | `app/api/genres/route.ts` | Add withCache |
-| Modify | `app/api/platforms/route.ts` | Add withCache |
-| Modify | `app/api/themes/route.ts` | Add withCache |
-| Modify | `app/api/games/[id]/route.ts` | Add withCache |
-| Modify | `app/api/games/__tests__/route.test.ts` | Add gameMetaKey cache miss test |
-| Modify | `app/api/games/route.ts` | Add meta caching; refactor inline list cache → withCache |
-| Modify | `app/api/member/profile/[nickname]/route.ts` | Add withCache |
-| Modify | `app/api/member/profile/[nickname]/__tests__/route.test.ts` | Add redis mock |
-| Modify | `backend/arena/application/usecase/GetArenaUsecase.ts` | Remove cache calls |
-| Modify | `backend/arena/application/usecase/GetArenaDetailUsecase.ts` | Remove cache calls |
-| Modify | `backend/arena/application/usecase/__tests__/GetArenaDetailUsecase.test.ts` | Remove cache mocks |
-| Modify | `app/api/arenas/route.ts` | Add version-fetch + withCache |
-| Modify | `app/api/arenas/__tests__/route.test.ts` | Add redis mock |
-| Modify | `app/api/arenas/[id]/route.ts` | Add withCache for GET; replace ArenaCacheService with del+incr |
-| Create | `app/api/arenas/[id]/__tests__/route.test.ts` | Cache invalidation tests for PATCH/DELETE |
-| Delete | `backend/arena/infra/cache/ArenaCacheService.ts` | No longer needed |
+| Action | File                                                                        | Responsibility                                                 |
+| ------ | --------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Create | `lib/withCache.ts`                                                          | Generic `withCache<T>` utility                                 |
+| Create | `lib/__tests__/withCache.test.ts`                                           | Unit tests for withCache                                       |
+| Modify | `lib/cacheKey.ts`                                                           | Remove arena-specific generators; add new key functions        |
+| Modify | `app/api/genres/route.ts`                                                   | Add withCache                                                  |
+| Modify | `app/api/platforms/route.ts`                                                | Add withCache                                                  |
+| Modify | `app/api/themes/route.ts`                                                   | Add withCache                                                  |
+| Modify | `app/api/games/[id]/route.ts`                                               | Add withCache                                                  |
+| Modify | `app/api/games/__tests__/route.test.ts`                                     | Add gameMetaKey cache miss test                                |
+| Modify | `app/api/games/route.ts`                                                    | Add meta caching; refactor inline list cache → withCache       |
+| Modify | `app/api/member/profile/[nickname]/route.ts`                                | Add withCache                                                  |
+| Modify | `app/api/member/profile/[nickname]/__tests__/route.test.ts`                 | Add redis mock                                                 |
+| Modify | `backend/arena/application/usecase/GetArenaUsecase.ts`                      | Remove cache calls                                             |
+| Modify | `backend/arena/application/usecase/GetArenaDetailUsecase.ts`                | Remove cache calls                                             |
+| Modify | `backend/arena/application/usecase/__tests__/GetArenaDetailUsecase.test.ts` | Remove cache mocks                                             |
+| Modify | `app/api/arenas/route.ts`                                                   | Add version-fetch + withCache                                  |
+| Modify | `app/api/arenas/__tests__/route.test.ts`                                    | Add redis mock                                                 |
+| Modify | `app/api/arenas/[id]/route.ts`                                              | Add withCache for GET; replace ArenaCacheService with del+incr |
+| Create | `app/api/arenas/[id]/__tests__/route.test.ts`                               | Cache invalidation tests for PATCH/DELETE                      |
+| Delete | `backend/arena/infra/cache/ArenaCacheService.ts`                            | No longer needed                                               |
 
 ---
 
 ## Task 1: `withCache` utility
 
 **Files:**
+
 - Create: `lib/withCache.ts`
 - Create: `lib/__tests__/withCache.test.ts`
 
@@ -86,7 +87,11 @@ describe("withCache", () => {
 
         expect(fn).toHaveBeenCalledOnce();
         expect(result).toEqual(data);
-        expect(mockSetex).toHaveBeenCalledWith("test:key", 300, JSON.stringify(data));
+        expect(mockSetex).toHaveBeenCalledWith(
+            "test:key",
+            300,
+            JSON.stringify(data)
+        );
     });
 
     it("redis read error: fn still called, result returned without throwing", async () => {
@@ -105,7 +110,9 @@ describe("withCache", () => {
         mockSetex.mockRejectedValue(new Error("Redis down"));
         const fn = vi.fn().mockResolvedValue({ name: "fresh" });
 
-        await expect(withCache("test:key", 60, fn)).resolves.toEqual({ name: "fresh" });
+        await expect(withCache("test:key", 60, fn)).resolves.toEqual({
+            name: "fresh",
+        });
     });
 });
 ```
@@ -167,6 +174,7 @@ git commit -m "feat: add withCache utility"
 ## Task 2: Update `lib/cacheKey.ts`
 
 **Files:**
+
 - Modify: `lib/cacheKey.ts`
 
 - [ ] **Step 1: Replace the file content**
@@ -273,6 +281,7 @@ git commit -m "feat: update cacheKey with new generators, version-aware arena ke
 ## Task 3: Cache genres, platforms, themes routes
 
 **Files:**
+
 - Modify: `app/api/genres/route.ts`
 - Modify: `app/api/platforms/route.ts`
 - Modify: `app/api/themes/route.ts`
@@ -292,7 +301,9 @@ export async function GET() {
     try {
         const repo = new PrismaGenreRepository();
         const usecase = new GetAllGenresUsecase(repo);
-        const genres = await withCache(genreListKey(), 3600, () => usecase.execute());
+        const genres = await withCache(genreListKey(), 3600, () =>
+            usecase.execute()
+        );
         return NextResponse.json(genres);
     } catch (e) {
         console.error("[GET /genres] 장르 조회 실패:", e);
@@ -314,7 +325,9 @@ export async function GET() {
     try {
         const repo = new PrismaPlatformRepository();
         const usecase = new GetAllPlatformsUsecase(repo);
-        const platforms = await withCache(platformListKey(), 3600, () => usecase.execute());
+        const platforms = await withCache(platformListKey(), 3600, () =>
+            usecase.execute()
+        );
         return NextResponse.json(platforms);
     } catch (e) {
         console.error("[GET /platforms] 플랫폼 조회 실패:", e);
@@ -336,7 +349,9 @@ export async function GET() {
     try {
         const repo = new PrismaThemeRepository();
         const usecase = new GetAllThemesUsecase(repo);
-        const themes = await withCache(themeListKey(), 3600, () => usecase.execute());
+        const themes = await withCache(themeListKey(), 3600, () =>
+            usecase.execute()
+        );
         return NextResponse.json(themes);
     } catch (e) {
         console.error("[GET /themes] 테마 조회 실패:", e);
@@ -365,6 +380,7 @@ git commit -m "feat: add Redis caching to genres, platforms, themes routes"
 ## Task 4: Cache game detail route
 
 **Files:**
+
 - Modify: `app/api/games/[id]/route.ts`
 
 - [ ] **Step 1: Update `app/api/games/[id]/route.ts`**
@@ -397,10 +413,8 @@ export async function GET(
     );
 
     try {
-        const gameDetail = await withCache(
-            gameDetailKey(gameId),
-            600,
-            () => usecase.execute(gameId)
+        const gameDetail = await withCache(gameDetailKey(gameId), 600, () =>
+            usecase.execute(gameId)
         );
         return NextResponse.json(gameDetail);
     } catch (err) {
@@ -433,10 +447,12 @@ git commit -m "feat: add Redis caching to game detail route"
 ## Task 5: Cache game meta + refactor game list
 
 **Files:**
+
 - Modify: `app/api/games/route.ts`
 - Modify: `app/api/games/__tests__/route.test.ts`
 
 The game list route has two caching changes:
+
 1. The `?meta=true` branch gets `withCache` added (new)
 2. The inline list caching is replaced with `withCache` (refactor — TTL unchanged at 24h)
 
@@ -481,12 +497,16 @@ export async function GET(req: NextRequest) {
             return NextResponse.json(metadata, { status: 200 });
         }
 
-        const validation = validate(GetFilteredGamesSchema, Object.fromEntries(params));
+        const validation = validate(
+            GetFilteredGamesSchema,
+            Object.fromEntries(params)
+        );
         if (!validation.success) {
             return validation.response;
         }
 
-        const { sort, page, size, genreId, themeId, platformId, keyword } = validation.data;
+        const { sort, page, size, genreId, themeId, platformId, keyword } =
+            validation.data;
         const offset = (page - 1) * size;
         const limit = size;
 
@@ -504,7 +524,10 @@ export async function GET(req: NextRequest) {
 
         const gameRepo = new GamePrismaRepository();
         const reviewRepo = new PrismaReviewRepository();
-        const getFilteredGamesUsecase = new GetFilteredGamesUsecase(gameRepo, reviewRepo);
+        const getFilteredGamesUsecase = new GetFilteredGamesUsecase(
+            gameRepo,
+            reviewRepo
+        );
 
         const response = await withCache(cacheKey, 60 * 60 * 24, async () => {
             const { data, totalCount } = await getFilteredGamesUsecase.execute({
@@ -530,7 +553,10 @@ export async function GET(req: NextRequest) {
         } else {
             console.error("[GET /api/games] 알 수 없는 에러:", error);
             return NextResponse.json(
-                { message: "게임 목록 조회 중 알 수 없는 오류가 발생했습니다." },
+                {
+                    message:
+                        "게임 목록 조회 중 알 수 없는 오류가 발생했습니다.",
+                },
                 { status: 500 }
             );
         }
@@ -557,31 +583,50 @@ const mockGames = [{ id: 1, title: "Game 1" }];
 
 vi.mock("@/backend/game/application/usecase/GetFilteredGamesUsecase", () => ({
     GetFilteredGamesUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue({ data: mockGames, totalCount: 1 });
+        this.execute = vi
+            .fn()
+            .mockResolvedValue({ data: mockGames, totalCount: 1 });
     }),
 }));
 
 vi.mock("@/backend/game/application/usecase/GetGameMetaDataUsecase", () => ({
     GetGameMetaDataUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue({ genres: [], themes: [], platforms: [] });
+        this.execute = vi
+            .fn()
+            .mockResolvedValue({ genres: [], themes: [], platforms: [] });
     }),
 }));
 
-vi.mock("@/backend/game/infra/repositories/prisma/GamePrismaRepository", () => ({
-    GamePrismaRepository: vi.fn(function () {}),
-}));
-vi.mock("@/backend/review/infra/repositories/prisma/PrismaReviewRepository", () => ({
-    PrismaReviewRepository: vi.fn(function () {}),
-}));
-vi.mock("@/backend/genre/infra/repositories/prisma/PrismaGenreRepository", () => ({
-    PrismaGenreRepository: vi.fn(function () {}),
-}));
-vi.mock("@/backend/theme/infra/repositories/prisma/PrismaThemeRepository", () => ({
-    PrismaThemeRepository: vi.fn(function () {}),
-}));
-vi.mock("@/backend/platform/infra/repositories/prisma/PrismaPlatformRepository", () => ({
-    PrismaPlatformRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/game/infra/repositories/prisma/GamePrismaRepository",
+    () => ({
+        GamePrismaRepository: vi.fn(function () {}),
+    })
+);
+vi.mock(
+    "@/backend/review/infra/repositories/prisma/PrismaReviewRepository",
+    () => ({
+        PrismaReviewRepository: vi.fn(function () {}),
+    })
+);
+vi.mock(
+    "@/backend/genre/infra/repositories/prisma/PrismaGenreRepository",
+    () => ({
+        PrismaGenreRepository: vi.fn(function () {}),
+    })
+);
+vi.mock(
+    "@/backend/theme/infra/repositories/prisma/PrismaThemeRepository",
+    () => ({
+        PrismaThemeRepository: vi.fn(function () {}),
+    })
+);
+vi.mock(
+    "@/backend/platform/infra/repositories/prisma/PrismaPlatformRepository",
+    () => ({
+        PrismaPlatformRepository: vi.fn(function () {}),
+    })
+);
 
 import { GET } from "../route";
 
@@ -639,6 +684,7 @@ git commit -m "feat: add meta caching, refactor game list inline cache to withCa
 ## Task 6: Cache member profile route
 
 **Files:**
+
 - Modify: `app/api/member/profile/[nickname]/route.ts`
 - Modify: `app/api/member/profile/[nickname]/__tests__/route.test.ts`
 
@@ -663,10 +709,8 @@ export async function GET(
         const usecase = new GetMemberProfileByNicknameUsecase(
             new PrismaMemberRepository()
         );
-        const profile = await withCache(
-            memberProfileKey(nickname),
-            120,
-            () => usecase.execute(nickname)
+        const profile = await withCache(memberProfileKey(nickname), 120, () =>
+            usecase.execute(nickname)
         );
 
         if (!profile) return errorResponse("Not found", 404);
@@ -674,7 +718,8 @@ export async function GET(
         return NextResponse.json(profile);
     } catch (error: unknown) {
         console.error("[profile/nickname] error:", error);
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -695,21 +740,30 @@ vi.mock("@/lib/redis", () => ({
     },
 }));
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByNickname = vi.fn().mockResolvedValue(null);
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByNickname = vi.fn().mockResolvedValue(null);
+        }),
+    })
+);
 
-vi.mock("@/backend/member/application/usecase/GetMemberProfileByNicknameUsecase", () => ({
-    GetMemberProfileByNicknameUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue(null);
-    }),
-}));
+vi.mock(
+    "@/backend/member/application/usecase/GetMemberProfileByNicknameUsecase",
+    () => ({
+        GetMemberProfileByNicknameUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue(null);
+        }),
+    })
+);
 
 import { GET } from "../route";
 
-const makeRequest = () => new Request("http://localhost/api/member/profile/testuser");
+const makeRequest = () =>
+    new Request("http://localhost/api/member/profile/testuser");
 const makeParams = (nickname = "testuser") => ({
     params: Promise.resolve({ nickname }),
 });
@@ -760,6 +814,7 @@ git commit -m "feat: add Redis caching to member profile route"
 ## Task 7: Refactor arena usecases — remove cache logic
 
 **Files:**
+
 - Modify: `backend/arena/application/usecase/GetArenaUsecase.ts`
 - Modify: `backend/arena/application/usecase/GetArenaDetailUsecase.ts`
 - Modify: `backend/arena/application/usecase/__tests__/GetArenaDetailUsecase.test.ts`
@@ -919,7 +974,8 @@ export class GetArenaUsecase {
             > = {};
 
             if (arenaIds.length > 0) {
-                const voteStats = await this.voteRepository.countByArenaIds(arenaIds);
+                const voteStats =
+                    await this.voteRepository.countByArenaIds(arenaIds);
                 voteStats.forEach((stat) => {
                     voteCounts[stat.arenaId] = {
                         totalCount: stat.totalCount,
@@ -930,7 +986,9 @@ export class GetArenaUsecase {
             }
 
             const arenaDto: ArenaDto[] = arenas.map((arena) => {
-                const { debateEndDate, voteEndDate } = GetArenaDates(arena.startDate);
+                const { debateEndDate, voteEndDate } = GetArenaDates(
+                    arena.startDate
+                );
 
                 const voteData = voteCounts[arena.id] || {
                     totalCount: 0,
@@ -945,16 +1003,21 @@ export class GetArenaUsecase {
 
                 const challengerNickname = arena.challenger?.nickname || null;
                 const challengerScore = arena.challenger?.score || null;
-                const challengerProfileImageUrl = arena.challenger?.imageUrl || null;
+                const challengerProfileImageUrl =
+                    arena.challenger?.imageUrl || null;
 
                 const leftPercent: number =
                     voteData.totalCount === 0
                         ? 0
-                        : Math.round((voteData.leftCount / voteData.totalCount) * 100);
+                        : Math.round(
+                              (voteData.leftCount / voteData.totalCount) * 100
+                          );
                 const rightPercent: number =
                     voteData.totalCount === 0
                         ? 0
-                        : Math.round((voteData.rightCount / voteData.totalCount) * 100);
+                        : Math.round(
+                              (voteData.rightCount / voteData.totalCount) * 100
+                          );
 
                 return {
                     id: arena.id,
@@ -1030,8 +1093,18 @@ const mockArenaWithRelations = {
     description: "A test arena",
     startDate,
     status: 2,
-    creator: { id: "creator-1", nickname: "Creator", imageUrl: null, score: 100 },
-    challenger: { id: "challenger-1", nickname: "Challenger", imageUrl: null, score: 80 },
+    creator: {
+        id: "creator-1",
+        nickname: "Creator",
+        imageUrl: null,
+        score: 100,
+    },
+    challenger: {
+        id: "challenger-1",
+        nickname: "Challenger",
+        imageUrl: null,
+        score: 80,
+    },
 };
 
 describe("GetArenaDetailUsecase", () => {
@@ -1051,7 +1124,11 @@ describe("GetArenaDetailUsecase", () => {
             { arenaId: 42, totalCount: 10, leftCount: 7, rightCount: 3 },
         ]);
 
-        const usecase = new GetArenaDetailUsecase(arenaRepo, memberRepo, voteRepo);
+        const usecase = new GetArenaDetailUsecase(
+            arenaRepo,
+            memberRepo,
+            voteRepo
+        );
         const result = await usecase.execute({ arenaId: 42 });
 
         expect(arenaRepo.getArenaById).toHaveBeenCalledWith(42);
@@ -1071,7 +1148,11 @@ describe("GetArenaDetailUsecase", () => {
             { arenaId: 42, totalCount: 10, leftCount: 3, rightCount: 7 },
         ]);
 
-        const usecase = new GetArenaDetailUsecase(arenaRepo, memberRepo, voteRepo);
+        const usecase = new GetArenaDetailUsecase(
+            arenaRepo,
+            memberRepo,
+            voteRepo
+        );
         const result = await usecase.execute({ arenaId: 42 });
 
         expect(result.leftPercent).toBe(30);
@@ -1090,7 +1171,11 @@ describe("GetArenaDetailUsecase", () => {
             { arenaId: 42, totalCount: 0, leftCount: 0, rightCount: 0 },
         ]);
 
-        const usecase = new GetArenaDetailUsecase(arenaRepo, memberRepo, voteRepo);
+        const usecase = new GetArenaDetailUsecase(
+            arenaRepo,
+            memberRepo,
+            voteRepo
+        );
         const result = await usecase.execute({ arenaId: 42 });
 
         expect(result.leftPercent).toBe(0);
@@ -1109,13 +1194,23 @@ describe("GetArenaDetailUsecase", () => {
             { arenaId: 42, totalCount: 0, leftCount: 0, rightCount: 0 },
         ]);
 
-        const usecase = new GetArenaDetailUsecase(arenaRepo, memberRepo, voteRepo);
+        const usecase = new GetArenaDetailUsecase(
+            arenaRepo,
+            memberRepo,
+            voteRepo
+        );
         const result = await usecase.execute({ arenaId: 42 });
 
-        const expectedEndChatting = new Date(startDate.getTime() + 30 * 60 * 1000);
-        const expectedEndVote = new Date(expectedEndChatting.getTime() + 24 * 60 * 60 * 1000);
+        const expectedEndChatting = new Date(
+            startDate.getTime() + 30 * 60 * 1000
+        );
+        const expectedEndVote = new Date(
+            expectedEndChatting.getTime() + 24 * 60 * 60 * 1000
+        );
 
-        expect(result.endChatting.getTime()).toBe(expectedEndChatting.getTime());
+        expect(result.endChatting.getTime()).toBe(
+            expectedEndChatting.getTime()
+        );
         expect(result.endVote.getTime()).toBe(expectedEndVote.getTime());
     });
 });
@@ -1149,6 +1244,7 @@ git commit -m "refactor: remove cache logic from arena usecases"
 ## Task 8: Refactor arena routes + delete ArenaCacheService
 
 **Files:**
+
 - Modify: `app/api/arenas/route.ts`
 - Modify: `app/api/arenas/__tests__/route.test.ts`
 - Modify: `app/api/arenas/[id]/route.ts`
@@ -1159,7 +1255,10 @@ git commit -m "refactor: remove cache logic from arena usecases"
 
 ```ts
 import { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
-import { GetArenaDto, GetArenaSchema } from "@/backend/arena/application/usecase/dto/GetArenaDto";
+import {
+    GetArenaDto,
+    GetArenaSchema,
+} from "@/backend/arena/application/usecase/dto/GetArenaDto";
 import { GetArenaUsecase } from "@/backend/arena/application/usecase/GetArenaUsecase";
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
@@ -1179,10 +1278,19 @@ export async function GET(request: Request) {
         const memberId = await getAuthUserId();
 
         const url = new URL(request.url);
-        const validated = validate(GetArenaSchema, Object.fromEntries(url.searchParams));
+        const validated = validate(
+            GetArenaSchema,
+            Object.fromEntries(url.searchParams)
+        );
         if (!validated.success) return validated.response;
 
-        const { currentPage, status, mine, pageSize, memberId: targetMemberId } = validated.data;
+        const {
+            currentPage,
+            status,
+            mine,
+            pageSize,
+            memberId: targetMemberId,
+        } = validated.data;
 
         if (!memberId && mine) {
             return NextResponse.json(
@@ -1284,17 +1392,26 @@ vi.mock("@/backend/arena/application/usecase/GetArenaUsecase", () => ({
     }),
 }));
 
-vi.mock("@/backend/arena/infra/repositories/prisma/PrismaArenaRepository", () => ({
-    PrismaArenaRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository",
+    () => ({
+        PrismaArenaRepository: vi.fn(function () {}),
+    })
+);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function () {}),
+    })
+);
 
-vi.mock("@/backend/vote/infra/repositories/prisma/PrismaVoteRepository", () => ({
-    PrismaVoteRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository",
+    () => ({
+        PrismaVoteRepository: vi.fn(function () {}),
+    })
+);
 
 import { GET } from "../route";
 
@@ -1399,10 +1516,8 @@ export async function GET(request: Request, { params }: RequestParams) {
     );
     const getArenaDetailDto = new GetArenaDetailDto(arenaId);
     try {
-        const result = await withCache(
-            arenaDetailKey(arenaId),
-            120,
-            () => getArenaDetailusecase.execute(getArenaDetailDto)
+        const result = await withCache(arenaDetailKey(arenaId), 120, () =>
+            getArenaDetailusecase.execute(getArenaDetailDto)
         );
         return NextResponse.json(result, { status: 200 });
     } catch (error: unknown) {
@@ -1465,7 +1580,10 @@ export async function PATCH(req: NextRequest, { params }: RequestParams) {
             }
 
             if (challenger.score < 100) {
-                return errorResponse("투기장 참여를 위해서는 최소 100점 이상의 점수가 필요합니다.", 403);
+                return errorResponse(
+                    "투기장 참여를 위해서는 최소 100점 이상의 점수가 필요합니다.",
+                    403
+                );
             }
         }
 
@@ -1574,7 +1692,9 @@ vi.mock("@/lib/redis", () => ({
 
 vi.mock("@/backend/arena/application/usecase/GetArenaDetailUsecase", () => ({
     GetArenaDetailUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue({ id: 1, title: "Test Arena" });
+        this.execute = vi
+            .fn()
+            .mockResolvedValue({ id: 1, title: "Test Arena" });
     }),
 }));
 
@@ -1596,34 +1716,51 @@ vi.mock("@/backend/arena/application/usecase/DeleteArenaUsecase", () => ({
     }),
 }));
 
-vi.mock("@/backend/arena/infra/repositories/prisma/PrismaArenaRepository", () => ({
-    PrismaArenaRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findById = vi.fn().mockResolvedValue({ id: 1 });
-        this.getArenaById = vi.fn().mockResolvedValue({ id: 1 });
-    }),
-}));
+vi.mock(
+    "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository",
+    () => ({
+        PrismaArenaRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findById = vi.fn().mockResolvedValue({ id: 1 });
+            this.getArenaById = vi.fn().mockResolvedValue({ id: 1 });
+        }),
+    })
+);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findById = vi.fn().mockResolvedValue({ id: "member-1", score: 200 });
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findById = vi
+                .fn()
+                .mockResolvedValue({ id: "member-1", score: 200 });
+        }),
+    })
+);
 
-vi.mock("@/backend/vote/infra/repositories/prisma/PrismaVoteRepository", () => ({
-    PrismaVoteRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository",
+    () => ({
+        PrismaVoteRepository: vi.fn(function () {}),
+    })
+);
 
-vi.mock("@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase", () => ({
-    ApplyArenaScoreUsecase: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/score-policy/application/usecase/ApplyArenaScoreUsecase",
+    () => ({
+        ApplyArenaScoreUsecase: vi.fn(function () {}),
+    })
+);
 
 vi.mock("@/backend/score-policy/domain/ScorePolicy", () => ({
     ScorePolicy: vi.fn(function () {}),
 }));
 
-vi.mock("@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository", () => ({
-    PrismaScoreRecordRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository",
+    () => ({
+        PrismaScoreRecordRepository: vi.fn(function () {}),
+    })
+);
 
 import { PATCH, DELETE } from "../route";
 
@@ -1677,11 +1814,11 @@ describe("DELETE /api/arenas/[id]", () => {
         const { PrismaArenaRepository } = await import(
             "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository"
         );
-        vi.mocked(PrismaArenaRepository).mockImplementationOnce(
-            function (this: Record<string, unknown>) {
-                this.findById = vi.fn().mockResolvedValue(null);
-            } as unknown as typeof PrismaArenaRepository
-        );
+        vi.mocked(PrismaArenaRepository).mockImplementationOnce(function (
+            this: Record<string, unknown>
+        ) {
+            this.findById = vi.fn().mockResolvedValue(null);
+        } as unknown as typeof PrismaArenaRepository);
 
         const req = new Request("http://localhost/api/arenas/1", {
             method: "DELETE",

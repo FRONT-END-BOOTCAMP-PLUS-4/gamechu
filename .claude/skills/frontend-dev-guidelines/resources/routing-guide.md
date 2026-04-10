@@ -29,6 +29,7 @@ app/(base)/profile/[nickname]/page.tsx → /profile/:nickname
 ```
 
 **Key Points:**
+
 - Route groups `(base)` and `(auth)` don't appear in the URL
 - `[id]` folders = dynamic parameters
 - `page.tsx` = the route component
@@ -228,7 +229,8 @@ export const metadata: Metadata = {
         default: "GameChu",
         template: "%s | GameChu",
     },
-    description: "GameChu에서 게임 리뷰, 위시리스트, 포인트 기록, 아레나 전적을 한눈에 확인하세요.",
+    description:
+        "GameChu에서 게임 리뷰, 위시리스트, 포인트 기록, 아레나 전적을 한눈에 확인하세요.",
 };
 ```
 
@@ -281,6 +283,7 @@ export default function ArenaDetailPage() {
 ## Summary
 
 **Routing Checklist:**
+
 - `app/(base)/[feature]/page.tsx` for pages
 - `[param]` directories for dynamic routes
 - `useParams()` from `next/navigation` for route params
@@ -290,6 +293,7 @@ export default function ArenaDetailPage() {
 - Metadata exports for SEO
 
 **See Also:**
+
 - [component-patterns.md](component-patterns.md) - Server vs Client Components
 - [file-organization.md](file-organization.md) - Directory structure
 - [complete-examples.md](complete-examples.md) - Full page examples

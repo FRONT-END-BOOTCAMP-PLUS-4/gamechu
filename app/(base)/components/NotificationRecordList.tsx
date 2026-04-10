@@ -12,10 +12,10 @@ export default function NotificationRecordList(
     props: NotificationRecordListProps
 ) {
     return (
-        <div className="w-full flex flex-col justify-center items-center gap-9">
-            <ol className="w-full flex flex-col gap-6 p-0 m-0 list-none">
+        <div className="flex w-full flex-col items-center justify-center gap-9">
+            <ol className="m-0 flex w-full list-none flex-col gap-6 p-0">
                 {props.notificationRecords.length === 0 ? (
-                    <li className="w-full flex flex-col justify-center items-center text-center gap-4 text-font-200 text-body font-regular">
+                    <li className="font-regular flex w-full flex-col items-center justify-center gap-4 text-center text-body text-font-200">
                         <Image
                             src="/images/empty.png"
                             alt="새 알림 없음 이미지"

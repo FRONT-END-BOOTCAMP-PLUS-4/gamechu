@@ -9,7 +9,7 @@ import { GetSectionTitle } from "@/utils/GetSectionTitle";
 
 type Props = {
     onLoaded?: () => void; // ✅ 상위 ArenaPage로 로딩 완료 신호
-}
+};
 
 export default function VotingArenaSection({ onLoaded }: Props) {
     const status: number = 4;

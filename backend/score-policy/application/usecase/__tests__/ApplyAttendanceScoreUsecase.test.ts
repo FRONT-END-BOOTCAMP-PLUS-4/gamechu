@@ -34,7 +34,11 @@ describe("ApplyAttendanceScoreUsecase", () => {
         expect(memberRepo.incrementScore).toHaveBeenCalledWith("m1", 5);
         expect(memberRepo.updateLastAttendedDate).toHaveBeenCalledOnce();
         expect(scoreRecordRepo.createRecord).toHaveBeenCalledWith(
-            expect.objectContaining({ memberId: "m1", policyId: 1, actualScore: 5 })
+            expect.objectContaining({
+                memberId: "m1",
+                policyId: 1,
+                actualScore: 5,
+            })
         );
     });
 

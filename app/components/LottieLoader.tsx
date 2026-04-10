@@ -16,7 +16,7 @@ export default function LottieLoader() {
                     animationData={loadingJson}
                     loop
                     autoplay
-                    className="w-[350px] h-[350px]"
+                    className="h-[350px] w-[350px]"
                 />
             </div>
         </div>

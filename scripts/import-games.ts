@@ -185,10 +185,7 @@ async function main() {
                 `Imported ${games.length} games (total: ${totalImported}, lastId: ${lastId})`
             );
         } catch (error: unknown) {
-            if (
-                error instanceof Error &&
-                error.message === "RATE_LIMITED"
-            ) {
+            if (error instanceof Error && error.message === "RATE_LIMITED") {
                 backoffMs = Math.min(backoffMs * 2, 30000);
                 console.warn(`Rate limited, waiting ${backoffMs}ms...`);
                 await sleep(backoffMs);

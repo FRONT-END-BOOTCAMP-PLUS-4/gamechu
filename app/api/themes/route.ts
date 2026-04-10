@@ -11,7 +11,9 @@ export async function GET() {
     try {
         const repo = new PrismaThemeRepository();
         const usecase = new GetAllThemesUsecase(repo);
-        const themes = await withCache(themeListKey(), 3600, () => usecase.execute());
+        const themes = await withCache(themeListKey(), 3600, () =>
+            usecase.execute()
+        );
         return NextResponse.json(themes);
     } catch (e) {
         log.error({ err: e }, "테마 조회 실패");

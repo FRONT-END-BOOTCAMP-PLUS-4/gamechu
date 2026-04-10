@@ -11,23 +11,34 @@ vi.mock("@/lib/Redis", () => ({
 
 vi.mock("@/backend/arena/application/usecase/GetArenaDetailUsecase", () => ({
     GetArenaDetailUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue({ id: 1, title: "Test Arena" });
+        this.execute = vi
+            .fn()
+            .mockResolvedValue({ id: 1, title: "Test Arena" });
     }),
 }));
 
-vi.mock("@/backend/arena/infra/repositories/prisma/PrismaArenaRepository", () => ({
-    PrismaArenaRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findById = vi.fn().mockResolvedValue({ id: 1 });
-    }),
-}));
+vi.mock(
+    "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository",
+    () => ({
+        PrismaArenaRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findById = vi.fn().mockResolvedValue({ id: 1 });
+        }),
+    })
+);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function () {}),
+    })
+);
 
-vi.mock("@/backend/vote/infra/repositories/prisma/PrismaVoteRepository", () => ({
-    PrismaVoteRepository: vi.fn(function () {}),
-}));
+vi.mock(
+    "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository",
+    () => ({
+        PrismaVoteRepository: vi.fn(function () {}),
+    })
+);
 
 import { GET } from "../route";
 

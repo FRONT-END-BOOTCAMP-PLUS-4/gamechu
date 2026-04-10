@@ -36,9 +36,7 @@ export class PrismaVoteRepository implements VoteRepository {
         return count;
     }
 
-    async countByArenaIds(
-        arenaIds: number[]
-    ): Promise<
+    async countByArenaIds(arenaIds: number[]): Promise<
         Array<{
             arenaId: number;
             totalCount: number;

@@ -76,7 +76,7 @@ For hooks that manage their own loading state (not global):
 // hooks/useArenaList.ts
 export function useArenaList() {
     const [arenaList, setArenaList] = useState<ArenaDetailDto[]>([]);
-    const [loading, setLoading] = useState(true);   // Local loading
+    const [loading, setLoading] = useState(true); // Local loading
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
@@ -214,23 +214,23 @@ if (error) {
 
 ## Loading State Patterns Summary
 
-| Pattern | When to Use | How |
-|---------|-------------|-----|
+| Pattern       | When to Use              | How                                       |
+| ------------- | ------------------------ | ----------------------------------------- |
 | Global loader | Page-level data fetching | `useLoadingStore` + `LottieLoaderWrapper` |
-| Local loading | Hook-level, non-blocking | `useState(true)` in custom hook |
-| Null render | Data not yet available | `if (!data) return null;` |
-| Not-found | API returns 404 | `setNotFound(true)` + conditional render |
+| Local loading | Hook-level, non-blocking | `useState(true)` in custom hook           |
+| Null render   | Data not yet available   | `if (!data) return null;`                 |
+| Not-found     | API returns 404          | `setNotFound(true)` + conditional render  |
 
 ---
 
 ## Error Handling Patterns Summary
 
-| Pattern | When to Use | How |
-|---------|-------------|-----|
-| Toast | User-facing success/error messages | `Toast` component with state |
-| Console.error | Debugging, non-user-facing | `console.error("Error:", error)` |
-| Error state | Display error UI | `useState<Error \| null>(null)` |
-| Not-found page | Resource doesn't exist | Conditional render or `ClientNotFoundView` |
+| Pattern        | When to Use                        | How                                        |
+| -------------- | ---------------------------------- | ------------------------------------------ |
+| Toast          | User-facing success/error messages | `Toast` component with state               |
+| Console.error  | Debugging, non-user-facing         | `console.error("Error:", error)`           |
+| Error state    | Display error UI                   | `useState<Error \| null>(null)`            |
+| Not-found page | Resource doesn't exist             | Conditional render or `ClientNotFoundView` |
 
 ---
 
@@ -268,16 +268,19 @@ setToast({ show: true, status: "error", message: "오류가 발생했습니다."
 ## Summary
 
 **Loading:**
+
 - Global: `useLoadingStore` → `LottieLoaderWrapper` (in layout)
 - Local: `useState` in custom hooks
 - Always use `try/finally` to ensure loading is cleared
 
 **Errors:**
+
 - Toast for user-facing messages
 - `console.error` for debugging
 - Not-found conditional rendering for 404s
 
 **See Also:**
+
 - [data-fetching.md](data-fetching.md) - Fetch patterns with loading
 - [common-patterns.md](common-patterns.md) - Toast and store patterns
 - [complete-examples.md](complete-examples.md) - Full working examples

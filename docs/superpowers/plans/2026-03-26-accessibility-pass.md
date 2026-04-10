@@ -14,35 +14,36 @@
 
 ## File Map
 
-| File | Status | Change |
-|------|--------|--------|
-| `app/components/CardLink.tsx` | **Create** | Semantic `<Link>` wrapper for clickable cards |
-| `app/components/__tests__/CardLink.test.tsx` | **Create** | Unit tests for CardLink |
-| `app/(base)/games/components/GameCard.tsx` | Modify | div→CardLink, aria-labels on score/review |
-| `app/(base)/games/components/__tests__/GameCard.test.tsx` | **Create** | Renders `<a>` not `<div>`, aria-labels present |
-| `app/(base)/arenas/components/RecruitingArenaCard.tsx` | Modify | div→CardLink |
-| `app/(base)/arenas/components/DebatingArenaCard.tsx` | Modify | div→CardLink |
-| `app/(base)/arenas/components/WaitingArenaCard.tsx` | Modify | div→CardLink |
-| `app/(base)/arenas/components/VotingArenaCard.tsx` | Modify | div→CardLink |
-| `app/(base)/arenas/components/CompleteArenaCard.tsx` | Modify | div→CardLink |
-| `app/(base)/arenas/components/__tests__/ArenaCards.test.tsx` | **Create** | Arena cards render `<a>` tags |
-| `app/components/TierBadge.tsx` | Modify | role="img", aria-label, alt="" on Image |
-| `app/components/__tests__/TierBadge.test.tsx` | **Create** | role/aria-label on wrapper |
-| `app/components/ModalWrapper.tsx` | Modify | role="dialog", aria-modal, FocusTrap, labelId prop |
-| `app/components/__tests__/ModalWrapper.test.tsx` | **Create** | role/aria-modal present, FocusTrap active |
-| `app/(base)/components/NotificationModal.tsx` | Modify | Add title `<h2>` with id, pass labelId |
-| `app/(base)/arenas/components/CreateArenaModal.tsx` | Modify | Add id to existing `<h2>`, pass labelId |
-| `app/(base)/profile/components/PointHelpModal.tsx` | Modify | Add FocusTrap, remove manual Escape/focus handlers |
-| `app/components/Header.tsx` | Modify | aria-expanded, aria-controls, aria-hidden, aria-label on bell buttons |
-| `app/components/__tests__/Header.test.tsx` | **Create** | Hamburger aria-expanded, mobile menu aria-hidden |
-| `app/layout.tsx` | Modify | Skip-to-content link |
-| `app/(base)/layout.tsx` | Modify | id="main-content" on `<main>` |
+| File                                                         | Status     | Change                                                                |
+| ------------------------------------------------------------ | ---------- | --------------------------------------------------------------------- |
+| `app/components/CardLink.tsx`                                | **Create** | Semantic `<Link>` wrapper for clickable cards                         |
+| `app/components/__tests__/CardLink.test.tsx`                 | **Create** | Unit tests for CardLink                                               |
+| `app/(base)/games/components/GameCard.tsx`                   | Modify     | div→CardLink, aria-labels on score/review                             |
+| `app/(base)/games/components/__tests__/GameCard.test.tsx`    | **Create** | Renders `<a>` not `<div>`, aria-labels present                        |
+| `app/(base)/arenas/components/RecruitingArenaCard.tsx`       | Modify     | div→CardLink                                                          |
+| `app/(base)/arenas/components/DebatingArenaCard.tsx`         | Modify     | div→CardLink                                                          |
+| `app/(base)/arenas/components/WaitingArenaCard.tsx`          | Modify     | div→CardLink                                                          |
+| `app/(base)/arenas/components/VotingArenaCard.tsx`           | Modify     | div→CardLink                                                          |
+| `app/(base)/arenas/components/CompleteArenaCard.tsx`         | Modify     | div→CardLink                                                          |
+| `app/(base)/arenas/components/__tests__/ArenaCards.test.tsx` | **Create** | Arena cards render `<a>` tags                                         |
+| `app/components/TierBadge.tsx`                               | Modify     | role="img", aria-label, alt="" on Image                               |
+| `app/components/__tests__/TierBadge.test.tsx`                | **Create** | role/aria-label on wrapper                                            |
+| `app/components/ModalWrapper.tsx`                            | Modify     | role="dialog", aria-modal, FocusTrap, labelId prop                    |
+| `app/components/__tests__/ModalWrapper.test.tsx`             | **Create** | role/aria-modal present, FocusTrap active                             |
+| `app/(base)/components/NotificationModal.tsx`                | Modify     | Add title `<h2>` with id, pass labelId                                |
+| `app/(base)/arenas/components/CreateArenaModal.tsx`          | Modify     | Add id to existing `<h2>`, pass labelId                               |
+| `app/(base)/profile/components/PointHelpModal.tsx`           | Modify     | Add FocusTrap, remove manual Escape/focus handlers                    |
+| `app/components/Header.tsx`                                  | Modify     | aria-expanded, aria-controls, aria-hidden, aria-label on bell buttons |
+| `app/components/__tests__/Header.test.tsx`                   | **Create** | Hamburger aria-expanded, mobile menu aria-hidden                      |
+| `app/layout.tsx`                                             | Modify     | Skip-to-content link                                                  |
+| `app/(base)/layout.tsx`                                      | Modify     | id="main-content" on `<main>`                                         |
 
 ---
 
 ## Task 1: Install focus-trap-react
 
 **Files:**
+
 - Modify: `package.json` (via npm)
 
 - [ ] **Step 1: Install packages**
@@ -80,6 +81,7 @@ EOF
 ## Task 2: Create CardLink component
 
 **Files:**
+
 - Create: `app/components/CardLink.tsx`
 - Create: `app/components/__tests__/CardLink.test.tsx`
 
@@ -206,6 +208,7 @@ EOF
 ## Task 3: Update GameCard
 
 **Files:**
+
 - Modify: `app/(base)/games/components/GameCard.tsx`
 - Create: `app/(base)/games/components/__tests__/GameCard.test.tsx`
 
@@ -406,6 +409,7 @@ EOF
 ## Task 4: Update arena card components (5 cards)
 
 **Files:**
+
 - Modify: `app/(base)/arenas/components/RecruitingArenaCard.tsx`
 - Modify: `app/(base)/arenas/components/DebatingArenaCard.tsx`
 - Modify: `app/(base)/arenas/components/WaitingArenaCard.tsx`
@@ -414,6 +418,7 @@ EOF
 - Create: `app/(base)/arenas/components/__tests__/ArenaCards.test.tsx`
 
 The pattern for all 5 cards is the same:
+
 - Remove `useRouter` import and `onClickHandler` / `router.push`
 - Replace outer `<div onClick={onClickHandler} className="... hover:cursor-pointer ...">` with `<CardLink href={/arenas/${props.id}} aria-label={${props.title} 아레나} className="flex h-full w-full ...">`
 - Drop `cursor-pointer` from className (native to `<a>`)
@@ -447,7 +452,9 @@ describe("Arena cards render semantic links", () => {
                 startDate={baseDate}
             />
         );
-        const link = screen.getByRole("link", { name: "PS5 vs Xbox 논쟁 아레나" });
+        const link = screen.getByRole("link", {
+            name: "PS5 vs Xbox 논쟁 아레나",
+        });
         expect(link.tagName).toBe("A");
         expect(link.getAttribute("href")).toBe("/arenas/1");
     });
@@ -464,7 +471,9 @@ describe("Arena cards render semantic links", () => {
                 debateEndDate={baseDate}
             />
         );
-        const link = screen.getByRole("link", { name: "롤 vs 발로란트 아레나" });
+        const link = screen.getByRole("link", {
+            name: "롤 vs 발로란트 아레나",
+        });
         expect(link.tagName).toBe("A");
         expect(link.getAttribute("href")).toBe("/arenas/2");
     });
@@ -499,7 +508,9 @@ describe("Arena cards render semantic links", () => {
                 voteCount={10}
             />
         );
-        const link = screen.getByRole("link", { name: "젤다 vs 마리오 아레나" });
+        const link = screen.getByRole("link", {
+            name: "젤다 vs 마리오 아레나",
+        });
         expect(link.tagName).toBe("A");
         expect(link.getAttribute("href")).toBe("/arenas/4");
     });
@@ -523,7 +534,9 @@ describe("Arena cards render semantic links", () => {
                 rightPercent={40}
             />
         );
-        const link = screen.getByRole("link", { name: "포켓몬 vs 디지몬 아레나" });
+        const link = screen.getByRole("link", {
+            name: "포켓몬 vs 디지몬 아레나",
+        });
         expect(link.tagName).toBe("A");
         expect(link.getAttribute("href")).toBe("/arenas/5");
     });
@@ -1059,6 +1072,7 @@ EOF
 ## Task 5: Update TierBadge
 
 **Files:**
+
 - Modify: `app/components/TierBadge.tsx`
 - Create: `app/components/__tests__/TierBadge.test.tsx`
 
@@ -1192,6 +1206,7 @@ EOF
 ## Task 6: Update ModalWrapper
 
 **Files:**
+
 - Modify: `app/components/ModalWrapper.tsx`
 - Create: `app/components/__tests__/ModalWrapper.test.tsx`
 
@@ -1343,6 +1358,7 @@ EOF
 ## Task 7: Update NotificationModal
 
 **Files:**
+
 - Modify: `app/(base)/components/NotificationModal.tsx`
 
 Current: no `<h2>` title, no `labelId` passed to `ModalWrapper`.
@@ -1392,7 +1408,7 @@ export default function NotificationModal() {
             onClose={closeModal}
             labelId="notification-modal-title"
         >
-            <div className="w-[480px] max-h-[80vh] flex flex-col gap-4">
+            <div className="flex max-h-[80vh] w-[480px] flex-col gap-4">
                 <h2
                     id="notification-modal-title"
                     className="text-lg font-bold text-font-100"
@@ -1454,6 +1470,7 @@ EOF
 ## Task 8: Update CreateArenaModal
 
 **Files:**
+
 - Modify: `app/(base)/arenas/components/CreateArenaModal.tsx`
 
 Current: `<h2>` "도전장 작성" has no `id`. `<ModalWrapper>` has no `labelId`.
@@ -1517,11 +1534,13 @@ EOF
 ## Task 9: Update PointHelpModal
 
 **Files:**
+
 - Modify: `app/(base)/profile/components/PointHelpModal.tsx`
 
 `PointHelpModal` does **not** use `ModalWrapper` — it has its own custom implementation. It already has `role="dialog"`, `aria-modal`, `aria-labelledby`, and an Escape key handler. Missing: proper focus trap (keyboard can tab outside).
 
 Changes:
+
 1. Add `<FocusTrap>` wrapping the panel div
 2. Remove the manual `onKeyDown` Escape handler and the `window.addEventListener` effect
 3. Remove the `setTimeout(() => closeBtnRef.current?.focus(), 0)` and `closeBtnRef` (FocusTrap handles initial focus)
@@ -1755,10 +1774,12 @@ EOF
 ## Task 10: Update Header keyboard support
 
 **Files:**
+
 - Modify: `app/components/Header.tsx`
 - Create: `app/components/__tests__/Header.test.tsx`
 
 Changes needed:
+
 1. **Hamburger button**: `aria-expanded={menuOpen}`, `aria-controls="mobile-menu"`, dynamic `aria-label` (`메뉴 열기` / `메뉴 닫기`)
 2. **Mobile menu div**: add `id="mobile-menu"` and `aria-hidden={!menuOpen}`
 3. **Desktop notification button**: add `aria-label="알림"`, change Image `alt="알림"` → `alt=""`
@@ -2107,6 +2128,7 @@ EOF
 ## Task 11: Add skip-to-content link and main id
 
 **Files:**
+
 - Modify: `app/layout.tsx`
 - Modify: `app/(base)/layout.tsx`
 
@@ -2174,6 +2196,7 @@ EOF
 ## Self-Review Checklist
 
 **Spec coverage:**
+
 - [x] §1 CardLink — Tasks 2, 3, 4
 - [x] §2 ARIA Labels (TierBadge) — Task 5
 - [x] §2 ARIA Labels (GameCard score/review) — Task 3

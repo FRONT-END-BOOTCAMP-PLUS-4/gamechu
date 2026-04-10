@@ -6,32 +6,48 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
     getAuthUserId: vi.fn().mockResolvedValue("test-user-id"),
 }));
 
-vi.mock("@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository", () => ({
-    PrismaReviewLikeRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByReviewIdAndMemberId = vi.fn();
-        this.create = vi.fn();
-        this.delete = vi.fn();
-    }),
-}));
+vi.mock(
+    "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository",
+    () => ({
+        PrismaReviewLikeRepository: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.findByReviewIdAndMemberId = vi.fn();
+            this.create = vi.fn();
+            this.delete = vi.fn();
+        }),
+    })
+);
 
-vi.mock("@/backend/review/infra/repositories/prisma/PrismaReviewRepository", () => ({
-    PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findById = vi.fn();
-    }),
-}));
+vi.mock(
+    "@/backend/review/infra/repositories/prisma/PrismaReviewRepository",
+    () => ({
+        PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findById = vi.fn();
+        }),
+    })
+);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findById = vi.fn();
-        this.updateScore = vi.fn();
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findById = vi.fn();
+            this.updateScore = vi.fn();
+        }),
+    })
+);
 
-vi.mock("@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository", () => ({
-    PrismaScoreRecordRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.create = vi.fn();
-    }),
-}));
+vi.mock(
+    "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository",
+    () => ({
+        PrismaScoreRecordRepository: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.create = vi.fn();
+        }),
+    })
+);
 
 vi.mock("@/backend/score-policy/domain/ScorePolicy", () => ({
     ScorePolicy: vi.fn(function (this: Record<string, unknown>) {
@@ -39,24 +55,37 @@ vi.mock("@/backend/score-policy/domain/ScorePolicy", () => ({
     }),
 }));
 
-vi.mock("@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase", () => ({
-    ApplyReviewScoreUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue(undefined);
-    }),
-}));
+vi.mock(
+    "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase",
+    () => ({
+        ApplyReviewScoreUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue(undefined);
+        }),
+    })
+);
 
-vi.mock("@/backend/review-like/application/usecase/ToggleReviewLikeUsecase", () => ({
-    ToggleReviewLikeUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue({ liked: true });
-    }),
-}));
+vi.mock(
+    "@/backend/review-like/application/usecase/ToggleReviewLikeUsecase",
+    () => ({
+        ToggleReviewLikeUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue({ liked: true });
+        }),
+    })
+);
 
 import { POST } from "../route";
 
 function makeRequest(reviewId: string) {
-    return new NextRequest(`http://localhost/api/member/review-likes/${reviewId}`, {
-        method: "POST",
-    });
+    return new NextRequest(
+        `http://localhost/api/member/review-likes/${reviewId}`,
+        {
+            method: "POST",
+        }
+    );
 }
 
 function makeParams(reviewId: string) {
@@ -85,11 +114,11 @@ describe("POST /api/member/review-likes/[reviewId]", () => {
         const { ToggleReviewLikeUsecase } = await import(
             "@/backend/review-like/application/usecase/ToggleReviewLikeUsecase"
         );
-        vi.mocked(ToggleReviewLikeUsecase).mockImplementationOnce(
-            function (this: Record<string, unknown>) {
-                this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
-            } as unknown as typeof ToggleReviewLikeUsecase
-        );
+        vi.mocked(ToggleReviewLikeUsecase).mockImplementationOnce(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
+        } as unknown as typeof ToggleReviewLikeUsecase);
 
         const response = await POST(makeRequest("1"), makeParams("1"));
         expect(response.status).toBe(500);
