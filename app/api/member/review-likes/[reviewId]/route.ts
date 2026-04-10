@@ -10,6 +10,9 @@ import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { IdSchema, validate } from "@/utils/Validation";
 import { errorResponse } from "@/utils/ApiResponse";
 import logger from "@/lib/Logger";
+import { RateLimiter, rateLimitResponse } from "@/lib/RateLimiter";
+
+const reviewLikeLimiter = new RateLimiter("review-like", 60_000, 30);
 
 export async function POST(
     req: NextRequest,
@@ -19,6 +22,11 @@ export async function POST(
     const log = logger.child({ route: "/api/member/review-likes/[reviewId]", method: "POST" });
     try {
         if (!userId) return errorResponse("Unauthorized", 401);
+
+        const limitResult = await reviewLikeLimiter.check(userId);
+        if (!limitResult.allowed) {
+            return rateLimitResponse(limitResult.retryAfterMs);
+        }
 
         const reviewIdValidation = validate(IdSchema, (await params).reviewId);
         if (!reviewIdValidation.success) return reviewIdValidation.response;

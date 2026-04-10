@@ -23,15 +23,17 @@ export async function DELETE(req: NextRequest, { params }: RequestParams) {
             return errorResponse("Unauthorized", 401);
         }
 
-        const { id } = await params;
+        const { id } = await params; // [id] is gameId, not wishlist PK
         const parsed = validate(IdSchema, id);
         if (!parsed.success) return parsed.response;
-        const wishlistId = parsed.data;
+        const gameId = parsed.data;
 
         const wishlistRepo = new PrismaWishListRepository();
-        const usecase = new DeleteWishlistUsecase(wishlistRepo);
+        const wishlist = await wishlistRepo.findById(memberId, gameId);
+        if (!wishlist) return errorResponse("위시리스트를 찾을 수 없습니다.", 404);
 
-        const deleteWishlistDto = new DeleteWishlistDto(wishlistId);
+        const usecase = new DeleteWishlistUsecase(wishlistRepo);
+        const deleteWishlistDto = new DeleteWishlistDto(wishlist.id);
 
         await usecase.execute(deleteWishlistDto);
 

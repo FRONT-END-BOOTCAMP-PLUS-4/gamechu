@@ -16,7 +16,6 @@ type RequestParams = {
     }>;
 };
 
-// 해당 API는 유저가 투기장 정보를 변경할 경우 (투기장 참여, 설명, 시작 날짜 변경) 사용합니다!
 export async function PATCH(request: Request, { params }: RequestParams) {
     try {
         const { id } = await params;
@@ -33,20 +32,37 @@ export async function PATCH(request: Request, { params }: RequestParams) {
         const memberId: string | null = await getAuthUserId();
         if (!memberId) {
             return NextResponse.json(
-                { message: "투기장 변경 권한이 없습니다." },
+                { message: "로그인이 필요합니다." },
                 { status: 401 }
             );
         }
 
         const arenaRepository: ArenaRepository = new PrismaArenaRepository();
+
+        // ownership check
+        const arena = await arenaRepository.findById(arenaId);
+        if (!arena) {
+            return NextResponse.json(
+                { message: "투기장이 존재하지 않습니다." },
+                { status: 404 }
+            );
+        }
+        if (arena.creatorId !== memberId && arena.challengerId !== memberId) {
+            return NextResponse.json(
+                { message: "투기장 변경 권한이 없습니다." },
+                { status: 403 }
+            );
+        }
+
         const updateArenaUsecase: UpdateArenaUsecase = new UpdateArenaUsecase(
             arenaRepository
         );
         const updateArenaDto: UpdateArenaDto = {
             id: arenaId,
-            challengerId: validated.data.challengerId,
             description: validated.data.description,
-            startDate: validated.data.startDate ? new Date(validated.data.startDate) : undefined,
+            startDate: validated.data.startDate
+                ? new Date(validated.data.startDate)
+                : undefined,
         };
 
         await updateArenaUsecase.execute(updateArenaDto);
@@ -69,9 +85,11 @@ export async function PATCH(request: Request, { params }: RequestParams) {
     }
 }
 
-// TODO: 투기장 참가자 간 상호 동의하에 삭제하는 기능을 추가할 시, 해당 API를 사용
 export async function DELETE(request: Request, { params }: RequestParams) {
-    const log = logger.child({ route: "/api/member/arenas/[id]", method: "DELETE" });
+    const log = logger.child({
+        route: "/api/member/arenas/[id]",
+        method: "DELETE",
+    });
     try {
         const { id } = await params;
         const idValidated = validate(IdSchema, id);
@@ -95,13 +113,16 @@ export async function DELETE(request: Request, { params }: RequestParams) {
 
         // member validation
         const memberId: string | null = await getAuthUserId();
-        if (
-            !memberId ||
-            (arena.creatorId !== memberId && arena.challengerId !== memberId)
-        ) {
+        if (!memberId) {
+            return NextResponse.json(
+                { message: "로그인이 필요합니다." },
+                { status: 401 }
+            );
+        }
+        if (arena.creatorId !== memberId && arena.challengerId !== memberId) {
             return NextResponse.json(
                 { message: "투기장 삭제 권한이 없습니다." },
-                { status: 401 }
+                { status: 403 }
             );
         }
 

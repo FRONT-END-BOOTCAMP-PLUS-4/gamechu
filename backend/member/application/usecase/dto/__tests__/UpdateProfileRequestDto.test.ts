@@ -22,8 +22,12 @@ describe("UpdateProfileSchema", () => {
         expect(UpdateProfileSchema.safeParse({ birthDate: "1990-01-01" }).success).toBe(false);
     });
 
-    it("imageUrl 유효한 URL 통과", () => {
-        expect(UpdateProfileSchema.safeParse({ imageUrl: "https://example.com/img.png" }).success).toBe(true);
+    it("imageUrl 허용된 도메인 통과", () => {
+        expect(UpdateProfileSchema.safeParse({ imageUrl: "https://i.imgur.com/img.png" }).success).toBe(true);
+    });
+
+    it("imageUrl 허용되지 않은 도메인 → 실패", () => {
+        expect(UpdateProfileSchema.safeParse({ imageUrl: "https://example.com/img.png" }).success).toBe(false);
     });
 
     it("imageUrl 잘못된 URL → 실패", () => {

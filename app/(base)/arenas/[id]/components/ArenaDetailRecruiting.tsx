@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 import Button from "@/app/components/Button";
 import Toast from "@/app/components/Toast";
 import useArenaStore from "@/stores/UseArenaStore";
-import { getAuthUserId } from "@/utils/GetAuthUserId.client";
 import Image from "next/image";
 
 export default function ArenaDetailRecruiting() {
@@ -15,24 +14,14 @@ export default function ArenaDetailRecruiting() {
 
     const { mutate: joinArena, isPending } = useMutation({
         mutationFn: async () => {
-            const memberId = await getAuthUserId();
-            if (!memberId) throw new Error("로그인이 필요합니다.");
-            if (memberId === arenaDetail?.creatorId) {
-                throw new Error("본인이 만든 투기장에는 참가할 수 없습니다.");
-            }
-            if (arenaDetail?.challengerId) {
-                throw new Error("이미 다른 유저가 참가 중입니다.");
-            }
-
-            const res = await fetch(`/api/arenas/${arenaDetail?.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: 2, challengerId: memberId }),
-            });
+            const res = await fetch(
+                `/api/member/arenas/${arenaDetail?.id}/join`,
+                { method: "POST" }
+            );
 
             if (!res.ok) {
                 const data = await res.json();
-                throw new Error(data.message || "상태 변경 실패");
+                throw new Error(data.message || "참가 실패");
             }
         },
         onSuccess: () => {

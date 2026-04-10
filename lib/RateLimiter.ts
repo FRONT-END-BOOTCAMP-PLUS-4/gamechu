@@ -67,11 +67,12 @@ export class RateLimiter {
 }
 
 export function getClientIp(req: NextRequest): string {
-    return (
-        req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-        req.headers.get("x-real-ip") ??
-        "unknown"
-    );
+    const forwarded = req.headers.get("x-forwarded-for");
+    if (forwarded) {
+        const ips = forwarded.split(",").map((ip) => ip.trim());
+        return ips[ips.length - 1]; // last entry is set by trusted proxy, not the client
+    }
+    return req.headers.get("x-real-ip") ?? "unknown";
 }
 
 export function rateLimitResponse(
