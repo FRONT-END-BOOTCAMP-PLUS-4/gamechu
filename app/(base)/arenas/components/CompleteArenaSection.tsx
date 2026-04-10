@@ -4,7 +4,6 @@ import useArenas from "@/hooks/useArenas";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import CompleteArenaCard from "./CompleteArenaCard";
 import { useEffect } from "react";
-import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
 
 type Props = {
@@ -13,16 +12,10 @@ type Props = {
 
 export default function CompleteArenaSection({ onLoaded }: Props) {
     const status: number = 5;
-    const { arenaListDto, loading, error } = useArenas({
-        status,
-        currentPage: 1,
-        mine: false,
-        pageSize: 2,
-    });
-    useArenaAutoStatus({
-        arenaList: arenaListDto?.arenas || [],
-        onStatusUpdate: () => {},
-    });
+    const { arenaListDto, loading, error } = useArenas(
+        { status, currentPage: 1, mine: false, pageSize: 2 },
+        { refetchInterval: 30_000 }
+    );
 
     // ✅ 로딩 완료되면 상위로 알림
     useEffect(() => {

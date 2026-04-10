@@ -10,7 +10,6 @@ import { fetcher } from "@/lib/Fetcher";
 import { queryKeys } from "@/lib/QueryKeys";
 import { ArenaDetailDto } from "@/backend/arena/application/usecase/dto/ArenaDetailDto";
 import useArenaStore from "@/stores/UseArenaStore";
-import { useArenaAutoStatusDetail } from "@/hooks/useArenaAutoStatusDetail";
 import { useParams } from "next/navigation";
 import { useLoadingStore } from "@/stores/LoadingStore";
 
@@ -21,12 +20,11 @@ export default function ArenaDetailPage() {
     const idParams = useParams().id;
     const arenaId = Number(idParams);
 
-    useArenaAutoStatusDetail({ onStatusUpdate: () => {} });
-
     const { data, isLoading, isError } = useQuery<ArenaDetailDto>({
         queryKey: queryKeys.arenaDetail(arenaId),
         queryFn: () => fetcher(`/api/arenas/${arenaId}`),
         enabled: !!arenaId,
+        refetchInterval: 30_000,
     });
 
     useEffect(() => {

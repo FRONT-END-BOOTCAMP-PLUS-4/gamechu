@@ -5,7 +5,6 @@ import ArenaSectionHeader from "./ArenaSectionHeader";
 import VotingArenaCard from "./VotingArenaCard";
 import useArenas from "@/hooks/useArenas";
 import { useEffect, useRef, useState } from "react";
-import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
 
 type Props = {
@@ -19,16 +18,10 @@ export default function VotingArenaSection({ onLoaded }: Props) {
         arenaListDto,
         loading: arenaLoading,
         error: arenaError,
-    } = useArenas({
-        status,
-        currentPage: 1,
-        mine: false,
-        pageSize: 3,
-    });
-    useArenaAutoStatus({
-        arenaList: arenaListDto?.arenas || [],
-        onStatusUpdate: () => {},
-    });
+    } = useArenas(
+        { status, currentPage: 1, mine: false, pageSize: 3 },
+        { refetchInterval: 30_000 }
+    );
 
     const [arenaIdsToFetch, setArenaIdsToFetch] = useState<number[]>([]);
     const fetchedIdsRef = useRef<string>("");

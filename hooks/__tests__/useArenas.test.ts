@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHook, waitFor, act } from "@testing-library/react";
 import useFetchArenas from "../useArenas";
 import { createWrapper } from "@/tests/utils/createQueryWrapper";
 
@@ -97,6 +97,71 @@ describe("useFetchArenas", () => {
         expect(fetch).toHaveBeenCalledWith(
             expect.stringContaining("mine=true")
         );
+    });
+
+    it("does NOT auto-refetch when refetchInterval is not passed", async () => {
+        vi.mocked(fetch).mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(mockArenaListDto),
+        } as unknown as Response);
+
+        vi.useFakeTimers();
+
+        renderHook(
+            () => useFetchArenas({ status: 1, mine: false, pageSize: 10 }),
+            { wrapper: createWrapper() }
+        );
+
+        // Initial fetch
+        await act(async () => {
+            await Promise.resolve();
+        });
+        const callCount = vi.mocked(fetch).mock.calls.length;
+
+        await act(async () => {
+            vi.advanceTimersByTime(60_000);
+        });
+
+        // No additional fetches after 60s
+        expect(vi.mocked(fetch).mock.calls.length).toBe(callCount);
+
+        vi.useRealTimers();
+    });
+
+    it("auto-refetches every 30s when refetchInterval is passed", async () => {
+        vi.mocked(fetch).mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(mockArenaListDto),
+        } as unknown as Response);
+
+        vi.useFakeTimers();
+
+        renderHook(
+            () =>
+                useFetchArenas(
+                    { status: 1, mine: false, pageSize: 10 },
+                    { refetchInterval: 30_000 }
+                ),
+            { wrapper: createWrapper() }
+        );
+
+        // Initial fetch
+        await act(async () => {
+            await Promise.resolve();
+        });
+        const afterInitial = vi.mocked(fetch).mock.calls.length;
+        expect(afterInitial).toBeGreaterThan(0);
+
+        // Advance past one interval — should trigger one more fetch
+        await act(async () => {
+            vi.advanceTimersByTime(30_000);
+            await Promise.resolve();
+        });
+        expect(vi.mocked(fetch).mock.calls.length).toBeGreaterThan(
+            afterInitial
+        );
+
+        vi.useRealTimers();
     });
 
     it("uses memberId param when targetMemberId is provided", async () => {

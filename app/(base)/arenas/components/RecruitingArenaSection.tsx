@@ -1,6 +1,5 @@
 "use client";
 
-import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import RecruitingArenaCard from "./RecruitingArenaCard";
@@ -14,17 +13,10 @@ type Props = {
 export default function RecruitingArenaSection({ onLoaded }: Props) {
     const status: number = 1;
 
-    const { arenaListDto, loading, error } = useArenas({
-        status,
-        currentPage: 1,
-        mine: false,
-        pageSize: 2,
-    });
-
-    useArenaAutoStatus({
-        arenaList: arenaListDto?.arenas || [],
-        onStatusUpdate: () => {},
-    });
+    const { arenaListDto, loading, error } = useArenas(
+        { status, currentPage: 1, mine: false, pageSize: 2 },
+        { refetchInterval: 30_000 }
+    );
 
     // ✅ 로딩이 끝났을 때 onLoaded 호출
     useEffect(() => {
