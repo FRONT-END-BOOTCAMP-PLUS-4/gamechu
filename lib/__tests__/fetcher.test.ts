@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { fetcher } from "../fetcher";
+import { fetcher } from "../Fetcher";
 
 describe("fetcher", () => {
     beforeEach(() => {
