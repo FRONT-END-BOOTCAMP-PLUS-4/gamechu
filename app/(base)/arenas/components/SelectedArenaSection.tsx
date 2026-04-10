@@ -11,7 +11,6 @@ import CompleteArenaCard from "./CompleteArenaCard";
 import Pager from "@/app/components/Pager";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 
 type SelectedArenaSectionProps = {
     status: number;
@@ -24,17 +23,10 @@ export default function SelectedArenaSection({
     currentPage,
     onLoaded,
 }: SelectedArenaSectionProps) {
-    const { arenaListDto, loading, error } = useArenas({
-        status,
-        currentPage,
-        mine: false,
-        pageSize: [1, 5].includes(status) ? 6 : 9,
-    });
-
-    useArenaAutoStatus({
-        arenaList: arenaListDto?.arenas || [],
-        onStatusUpdate: () => {},
-    });
+    const { arenaListDto, loading, error } = useArenas(
+        { status, currentPage, mine: false, pageSize: [1, 5].includes(status) ? 6 : 9 },
+        { refetchInterval: 30_000 }
+    );
 
     useEffect(() => {
         if (!loading) {

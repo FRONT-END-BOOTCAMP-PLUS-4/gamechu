@@ -3,7 +3,6 @@
 import useArenas from "@/hooks/useArenas";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import WaitingArenaCard from "./WaitingArenaCard";
-import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
 import { useEffect } from "react";
 
@@ -14,17 +13,10 @@ type Props = {
 export default function WaitingArenaSection({ onLoaded }: Props) {
     const status: number = 2;
 
-    const { arenaListDto, loading, error } = useArenas({
-        status,
-        currentPage: 1,
-        mine: false,
-        pageSize: 3,
-    });
-
-    useArenaAutoStatus({
-        arenaList: arenaListDto?.arenas || [],
-        onStatusUpdate: () => {},
-    });
+    const { arenaListDto, loading, error } = useArenas(
+        { status, currentPage: 1, mine: false, pageSize: 3 },
+        { refetchInterval: 30_000 }
+    );
 
     // ✅ 데이터 패칭 완료되면 상위에 알림
     useEffect(() => {

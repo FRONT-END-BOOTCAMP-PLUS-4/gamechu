@@ -3,7 +3,6 @@
 import useArenas from "@/hooks/useArenas";
 import ArenaSectionHeader from "./ArenaSectionHeader";
 import DebatingArenaCard from "./DebatingArenaCard";
-import { useArenaAutoStatus } from "@/hooks/useArenaAutoStatus";
 import { GetSectionTitle } from "@/utils/GetSectionTitle";
 import { useEffect } from "react";
 
@@ -14,17 +13,10 @@ type Props = {
 export default function DebatingArenaSection({ onLoaded }: Props) {
     const status: number = 3;
 
-    const { arenaListDto, loading, error } = useArenas({
-        status,
-        currentPage: 1,
-        mine: false,
-        pageSize: 3,
-    });
-
-    useArenaAutoStatus({
-        arenaList: arenaListDto?.arenas || [],
-        onStatusUpdate: () => {},
-    });
+    const { arenaListDto, loading, error } = useArenas(
+        { status, currentPage: 1, mine: false, pageSize: 3 },
+        { refetchInterval: 30_000 }
+    );
 
     // ✅ 로딩이 끝나면 onLoaded 콜백 실행
     useEffect(() => {
