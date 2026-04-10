@@ -1,4 +1,4 @@
-// next.config.js
+// next.config.ts
 const nextConfig = {
     async headers() {
         return [
@@ -9,10 +9,10 @@ const nextConfig = {
                         key: "Content-Security-Policy",
                         value: [
                             "default-src 'self'",
-                            "script-src 'self'",
-                            "style-src 'self' 'unsafe-inline'",
+                            "script-src 'self' 'unsafe-inline'",
+                            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
                             "img-src 'self' data: https:",
-                            "font-src 'self'",
+                            "font-src 'self' https://cdn.jsdelivr.net",
                             "connect-src 'self' ws: wss:",
                         ].join("; "),
                     },
@@ -21,8 +21,11 @@ const nextConfig = {
         ];
     },
     images: {
-        domains: ["cdn.cloudflare.steamstatic.com"], // 정적 도메인은 여기 유지
         remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "cdn.cloudflare.steamstatic.com",
+            },
             {
                 protocol: "https",
                 hostname: "i.imgur.com",

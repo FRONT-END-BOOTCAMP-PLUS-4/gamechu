@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { z } from "zod";
-import { validate, IdSchema } from "../validation";
+import { validate, IdSchema } from "../Validation";
 
 describe("validate()", () => {
     const TestSchema = z.object({ name: z.string().min(1, "이름 필수") });

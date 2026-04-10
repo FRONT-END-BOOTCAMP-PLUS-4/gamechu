@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
@@ -8,7 +9,7 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
 vi.mock(
     "@/backend/review/infra/repositories/prisma/PrismaReviewRepository",
     () => ({
-        PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
+        PrismaReviewRepository: vi.fn(function (this: any) {
             this.findByMemberId = vi.fn().mockResolvedValue([]);
             this.create = vi.fn().mockResolvedValue({
                 id: 1,
@@ -22,7 +23,7 @@ vi.mock(
 );
 
 vi.mock("@/backend/review/application/usecase/CreateReviewUsecase", () => ({
-    CreateReviewUsecase: vi.fn(function (this: Record<string, unknown>) {
+    CreateReviewUsecase: vi.fn(function (this: any) {
         this.execute = vi.fn().mockResolvedValue({
             id: 1,
             gameId: 10,
@@ -40,9 +41,7 @@ const { CreateReviewUsecase } = await import(
 
 describe("POST /api/member/games/[gameId]/reviews", () => {
     beforeEach(() => {
-        vi.mocked(CreateReviewUsecase).mockImplementation(function (
-            this: Record<string, unknown>
-        ) {
+        vi.mocked(CreateReviewUsecase).mockImplementation(function (this: any) {
             this.execute = vi.fn().mockResolvedValue({
                 id: 1,
                 gameId: 10,
@@ -94,7 +93,7 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
 
     it("POST with non-JSON content returns 400", async () => {
         vi.mocked(CreateReviewUsecase).mockImplementationOnce(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.execute = vi
                 .fn()
@@ -125,7 +124,7 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
 
     it("POST with content exceeding 10,000 chars returns 400", async () => {
         vi.mocked(CreateReviewUsecase).mockImplementationOnce(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.execute = vi
                 .fn()

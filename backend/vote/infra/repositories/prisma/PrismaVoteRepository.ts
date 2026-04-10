@@ -44,31 +44,38 @@ export class PrismaVoteRepository implements VoteRepository {
             rightCount: number;
         }>
     > {
-        // RAW SQL 쿼리로 한 번에 모든 arena의 vote count 계산
-        const results = await this.prisma.$queryRaw<
-            Array<{
-                arenaId: number;
-                totalCount: bigint;
-                leftCount: bigint;
-                rightCount: bigint;
-            }>
-        >`
-            SELECT
-                v.arena_id::INTEGER AS "arenaId",
-                COUNT(*)::INTEGER AS "totalCount",
-                SUM(CASE WHEN v.voted_to = a.creator_id THEN 1 ELSE 0 END)::INTEGER AS "leftCount",
-                SUM(CASE WHEN v.voted_to != a.creator_id THEN 1 ELSE 0 END)::INTEGER AS "rightCount"
-            FROM votes v
-            JOIN arenas a ON v.arena_id = a.id
-            WHERE v.arena_id IN (${Prisma.join(arenaIds)})
-            GROUP BY v.arena_id
-        `;
+        const votes = await this.prisma.vote.findMany({
+            where: { arenaId: { in: arenaIds } },
+            select: {
+                arenaId: true,
+                votedTo: true,
+                arena: { select: { creatorId: true } },
+            },
+        });
 
-        return results.map((row) => ({
-            arenaId: row.arenaId,
-            totalCount: Number(row.totalCount),
-            leftCount: Number(row.leftCount),
-            rightCount: Number(row.rightCount),
+        const statsMap = new Map<
+            number,
+            { totalCount: number; leftCount: number; rightCount: number }
+        >();
+
+        for (const vote of votes) {
+            const existing = statsMap.get(vote.arenaId) ?? {
+                totalCount: 0,
+                leftCount: 0,
+                rightCount: 0,
+            };
+            existing.totalCount++;
+            if (vote.votedTo === vote.arena.creatorId) {
+                existing.leftCount++;
+            } else {
+                existing.rightCount++;
+            }
+            statsMap.set(vote.arenaId, existing);
+        }
+
+        return Array.from(statsMap.entries()).map(([arenaId, counts]) => ({
+            arenaId,
+            ...counts,
         }));
     }
     async findAll(filter: VoteFilter): Promise<Vote[]> {

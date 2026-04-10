@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
@@ -8,7 +9,7 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
 vi.mock(
     "@/backend/review/infra/repositories/prisma/PrismaReviewRepository",
     () => ({
-        PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
+        PrismaReviewRepository: vi.fn(function (this: any) {
             this.findById = vi.fn().mockResolvedValue({
                 id: 1,
                 memberId: "test-user-id",
@@ -28,7 +29,7 @@ vi.mock(
 );
 
 vi.mock("@/backend/review/application/usecase/UpdateReviewUsecase", () => ({
-    UpdateReviewUsecase: vi.fn(function (this: Record<string, unknown>) {
+    UpdateReviewUsecase: vi.fn(function (this: any) {
         this.execute = vi.fn().mockResolvedValue({
             id: 1,
             gameId: 10,
@@ -39,7 +40,7 @@ vi.mock("@/backend/review/application/usecase/UpdateReviewUsecase", () => ({
 }));
 
 vi.mock("@/backend/review/application/usecase/DeleteReviewUsecase", () => ({
-    DeleteReviewUsecase: vi.fn(function (this: Record<string, unknown>) {
+    DeleteReviewUsecase: vi.fn(function (this: any) {
         this.execute = vi.fn().mockResolvedValue(undefined);
     }),
 }));
@@ -47,9 +48,7 @@ vi.mock("@/backend/review/application/usecase/DeleteReviewUsecase", () => ({
 vi.mock(
     "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository",
     () => ({
-        PrismaReviewLikeRepository: vi.fn(function (
-            this: Record<string, unknown>
-        ) {
+        PrismaReviewLikeRepository: vi.fn(function (this: any) {
             this.deleteByReviewId = vi.fn().mockResolvedValue(undefined);
         }),
     })
@@ -58,7 +57,7 @@ vi.mock(
 vi.mock(
     "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
     () => ({
-        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+        PrismaMemberRepository: vi.fn(function (this: any) {
             this.findById = vi.fn().mockResolvedValue(null);
         }),
     })
@@ -67,16 +66,14 @@ vi.mock(
 vi.mock(
     "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository",
     () => ({
-        PrismaScoreRecordRepository: vi.fn(function (
-            this: Record<string, unknown>
-        ) {
+        PrismaScoreRecordRepository: vi.fn(function (this: any) {
             this.create = vi.fn().mockResolvedValue(undefined);
         }),
     })
 );
 
 vi.mock("@/backend/score-policy/domain/ScorePolicy", () => ({
-    ScorePolicy: vi.fn(function (this: Record<string, unknown>) {
+    ScorePolicy: vi.fn(function (this: any) {
         this.getPolicy = vi.fn().mockReturnValue(null);
     }),
 }));
@@ -84,9 +81,7 @@ vi.mock("@/backend/score-policy/domain/ScorePolicy", () => ({
 vi.mock(
     "@/backend/score-policy/application/usecase/ApplyReviewScoreUsecase",
     () => ({
-        ApplyReviewScoreUsecase: vi.fn(function (
-            this: Record<string, unknown>
-        ) {
+        ApplyReviewScoreUsecase: vi.fn(function (this: any) {
             this.execute = vi.fn().mockResolvedValue(undefined);
         }),
     })
@@ -122,8 +117,8 @@ function makeDeleteRequest(reviewId: string) {
 
 const validBody = { content: "{}", rating: 5 };
 const patchParams = (reviewId: string) =>
-    ({ params: Promise.resolve({ reviewId }) }) as {
-        params: Promise<{ reviewId: string }>;
+    ({ params: Promise.resolve({ gameId: "10", reviewId }) }) as {
+        params: Promise<{ gameId: string; reviewId: string }>;
     };
 const deleteParams = (reviewId: string) =>
     ({ params: Promise.resolve({ gameId: "10", reviewId }) }) as {
@@ -134,7 +129,7 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
     beforeEach(() => {
         vi.mocked(getAuthUserId).mockResolvedValue("test-user-id");
         vi.mocked(PrismaReviewRepository).mockImplementation(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.findById = vi.fn().mockResolvedValue({
                 id: 1,
@@ -144,9 +139,7 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
                 rating: 5,
             });
         });
-        vi.mocked(UpdateReviewUsecase).mockImplementation(function (
-            this: Record<string, unknown>
-        ) {
+        vi.mocked(UpdateReviewUsecase).mockImplementation(function (this: any) {
             this.execute = vi.fn().mockResolvedValue({
                 id: 1,
                 gameId: 10,
@@ -167,7 +160,7 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
 
     it("PATCH on non-existent review returns 404", async () => {
         vi.mocked(PrismaReviewRepository).mockImplementationOnce(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.findById = vi.fn().mockResolvedValue(null);
         });
@@ -180,7 +173,7 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
 
     it("PATCH on another user's review returns 403", async () => {
         vi.mocked(PrismaReviewRepository).mockImplementationOnce(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.findById = vi.fn().mockResolvedValue({
                 id: 1,
@@ -199,7 +192,7 @@ describe("PATCH /api/member/games/[gameId]/reviews/[reviewId]", () => {
 
     it("PATCH with invalid content (usecase throws) returns 400", async () => {
         vi.mocked(UpdateReviewUsecase).mockImplementationOnce(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.execute = vi
                 .fn()
@@ -232,7 +225,7 @@ describe("DELETE /api/member/games/[gameId]/reviews/[reviewId]", () => {
     beforeEach(() => {
         vi.mocked(getAuthUserId).mockResolvedValue("test-user-id");
         vi.mocked(PrismaReviewRepository).mockImplementation(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.findById = vi.fn().mockResolvedValue({
                 id: 1,
@@ -252,7 +245,7 @@ describe("DELETE /api/member/games/[gameId]/reviews/[reviewId]", () => {
 
     it("DELETE on non-existent review returns 404", async () => {
         vi.mocked(PrismaReviewRepository).mockImplementationOnce(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.findById = vi.fn().mockResolvedValue(null);
         });

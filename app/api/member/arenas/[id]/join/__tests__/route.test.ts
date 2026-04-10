@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NextRequest } from "next/server";
 
 vi.mock("@/utils/GetAuthUserId.server", () => ({
     getAuthUserId: vi.fn().mockResolvedValue("user-id"),
@@ -65,9 +67,12 @@ describe("POST /api/member/arenas/[id]/join", () => {
         const { getAuthUserId } = await import("@/utils/GetAuthUserId.server");
         vi.mocked(getAuthUserId).mockResolvedValueOnce(null);
 
-        const req = new Request("http://localhost/api/member/arenas/1/join", {
-            method: "POST",
-        });
+        const req = new NextRequest(
+            "http://localhost/api/member/arenas/1/join",
+            {
+                method: "POST",
+            }
+        );
         const res = await POST(req, { params });
         expect(res.status).toBe(401);
     });
@@ -76,9 +81,12 @@ describe("POST /api/member/arenas/[id]/join", () => {
         const { getAuthUserId } = await import("@/utils/GetAuthUserId.server");
         vi.mocked(getAuthUserId).mockResolvedValueOnce("creator-id");
 
-        const req = new Request("http://localhost/api/member/arenas/1/join", {
-            method: "POST",
-        });
+        const req = new NextRequest(
+            "http://localhost/api/member/arenas/1/join",
+            {
+                method: "POST",
+            }
+        );
         const res = await POST(req, { params });
         expect(res.status).toBe(403);
         const body = await res.json();
@@ -90,7 +98,7 @@ describe("POST /api/member/arenas/[id]/join", () => {
             "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository"
         );
         vi.mocked(PrismaArenaRepository).mockImplementationOnce(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.findById = vi.fn().mockResolvedValue({
                 id: 1,
@@ -102,9 +110,12 @@ describe("POST /api/member/arenas/[id]/join", () => {
             this.update = vi.fn();
         });
 
-        const req = new Request("http://localhost/api/member/arenas/1/join", {
-            method: "POST",
-        });
+        const req = new NextRequest(
+            "http://localhost/api/member/arenas/1/join",
+            {
+                method: "POST",
+            }
+        );
         const res = await POST(req, { params });
         expect(res.status).toBe(409);
     });
@@ -114,7 +125,7 @@ describe("POST /api/member/arenas/[id]/join", () => {
             "@/backend/member/infra/repositories/prisma/PrismaMemberRepository"
         );
         vi.mocked(PrismaMemberRepository).mockImplementationOnce(function (
-            this: Record<string, unknown>
+            this: any
         ) {
             this.findById = vi.fn().mockResolvedValue({
                 id: "user-id",
@@ -122,9 +133,12 @@ describe("POST /api/member/arenas/[id]/join", () => {
             });
         });
 
-        const req = new Request("http://localhost/api/member/arenas/1/join", {
-            method: "POST",
-        });
+        const req = new NextRequest(
+            "http://localhost/api/member/arenas/1/join",
+            {
+                method: "POST",
+            }
+        );
         const res = await POST(req, { params });
         expect(res.status).toBe(403);
         const body = await res.json();
@@ -132,9 +146,12 @@ describe("POST /api/member/arenas/[id]/join", () => {
     });
 
     it("returns 200 on valid join", async () => {
-        const req = new Request("http://localhost/api/member/arenas/1/join", {
-            method: "POST",
-        });
+        const req = new NextRequest(
+            "http://localhost/api/member/arenas/1/join",
+            {
+                method: "POST",
+            }
+        );
         const res = await POST(req, { params });
         expect(res.status).toBe(200);
         const body = await res.json();
