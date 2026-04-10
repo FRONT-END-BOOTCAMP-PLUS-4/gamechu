@@ -28,27 +28,27 @@
 Single pino instance exported as default. `pino-pretty` transport activates only in development via `NODE_ENV`.
 
 ```ts
-import pino from "pino"
+import pino from "pino";
 
-const isDev = process.env.NODE_ENV === "development"
+const isDev = process.env.NODE_ENV === "development";
 
-const globalForLogger = global as unknown as { logger: pino.Logger }
+const globalForLogger = global as unknown as { logger: pino.Logger };
 
 const logger =
-  globalForLogger.logger ??
-  pino({
-    level: isDev ? "debug" : "info",
-    timestamp: pino.stdTimeFunctions.isoTime, // epoch ms 대신 ISO 8601 — 가독성 및 로그 파서 호환성
-    transport: isDev
-      ? { target: "pino-pretty", options: { colorize: true } }
-      : undefined,
-  })
+    globalForLogger.logger ??
+    pino({
+        level: isDev ? "debug" : "info",
+        timestamp: pino.stdTimeFunctions.isoTime, // epoch ms 대신 ISO 8601 — 가독성 및 로그 파서 호환성
+        transport: isDev
+            ? { target: "pino-pretty", options: { colorize: true } }
+            : undefined,
+    });
 
 // HMR(hot module replacement)에서 모듈이 재평가될 때 중복 인스턴스 생성 방지
 // production은 Node.js 모듈 캐시로 보장되므로 global 저장 불필요
-if (process.env.NODE_ENV !== "production") globalForLogger.logger = logger
+if (process.env.NODE_ENV !== "production") globalForLogger.logger = logger;
 
-export default logger
+export default logger;
 ```
 
 `pino-pretty` is a devDependency — the transport branch is never reached in production.
@@ -58,19 +58,22 @@ export default logger
 Each route handler creates a child logger at the top of the handler with route context baked in. `userId` is added per call since it is only available after `getAuthUserId()`.
 
 ```ts
-import logger from "@/lib/logger"
+import logger from "@/lib/logger";
 
 export async function GET(request: Request) {
-  const log = logger.child({ route: "/api/arenas", method: "GET" })
-  const userId = await getAuthUserId()
+    const log = logger.child({ route: "/api/arenas", method: "GET" });
+    const userId = await getAuthUserId();
 
-  try {
-    // ...
-    return NextResponse.json(result)
-  } catch (error) {
-    log.error({ userId, err: error }, "아레나 목록 조회 실패")
-    return NextResponse.json({ message: "알 수 없는 오류 발생" }, { status: 500 })
-  }
+    try {
+        // ...
+        return NextResponse.json(result);
+    } catch (error) {
+        log.error({ userId, err: error }, "아레나 목록 조회 실패");
+        return NextResponse.json(
+            { message: "알 수 없는 오류 발생" },
+            { status: 500 }
+        );
+    }
 }
 ```
 
@@ -101,6 +104,7 @@ async execute(dto: GetArenaDto): Promise<ArenaListDto> {
 ```
 
 Affected files (7 total):
+
 - `backend/arena/application/usecase/GetArenaUsecase.ts`
 - `backend/chatting/application/usecase/CreateChattingUsecase.ts`
 - `backend/notification-record/application/usecase/GetNotificationRecordUsecase.ts`
@@ -115,11 +119,11 @@ These are graceful degradation sites — failures are expected and recovered fro
 
 ```ts
 // lib/withCache.ts
-logger.warn({ key }, "캐시 읽기 실패 — DB로 폴백")
-logger.warn({ key }, "캐시 쓰기 실패")
+logger.warn({ key }, "캐시 읽기 실패 — DB로 폴백");
+logger.warn({ key }, "캐시 쓰기 실패");
 
 // lib/RateLimiter.ts
-logger.warn({ ip }, "레이트 리미터 Redis 오류 — 요청 허용")
+logger.warn({ ip }, "레이트 리미터 Redis 오류 — 요청 허용");
 ```
 
 Level distinction: `warn` = degraded but recovered; `error` = broke and could not recover.
@@ -128,11 +132,11 @@ Level distinction: `warn` = degraded but recovered; `error` = broke and could no
 
 ## Log level guide
 
-| Level | Use for |
-|-------|---------|
-| `error` | Unhandled exception, DB query failed, use case threw |
-| `warn` | Graceful degradation — Redis failure, rate limit hit |
-| `info` | Significant business events (future use) |
+| Level   | Use for                                                |
+| ------- | ------------------------------------------------------ |
+| `error` | Unhandled exception, DB query failed, use case threw   |
+| `warn`  | Graceful degradation — Redis failure, rate limit hit   |
+| `info`  | Significant business events (future use)               |
 | `debug` | Developer detail — query params, cache keys (dev only) |
 
 ---

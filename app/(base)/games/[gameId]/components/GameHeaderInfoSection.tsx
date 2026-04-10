@@ -8,7 +8,7 @@ type GameTitleInfoSectionProps = {
     releaseDate: string | null;
     gameId: number;
     viewerId: string;
-}
+};
 
 export default function GameTitleInfoSection({
     title,

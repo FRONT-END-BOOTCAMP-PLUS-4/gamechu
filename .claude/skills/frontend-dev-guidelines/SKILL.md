@@ -54,9 +54,9 @@ Creating a page? Set up this structure:
 
 ## Import Alias Quick Reference
 
-| Alias | Resolves To | Example |
-|-------|-------------|---------|
-| `@/` | Project root | `import { cn } from '@/utils/tailwindUtil'` |
+| Alias | Resolves To  | Example                                     |
+| ----- | ------------ | ------------------------------------------- |
+| `@/`  | Project root | `import { cn } from '@/utils/tailwindUtil'` |
 
 Defined in: `tsconfig.json` paths configuration
 
@@ -98,12 +98,14 @@ import Toast from "@/app/components/Toast";
 ### Component Patterns
 
 **GameChu components use:**
+
 - Function components with TypeScript interfaces
 - `"use client"` directive for interactive components
 - `cn()` utility for conditional TailwindCSS classes
 - Default export pattern
 
 **Key Concepts:**
+
 - Server Components by default (no directive needed)
 - Add `"use client"` only when using hooks, events, or browser APIs
 - Component structure: Interface → Component → Export
@@ -115,10 +117,12 @@ import Toast from "@/app/components/Toast";
 ### Data Fetching
 
 **Two patterns based on context:**
+
 1. **Server Components**: Direct `fetch()` or Prisma queries
 2. **Client Components**: `useEffect` + `fetch("/api/...")` + `useState`
 
 **API Route Layer:**
+
 - Routes live in `app/api/[feature]/route.ts`
 - Client fetches from `/api/...` paths
 - Use `useLoadingStore` for global loading state
@@ -130,6 +134,7 @@ import Toast from "@/app/components/Toast";
 ### File Organization
 
 **GameChu directory structure:**
+
 - `app/(base)/`: Main app pages (arenas, games, profile)
 - `app/(auth)/`: Authentication pages
 - `app/api/`: API route handlers
@@ -145,6 +150,7 @@ import Toast from "@/app/components/Toast";
 ### Styling
 
 **Primary Method: TailwindCSS utility classes**
+
 - All styling via className with Tailwind utilities
 - Use `cn()` from `@/utils/tailwindUtil` for conditional classes
 - Custom design tokens in `tailwind.config.ts` (colors, fonts)
@@ -157,6 +163,7 @@ import Toast from "@/app/components/Toast";
 ### Routing
 
 **Next.js App Router — Directory-Based:**
+
 - `app/(base)/[feature]/page.tsx` for pages
 - `app/(base)/[feature]/[id]/page.tsx` for dynamic routes
 - `app/(base)/[feature]/components/` for page-specific components
@@ -170,10 +177,12 @@ import Toast from "@/app/components/Toast";
 ### Loading & Error States
 
 **Loading: Zustand `useLoadingStore`**
+
 - Set `setLoading(true)` before fetch, `setLoading(false)` in finally
 - `LottieLoaderWrapper` in layout shows global loader
 
 **Error Handling:**
+
 - `Toast` component for user feedback
 - Try/catch in fetch calls
 - Not-found states with conditional rendering
@@ -185,6 +194,7 @@ import Toast from "@/app/components/Toast";
 ### Performance
 
 **Optimization Patterns:**
+
 - `useMemo`: Expensive computations (filter, sort, map)
 - `useCallback`: Event handlers passed to children
 - `React.memo`: Expensive components
@@ -199,6 +209,7 @@ import Toast from "@/app/components/Toast";
 ### TypeScript
 
 **Standards:**
+
 - Strict mode, avoid `any` type
 - Explicit return types on functions
 - Type imports: `import type { ... } from '...'`
@@ -211,6 +222,7 @@ import Toast from "@/app/components/Toast";
 ### Common Patterns
 
 **Covered Topics:**
+
 - Zustand store patterns (auth, modal, loading, arena)
 - Custom hooks for data fetching
 - Toast notifications
@@ -224,6 +236,7 @@ import Toast from "@/app/components/Toast";
 ### Complete Examples
 
 **Full working examples:**
+
 - Client component with fetch + Zustand
 - Server Component page
 - Custom data-fetching hook
@@ -236,18 +249,18 @@ import Toast from "@/app/components/Toast";
 
 ## Navigation Guide
 
-| Need to... | Read this resource |
-|------------|-------------------|
-| Create a component | [component-patterns.md](resources/component-patterns.md) |
-| Fetch data | [data-fetching.md](resources/data-fetching.md) |
-| Organize files/folders | [file-organization.md](resources/file-organization.md) |
-| Style components | [styling-guide.md](resources/styling-guide.md) |
-| Set up routing | [routing-guide.md](resources/routing-guide.md) |
-| Handle loading/errors | [loading-and-error-states.md](resources/loading-and-error-states.md) |
-| Optimize performance | [performance.md](resources/performance.md) |
-| TypeScript types | [typescript-standards.md](resources/typescript-standards.md) |
-| Stores/Modals/Hooks | [common-patterns.md](resources/common-patterns.md) |
-| See full examples | [complete-examples.md](resources/complete-examples.md) |
+| Need to...             | Read this resource                                                   |
+| ---------------------- | -------------------------------------------------------------------- |
+| Create a component     | [component-patterns.md](resources/component-patterns.md)             |
+| Fetch data             | [data-fetching.md](resources/data-fetching.md)                       |
+| Organize files/folders | [file-organization.md](resources/file-organization.md)               |
+| Style components       | [styling-guide.md](resources/styling-guide.md)                       |
+| Set up routing         | [routing-guide.md](resources/routing-guide.md)                       |
+| Handle loading/errors  | [loading-and-error-states.md](resources/loading-and-error-states.md) |
+| Optimize performance   | [performance.md](resources/performance.md)                           |
+| TypeScript types       | [typescript-standards.md](resources/typescript-standards.md)         |
+| Stores/Modals/Hooks    | [common-patterns.md](resources/common-patterns.md)                   |
+| See full examples      | [complete-examples.md](resources/complete-examples.md)               |
 
 ---
 

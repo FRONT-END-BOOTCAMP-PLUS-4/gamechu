@@ -4,5 +4,8 @@ export interface ReviewLikeRepository {
     isLiked(reviewId: number, memberId: string): Promise<boolean>;
     count(reviewId: number): Promise<number>;
     countByReviewIds(reviewIds: number[]): Promise<Map<number, number>>;
-    isLikedByReviewIds(reviewIds: number[], memberId: string): Promise<Set<number>>;
+    isLikedByReviewIds(
+        reviewIds: number[],
+        memberId: string
+    ): Promise<Set<number>>;
 }

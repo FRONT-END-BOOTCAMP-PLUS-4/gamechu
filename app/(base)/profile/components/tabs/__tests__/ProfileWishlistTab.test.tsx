@@ -46,7 +46,7 @@ describe("ProfileWishlistTab", () => {
     it("게임이 없을 때 위시리스트 고유 빈 상태 메시지를 표시한다", () => {
         render(<ProfileWishlistTab {...defaultProps} />);
         expect(
-            screen.getByText("위시리스트에 등록된 게임이 없습니다."),
+            screen.getByText("위시리스트에 등록된 게임이 없습니다.")
         ).toBeDefined();
     });
 
@@ -57,7 +57,7 @@ describe("ProfileWishlistTab", () => {
                 games={sampleGames}
                 pages={[1]}
                 endPage={1}
-            />,
+            />
         );
         expect(screen.getByTestId("game-card-list")).toBeDefined();
         const list = screen.getByTestId("game-card-list");
@@ -71,10 +71,10 @@ describe("ProfileWishlistTab", () => {
                 games={sampleGames}
                 pages={[1]}
                 endPage={1}
-            />,
+            />
         );
         expect(
-            screen.queryByText("위시리스트에 등록된 게임이 없습니다."),
+            screen.queryByText("위시리스트에 등록된 게임이 없습니다.")
         ).toBeNull();
     });
 
@@ -85,7 +85,7 @@ describe("ProfileWishlistTab", () => {
                 games={sampleGames}
                 pages={[1, 2]}
                 endPage={2}
-            />,
+            />
         );
         expect(screen.getByTestId("pager")).toBeDefined();
     });
@@ -97,7 +97,7 @@ describe("ProfileWishlistTab", () => {
                 games={sampleGames}
                 pages={[1]}
                 endPage={1}
-            />,
+            />
         );
         expect(screen.queryByTestId("pager")).toBeNull();
     });

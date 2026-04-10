@@ -21,9 +21,11 @@
 ## File Map
 
 **New:**
+
 - `utils/validation.ts` — `validate()` helper + `IdSchema`
 
 **Modified — add Zod schema export (input DTO files):**
+
 - `backend/member/application/usecase/dto/SignUpRequestDto.ts`
 - `backend/member/application/usecase/dto/UpdateProfileRequestDto.ts` ← also make fields optional
 - `backend/arena/application/usecase/dto/CreateArenaDto.ts`
@@ -39,6 +41,7 @@
 - `backend/game/application/usecase/dto/GetFilteredGamesRequestDto.ts`
 
 **Modified — add validation call + fix `{ error }` → `{ message }`:**
+
 - `app/api/auth/signup/route.ts`
 - `app/api/auth/email-check/route.ts`
 - `app/api/arenas/route.ts`
@@ -60,6 +63,7 @@
 - `app/api/member/review-likes/[reviewId]/route.ts`
 
 **New test files:**
+
 - `utils/__tests__/validation.test.ts`
 - `backend/member/application/usecase/dto/__tests__/SignUpRequestDto.test.ts`
 - `backend/member/application/usecase/dto/__tests__/UpdateProfileRequestDto.test.ts`
@@ -80,6 +84,7 @@
 ## Task 1: Foundation — `utils/validation.ts`
 
 **Files:**
+
 - Create: `utils/validation.ts`
 - Create: `utils/__tests__/validation.test.ts`
 
@@ -152,7 +157,9 @@ import { NextResponse } from "next/server";
 export function validate<T>(
     schema: z.ZodSchema<T>,
     data: unknown
-): { success: true; data: T } | { success: false; response: NextResponse<{ message: string }> } {
+):
+    | { success: true; data: T }
+    | { success: false; response: NextResponse<{ message: string }> } {
     const result = schema.safeParse(data);
     if (!result.success) {
         return {
@@ -197,6 +204,7 @@ git commit -m "[refactor/#NNN] utils/validation.ts: validate() 헬퍼 + IdSchema
 ## Task 2: Auth Validation
 
 **Files:**
+
 - Modify: `backend/member/application/usecase/dto/SignUpRequestDto.ts`
 - Modify: `app/api/auth/signup/route.ts`
 - Modify: `app/api/auth/email-check/route.ts`
@@ -263,10 +271,15 @@ Expected: FAIL — `SignUpSchema` not exported
 import { z } from "zod";
 
 export const SignUpSchema = z.object({
-    nickname: z.string().min(1, "닉네임을 입력해주세요.").max(20, "닉네임은 20자 이하여야 합니다."),
+    nickname: z
+        .string()
+        .min(1, "닉네임을 입력해주세요.")
+        .max(20, "닉네임은 20자 이하여야 합니다."),
     email: z.string().email("올바른 이메일 형식이 아닙니다."),
     password: z.string().min(8, "비밀번호는 8자 이상이어야 합니다."),
-    birthDate: z.string().regex(/^\d{8}$/, "생년월일은 yyyymmdd 형식이어야 합니다."),
+    birthDate: z
+        .string()
+        .regex(/^\d{8}$/, "생년월일은 yyyymmdd 형식이어야 합니다."),
     gender: z.enum(["M", "F"], { error: "성별은 M 또는 F여야 합니다." }),
 });
 
@@ -297,7 +310,10 @@ Add `validate()` call after rate limit, before DTO construction. Also fix `{ err
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { SignUpUsecase } from "@/backend/member/application/usecase/SignUpUsecase";
-import { SignUpRequestDto, SignUpSchema } from "@/backend/member/application/usecase/dto/SignUpRequestDto";
+import {
+    SignUpRequestDto,
+    SignUpSchema,
+} from "@/backend/member/application/usecase/dto/SignUpRequestDto";
 import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
 import { validate } from "@/utils/validation";
 
@@ -307,7 +323,10 @@ export async function POST(req: NextRequest) {
     const ip = getClientIp(req);
     const rateLimit = await signupLimiter.check(ip);
     if (!rateLimit.allowed) {
-        return rateLimitResponse(rateLimit.retryAfterMs, "회원가입 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.");
+        return rateLimitResponse(
+            rateLimit.retryAfterMs,
+            "회원가입 요청이 너무 많습니다. 잠시 후 다시 시도해주세요."
+        );
     }
 
     const validated = validate(SignUpSchema, await req.json());
@@ -315,7 +334,13 @@ export async function POST(req: NextRequest) {
 
     try {
         const { nickname, email, password, birthDate, gender } = validated.data;
-        const dto = new SignUpRequestDto(nickname, email, password, birthDate, gender);
+        const dto = new SignUpRequestDto(
+            nickname,
+            email,
+            password,
+            birthDate,
+            gender
+        );
         const repo = new PrismaMemberRepository();
         const usecase = new SignUpUsecase(repo);
         const user = await usecase.execute(dto);
@@ -324,7 +349,8 @@ export async function POST(req: NextRequest) {
             { status: 201 }
         );
     } catch (err) {
-        const message = err instanceof Error ? err.message : "서버 오류가 발생했습니다.";
+        const message =
+            err instanceof Error ? err.message : "서버 오류가 발생했습니다.";
         return NextResponse.json({ message }, { status: 400 });
     }
 }
@@ -343,7 +369,9 @@ import { validate } from "@/utils/validation";
 import { z } from "zod";
 
 const emailCheckLimiter = new RateLimiter("email-check", 60_000, 10);
-const EmailQuerySchema = z.object({ email: z.string().email("올바른 이메일 형식이 아닙니다.") });
+const EmailQuerySchema = z.object({
+    email: z.string().email("올바른 이메일 형식이 아닙니다."),
+});
 
 export async function GET(req: NextRequest) {
     const ip = getClientIp(req);
@@ -351,7 +379,10 @@ export async function GET(req: NextRequest) {
     if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfterMs);
 
     const { searchParams } = new URL(req.url);
-    const validated = validate(EmailQuerySchema, Object.fromEntries(searchParams));
+    const validated = validate(
+        EmailQuerySchema,
+        Object.fromEntries(searchParams)
+    );
     if (!validated.success) return validated.response;
 
     const repo = new PrismaMemberRepository();
@@ -360,9 +391,15 @@ export async function GET(req: NextRequest) {
     try {
         const result = await usecase.execute(validated.data.email);
         if (result.isDuplicate) {
-            return NextResponse.json({ message: "이미 존재하는 이메일입니다." }, { status: 409 });
+            return NextResponse.json(
+                { message: "이미 존재하는 이메일입니다." },
+                { status: 409 }
+            );
         }
-        return NextResponse.json({ message: "사용 가능한 이메일입니다." }, { status: 200 });
+        return NextResponse.json(
+            { message: "사용 가능한 이메일입니다." },
+            { status: 200 }
+        );
     } catch (err) {
         const message = err instanceof Error ? err.message : "서버 오류 발생";
         return NextResponse.json({ message }, { status: 500 });
@@ -395,6 +432,7 @@ git commit -m "[refactor/#NNN] auth 라우트 Zod 유효성 검사 추가 (signu
 ## Task 3: Review Validation
 
 **Files:**
+
 - Modify: `backend/review/application/usecase/dto/CreateReviewDto.ts`
 - Modify: `backend/review/application/usecase/dto/UpdateReviewDto.ts`
 - Modify: `app/api/member/games/[gameId]/reviews/route.ts`
@@ -425,19 +463,27 @@ describe("CreateReviewSchema", () => {
     });
 
     it("content 빈 문자열 → 실패", () => {
-        expect(CreateReviewSchema.safeParse({ ...valid, content: "" }).success).toBe(false);
+        expect(
+            CreateReviewSchema.safeParse({ ...valid, content: "" }).success
+        ).toBe(false);
     });
 
     it("rating 0 → 실패", () => {
-        expect(CreateReviewSchema.safeParse({ ...valid, rating: 0 }).success).toBe(false);
+        expect(
+            CreateReviewSchema.safeParse({ ...valid, rating: 0 }).success
+        ).toBe(false);
     });
 
     it("rating 6 → 실패", () => {
-        expect(CreateReviewSchema.safeParse({ ...valid, rating: 6 }).success).toBe(false);
+        expect(
+            CreateReviewSchema.safeParse({ ...valid, rating: 6 }).success
+        ).toBe(false);
     });
 
     it("rating 소수점 → 실패", () => {
-        expect(CreateReviewSchema.safeParse({ ...valid, rating: 3.5 }).success).toBe(false);
+        expect(
+            CreateReviewSchema.safeParse({ ...valid, rating: 3.5 }).success
+        ).toBe(false);
     });
 });
 ```
@@ -449,7 +495,9 @@ import { UpdateReviewSchema } from "../UpdateReviewDto";
 
 describe("UpdateReviewSchema", () => {
     it("content만 있어도 통과", () => {
-        expect(UpdateReviewSchema.safeParse({ content: "수정된 내용" }).success).toBe(true);
+        expect(
+            UpdateReviewSchema.safeParse({ content: "수정된 내용" }).success
+        ).toBe(true);
     });
 
     it("rating만 있어도 통과", () => {
@@ -475,12 +523,17 @@ npx vitest run "backend/review/application/usecase/dto/__tests__" --reporter ver
 - [ ] **Step 4: Add schemas to DTO files**
 
 `CreateReviewDto.ts` — add schema above existing interface:
+
 ```typescript
 import { z } from "zod";
 
 export const CreateReviewSchema = z.object({
     content: z.string().min(1, "리뷰 내용을 입력해주세요."),
-    rating: z.number().int().min(1, "별점은 1-5 사이여야 합니다.").max(5, "별점은 1-5 사이여야 합니다."),
+    rating: z
+        .number()
+        .int()
+        .min(1, "별점은 1-5 사이여야 합니다.")
+        .max(5, "별점은 1-5 사이여야 합니다."),
 });
 
 export interface CreateReviewDto {
@@ -491,16 +544,23 @@ export interface CreateReviewDto {
 ```
 
 `UpdateReviewDto.ts` — read the file first, then add:
+
 ```typescript
 import { z } from "zod";
 
-export const UpdateReviewSchema = z.object({
-    content: z.string().min(1, "리뷰 내용을 입력해주세요.").optional(),
-    rating: z.number().int().min(1, "별점은 1-5 사이여야 합니다.").max(5, "별점은 1-5 사이여야 합니다.").optional(),
-}).refine(
-    data => data.content !== undefined || data.rating !== undefined,
-    { message: "수정할 내용을 입력해주세요." }
-);
+export const UpdateReviewSchema = z
+    .object({
+        content: z.string().min(1, "리뷰 내용을 입력해주세요.").optional(),
+        rating: z
+            .number()
+            .int()
+            .min(1, "별점은 1-5 사이여야 합니다.")
+            .max(5, "별점은 1-5 사이여야 합니다.")
+            .optional(),
+    })
+    .refine((data) => data.content !== undefined || data.rating !== undefined, {
+        message: "수정할 내용을 입력해주세요.",
+    });
 ```
 
 - [ ] **Step 5: Run schema tests — confirm pass**
@@ -514,13 +574,18 @@ npx vitest run "backend/review/application/usecase/dto/__tests__" --reporter ver
 Read `app/api/member/games/[gameId]/reviews/route.ts` first, then add `IdSchema` for `gameId` path param and `CreateReviewSchema` for body. Import `validate` and `IdSchema` from `@/utils/validation`. Import `CreateReviewSchema` from the DTO.
 
 Key pattern — add at the top of the POST handler:
+
 ```typescript
 import { validate, IdSchema } from "@/utils/validation";
 import { CreateReviewSchema } from "@/backend/review/application/usecase/dto/CreateReviewDto";
 
 // Inside POST handler, after params:
 const gameIdResult = IdSchema.safeParse(gameId);
-if (!gameIdResult.success) return NextResponse.json({ message: "유효하지 않은 게임 ID입니다." }, { status: 400 });
+if (!gameIdResult.success)
+    return NextResponse.json(
+        { message: "유효하지 않은 게임 ID입니다." },
+        { status: 400 }
+    );
 
 const validated = validate(CreateReviewSchema, await req.json());
 if (!validated.success) return validated.response;
@@ -553,6 +618,7 @@ git commit -m "[refactor/#NNN] review 라우트 Zod 유효성 검사 추가"
 ## Task 4: Arena GET Validation (fixes NaN bug)
 
 **Files:**
+
 - Modify: `backend/arena/application/usecase/dto/GetArenaDto.ts`
 - Modify: `app/api/arenas/route.ts`
 - Create: `backend/arena/application/usecase/dto/__tests__/GetArenaDto.test.ts`
@@ -602,7 +668,9 @@ describe("GetArenaSchema", () => {
     });
 
     it("currentPage=0 → 실패 (min 1)", () => {
-        expect(GetArenaSchema.safeParse({ currentPage: "0" }).success).toBe(false);
+        expect(GetArenaSchema.safeParse({ currentPage: "0" }).success).toBe(
+            false
+        );
     });
 
     it("memberId 있으면 string으로 통과", () => {
@@ -625,13 +693,24 @@ npx vitest run "backend/arena/application/usecase/dto/__tests__/GetArenaDto.test
 import { z } from "zod";
 
 export const GetArenaSchema = z.object({
-    currentPage: z.coerce.number().int().min(1, "페이지는 1 이상이어야 합니다.").default(1),
-    status:      z.coerce.number().int().default(0),
+    currentPage: z.coerce
+        .number()
+        .int()
+        .min(1, "페이지는 1 이상이어야 합니다.")
+        .default(1),
+    status: z.coerce.number().int().default(0),
     // Absent from searchParams when not set → .default("false") handles it.
     // Any value other than exact string "true" produces false — intentional.
-    mine:        z.string().transform(v => v === "true").default("false"),
-    pageSize:    z.coerce.number().int().min(1, "페이지 크기는 1 이상이어야 합니다.").default(9),
-    memberId:    z.string().optional(), // targetMemberId — for "other user's arenas" view
+    mine: z
+        .string()
+        .transform((v) => v === "true")
+        .default("false"),
+    pageSize: z.coerce
+        .number()
+        .int()
+        .min(1, "페이지 크기는 1 이상이어야 합니다.")
+        .default(9),
+    memberId: z.string().optional(), // targetMemberId — for "other user's arenas" view
 });
 
 export class GetArenaDto {
@@ -669,10 +748,19 @@ export async function GET(request: Request) {
         const memberId = await getAuthUserId();
         const url = new URL(request.url);
 
-        const validated = validate(GetArenaSchema, Object.fromEntries(url.searchParams));
+        const validated = validate(
+            GetArenaSchema,
+            Object.fromEntries(url.searchParams)
+        );
         if (!validated.success) return validated.response;
 
-        const { currentPage, status, mine, pageSize, memberId: targetMemberId } = validated.data;
+        const {
+            currentPage,
+            status,
+            mine,
+            pageSize,
+            memberId: targetMemberId,
+        } = validated.data;
 
         // Determine effective member ID (same logic as before)
         let effectiveMemberId: string | undefined;
@@ -685,16 +773,28 @@ export async function GET(request: Request) {
         }
 
         if (!memberId && mine) {
-            return NextResponse.json({ message: "멤버 투기장 조회 권한이 없습니다." }, { status: 401 });
+            return NextResponse.json(
+                { message: "멤버 투기장 조회 권한이 없습니다." },
+                { status: 401 }
+            );
         }
 
         const arenaRepository = new PrismaArenaRepository();
         const memberRepository = new PrismaMemberRepository();
         const voteRepository = new PrismaVoteRepository();
-        const getArenaUsecase = new GetArenaUsecase(arenaRepository, memberRepository, voteRepository);
+        const getArenaUsecase = new GetArenaUsecase(
+            arenaRepository,
+            memberRepository,
+            voteRepository
+        );
 
         const getArenaDto = new GetArenaDto(
-            { currentPage, status, mine: false, targetMemberId: effectiveMemberId },
+            {
+                currentPage,
+                status,
+                mine: false,
+                targetMemberId: effectiveMemberId,
+            },
             memberId,
             pageSize
         );
@@ -704,9 +804,15 @@ export async function GET(request: Request) {
     } catch (error: unknown) {
         console.error("Error fetching arenas:", error);
         if (error instanceof Error) {
-            return NextResponse.json({ message: error.message || "투기장 조회 실패" }, { status: 400 });
+            return NextResponse.json(
+                { message: error.message || "투기장 조회 실패" },
+                { status: 400 }
+            );
         }
-        return NextResponse.json({ message: "알 수 없는 오류 발생" }, { status: 500 });
+        return NextResponse.json(
+            { message: "알 수 없는 오류 발생" },
+            { status: 500 }
+        );
     }
 }
 ```
@@ -733,6 +839,7 @@ git commit -m "[refactor/#NNN] arenas GET Zod 유효성 검사 추가, pageSize 
 ## Task 5: Arena Create/Update Validation
 
 **Files:**
+
 - Modify: `backend/arena/application/usecase/dto/CreateArenaDto.ts`
 - Modify: `backend/arena/application/usecase/dto/UpdateArenaDto.ts`
 - Modify: `app/api/member/arenas/route.ts`
@@ -760,19 +867,32 @@ describe("CreateArenaSchema", () => {
     });
 
     it("제목 빈 문자열 → 실패", () => {
-        expect(CreateArenaSchema.safeParse({ ...valid, title: "" }).success).toBe(false);
+        expect(
+            CreateArenaSchema.safeParse({ ...valid, title: "" }).success
+        ).toBe(false);
     });
 
     it("제목 100자 초과 → 실패", () => {
-        expect(CreateArenaSchema.safeParse({ ...valid, title: "a".repeat(101) }).success).toBe(false);
+        expect(
+            CreateArenaSchema.safeParse({ ...valid, title: "a".repeat(101) })
+                .success
+        ).toBe(false);
     });
 
     it("설명 500자 초과 → 실패", () => {
-        expect(CreateArenaSchema.safeParse({ ...valid, description: "a".repeat(501) }).success).toBe(false);
+        expect(
+            CreateArenaSchema.safeParse({
+                ...valid,
+                description: "a".repeat(501),
+            }).success
+        ).toBe(false);
     });
 
     it("잘못된 날짜 형식 → 실패", () => {
-        expect(CreateArenaSchema.safeParse({ ...valid, startDate: "2026-04-01" }).success).toBe(false);
+        expect(
+            CreateArenaSchema.safeParse({ ...valid, startDate: "2026-04-01" })
+                .success
+        ).toBe(false);
     });
 });
 ```
@@ -784,7 +904,9 @@ import { UpdateArenaSchema, UpdateArenaAdminSchema } from "../UpdateArenaDto";
 
 describe("UpdateArenaSchema", () => {
     it("description만 있어도 통과", () => {
-        expect(UpdateArenaSchema.safeParse({ description: "수정된 설명" }).success).toBe(true);
+        expect(
+            UpdateArenaSchema.safeParse({ description: "수정된 설명" }).success
+        ).toBe(true);
     });
 
     it("빈 객체 → 실패 (최소 1개 필드)", () => {
@@ -792,13 +914,17 @@ describe("UpdateArenaSchema", () => {
     });
 
     it("description 빈 문자열 → 실패", () => {
-        expect(UpdateArenaSchema.safeParse({ description: "" }).success).toBe(false);
+        expect(UpdateArenaSchema.safeParse({ description: "" }).success).toBe(
+            false
+        );
     });
 });
 
 describe("UpdateArenaAdminSchema", () => {
     it("status만 있어도 통과", () => {
-        expect(UpdateArenaAdminSchema.safeParse({ status: 2 }).success).toBe(true);
+        expect(UpdateArenaAdminSchema.safeParse({ status: 2 }).success).toBe(
+            true
+        );
     });
 
     it("빈 객체 → 실패", () => {
@@ -816,12 +942,19 @@ npx vitest run "backend/arena/application/usecase/dto/__tests__/CreateArenaDto.t
 - [ ] **Step 3: Add schemas to DTO files**
 
 `CreateArenaDto.ts`:
+
 ```typescript
 import { z } from "zod";
 
 export const CreateArenaSchema = z.object({
-    title: z.string().min(1, "제목을 입력해주세요.").max(100, "제목은 100자 이하여야 합니다."),
-    description: z.string().min(1, "설명을 입력해주세요.").max(500, "설명은 500자 이하여야 합니다."),
+    title: z
+        .string()
+        .min(1, "제목을 입력해주세요.")
+        .max(100, "제목은 100자 이하여야 합니다."),
+    description: z
+        .string()
+        .min(1, "설명을 입력해주세요.")
+        .max(500, "설명은 500자 이하여야 합니다."),
     startDate: z.string().datetime("올바른 날짜 형식이 아닙니다."),
 });
 
@@ -836,6 +969,7 @@ export class CreateArenaDto {
 ```
 
 `UpdateArenaDto.ts` — read the file first, then add at the top (keep existing class unchanged):
+
 ```typescript
 import { z } from "zod";
 
@@ -873,6 +1007,7 @@ npx vitest run "backend/arena/application/usecase/dto/__tests__/CreateArenaDto.t
 Read the file first. Replace three manual `if (!body.title)` / `if (!body.description)` / `if (!body.startDate)` checks with a single `validate(CreateArenaSchema, body)` call. Move auth check before validation. Fix all `{ error }` → `{ message }`.
 
 Key change:
+
 ```typescript
 import { CreateArenaSchema } from "@/backend/arena/application/usecase/dto/CreateArenaDto";
 import { validate } from "@/utils/validation";
@@ -880,7 +1015,11 @@ import { validate } from "@/utils/validation";
 export async function POST(request: Request) {
     try {
         const memberId = await getAuthUserId();
-        if (!memberId) return NextResponse.json({ message: "투기장 작성 권한이 없습니다." }, { status: 401 });
+        if (!memberId)
+            return NextResponse.json(
+                { message: "투기장 작성 권한이 없습니다." },
+                { status: 401 }
+            );
 
         const validated = validate(CreateArenaSchema, await request.json());
         if (!validated.success) return validated.response;
@@ -888,18 +1027,41 @@ export async function POST(request: Request) {
         // score validation
         const memberRepository = new PrismaMemberRepository();
         const member = await memberRepository.findById(memberId);
-        if (!member) return NextResponse.json({ message: "회원 정보를 찾을 수 없습니다." }, { status: 404 });
-        if (member.score < 100) return NextResponse.json({ message: "투기장 작성을 위해서는 최소 100점 이상의 점수가 필요합니다." }, { status: 403 });
+        if (!member)
+            return NextResponse.json(
+                { message: "회원 정보를 찾을 수 없습니다." },
+                { status: 404 }
+            );
+        if (member.score < 100)
+            return NextResponse.json(
+                {
+                    message:
+                        "투기장 작성을 위해서는 최소 100점 이상의 점수가 필요합니다.",
+                },
+                { status: 403 }
+            );
 
-        const dto = new CreateArenaDto(memberId, validated.data.title, validated.data.description, new Date(validated.data.startDate));
+        const dto = new CreateArenaDto(
+            memberId,
+            validated.data.title,
+            validated.data.description,
+            new Date(validated.data.startDate)
+        );
         const arenaRepository = new PrismaArenaRepository();
         const usecase = new CreateArenaUsecase(arenaRepository);
         const newArena = await usecase.execute(dto);
         return NextResponse.json(newArena, { status: 201 });
     } catch (error: unknown) {
         console.error("Error creating arenas:", error);
-        if (error instanceof Error) return NextResponse.json({ message: error.message || "투기장 생성 실패" }, { status: 400 });
-        return NextResponse.json({ message: "알 수 없는 오류 발생" }, { status: 500 });
+        if (error instanceof Error)
+            return NextResponse.json(
+                { message: error.message || "투기장 생성 실패" },
+                { status: 400 }
+            );
+        return NextResponse.json(
+            { message: "알 수 없는 오류 발생" },
+            { status: 500 }
+        );
     }
 }
 ```
@@ -936,6 +1098,7 @@ git commit -m "[refactor/#NNN] arena 생성/수정 라우트 Zod 유효성 검�
 ## Task 6: Games Validation
 
 **Files:**
+
 - Modify: `backend/game/application/usecase/dto/GetFilteredGamesRequestDto.ts`
 - Modify: `app/api/games/route.ts`
 - Create: `backend/game/application/usecase/dto/__tests__/GetFilteredGamesRequestDto.test.ts`
@@ -963,11 +1126,15 @@ describe("GetFilteredGamesSchema", () => {
     });
 
     it("sort=latest 통과", () => {
-        expect(GetFilteredGamesSchema.safeParse({ sort: "latest" }).success).toBe(true);
+        expect(
+            GetFilteredGamesSchema.safeParse({ sort: "latest" }).success
+        ).toBe(true);
     });
 
     it("sort=invalid → 실패", () => {
-        expect(GetFilteredGamesSchema.safeParse({ sort: "newest" }).success).toBe(false);
+        expect(
+            GetFilteredGamesSchema.safeParse({ sort: "newest" }).success
+        ).toBe(false);
     });
 
     it("genreId 문자열 숫자 → 숫자 변환", () => {
@@ -977,7 +1144,9 @@ describe("GetFilteredGamesSchema", () => {
     });
 
     it("keyword 있으면 통과", () => {
-        expect(GetFilteredGamesSchema.safeParse({ keyword: "zelda" }).success).toBe(true);
+        expect(
+            GetFilteredGamesSchema.safeParse({ keyword: "zelda" }).success
+        ).toBe(true);
     });
 });
 ```
@@ -994,13 +1163,13 @@ npx vitest run "backend/game/application/usecase/dto/__tests__/GetFilteredGamesR
 import { z } from "zod";
 
 export const GetFilteredGamesSchema = z.object({
-    sort:       z.enum(["popular", "latest", "rating"]).default("popular"),
-    page:       z.coerce.number().int().min(1).default(1),
-    size:       z.coerce.number().int().min(1).default(6),
-    genreId:    z.coerce.number().int().positive().optional(),
-    themeId:    z.coerce.number().int().positive().optional(),
+    sort: z.enum(["popular", "latest", "rating"]).default("popular"),
+    page: z.coerce.number().int().min(1).default(1),
+    size: z.coerce.number().int().min(1).default(6),
+    genreId: z.coerce.number().int().positive().optional(),
+    themeId: z.coerce.number().int().positive().optional(),
     platformId: z.coerce.number().int().positive().optional(),
-    keyword:    z.string().max(100).optional(),
+    keyword: z.string().max(100).optional(),
 });
 
 // Existing DTO types/interfaces below — unchanged
@@ -1038,6 +1207,7 @@ git commit -m "[refactor/#NNN] games GET Zod 유효성 검사 추가, SortType �
 ## Task 7: Votes, Chat, Review-Likes Validation
 
 **Files:**
+
 - Modify: `backend/vote/application/usecase/dto/SubmitVoteDto.ts`
 - Modify: `backend/chatting/application/usecase/dto/CreateChattingDto.ts`
 - Modify: `app/api/arenas/[id]/votes/route.ts`
@@ -1051,6 +1221,7 @@ git commit -m "[refactor/#NNN] games GET Zod 유효성 검사 추가, SortType �
 - [ ] **Step 1: Read all target DTO and route files before modifying**
 
 Read:
+
 - `backend/chatting/application/usecase/dto/CreateChattingDto.ts`
 - `app/api/arenas/[id]/votes/route.ts`
 - `app/api/member/arenas/[id]/votes/route.ts`
@@ -1073,11 +1244,15 @@ describe("SubmitVoteSchema", () => {
     });
 
     it("arenaId 0 → 실패", () => {
-        expect(SubmitVoteSchema.safeParse({ ...valid, arenaId: 0 }).success).toBe(false);
+        expect(
+            SubmitVoteSchema.safeParse({ ...valid, arenaId: 0 }).success
+        ).toBe(false);
     });
 
     it("votedTo 빈 문자열 → 실패", () => {
-        expect(SubmitVoteSchema.safeParse({ ...valid, votedTo: "" }).success).toBe(false);
+        expect(
+            SubmitVoteSchema.safeParse({ ...valid, votedTo: "" }).success
+        ).toBe(false);
     });
 });
 ```
@@ -1089,19 +1264,27 @@ import { CreateChattingSchema } from "../CreateChattingDto";
 
 describe("CreateChattingSchema", () => {
     it("유효한 입력 통과", () => {
-        expect(CreateChattingSchema.safeParse({ content: "안녕하세요" }).success).toBe(true);
+        expect(
+            CreateChattingSchema.safeParse({ content: "안녕하세요" }).success
+        ).toBe(true);
     });
 
     it("빈 content → 실패", () => {
-        expect(CreateChattingSchema.safeParse({ content: "" }).success).toBe(false);
+        expect(CreateChattingSchema.safeParse({ content: "" }).success).toBe(
+            false
+        );
     });
 
     it("200자 초과 → 실패", () => {
-        expect(CreateChattingSchema.safeParse({ content: "a".repeat(201) }).success).toBe(false);
+        expect(
+            CreateChattingSchema.safeParse({ content: "a".repeat(201) }).success
+        ).toBe(false);
     });
 
     it("200자 정확히 → 통과", () => {
-        expect(CreateChattingSchema.safeParse({ content: "a".repeat(200) }).success).toBe(true);
+        expect(
+            CreateChattingSchema.safeParse({ content: "a".repeat(200) }).success
+        ).toBe(true);
     });
 });
 ```
@@ -1115,6 +1298,7 @@ npx vitest run "backend/vote/application/usecase/dto/__tests__/SubmitVoteDto.tes
 - [ ] **Step 4: Add schemas to DTO files**
 
 `SubmitVoteDto.ts` — add at top:
+
 ```typescript
 import { z } from "zod";
 
@@ -1127,11 +1311,15 @@ export class SubmitVoteDto { ... } // unchanged
 ```
 
 `CreateChattingDto.ts` — add at top:
+
 ```typescript
 import { z } from "zod";
 
 export const CreateChattingSchema = z.object({
-    content: z.string().min(1, "메시지를 입력해주세요.").max(200, "메시지는 200자 이하여야 합니다."),
+    content: z
+        .string()
+        .min(1, "메시지를 입력해주세요.")
+        .max(200, "메시지는 200자 이하여야 합니다."),
 });
 
 // Existing DTO class/interface below — unchanged
@@ -1146,6 +1334,7 @@ npx vitest run "backend/vote/application/usecase/dto/__tests__/SubmitVoteDto.tes
 - [ ] **Step 6: Update vote routes**
 
 Both `app/api/arenas/[id]/votes/route.ts` and `app/api/member/arenas/[id]/votes/route.ts`:
+
 - Add `IdSchema` for `[id]` path param
 - Add `validate(SubmitVoteSchema, body)` for the request body (`arenaId` + `votedTo` come from body)
 - Fix any `{ error }` → `{ message }`
@@ -1153,12 +1342,14 @@ Both `app/api/arenas/[id]/votes/route.ts` and `app/api/member/arenas/[id]/votes/
 - [ ] **Step 7: Update chatting routes**
 
 Both `app/api/arenas/[id]/chattings/route.ts` and `app/api/member/arenas/[id]/chattings/route.ts`:
+
 - Add `IdSchema` for `[id]` path param (replace existing `isNaN` check)
 - Add `validate(CreateChattingSchema, body)` for POST body
 
 - [ ] **Step 8: Update review-likes route**
 
 `app/api/member/review-likes/[reviewId]/route.ts`:
+
 - Add `IdSchema` for `[reviewId]` path param (replace any existing `isNaN` or `Number()` check)
 - No body validation needed
 
@@ -1188,6 +1379,7 @@ git commit -m "[refactor/#NNN] votes, chat, review-likes 라우트 Zod 유효성
 ## Task 8: Profile Validation (+ DTO class field change)
 
 **Files:**
+
 - Modify: `backend/member/application/usecase/dto/UpdateProfileRequestDto.ts` ← make fields optional
 - Modify: `app/api/member/profile/route.ts`
 - Create: `backend/member/application/usecase/dto/__tests__/UpdateProfileRequestDto.test.ts`
@@ -1205,7 +1397,9 @@ import { UpdateProfileSchema } from "../UpdateProfileRequestDto";
 
 describe("UpdateProfileSchema", () => {
     it("nickname만 있어도 통과", () => {
-        expect(UpdateProfileSchema.safeParse({ nickname: "새닉네임" }).success).toBe(true);
+        expect(
+            UpdateProfileSchema.safeParse({ nickname: "새닉네임" }).success
+        ).toBe(true);
     });
 
     it("빈 객체 → 실패 (최소 1개 필드)", () => {
@@ -1213,23 +1407,35 @@ describe("UpdateProfileSchema", () => {
     });
 
     it("nickname 빈 문자열 → 실패", () => {
-        expect(UpdateProfileSchema.safeParse({ nickname: "" }).success).toBe(false);
+        expect(UpdateProfileSchema.safeParse({ nickname: "" }).success).toBe(
+            false
+        );
     });
 
     it("birthDate yyyymmdd 형식 통과", () => {
-        expect(UpdateProfileSchema.safeParse({ birthDate: "19900101" }).success).toBe(true);
+        expect(
+            UpdateProfileSchema.safeParse({ birthDate: "19900101" }).success
+        ).toBe(true);
     });
 
     it("birthDate ISO 형식 → 실패", () => {
-        expect(UpdateProfileSchema.safeParse({ birthDate: "1990-01-01" }).success).toBe(false);
+        expect(
+            UpdateProfileSchema.safeParse({ birthDate: "1990-01-01" }).success
+        ).toBe(false);
     });
 
     it("imageUrl 유효한 URL 통과", () => {
-        expect(UpdateProfileSchema.safeParse({ imageUrl: "https://example.com/img.png" }).success).toBe(true);
+        expect(
+            UpdateProfileSchema.safeParse({
+                imageUrl: "https://example.com/img.png",
+            }).success
+        ).toBe(true);
     });
 
     it("imageUrl 잘못된 URL → 실패", () => {
-        expect(UpdateProfileSchema.safeParse({ imageUrl: "not-a-url" }).success).toBe(false);
+        expect(
+            UpdateProfileSchema.safeParse({ imageUrl: "not-a-url" }).success
+        ).toBe(false);
     });
 });
 ```
@@ -1247,15 +1453,23 @@ Make all DTO class fields optional AND add Zod schema:
 ```typescript
 import { z } from "zod";
 
-export const UpdateProfileSchema = z.object({
-    nickname:  z.string().min(1, "닉네임을 입력해주세요.").max(20, "닉네임은 20자 이하여야 합니다.").optional(),
-    isMale:    z.boolean().optional(),
-    birthDate: z.string().regex(/^\d{8}$/, "날짜는 yyyymmdd 형식이어야 합니다.").optional(),
-    imageUrl:  z.string().url("올바른 URL 형식이 아닙니다.").optional(),
-}).refine(
-    data => Object.values(data).some(v => v !== undefined),
-    { message: "수정할 내용을 입력해주세요." }
-);
+export const UpdateProfileSchema = z
+    .object({
+        nickname: z
+            .string()
+            .min(1, "닉네임을 입력해주세요.")
+            .max(20, "닉네임은 20자 이하여야 합니다.")
+            .optional(),
+        isMale: z.boolean().optional(),
+        birthDate: z
+            .string()
+            .regex(/^\d{8}$/, "날짜는 yyyymmdd 형식이어야 합니다.")
+            .optional(),
+        imageUrl: z.string().url("올바른 URL 형식이 아닙니다.").optional(),
+    })
+    .refine((data) => Object.values(data).some((v) => v !== undefined), {
+        message: "수정할 내용을 입력해주세요.",
+    });
 
 export class UpdateProfileRequestDto {
     memberId: string;
@@ -1312,6 +1526,7 @@ git commit -m "[refactor/#NNN] profile PUT Zod 유효성 검사 추가, UpdatePr
 ## Task 9: Wishlists, Notifications, Misc Validation
 
 **Files:**
+
 - Modify: `backend/wishlist/application/usecase/dto/GetWishlistDto.ts`
 - Modify: `backend/notification-record/application/usecase/dto/CreateNotificationRecordDto.ts`
 - Modify: `backend/notification-record/application/usecase/dto/GetNotificationRecordDto.ts`
@@ -1352,13 +1567,21 @@ import { CreateNotificationRecordSchema } from "../CreateNotificationRecordDto";
 describe("CreateNotificationRecordSchema", () => {
     const valid = { memberId: "user-1", typeId: 1, description: "알림 내용" };
     it("유효한 입력 통과", () => {
-        expect(CreateNotificationRecordSchema.safeParse(valid).success).toBe(true);
+        expect(CreateNotificationRecordSchema.safeParse(valid).success).toBe(
+            true
+        );
     });
     it("memberId 빈 문자열 → 실패", () => {
-        expect(CreateNotificationRecordSchema.safeParse({ ...valid, memberId: "" }).success).toBe(false);
+        expect(
+            CreateNotificationRecordSchema.safeParse({ ...valid, memberId: "" })
+                .success
+        ).toBe(false);
     });
     it("typeId 0 → 실패", () => {
-        expect(CreateNotificationRecordSchema.safeParse({ ...valid, typeId: 0 }).success).toBe(false);
+        expect(
+            CreateNotificationRecordSchema.safeParse({ ...valid, typeId: 0 })
+                .success
+        ).toBe(false);
     });
 });
 ```
@@ -1375,12 +1598,15 @@ describe("GetNotificationRecordSchema", () => {
         if (r.success) expect(r.data.currentPage).toBe(1);
     });
     it("currentPage=0 → 실패", () => {
-        expect(GetNotificationRecordSchema.safeParse({ currentPage: "0" }).success).toBe(false);
+        expect(
+            GetNotificationRecordSchema.safeParse({ currentPage: "0" }).success
+        ).toBe(false);
     });
 });
 ```
 
 Run tests to confirm they fail:
+
 ```bash
 npx vitest run "backend/wishlist/application/usecase/dto/__tests__" "backend/notification-record/application/usecase/dto/__tests__" --reporter verbose
 ```
@@ -1388,6 +1614,7 @@ npx vitest run "backend/wishlist/application/usecase/dto/__tests__" "backend/not
 - [ ] **Step 3: Add schemas to DTO files**
 
 `GetWishlistDto.ts` — add at top (the POST route reads `gameId` from body and uses this DTO):
+
 ```typescript
 import { z } from "zod";
 
@@ -1399,12 +1626,13 @@ export const WishlistBodySchema = z.object({
 ```
 
 `CreateNotificationRecordDto.ts`:
+
 ```typescript
 import { z } from "zod";
 
 export const CreateNotificationRecordSchema = z.object({
-    memberId:    z.string().min(1, "회원 ID를 입력해주세요."),
-    typeId:      z.number().int().positive("유효하지 않은 알림 유형입니다."),
+    memberId: z.string().min(1, "회원 ID를 입력해주세요."),
+    typeId: z.number().int().positive("유효하지 않은 알림 유형입니다."),
     description: z.string().min(1, "알림 내용을 입력해주세요."),
 });
 
@@ -1412,6 +1640,7 @@ export const CreateNotificationRecordSchema = z.object({
 ```
 
 `GetNotificationRecordDto.ts` — add query param schema:
+
 ```typescript
 import { z } from "zod";
 

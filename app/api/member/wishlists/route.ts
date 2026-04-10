@@ -6,7 +6,10 @@ import { PrismaReviewRepository } from "@/backend/review/infra/repositories/pris
 import { GetWishlistUsecase } from "@/backend/wishlist/application/usecase/GetWishlistUsecase";
 import { GetWishlistsUsecase } from "@/backend/wishlist/application/usecase/GetWishlistsUsecase";
 import { CreateWishlistUsecase } from "@/backend/wishlist/application/usecase/CreateWishlistUsecase";
-import { GetWishlistDto, WishlistBodySchema } from "@/backend/wishlist/application/usecase/dto/GetWishlistDto";
+import {
+    GetWishlistDto,
+    WishlistBodySchema,
+} from "@/backend/wishlist/application/usecase/dto/GetWishlistDto";
 import { GetWishlistsDto } from "@/backend/wishlist/application/usecase/dto/GetWishlistsDto";
 import { validate } from "@/utils/Validation";
 import { errorResponse } from "@/utils/ApiResponse";
@@ -37,20 +40,28 @@ export async function GET(req: NextRequest) {
 
         const gameRepo = new GamePrismaRepository();
         const reviewRepo = new PrismaReviewRepository();
-        const usecase = new GetWishlistsUsecase(wishlistRepo, gameRepo, reviewRepo);
+        const usecase = new GetWishlistsUsecase(
+            wishlistRepo,
+            gameRepo,
+            reviewRepo
+        );
         const getWishlistsDto = new GetWishlistsDto(memberId, page);
         const result = await usecase.execute(getWishlistsDto);
         return NextResponse.json(result);
     } catch (error: unknown) {
         log.error({ userId: memberId, err: error }, "위시리스트 조회 실패");
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
 
 export async function POST(req: NextRequest) {
     const memberId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/wishlists", method: "POST" });
+    const log = logger.child({
+        route: "/api/member/wishlists",
+        method: "POST",
+    });
     try {
         if (!memberId) return errorResponse("Unauthorized", 401);
 
@@ -70,7 +81,8 @@ export async function POST(req: NextRequest) {
         );
     } catch (error: unknown) {
         log.error({ userId: memberId, err: error }, "위시리스트 추가 실패");
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }

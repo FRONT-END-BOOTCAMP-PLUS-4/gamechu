@@ -10,7 +10,7 @@ interface SortOption {
 type Props = {
     current: "latest" | "popular" | "rating";
     onChange: (value: "latest" | "popular" | "rating") => void;
-}
+};
 
 const options: SortOption[] = [
     { label: "리뷰순", value: "popular" },

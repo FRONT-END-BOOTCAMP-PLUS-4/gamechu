@@ -3,11 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { NicknameCheckUsecase } from "@/backend/member/application/usecase/NicknameCheckUsecase";
-import {
-    RateLimiter,
-    getClientIp,
-    rateLimitResponse,
-} from "@/lib/RateLimiter";
+import { RateLimiter, getClientIp, rateLimitResponse } from "@/lib/RateLimiter";
 import { validate } from "@/utils/Validation";
 import { z } from "zod";
 import logger from "@/lib/Logger";
@@ -26,7 +22,10 @@ const NicknameQuerySchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
-    const log = logger.child({ route: "/api/member/nickname-check", method: "GET" });
+    const log = logger.child({
+        route: "/api/member/nickname-check",
+        method: "GET",
+    });
     const session = await getServerSession(authOptions);
     const memberId = session?.user?.id;
     if (!memberId) {
@@ -40,7 +39,10 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
-    const validated = validate(NicknameQuerySchema, Object.fromEntries(searchParams));
+    const validated = validate(
+        NicknameQuerySchema,
+        Object.fromEntries(searchParams)
+    );
     if (!validated.success) return validated.response;
 
     const repo = new PrismaMemberRepository();

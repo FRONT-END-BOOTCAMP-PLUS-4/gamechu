@@ -32,7 +32,9 @@ export default function ProfileSidebar({
             className={[
                 "rounded-xl bg-background-200",
                 "mx-auto w-full max-w-full p-3",
-                isOwnProfile ? "grid auto-rows-fr grid-cols-3 gap-3" : "grid auto-rows-fr grid-cols-2 gap-3",
+                isOwnProfile
+                    ? "grid auto-rows-fr grid-cols-3 gap-3"
+                    : "grid auto-rows-fr grid-cols-2 gap-3",
                 "md:mx-0 md:block md:w-[250px] md:space-y-2 md:p-4",
             ].join(" ")}
         >

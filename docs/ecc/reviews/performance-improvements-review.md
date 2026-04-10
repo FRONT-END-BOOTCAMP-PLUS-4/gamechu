@@ -47,6 +47,7 @@ const userAvgRating = useMemo(() => {
 `cleanupUpgrade`는 외부 closure의 `let` 변수. 소켓이 재연결될 때마다 `onConnect`가 재실행되어 새 `handleUpgrade`를 `engine.on`에 등록하고 `cleanupUpgrade`를 덮어쓴다. 이전 `handleUpgrade` 참조가 제거되지 않아 재연결 횟수만큼 리스너가 누적된다. 현재 `handleUpgrade`는 no-op이라 기능상 영향은 없으나 메모리 누수.
 
 **수정 방법** — `onConnect` 내에서 등록 전 이전 핸들러를 먼저 해제하거나, `cleanupUpgrade?.()` 호출 후 재등록:
+
 ```ts
 function onConnect() {
     cleanupUpgrade?.(); // 이전 핸들러 먼저 해제
@@ -63,9 +64,12 @@ function onConnect() {
 destructured props를 다시 plain object로 감싸는 `const arenaDetail = { ... }` 패턴. 이후 `arenaDetail?.xxx` 형태의 optional chaining은 object가 항상 존재하므로 불필요. `React.memo`와 함께 사용 시 렌더마다 새 참조를 만들어도 memo 효과에는 영향이 없지만, 코드 명확성이 떨어짐.
 
 **수정 방법** — destructured params를 직접 참조:
+
 ```ts
-{status === 3 ? "채팅이 아직 없습니다..." : "채팅이 없습니다."}
-String(chat.memberId) === String(creatorId)
+{
+    status === 3 ? "채팅이 아직 없습니다..." : "채팅이 없습니다.";
+}
+String(chat.memberId) === String(creatorId);
 ```
 
 ---
@@ -86,31 +90,31 @@ String(chat.memberId) === String(creatorId)
 
 ## Validation Results
 
-| Check | Result |
-|---|---|
-| Type check (`tsc --noEmit`, 소스 파일) | Pass |
-| Lint | Pass (기존 warning 5건은 변경 전부터 존재) |
-| Tests | Pass — 321 tests, 75 files |
-| Build (`next build`) | Pass |
+| Check                                  | Result                                     |
+| -------------------------------------- | ------------------------------------------ |
+| Type check (`tsc --noEmit`, 소스 파일) | Pass                                       |
+| Lint                                   | Pass (기존 warning 5건은 변경 전부터 존재) |
+| Tests                                  | Pass — 321 tests, 75 files                 |
+| Build (`next build`)                   | Pass                                       |
 
 ## Files Reviewed
 
-| File | Change |
-|---|---|
-| `backend/review-like/domain/repositories/ReviewLikeRepository.ts` | Modified |
+| File                                                                          | Change   |
+| ----------------------------------------------------------------------------- | -------- |
+| `backend/review-like/domain/repositories/ReviewLikeRepository.ts`             | Modified |
 | `backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository.ts` | Modified |
-| `backend/review/application/usecase/GetReviewsByGameIdUsecase.ts` | Modified |
-| `app/(base)/games/page.tsx` | Modified |
-| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx` | Modified |
-| `app/(base)/games/[gameId]/components/ReviewSelector.tsx` | Modified |
-| `app/(base)/games/[gameId]/components/CommentCard.tsx` | Modified |
-| `app/(base)/games/[gameId]/components/lexical/ReadOnlyReview.tsx` | Modified |
-| `app/(base)/arenas/ArenaPage.tsx` | Modified |
-| `app/(base)/arenas/[id]/page.tsx` | Modified |
-| `app/(base)/arenas/[id]/components/ArenaDetailChatList.tsx` | Modified |
-| `app/(base)/arenas/[id]/components/ArenaDetailContainer.tsx` | Modified |
-| `app/(base)/arenas/[id]/loading.tsx` | Added |
-| `app/(base)/games/[gameId]/loading.tsx` | Added |
-| `hooks/useArenaSocket.ts` | Modified |
-| `app/components/Header.tsx` | Modified |
-| `tests/mocks/createMockReviewLikeRepository.ts` | Modified |
+| `backend/review/application/usecase/GetReviewsByGameIdUsecase.ts`             | Modified |
+| `app/(base)/games/page.tsx`                                                   | Modified |
+| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx`               | Modified |
+| `app/(base)/games/[gameId]/components/ReviewSelector.tsx`                     | Modified |
+| `app/(base)/games/[gameId]/components/CommentCard.tsx`                        | Modified |
+| `app/(base)/games/[gameId]/components/lexical/ReadOnlyReview.tsx`             | Modified |
+| `app/(base)/arenas/ArenaPage.tsx`                                             | Modified |
+| `app/(base)/arenas/[id]/page.tsx`                                             | Modified |
+| `app/(base)/arenas/[id]/components/ArenaDetailChatList.tsx`                   | Modified |
+| `app/(base)/arenas/[id]/components/ArenaDetailContainer.tsx`                  | Modified |
+| `app/(base)/arenas/[id]/loading.tsx`                                          | Added    |
+| `app/(base)/games/[gameId]/loading.tsx`                                       | Added    |
+| `hooks/useArenaSocket.ts`                                                     | Modified |
+| `app/components/Header.tsx`                                                   | Modified |
+| `tests/mocks/createMockReviewLikeRepository.ts`                               | Modified |

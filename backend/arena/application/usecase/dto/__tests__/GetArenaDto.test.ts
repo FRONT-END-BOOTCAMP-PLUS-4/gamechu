@@ -38,7 +38,9 @@ describe("GetArenaSchema", () => {
     });
 
     it("currentPage=0 → 실패 (min 1)", () => {
-        expect(GetArenaSchema.safeParse({ currentPage: "0" }).success).toBe(false);
+        expect(GetArenaSchema.safeParse({ currentPage: "0" }).success).toBe(
+            false
+        );
     });
 
     it("memberId 있으면 string으로 통과", () => {

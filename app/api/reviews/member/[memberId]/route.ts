@@ -8,7 +8,10 @@ export async function GET(
     request: Request,
     { params }: { params: Promise<{ memberId: string }> }
 ) {
-    const log = logger.child({ route: "/api/reviews/member/[memberId]", method: "GET" });
+    const log = logger.child({
+        route: "/api/reviews/member/[memberId]",
+        method: "GET",
+    });
     try {
         const { memberId } = await params;
 
@@ -16,12 +19,15 @@ export async function GET(
             return errorResponse("Not Found", 404);
         }
 
-        const usecase = new GetReviewsByMemberIdUsecase(new PrismaReviewRepository());
+        const usecase = new GetReviewsByMemberIdUsecase(
+            new PrismaReviewRepository()
+        );
         const result = await usecase.execute(memberId);
         return NextResponse.json(result);
     } catch (error: unknown) {
         log.error({ err: error }, "회원 리뷰 목록 조회 실패");
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }

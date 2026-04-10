@@ -30,6 +30,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 ```
 
 **Usage:**
+
 ```typescript
 "use client";
 import { useAuthStore } from "@/stores/AuthStore";
@@ -58,6 +59,7 @@ export const useLoadingStore = create<{
 ```
 
 **Usage:**
+
 ```typescript
 const { setLoading } = useLoadingStore();
 
@@ -92,14 +94,17 @@ const useModalStore = create<ModalStore>((set) => ({
     modalType: null,
     modalPosition: null,
     isOpen: false,
-    openModal: (type, position) => set({ modalType: type, modalPosition: position, isOpen: true }),
-    closeModal: () => set({ modalType: null, modalPosition: null, isOpen: false }),
+    openModal: (type, position) =>
+        set({ modalType: type, modalPosition: position, isOpen: true }),
+    closeModal: () =>
+        set({ modalType: null, modalPosition: null, isOpen: false }),
 }));
 
 export default useModalStore;
 ```
 
 **Usage:**
+
 ```typescript
 import useModalStore from "@/stores/modalStore";
 
@@ -289,8 +294,12 @@ export function useArenaSocket(arenaId: number) {
         const socket = io("/arena", { query: { arenaId } });
         socketRef.current = socket;
 
-        socket.on("connect", () => { /* connected */ });
-        socket.on("message", (msg) => { /* handle message */ });
+        socket.on("connect", () => {
+            /* connected */
+        });
+        socket.on("message", (msg) => {
+            /* handle message */
+        });
 
         return () => {
             socket.disconnect();
@@ -356,18 +365,19 @@ export default function CreateArenaForm({ onClose }: { onClose: () => void }) {
 
 ## State Management Decision
 
-| State Type | Solution | Example |
-|-----------|----------|---------|
-| Server data (fetched) | `useState` + `useEffect` + `fetch` | Arena list, game details |
-| Shared across pages | Zustand store | Auth user, modal state, loading |
-| Local UI state | `useState` | Form inputs, toggles, selected tab |
-| Real-time data | Socket.IO + `useRef` | Arena chat messages |
+| State Type            | Solution                           | Example                            |
+| --------------------- | ---------------------------------- | ---------------------------------- |
+| Server data (fetched) | `useState` + `useEffect` + `fetch` | Arena list, game details           |
+| Shared across pages   | Zustand store                      | Auth user, modal state, loading    |
+| Local UI state        | `useState`                         | Form inputs, toggles, selected tab |
+| Real-time data        | Socket.IO + `useRef`               | Arena chat messages                |
 
 ---
 
 ## Summary
 
 **Common Patterns:**
+
 - Zustand stores: auth, loading, modal, arena (use selectors)
 - Toast for user notifications (success/error/info)
 - Modal system via `useModalStore`
@@ -376,6 +386,7 @@ export default function CreateArenaForm({ onClose }: { onClose: () => void }) {
 - Socket.IO for real-time features
 
 **See Also:**
+
 - [data-fetching.md](data-fetching.md) - Fetch patterns
 - [component-patterns.md](component-patterns.md) - Component structure
 - [complete-examples.md](complete-examples.md) - Full examples

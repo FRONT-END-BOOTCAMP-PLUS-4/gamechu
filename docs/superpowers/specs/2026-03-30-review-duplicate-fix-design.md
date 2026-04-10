@@ -43,12 +43,12 @@ const commentsForPage = currentComments.slice(...);
 
 ## Decisions
 
-| 질문 | 결정 | 근거 |
-|------|------|------|
-| 수정 위치 | `ClientContentWrapper.tsx` 필터링 로직 | 렌더링 책임을 가진 컴포넌트에서 제어 |
-| `expertComments` / `userComments` 카운트에서 제외 여부 | 제외 안 함 | `ReviewSelector`의 리뷰 수 표시가 부정확해짐 |
-| 별도 유틸 함수 추출 여부 | 추출 안 함 | 단일 사용처, 1줄 변경으로 충분 |
-| API 레벨 수정 여부 | 수정 안 함 | 서버는 전체 리뷰를 정확히 반환 중, 문제는 클라이언트 렌더링 |
+| 질문                                                   | 결정                                   | 근거                                                        |
+| ------------------------------------------------------ | -------------------------------------- | ----------------------------------------------------------- |
+| 수정 위치                                              | `ClientContentWrapper.tsx` 필터링 로직 | 렌더링 책임을 가진 컴포넌트에서 제어                        |
+| `expertComments` / `userComments` 카운트에서 제외 여부 | 제외 안 함                             | `ReviewSelector`의 리뷰 수 표시가 부정확해짐                |
+| 별도 유틸 함수 추출 여부                               | 추출 안 함                             | 단일 사용처, 1줄 변경으로 충분                              |
+| API 레벨 수정 여부                                     | 수정 안 함                             | 서버는 전체 리뷰를 정확히 반환 중, 문제는 클라이언트 렌더링 |
 
 ---
 
@@ -88,10 +88,10 @@ const commentsForPage = listComments.slice(...);
 
 ### 신규 테스트: `ClientContentWrapper.test.tsx`
 
-| 케이스 | 입력 | 기대 |
-|--------|------|------|
+| 케이스            | 입력                                 | 기대                                 |
+| ----------------- | ------------------------------------ | ------------------------------------ |
 | 내 리뷰 중복 방지 | viewer의 expert 리뷰 + 타인 리뷰 2개 | `comment-card-{viewerId}` 정확히 1개 |
-| 내 리뷰 없음 | viewer 리뷰 없음 | 타인 리뷰 전부 표시, 작성 폼 노출 |
+| 내 리뷰 없음      | viewer 리뷰 없음                     | 타인 리뷰 전부 표시, 작성 폼 노출    |
 
 **RED → GREEN 검증 완료**: 수정 전 1번 케이스 실패(2개), 수정 후 2/2 통과.
 
@@ -111,7 +111,7 @@ const commentsForPage = listComments.slice(...);
 
 ## Affected Files
 
-| 파일 | 변경 |
-|------|------|
-| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx` | `listComments` 필터링 추가 |
-| `app/(base)/games/[gameId]/components/__tests__/ClientContentWrapper.test.tsx` | 신규 생성 (2 test cases) |
+| 파일                                                                           | 변경                       |
+| ------------------------------------------------------------------------------ | -------------------------- |
+| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx`                | `listComments` 필터링 추가 |
+| `app/(base)/games/[gameId]/components/__tests__/ClientContentWrapper.test.tsx` | 신규 생성 (2 test cases)   |

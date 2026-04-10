@@ -17,10 +17,9 @@ describe("useVoteList", () => {
             json: () => Promise.resolve(mockVote),
         } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useVoteList({ arenaIds: [1, 2] }),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useVoteList({ arenaIds: [1, 2] }), {
+            wrapper: createWrapper(),
+        });
 
         await waitFor(() => expect(result.current.loading).toBe(false));
         expect(fetch).toHaveBeenCalledTimes(2);
@@ -28,10 +27,9 @@ describe("useVoteList", () => {
     });
 
     it("returns empty array and loading=false when arenaIds is empty", async () => {
-        const { result } = renderHook(
-            () => useVoteList({ arenaIds: [] }),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useVoteList({ arenaIds: [] }), {
+            wrapper: createWrapper(),
+        });
 
         await waitFor(() => expect(result.current.loading).toBe(false));
         expect(result.current.voteResult).toEqual([]);
@@ -45,10 +43,9 @@ describe("useVoteList", () => {
             json: () => Promise.resolve({ message: "오류" }),
         } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useVoteList({ arenaIds: [1] }),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useVoteList({ arenaIds: [1] }), {
+            wrapper: createWrapper(),
+        });
 
         await waitFor(() => expect(result.current.loading).toBe(false));
         expect(result.current.error).toBeInstanceOf(Error);

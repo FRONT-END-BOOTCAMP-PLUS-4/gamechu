@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 type Props = {
     onLoaded?: () => void; // ✅ 상위에서 로딩 완료 알림을 받을 콜백
-}
+};
 
 export default function WaitingArenaSection({ onLoaded }: Props) {
     const status: number = 2;

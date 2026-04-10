@@ -5,18 +5,21 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
     getAuthUserId: vi.fn().mockResolvedValue("test-user-id"),
 }));
 
-vi.mock("@/backend/review/infra/repositories/prisma/PrismaReviewRepository", () => ({
-    PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByMemberId = vi.fn().mockResolvedValue([]);
-        this.create = vi.fn().mockResolvedValue({
-            id: 1,
-            gameId: 10,
-            memberId: "test-user-id",
-            content: "Great game",
-            rating: 5,
-        });
-    }),
-}));
+vi.mock(
+    "@/backend/review/infra/repositories/prisma/PrismaReviewRepository",
+    () => ({
+        PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByMemberId = vi.fn().mockResolvedValue([]);
+            this.create = vi.fn().mockResolvedValue({
+                id: 1,
+                gameId: 10,
+                memberId: "test-user-id",
+                content: "Great game",
+                rating: 5,
+            });
+        }),
+    })
+);
 
 vi.mock("@/backend/review/application/usecase/CreateReviewUsecase", () => ({
     CreateReviewUsecase: vi.fn(function (this: Record<string, unknown>) {
@@ -56,11 +59,17 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
             "http://localhost/api/member/games/10/reviews",
             {
                 method: "POST",
-                body: JSON.stringify({ gameId: 10, content: "Great", rating: 5 }),
+                body: JSON.stringify({
+                    gameId: 10,
+                    content: "Great",
+                    rating: 5,
+                }),
                 headers: { "content-type": "application/json" },
             }
         );
-        const response = await POST(req, { params: Promise.resolve({ gameId: "10" }) });
+        const response = await POST(req, {
+            params: Promise.resolve({ gameId: "10" }),
+        });
         expect(response.status).toBe(401);
     });
 
@@ -77,7 +86,9 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
                 headers: { "content-type": "application/json" },
             }
         );
-        const response = await POST(req, { params: Promise.resolve({ gameId: "10" }) });
+        const response = await POST(req, {
+            params: Promise.resolve({ gameId: "10" }),
+        });
         expect(response.status).toBe(200);
     });
 
@@ -104,7 +115,9 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
                 headers: { "content-type": "application/json" },
             }
         );
-        const response = await POST(req, { params: Promise.resolve({ gameId: "10" }) });
+        const response = await POST(req, {
+            params: Promise.resolve({ gameId: "10" }),
+        });
         expect(response.status).toBe(400);
         const body = await response.json();
         expect(body.message).toBe("유효하지 않은 콘텐츠 형식입니다.");
@@ -133,7 +146,9 @@ describe("POST /api/member/games/[gameId]/reviews", () => {
                 headers: { "content-type": "application/json" },
             }
         );
-        const response = await POST(req, { params: Promise.resolve({ gameId: "10" }) });
+        const response = await POST(req, {
+            params: Promise.resolve({ gameId: "10" }),
+        });
         expect(response.status).toBe(400);
         const body = await response.json();
         expect(body.message).toContain("10,000자");

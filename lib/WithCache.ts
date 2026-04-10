@@ -10,7 +10,7 @@ export async function withCache<T>(
         const cached = await redis.get(key);
         if (cached) return JSON.parse(cached) as T;
     } catch {
-        logger.warn({ key }, "캐시 읽기 실패 — DB로 폴백")
+        logger.warn({ key }, "캐시 읽기 실패 — DB로 폴백");
     }
 
     const data = await fn();
@@ -18,7 +18,7 @@ export async function withCache<T>(
     try {
         await redis.setex(key, ttl, JSON.stringify(data));
     } catch {
-        logger.warn({ key }, "캐시 쓰기 실패")
+        logger.warn({ key }, "캐시 쓰기 실패");
     }
 
     return data;

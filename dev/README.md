@@ -7,6 +7,7 @@ A methodology for maintaining project context across Claude Code sessions and co
 ## The Problem
 
 **Context resets lose everything:**
+
 - Implementation decisions
 - Key files and their purposes
 - Task progress
@@ -39,6 +40,7 @@ dev/active/[task-name]/
 **Purpose:** Strategic plan for the implementation
 
 **Contains:**
+
 - Executive summary
 - Current state analysis
 - Proposed future state
@@ -53,24 +55,29 @@ dev/active/[task-name]/
 **When to update:** When scope changes or new phases discovered
 
 **Example:**
+
 ```markdown
 # Feature Name - Implementation Plan
 
 ## Executive Summary
+
 What we're building and why
 
 ## Current State
+
 Where we are now
 
 ## Implementation Phases
 
 ### Phase 1: Infrastructure (2 hours)
+
 - Task 1.1: Set up database schema
-  - Acceptance: Schema compiles, relationships correct
+    - Acceptance: Schema compiles, relationships correct
 - Task 1.2: Create service structure
-  - Acceptance: All directories created
+    - Acceptance: All directories created
 
 ### Phase 2: Core Functionality (3 hours)
+
 ...
 ```
 
@@ -81,6 +88,7 @@ Where we are now
 **Purpose:** Key information for resuming work
 
 **Contains:**
+
 - SESSION PROGRESS section (updated frequently!)
 - What's completed vs in-progress
 - Key files and their purposes
@@ -94,36 +102,44 @@ Where we are now
 **When to update:** **FREQUENTLY** - after major decisions, completions, or discoveries
 
 **Example:**
+
 ```markdown
 # Feature Name - Context
 
 ## SESSION PROGRESS (2025-10-29)
 
 ### ✅ COMPLETED
+
 - Database schema created (User, Post, Comment models)
 - PostController implemented with BaseController pattern
 - Sentry integration working
 
 ### 🟡 IN PROGRESS
+
 - Creating PostService with business logic
 - File: src/services/postService.ts
 
 ### ⚠️ BLOCKERS
+
 - Need to decide on caching strategy
 
 ## Key Files
 
 **src/controllers/PostController.ts**
+
 - Extends BaseController
 - Handles HTTP requests for posts
 - Delegates to PostService
 
 **src/services/postService.ts** (IN PROGRESS)
+
 - Business logic for post operations
 - Next: Add caching
 
 ## Quick Resume
+
 To continue:
+
 1. Read this file
 2. Continue implementing PostService.createPost()
 3. See tasks file for remaining work
@@ -138,6 +154,7 @@ To continue:
 **Purpose:** Checklist for tracking progress
 
 **Contains:**
+
 - Phases broken down by logical sections
 - Tasks in checkbox format
 - Status indicators (✅/🟡/⏳)
@@ -149,21 +166,25 @@ To continue:
 **When to update:** After completing each task or discovering new tasks
 
 **Example:**
+
 ```markdown
 # Feature Name - Task Checklist
 
 ## Phase 1: Setup ✅ COMPLETE
+
 - [x] Create database schema
 - [x] Set up controllers
 - [x] Configure Sentry
 
 ## Phase 2: Implementation 🟡 IN PROGRESS
+
 - [x] Create PostController
 - [ ] Create PostService (IN PROGRESS)
 - [ ] Create PostRepository
 - [ ] Add validation with Zod
 
 ## Phase 3: Testing ⏳ NOT STARTED
+
 - [ ] Unit tests for service
 - [ ] Integration tests
 - [ ] Manual API testing
@@ -174,6 +195,7 @@ To continue:
 ## When to Use Dev Docs
 
 **Use for:**
+
 - ✅ Complex multi-day tasks
 - ✅ Features with many moving parts
 - ✅ Tasks likely to span multiple sessions
@@ -181,6 +203,7 @@ To continue:
 - ✅ Refactoring large systems
 
 **Skip for:**
+
 - ❌ Simple bug fixes
 - ❌ Single-file changes
 - ❌ Quick updates
@@ -195,28 +218,29 @@ To continue:
 ### Starting a New Task
 
 1. **Use /dev-docs slash command:**
-   ```
-   /dev-docs refactor authentication system
-   ```
+
+    ```
+    /dev-docs refactor authentication system
+    ```
 
 2. **Claude creates the three files:**
-   - Analyzes requirements
-   - Examines codebase
-   - Creates comprehensive plan
-   - Generates context and tasks files
+    - Analyzes requirements
+    - Examines codebase
+    - Creates comprehensive plan
+    - Generates context and tasks files
 
 3. **Review and adjust:**
-   - Check if plan makes sense
-   - Add any missing considerations
-   - Adjust timeline estimates
+    - Check if plan makes sense
+    - Add any missing considerations
+    - Adjust timeline estimates
 
 ### During Implementation
 
 1. **Refer to plan** for overall strategy
 2. **Update context.md** frequently:
-   - Mark completed work
-   - Note decisions made
-   - Add blockers
+    - Mark completed work
+    - Note decisions made
+    - Add blockers
 3. **Check off tasks** in tasks.md as you complete them
 
 ### After Context Reset
@@ -232,28 +256,34 @@ No need to explain what you were doing - it's all documented!
 ## Integration with Slash Commands
 
 ### /dev-docs
+
 **Creates:** New dev docs for a task
 
 **Usage:**
+
 ```
 /dev-docs implement real-time notifications
 ```
 
 **Generates:**
+
 - `dev/active/implement-real-time-notifications/`
-  - implement-real-time-notifications-plan.md
-  - implement-real-time-notifications-context.md
-  - implement-real-time-notifications-tasks.md
+    - implement-real-time-notifications-plan.md
+    - implement-real-time-notifications-context.md
+    - implement-real-time-notifications-tasks.md
 
 ### /dev-docs-update
+
 **Updates:** Existing dev docs before context reset
 
 **Usage:**
+
 ```
 /dev-docs-update
 ```
 
 **Updates:**
+
 - Marks completed tasks
 - Adds new tasks discovered
 - Updates context with session progress
@@ -288,6 +318,7 @@ dev/
 ## Example: Real Usage
 
 See **dev/active/public-infrastructure-repo/** in this repository for a real example:
+
 - **plan.md** - 700+ line strategic plan for creating this showcase
 - **context.md** - Tracks what's completed, decisions made, what's next
 - **tasks.md** - Checklist of all phases and tasks
@@ -304,11 +335,14 @@ This is the actual dev docs used to build this showcase!
 **Good:** Update after each major milestone
 
 **SESSION PROGRESS section should always reflect reality:**
+
 ```markdown
 ## SESSION PROGRESS (YYYY-MM-DD)
 
 ### ✅ COMPLETED (list everything done)
+
 ### 🟡 IN PROGRESS (what you're working on RIGHT NOW)
+
 ### ⚠️ BLOCKERS (what's preventing progress)
 ```
 
@@ -318,6 +352,7 @@ This is the actual dev docs used to build this showcase!
 **Good:** "Implement JWT token validation in AuthMiddleware.ts (Acceptance: Tokens validated, errors to Sentry)"
 
 **Include:**
+
 - Specific file names
 - Clear acceptance criteria
 - Dependencies on other tasks
@@ -325,6 +360,7 @@ This is the actual dev docs used to build this showcase!
 ### Keep Plan Current
 
 If scope changes:
+
 - Update the plan
 - Add new phases
 - Adjust timeline estimates
@@ -338,21 +374,21 @@ If scope changes:
 
 1. **Use the /dev-docs slash command** if available
 2. **Or create manually:**
-   - Ask about the task scope
-   - Analyze relevant codebase files
-   - Create comprehensive plan
-   - Generate context and tasks
+    - Ask about the task scope
+    - Analyze relevant codebase files
+    - Create comprehensive plan
+    - Generate context and tasks
 
 3. **Structure the plan with:**
-   - Clear phases
-   - Actionable tasks
-   - Acceptance criteria
-   - Risk assessment
+    - Clear phases
+    - Actionable tasks
+    - Acceptance criteria
+    - Risk assessment
 
 4. **Make context file resumable:**
-   - SESSION PROGRESS at top
-   - Quick resume instructions
-   - Key files list with explanations
+    - SESSION PROGRESS at top
+    - Quick resume instructions
+    - Key files list with explanations
 
 **When resuming from dev docs:**
 
@@ -362,6 +398,7 @@ If scope changes:
 4. **Refer to plan.md** - understand overall strategy
 
 **Update frequently:**
+
 - Mark tasks complete immediately
 - Update SESSION PROGRESS after significant work
 - Add new tasks as discovered
@@ -373,23 +410,27 @@ If scope changes:
 If you don't have the /dev-docs command:
 
 **1. Create directory:**
+
 ```bash
 mkdir -p dev/active/your-task-name
 ```
 
 **2. Create plan.md:**
+
 - Executive summary
 - Implementation phases
 - Detailed tasks
 - Timeline estimates
 
 **3. Create context.md:**
+
 - SESSION PROGRESS section
 - Key files
 - Important decisions
 - Quick resume instructions
 
 **4. Create tasks.md:**
+
 - Phases with checkboxes
 - [ ] Task format
 - Acceptance criteria
@@ -399,12 +440,14 @@ mkdir -p dev/active/your-task-name
 ## Benefits
 
 **Before dev docs:**
+
 - Context reset = start over
 - Forget why decisions were made
 - Lose track of progress
 - Repeat work
 
 **After dev docs:**
+
 - Context reset = read 3 files, resume instantly
 - Decisions documented
 - Progress tracked

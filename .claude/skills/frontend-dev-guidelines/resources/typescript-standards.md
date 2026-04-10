@@ -18,6 +18,7 @@ TypeScript strict mode is enabled:
 ```
 
 **This means:**
+
 - No implicit `any` types
 - Null/undefined must be handled explicitly
 - Type safety enforced throughout
@@ -75,6 +76,7 @@ export default function ArenaCard({
 ```
 
 **Key Points:**
+
 - Separate interface for props
 - Optional props use `?`
 - Provide defaults in destructuring
@@ -111,6 +113,7 @@ import { create } from "zustand";
 ```
 
 **Benefits:**
+
 - Clearly separates types from values
 - Better tree-shaking
 - Prevents circular dependencies
@@ -275,7 +278,7 @@ const score = arena?.creatorScore ?? 0;
 
 ```typescript
 // Only when you KNOW it's not null (e.g., after a null check)
-const id = useParams().id!;  // OK if route guarantees id exists
+const id = useParams().id!; // OK if route guarantees id exists
 ```
 
 ---
@@ -309,6 +312,7 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 ## Summary
 
 **TypeScript Checklist:**
+
 - Strict mode enabled
 - No `any` type (use `unknown` if needed)
 - Explicit return types on non-trivial functions
@@ -320,6 +324,7 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 - Proper React event handler types
 
 **See Also:**
+
 - [component-patterns.md](component-patterns.md) - Component typing
 - [common-patterns.md](common-patterns.md) - Store typing patterns
 - [data-fetching.md](data-fetching.md) - API response typing

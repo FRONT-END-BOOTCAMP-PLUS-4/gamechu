@@ -15,7 +15,7 @@ type ReviewSelectorProps = {
     expertAvgRating: number;
     userReviewCount: number;
     userAvgRating: number;
-}
+};
 
 export default function ReviewSelector({
     selected,

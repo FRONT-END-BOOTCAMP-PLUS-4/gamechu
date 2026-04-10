@@ -3,8 +3,12 @@ import { test, expect } from "@playwright/test";
 test("/log-in 페이지 폼 렌더링", async ({ page }) => {
     await page.goto("/log-in");
 
-    await expect(page.getByRole("textbox", { name: "이메일 주소를 입력하세요" })).toBeVisible();
-    await expect(page.getByRole("textbox", { name: "비밀번호를 입력하세요" })).toBeVisible();
+    await expect(
+        page.getByRole("textbox", { name: "이메일 주소를 입력하세요" })
+    ).toBeVisible();
+    await expect(
+        page.getByRole("textbox", { name: "비밀번호를 입력하세요" })
+    ).toBeVisible();
 });
 
 test("/sign-up 페이지 단계 UI 렌더링", async ({ page }) => {

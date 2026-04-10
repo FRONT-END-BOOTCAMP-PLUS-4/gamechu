@@ -27,7 +27,10 @@ vi.mock("../CommentCard", () => ({
         memberId: string;
         nickname: string;
     }) => (
-        <div data-testid={`comment-card-${memberId}`} data-nickname={nickname} />
+        <div
+            data-testid={`comment-card-${memberId}`}
+            data-nickname={nickname}
+        />
     ),
 }));
 

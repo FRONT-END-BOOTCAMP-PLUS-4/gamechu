@@ -15,7 +15,10 @@ import {
 } from "@lexical/list";
 import { $setBlocksType } from "@lexical/selection";
 import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
-import { $patchStyleText, $getSelectionStyleValueForProperty } from "@lexical/selection";
+import {
+    $patchStyleText,
+    $getSelectionStyleValueForProperty,
+} from "@lexical/selection";
 import {
     Bold,
     Italic,
@@ -38,7 +41,7 @@ const FONT_SIZES = ["12", "14", "16", "18", "20", "24", "32"] as const;
 
 type ToolbarPluginProps = {
     onImageUpload: () => void;
-}
+};
 
 export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
     const [editor] = useLexicalComposerContext();
@@ -54,7 +57,8 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 if (selection.hasFormat("bold")) formats.add("bold");
                 if (selection.hasFormat("italic")) formats.add("italic");
                 if (selection.hasFormat("underline")) formats.add("underline");
-                if (selection.hasFormat("strikethrough")) formats.add("strikethrough");
+                if (selection.hasFormat("strikethrough"))
+                    formats.add("strikethrough");
                 setActiveFormats(formats);
 
                 const currentFontSize = $getSelectionStyleValueForProperty(
@@ -106,7 +110,9 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 <button
                     aria-label="실행 취소"
                     onMouseDown={noFocus}
-                    onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
+                    onClick={() =>
+                        editor.dispatchCommand(UNDO_COMMAND, undefined)
+                    }
                     className={base}
                 >
                     <Undo size={18} />
@@ -114,7 +120,9 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 <button
                     aria-label="다시 실행"
                     onMouseDown={noFocus}
-                    onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
+                    onClick={() =>
+                        editor.dispatchCommand(REDO_COMMAND, undefined)
+                    }
                     className={base}
                 >
                     <Redo size={18} />
@@ -125,7 +133,9 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 <button
                     aria-label="굵게"
                     onMouseDown={noFocus}
-                    onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
+                    onClick={() =>
+                        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")
+                    }
                     className={`${base} ${activeFormats.has("bold") ? active : ""}`}
                 >
                     <Bold size={18} />
@@ -133,7 +143,9 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 <button
                     aria-label="기울임"
                     onMouseDown={noFocus}
-                    onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}
+                    onClick={() =>
+                        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")
+                    }
                     className={`${base} ${activeFormats.has("italic") ? active : ""}`}
                 >
                     <Italic size={18} />
@@ -141,7 +153,9 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 <button
                     aria-label="밑줄"
                     onMouseDown={noFocus}
-                    onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")}
+                    onClick={() =>
+                        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")
+                    }
                     className={`${base} ${activeFormats.has("underline") ? active : ""}`}
                 >
                     <Underline size={18} />
@@ -149,7 +163,12 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                 <button
                     aria-label="취소선"
                     onMouseDown={noFocus}
-                    onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")}
+                    onClick={() =>
+                        editor.dispatchCommand(
+                            FORMAT_TEXT_COMMAND,
+                            "strikethrough"
+                        )
+                    }
                     className={`${base} ${activeFormats.has("strikethrough") ? active : ""}`}
                 >
                     <Strikethrough size={18} />
@@ -164,7 +183,9 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                         editor.update(() => {
                             const selection = $getSelection();
                             if ($isRangeSelection(selection)) {
-                                $setBlocksType(selection, () => $createHeadingNode("h1"));
+                                $setBlocksType(selection, () =>
+                                    $createHeadingNode("h1")
+                                );
                             }
                         })
                     }
@@ -179,7 +200,9 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                         editor.update(() => {
                             const selection = $getSelection();
                             if ($isRangeSelection(selection)) {
-                                $setBlocksType(selection, () => $createHeadingNode("h2"));
+                                $setBlocksType(selection, () =>
+                                    $createHeadingNode("h2")
+                                );
                             }
                         })
                     }
@@ -194,7 +217,9 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                         editor.update(() => {
                             const selection = $getSelection();
                             if ($isRangeSelection(selection)) {
-                                $setBlocksType(selection, () => $createHeadingNode("h3"));
+                                $setBlocksType(selection, () =>
+                                    $createHeadingNode("h3")
+                                );
                             }
                         })
                     }
@@ -206,7 +231,10 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                     aria-label="글머리 기호 목록"
                     onMouseDown={noFocus}
                     onClick={() =>
-                        editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)
+                        editor.dispatchCommand(
+                            INSERT_UNORDERED_LIST_COMMAND,
+                            undefined
+                        )
                     }
                     className={base}
                 >
@@ -216,7 +244,10 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                     aria-label="번호 매기기 목록"
                     onMouseDown={noFocus}
                     onClick={() =>
-                        editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)
+                        editor.dispatchCommand(
+                            INSERT_ORDERED_LIST_COMMAND,
+                            undefined
+                        )
                     }
                     className={base}
                 >
@@ -229,7 +260,9 @@ export function ToolbarPlugin({ onImageUpload }: ToolbarPluginProps) {
                         editor.update(() => {
                             const selection = $getSelection();
                             if ($isRangeSelection(selection)) {
-                                $setBlocksType(selection, () => $createQuoteNode());
+                                $setBlocksType(selection, () =>
+                                    $createQuoteNode()
+                                );
                             }
                         })
                     }

@@ -53,13 +53,13 @@ Never inline cache key strings — always use these functions.
 
 ## TTL guidelines
 
-| Data | TTL |
-|------|-----|
-| Genre / platform / theme lists | 3600s (1 hour) |
-| Game detail | 600s (10 min) |
-| Arena detail | 120s (2 min) |
-| Arena list | 60s (1 min) via version key |
-| Member profile | 120s |
+| Data                           | TTL                         |
+| ------------------------------ | --------------------------- |
+| Genre / platform / theme lists | 3600s (1 hour)              |
+| Game detail                    | 600s (10 min)               |
+| Arena detail                   | 120s (2 min)                |
+| Arena list                     | 60s (1 min) via version key |
+| Member profile                 | 120s                        |
 
 ## Arena list invalidation (version-based)
 

@@ -24,7 +24,10 @@ setup("authenticate", async ({ page }) => {
 
     if (!email || !password) {
         // Write empty state so authenticated project can reference the file
-        fs.writeFileSync(AUTH_FILE, JSON.stringify({ cookies: [], origins: [] }));
+        fs.writeFileSync(
+            AUTH_FILE,
+            JSON.stringify({ cookies: [], origins: [] })
+        );
         return;
     }
 

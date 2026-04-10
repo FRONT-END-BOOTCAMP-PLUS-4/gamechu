@@ -96,9 +96,7 @@ test("5-C: '겜잘알 리뷰' 버튼 visible", async ({ page }) => {
 
 test("5-C: '일반 리뷰' 버튼 visible", async ({ page }) => {
     await page.goto(GAME_URL);
-    await expect(
-        page.getByRole("button", { name: /일반 리뷰/ })
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /일반 리뷰/ })).toBeVisible();
 });
 
 test("5-C: 기본 선택은 '겜잘알 리뷰' (border-primary-purple-200 클래스)", async ({
@@ -161,9 +159,15 @@ test("5-D: 툴바 Row2 — 글자 크기 select, 사진, 초기화 버튼 visibl
     page,
 }) => {
     await page.goto(GAME_URL);
-    await expect(page.getByRole("combobox", { name: "글자 크기" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "사진 업로드" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "에디터 초기화" })).toBeVisible();
+    await expect(
+        page.getByRole("combobox", { name: "글자 크기" })
+    ).toBeVisible();
+    await expect(
+        page.getByRole("button", { name: "사진 업로드" })
+    ).toBeVisible();
+    await expect(
+        page.getByRole("button", { name: "에디터 초기화" })
+    ).toBeVisible();
 });
 
 test("5-D: 글자 수 카운터 '0 / 10,000' visible", async ({ page }) => {
@@ -261,9 +265,9 @@ test("5-F: '일반 리뷰' 탭 클릭 시 유저 리뷰 로드", async ({ page }
     await page.getByRole("button", { name: /일반 리뷰/ }).click();
     await nextResponsePromise;
     // 일반 리뷰 버튼이 active 상태로 전환
-    await expect(
-        page.getByRole("button", { name: /일반 리뷰/ })
-    ).toHaveClass(/border-primary-purple-200/);
+    await expect(page.getByRole("button", { name: /일반 리뷰/ })).toHaveClass(
+        /border-primary-purple-200/
+    );
 });
 
 // ─── 5-G: 페이지네이션 ────────────────────────────────────────────────────

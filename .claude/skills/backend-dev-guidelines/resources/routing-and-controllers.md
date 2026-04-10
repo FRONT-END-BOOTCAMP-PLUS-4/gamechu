@@ -19,6 +19,7 @@ Complete guide to clean Next.js API route definitions and handler patterns for G
 ### The Golden Rule
 
 **Route handlers should ONLY:**
+
 - ✅ Parse request params/query/body
 - ✅ Check authentication (getAuthUserId)
 - ✅ Instantiate repositories + usecases
@@ -26,6 +27,7 @@ Complete guide to clean Next.js API route definitions and handler patterns for G
 - ✅ Return NextResponse
 
 **Route handlers should NEVER:**
+
 - ❌ Contain business logic
 - ❌ Access database directly (Prisma calls)
 - ❌ Implement complex validation logic
@@ -70,6 +72,7 @@ export async function GET(request: Request) {
 ```
 
 **Key Points:**
+
 - Each handler: parse, auth, instantiate, delegate, respond
 - No DI container — repos instantiated inline per request
 - try-catch wraps entire handler body
@@ -86,8 +89,12 @@ export async function GET(request: Request) {
 
 ```typescript
 // app/api/arenas/route.ts — collection
-export async function GET(request: Request) { /* list */ }
-export async function POST(request: Request) { /* create */ }
+export async function GET(request: Request) {
+    /* list */
+}
+export async function POST(request: Request) {
+    /* create */
+}
 
 // app/api/arenas/[id]/route.ts — item
 export async function GET(
@@ -152,10 +159,16 @@ export async function GET(request: Request) {
         const voteRepository = new PrismaVoteRepository();
 
         const getArenaUsecase = new GetArenaUsecase(
-            arenaRepository, memberRepository, voteRepository
+            arenaRepository,
+            memberRepository,
+            voteRepository
         );
 
-        const dto = new GetArenaDto({ currentPage, status }, memberId, pageSize);
+        const dto = new GetArenaDto(
+            { currentPage, status },
+            memberId,
+            pageSize
+        );
         const result = await getArenaUsecase.execute(dto);
         return NextResponse.json(result);
     } catch (error: unknown) {
@@ -165,6 +178,7 @@ export async function GET(request: Request) {
 ```
 
 **What Makes This Excellent:**
+
 - Zero business logic in route handler
 - Repositories instantiated and injected into usecase
 - DTO encapsulates input parameters
@@ -184,7 +198,9 @@ export async function POST(request: Request) {
         const memberId = await getAuthUserId();
 
         // ❌ Permission checking in handler
-        const member = await prismaClient.member.findUnique({ where: { id: memberId } });
+        const member = await prismaClient.member.findUnique({
+            where: { id: memberId },
+        });
         if (member?.score < 100) {
             return NextResponse.json({ error: "점수 부족" }, { status: 403 });
         }
@@ -211,6 +227,7 @@ export async function POST(request: Request) {
 ```
 
 **Why This Is Bad:**
+
 - Business logic mixed into route handler
 - Hard to test (requires HTTP mocking)
 - Hard to reuse (tied to route)
@@ -225,7 +242,7 @@ export async function POST(request: Request) {
 export class CreateArenaUsecase {
     constructor(
         private arenaRepository: ArenaRepository,
-        private memberRepository: MemberRepository,
+        private memberRepository: MemberRepository
     ) {}
 
     async execute(dto: CreateArenaDto): Promise<Arena> {
@@ -256,7 +273,8 @@ export async function POST(request: Request) {
         const arenaRepository = new PrismaArenaRepository();
         const memberRepository = new PrismaMemberRepository();
         const createArenaUsecase = new CreateArenaUsecase(
-            arenaRepository, memberRepository
+            arenaRepository,
+            memberRepository
         );
 
         const dto = new CreateArenaDto({ title: body.title }, memberId);
@@ -269,6 +287,7 @@ export async function POST(request: Request) {
 ```
 
 **Result:**
+
 - Route handler: ~15 lines (parse + delegate)
 - Usecase: ~20 lines (business logic)
 - Testable, reusable, maintainable!
@@ -321,16 +340,16 @@ catch (error: unknown) {
 
 ### Standard Codes
 
-| Code | Use Case | Example |
-|------|----------|---------|
-| 200 | Success (GET, PATCH) | Arena retrieved, Updated |
-| 201 | Created (POST) | Arena created |
-| 204 | No Content (DELETE) | Arena deleted |
-| 400 | Bad Request | Invalid input data |
-| 401 | Unauthorized | Not authenticated |
-| 403 | Forbidden | No permission / insufficient score |
-| 404 | Not Found | Resource doesn't exist |
-| 500 | Internal Server Error | Unexpected error |
+| Code | Use Case              | Example                            |
+| ---- | --------------------- | ---------------------------------- |
+| 200  | Success (GET, PATCH)  | Arena retrieved, Updated           |
+| 201  | Created (POST)        | Arena created                      |
+| 204  | No Content (DELETE)   | Arena deleted                      |
+| 400  | Bad Request           | Invalid input data                 |
+| 401  | Unauthorized          | Not authenticated                  |
+| 403  | Forbidden             | No permission / insufficient score |
+| 404  | Not Found             | Resource doesn't exist             |
+| 500  | Internal Server Error | Unexpected error                   |
 
 ---
 
@@ -339,6 +358,7 @@ catch (error: unknown) {
 ### Identify Handlers Needing Refactoring
 
 **Red Flags:**
+
 - Route handler > 50 lines
 - Direct `prismaClient` calls in handler
 - Complex business logic (if statements, loops)
@@ -347,6 +367,7 @@ catch (error: unknown) {
 ### Refactoring Process
 
 **1. Extract to Usecase:**
+
 ```typescript
 // Before: Handler with logic
 export async function POST(request: Request) {
@@ -369,6 +390,7 @@ export async function POST(request: Request) {
 ```
 
 **2. Extract Repository if direct Prisma calls exist:**
+
 ```typescript
 // Domain interface
 export interface FeatureRepository {
@@ -389,6 +411,7 @@ export class PrismaFeatureRepository implements FeatureRepository {
 ---
 
 **Related Files:**
+
 - [SKILL.md](SKILL.md) - Main guide
 - [services-and-repositories.md](services-and-repositories.md) - Usecase and repository details
 - [complete-examples.md](complete-examples.md) - Full feature examples

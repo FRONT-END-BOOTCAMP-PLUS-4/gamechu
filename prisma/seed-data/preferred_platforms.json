@@ -1,1 +1,47 @@
-[{"id":1,"memberId":"03a05aac-a2de-4e5b-ada7-fabc465bf7d2","platformId":6}, {"id":2,"memberId":"03a05aac-a2de-4e5b-ada7-fabc465bf7d2","platformId":34}, {"id":3,"memberId":"03a05aac-a2de-4e5b-ada7-fabc465bf7d2","platformId":508}, {"id":4,"memberId":"36f1c136-590a-4c20-8a7d-647a88338531","platformId":169}, {"id":5,"memberId":"249d9e5d-fec0-41e1-b918-c2c6b531b32a","platformId":6}, {"id":6,"memberId":"249d9e5d-fec0-41e1-b918-c2c6b531b32a","platformId":34}, {"id":7,"memberId":"725d52db-501d-41ff-980e-fb26d6a5338b","platformId":6}, {"id":8,"memberId":"725d52db-501d-41ff-980e-fb26d6a5338b","platformId":163}, {"id":9,"memberId":"725d52db-501d-41ff-980e-fb26d6a5338b","platformId":39}]
+[
+    {
+        "id": 1,
+        "memberId": "03a05aac-a2de-4e5b-ada7-fabc465bf7d2",
+        "platformId": 6
+    },
+    {
+        "id": 2,
+        "memberId": "03a05aac-a2de-4e5b-ada7-fabc465bf7d2",
+        "platformId": 34
+    },
+    {
+        "id": 3,
+        "memberId": "03a05aac-a2de-4e5b-ada7-fabc465bf7d2",
+        "platformId": 508
+    },
+    {
+        "id": 4,
+        "memberId": "36f1c136-590a-4c20-8a7d-647a88338531",
+        "platformId": 169
+    },
+    {
+        "id": 5,
+        "memberId": "249d9e5d-fec0-41e1-b918-c2c6b531b32a",
+        "platformId": 6
+    },
+    {
+        "id": 6,
+        "memberId": "249d9e5d-fec0-41e1-b918-c2c6b531b32a",
+        "platformId": 34
+    },
+    {
+        "id": 7,
+        "memberId": "725d52db-501d-41ff-980e-fb26d6a5338b",
+        "platformId": 6
+    },
+    {
+        "id": 8,
+        "memberId": "725d52db-501d-41ff-980e-fb26d6a5338b",
+        "platformId": 163
+    },
+    {
+        "id": 9,
+        "memberId": "725d52db-501d-41ff-980e-fb26d6a5338b",
+        "platformId": 39
+    }
+]

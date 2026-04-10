@@ -3,7 +3,9 @@ import { UpdateReviewSchema } from "../UpdateReviewDto";
 
 describe("UpdateReviewSchema", () => {
     it("content만 있어도 통과", () => {
-        expect(UpdateReviewSchema.safeParse({ content: "수정된 내용" }).success).toBe(true);
+        expect(
+            UpdateReviewSchema.safeParse({ content: "수정된 내용" }).success
+        ).toBe(true);
     });
 
     it("rating만 있어도 통과", () => {

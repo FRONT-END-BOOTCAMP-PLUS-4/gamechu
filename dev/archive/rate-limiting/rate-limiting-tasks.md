@@ -8,9 +8,9 @@
 
 - [x] location 블록에 아래 헤더 추가 확인:
       `nginx
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header X-Real-IP $remote_addr;
-  `
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Real-IP $remote_addr;
+`
 - 미설정 시 `getClientIp()`가 항상 `"unknown"` 반환 → 모든 사용자가 하나의 버킷 공유
 
 **Note**: 코드 구현과 병행 가능하나, 프로덕션 배포 전 반드시 완료해야 함.

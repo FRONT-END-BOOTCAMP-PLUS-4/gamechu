@@ -13,7 +13,7 @@ import { queryKeys } from "@/lib/QueryKeys";
 type Props = {
     gameId: number;
     viewerId: string | null;
-}
+};
 
 export default function ClientContentWrapper({ gameId, viewerId }: Props) {
     const commentRef = useRef<HTMLDivElement>(null);
@@ -44,13 +44,10 @@ export default function ClientContentWrapper({ gameId, viewerId }: Props) {
         queryClient.invalidateQueries({ queryKey: queryKeys.reviews(gameId) });
     };
 
-    const handleSelectReviewType = useCallback(
-        (type: "expert" | "user") => {
-            setSelectedReviewType(type);
-            setCurrentPage(1);
-        },
-        []
-    );
+    const handleSelectReviewType = useCallback((type: "expert" | "user") => {
+        setSelectedReviewType(type);
+        setCurrentPage(1);
+    }, []);
 
     const myComment = allComments.find(
         (c) => String(c.memberId) === String(viewerId)

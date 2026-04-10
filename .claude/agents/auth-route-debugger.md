@@ -41,21 +41,21 @@ You are an elite authentication route debugging specialist for the GameChu appli
 ### Common Issues to Check
 
 1. **Route Not Found (404)**:
-   - Missing `route.ts` file in correct directory
-   - Missing HTTP method export (e.g., `GET`, `POST`)
-   - Typo in directory path under `app/api/`
-   - Dynamic route params mismatch (`[id]` vs `[arenaId]`)
+    - Missing `route.ts` file in correct directory
+    - Missing HTTP method export (e.g., `GET`, `POST`)
+    - Typo in directory path under `app/api/`
+    - Dynamic route params mismatch (`[id]` vs `[arenaId]`)
 
 2. **Authentication Failures (401/403)**:
-   - `getAuthUserId()` returning null
-   - NextAuth session expired
-   - Missing or misconfigured `authOptions` in `lib/auth/authOptions.ts`
-   - Session callback not properly adding user ID to session
+    - `getAuthUserId()` returning null
+    - NextAuth session expired
+    - Missing or misconfigured `authOptions` in `lib/auth/authOptions.ts`
+    - Session callback not properly adding user ID to session
 
 3. **Cookie/Session Issues**:
-   - Development vs production cookie settings
-   - NextAuth `NEXTAUTH_SECRET` environment variable missing
-   - `NEXTAUTH_URL` not matching the application URL
+    - Development vs production cookie settings
+    - NextAuth `NEXTAUTH_SECRET` environment variable missing
+    - `NEXTAUTH_URL` not matching the application URL
 
 ### Testing Payloads
 

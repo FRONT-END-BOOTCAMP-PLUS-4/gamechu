@@ -28,7 +28,11 @@ function extractTextContent(node: unknown): string {
 function rejectBase64Images(node: unknown): void {
     if (typeof node !== "object" || node === null) return;
     const n = node as Record<string, unknown>;
-    if (n.type === "image" && typeof n.src === "string" && n.src.startsWith("data:")) {
+    if (
+        n.type === "image" &&
+        typeof n.src === "string" &&
+        n.src.startsWith("data:")
+    ) {
         throw new Error("이미지는 URL 형식으로만 삽입할 수 있습니다.");
     }
     if (Array.isArray(n.children)) {
@@ -53,7 +57,9 @@ export function validateReviewContent(content: string): string {
         throw new Error("리뷰 내용을 입력해주세요.");
     }
     if (textLength > MAX_TEXT_LENGTH) {
-        throw new Error(`리뷰는 최대 ${MAX_TEXT_LENGTH.toLocaleString()}자까지 작성할 수 있습니다.`);
+        throw new Error(
+            `리뷰는 최대 ${MAX_TEXT_LENGTH.toLocaleString()}자까지 작성할 수 있습니다.`
+        );
     }
     return content;
 }

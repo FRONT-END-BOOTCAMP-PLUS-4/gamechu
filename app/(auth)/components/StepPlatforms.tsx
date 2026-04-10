@@ -12,11 +12,17 @@ import { Platform } from "@/prisma/generated";
 type Props = {
     onSubmit: () => void;
     onBack: () => void;
-}
+};
 
 export default function StepPlatforms({ onSubmit, onBack }: Props) {
-    const [selectedPlatformIds, setSelectedPlatformIds] = useState<number[]>([]);
-    const [toast, setToast] = useState({ show: false, status: "error" as const, message: "" });
+    const [selectedPlatformIds, setSelectedPlatformIds] = useState<number[]>(
+        []
+    );
+    const [toast, setToast] = useState({
+        show: false,
+        status: "error" as const,
+        message: "",
+    });
 
     const { data: platforms = [] } = useQuery<Platform[]>({
         queryKey: queryKeys.platforms(),
@@ -30,10 +36,16 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ platformIds: selectedPlatformIds }),
             }).then((res) => {
-                if (!res.ok) throw new Error("선호 플랫폼 저장에 실패했습니다.");
+                if (!res.ok)
+                    throw new Error("선호 플랫폼 저장에 실패했습니다.");
             }),
         onSuccess: () => onSubmit(),
-        onError: () => setToast({ show: true, status: "error", message: "선호 플랫폼 저장에 실패했습니다." }),
+        onError: () =>
+            setToast({
+                show: true,
+                status: "error",
+                message: "선호 플랫폼 저장에 실패했습니다.",
+            }),
     });
 
     const togglePlatform = (platformId: number) => {
@@ -54,11 +66,11 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
 
     return (
         <div>
-            <h2 className="text-body text-font-100 font-semibold mb-2">
+            <h2 className="mb-2 text-body font-semibold text-font-100">
                 이용하는 게임 플랫폼을 선택해주세요
             </h2>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+            <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
                 {platforms.map((platform) => (
                     <SelectionCard
                         key={platform.id}
@@ -69,9 +81,13 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
                 ))}
             </div>
 
-            <Toast show={toast.show} status={toast.status} message={toast.message} />
+            <Toast
+                show={toast.show}
+                status={toast.status}
+                message={toast.message}
+            />
 
-            <div className="flex justify-between mt-8">
+            <div className="mt-8 flex justify-between">
                 <Button
                     label="← 이전"
                     size="medium"

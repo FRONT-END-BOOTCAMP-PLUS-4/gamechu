@@ -28,9 +28,12 @@ export async function POST() {
 
         let attendedDateStr: string | null = null;
         if (lastAttendedDate) {
-            attendedDateStr = new Date(lastAttendedDate).toLocaleDateString("ko-KR", {
-                timeZone: "Asia/Seoul",
-            });
+            attendedDateStr = new Date(lastAttendedDate).toLocaleDateString(
+                "ko-KR",
+                {
+                    timeZone: "Asia/Seoul",
+                }
+            );
         }
 
         return NextResponse.json({
@@ -39,7 +42,8 @@ export async function POST() {
         });
     } catch (error: unknown) {
         log.error({ userId: memberId, err: error }, "출석 체크 실패");
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }

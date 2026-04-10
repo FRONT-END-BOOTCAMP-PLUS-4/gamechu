@@ -27,6 +27,7 @@ export default function GamesPage() {
 ```
 
 **Use Server Components when:**
+
 - Rendering static content
 - Fetching data directly (no user interaction needed)
 - No hooks, event handlers, or browser APIs
@@ -58,6 +59,7 @@ export default function ArenaDetail() {
 ```
 
 **Use Client Components when:**
+
 - Using React hooks (`useState`, `useEffect`, etc.)
 - Using event handlers (`onClick`, `onChange`, etc.)
 - Using browser APIs (`window`, `document`)
@@ -150,6 +152,7 @@ export default function MyComponent({ entityId, onComplete }: MyComponentProps) 
 ### When to Split Components
 
 **Split into page-specific `components/` subdirectory when:**
+
 - Component exceeds 300 lines
 - Multiple distinct responsibilities
 - Reusable within the page
@@ -196,6 +199,7 @@ export default function ArenaDetailPage() {
 ### When to Put in Shared Components
 
 **Put in `app/components/` when:**
+
 - Used across 3+ pages
 - Generic, no feature-specific logic
 - Pure UI primitive
@@ -315,6 +319,7 @@ function DeepChild() {
 ## Summary
 
 **Component Recipe:**
+
 1. Server Component by default; add `"use client"` only when needed
 2. TailwindCSS utility classes for styling
 3. `cn()` for conditional classes
@@ -324,6 +329,7 @@ function DeepChild() {
 7. Korean UI strings
 
 **See Also:**
+
 - [data-fetching.md](data-fetching.md) - fetch patterns
 - [loading-and-error-states.md](loading-and-error-states.md) - Loading/error handling
 - [complete-examples.md](complete-examples.md) - Full working examples

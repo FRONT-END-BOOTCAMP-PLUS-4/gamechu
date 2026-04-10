@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 type Props = {
     onLoaded?: () => void; // ✅ 상위로 로딩 완료 알림
-}
+};
 
 export default function DebatingArenaSection({ onLoaded }: Props) {
     const status: number = 3;

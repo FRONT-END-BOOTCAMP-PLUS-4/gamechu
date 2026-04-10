@@ -14,7 +14,10 @@ const PreferredPlatformsBodySchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-    const log = logger.child({ route: "/api/preferred-platforms", method: "POST" });
+    const log = logger.child({
+        route: "/api/preferred-platforms",
+        method: "POST",
+    });
     try {
         const memberId = await getAuthUserId();
         if (!memberId) {

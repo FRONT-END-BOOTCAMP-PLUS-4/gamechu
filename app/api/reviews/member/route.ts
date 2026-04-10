@@ -13,12 +13,15 @@ export async function GET() {
             return errorResponse("Unauthorized", 401);
         }
 
-        const usecase = new GetReviewsByMemberIdUsecase(new PrismaReviewRepository());
+        const usecase = new GetReviewsByMemberIdUsecase(
+            new PrismaReviewRepository()
+        );
         const result = await usecase.execute(memberId);
         return NextResponse.json(result);
     } catch (error: unknown) {
         log.error({ userId: memberId, err: error }, "본인 리뷰 목록 조회 실패");
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }

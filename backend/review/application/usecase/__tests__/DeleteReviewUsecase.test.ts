@@ -10,7 +10,9 @@ function makeApplyReviewScoreMock() {
 }
 
 function makeLikeRepo(likeCount: number) {
-    return { count: vi.fn().mockResolvedValue(likeCount) } as unknown as ReviewLikeRepository;
+    return {
+        count: vi.fn().mockResolvedValue(likeCount),
+    } as unknown as ReviewLikeRepository;
 }
 
 describe("DeleteReviewUsecase", () => {
@@ -52,6 +54,8 @@ describe("DeleteReviewUsecase", () => {
             likeRepo,
             applyScore as unknown as ApplyReviewScoreUsecase
         );
-        await expect(usecase.execute(999)).rejects.toThrow("리뷰가 존재하지 않음");
+        await expect(usecase.execute(999)).rejects.toThrow(
+            "리뷰가 존재하지 않음"
+        );
     });
 });

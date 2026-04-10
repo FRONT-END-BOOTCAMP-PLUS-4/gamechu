@@ -9,10 +9,14 @@ describe("SubmitVoteSchema", () => {
     });
 
     it("arenaId 0 → 실패", () => {
-        expect(SubmitVoteSchema.safeParse({ ...valid, arenaId: 0 }).success).toBe(false);
+        expect(
+            SubmitVoteSchema.safeParse({ ...valid, arenaId: 0 }).success
+        ).toBe(false);
     });
 
     it("votedTo 빈 문자열 → 실패", () => {
-        expect(SubmitVoteSchema.safeParse({ ...valid, votedTo: "" }).success).toBe(false);
+        expect(
+            SubmitVoteSchema.safeParse({ ...valid, votedTo: "" }).success
+        ).toBe(false);
     });
 });

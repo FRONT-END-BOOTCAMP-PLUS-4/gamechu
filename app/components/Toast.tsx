@@ -8,7 +8,7 @@ type GlobalToastProps = {
     status: "success" | "error" | "info";
     message: string;
     duration?: number; // 기본값: 3000ms
-}
+};
 
 export default function Toast({
     show,
@@ -36,14 +36,13 @@ export default function Toast({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 50 }}
                     transition={{ duration: 0.4 }}
-                    className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-xl shadow-xl text-white text-sm font-medium z-50
-                        ${
-                            status === "success"
-                                ? "bg-green-500"
-                                : status === "error"
-                                  ? "bg-red-500"
-                                  : "bg-blue-500"
-                        }`}
+                    className={`fixed bottom-6 left-1/2 z-50 -translate-x-1/2 transform rounded-xl px-6 py-3 text-sm font-medium text-white shadow-xl ${
+                        status === "success"
+                            ? "bg-green-500"
+                            : status === "error"
+                              ? "bg-red-500"
+                              : "bg-blue-500"
+                    }`}
                 >
                     {message}
                 </motion.div>

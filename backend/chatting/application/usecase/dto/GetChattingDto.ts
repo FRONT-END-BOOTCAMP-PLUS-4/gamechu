@@ -1,3 +1,6 @@
 export class GetChattingDto {
-    constructor(public arenaId: number, public memberId: string | null) {}
+    constructor(
+        public arenaId: number,
+        public memberId: string | null
+    ) {}
 }

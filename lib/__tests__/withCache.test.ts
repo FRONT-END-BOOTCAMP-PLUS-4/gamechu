@@ -38,7 +38,11 @@ describe("withCache", () => {
 
         expect(fn).toHaveBeenCalledOnce();
         expect(result).toEqual(data);
-        expect(mockSetex).toHaveBeenCalledWith("test:key", 300, JSON.stringify(data));
+        expect(mockSetex).toHaveBeenCalledWith(
+            "test:key",
+            300,
+            JSON.stringify(data)
+        );
     });
 
     it("redis read error: fn still called, result returned without throwing", async () => {
@@ -57,6 +61,8 @@ describe("withCache", () => {
         mockSetex.mockRejectedValue(new Error("Redis down"));
         const fn = vi.fn().mockResolvedValue({ name: "fresh" });
 
-        await expect(withCache("test:key", 60, fn)).resolves.toEqual({ name: "fresh" });
+        await expect(withCache("test:key", 60, fn)).resolves.toEqual({
+            name: "fresh",
+        });
     });
 });

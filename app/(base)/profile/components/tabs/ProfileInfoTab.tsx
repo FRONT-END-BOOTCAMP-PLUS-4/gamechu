@@ -14,13 +14,19 @@ type Props = {
     imageUrl: string;
     birthDate: string; // yyyy-mm-dd
     isMale: boolean;
-}
+};
 
 export default function ProfileInfoTab(props: Props) {
     const [isEdit, setIsEdit] = useState(false);
-    const [toast, setToast] = useState<{ show: boolean; status: "success" | "error"; message: string }>({ show: false, status: "success", message: "" });
+    const [toast, setToast] = useState<{
+        show: boolean;
+        status: "success" | "error";
+        message: string;
+    }>({ show: false, status: "success", message: "" });
     const [nickname, setNickname] = useState(props.nickname);
-    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<boolean | null>(null);
+    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<
+        boolean | null
+    >(null);
     const [nicknameMessage, setNicknameMessage] = useState<{
         text: string;
         isError: boolean;
@@ -35,8 +41,12 @@ export default function ProfileInfoTab(props: Props) {
 
     const { mutate: checkNickname } = useMutation({
         mutationFn: () =>
-            fetch(`/api/member/nickname-check?nickname=${encodeURIComponent(nickname)}`).then(
-                (res) => res.json().then((data) => ({ status: res.status, ok: res.ok, data }))
+            fetch(
+                `/api/member/nickname-check?nickname=${encodeURIComponent(nickname)}`
+            ).then((res) =>
+                res
+                    .json()
+                    .then((data) => ({ status: res.status, ok: res.ok, data }))
             ),
         onSuccess: ({ status, ok, data }) => {
             if (status === 409) {
@@ -45,7 +55,10 @@ export default function ProfileInfoTab(props: Props) {
                 return;
             }
             if (!ok) {
-                setNicknameMessage({ text: data.message || "중복 확인 실패", isError: true });
+                setNicknameMessage({
+                    text: data.message || "중복 확인 실패",
+                    isError: true,
+                });
                 setIsNicknameDuplicate(null);
                 return;
             }
@@ -53,7 +66,8 @@ export default function ProfileInfoTab(props: Props) {
             setNicknameMessage({ text: data.message, isError: false });
         },
         onError: (err) => {
-            const message = err instanceof Error ? err.message : "오류가 발생했습니다.";
+            const message =
+                err instanceof Error ? err.message : "오류가 발생했습니다.";
             setNicknameMessage({ text: message, isError: true });
             setIsNicknameDuplicate(null);
         },
@@ -77,12 +91,23 @@ export default function ProfileInfoTab(props: Props) {
                 }
             }),
         onSuccess: () => {
-            setToast({ show: true, status: "success", message: "프로필이 수정되었습니다." });
+            setToast({
+                show: true,
+                status: "success",
+                message: "프로필이 수정되었습니다.",
+            });
             setIsEdit(false);
             setNicknameMessage(null);
         },
         onError: (err) => {
-            setToast({ show: true, status: "error", message: err instanceof Error ? err.message : "예기치 못한 오류가 발생했습니다." });
+            setToast({
+                show: true,
+                status: "error",
+                message:
+                    err instanceof Error
+                        ? err.message
+                        : "예기치 못한 오류가 발생했습니다.",
+            });
         },
     });
 
@@ -90,13 +115,19 @@ export default function ProfileInfoTab(props: Props) {
         setNicknameMessage(null);
 
         if (!nickname) {
-            setNicknameMessage({ text: "닉네임을 입력해주세요.", isError: true });
+            setNicknameMessage({
+                text: "닉네임을 입력해주세요.",
+                isError: true,
+            });
             setIsNicknameDuplicate(null);
             return;
         }
 
         if (nickname.length > 8) {
-            setNicknameMessage({ text: "닉네임은 8자 이하여야 합니다.", isError: true });
+            setNicknameMessage({
+                text: "닉네임은 8자 이하여야 합니다.",
+                isError: true,
+            });
             setIsNicknameDuplicate(null);
             return;
         }
@@ -136,7 +167,11 @@ export default function ProfileInfoTab(props: Props) {
 
     return (
         <div className="flex w-full flex-col gap-8 rounded-xl bg-background-400 p-6 shadow">
-            <Toast show={toast.show} status={toast.status} message={toast.message} />
+            <Toast
+                show={toast.show}
+                status={toast.status}
+                message={toast.message}
+            />
             <h2 className="text-lg font-semibold">프로필 정보</h2>
 
             <div className="flex flex-col gap-6">

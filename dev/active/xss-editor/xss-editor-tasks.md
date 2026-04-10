@@ -97,8 +97,8 @@
 
 ### 1-M. Phase 1 통합 검증 ⚠️ 수동 필요
 
-- [x] 브라우저에서 Lexical 에디터 동작 확인 *(2026-03-20 브라우저 조사 — 아래 "조사 결과" 섹션 참고)*
-- [x] curl로 API에 JSON 아닌 문자열 전송 → `400` 반환 확인 *(자동화: route 단위 테스트)*
+- [x] 브라우저에서 Lexical 에디터 동작 확인 _(2026-03-20 브라우저 조사 — 아래 "조사 결과" 섹션 참고)_
+- [x] curl로 API에 JSON 아닌 문자열 전송 → `400` 반환 확인 _(자동화: route 단위 테스트)_
 - [x] `next build` 성공
 - [x] 테스트 142개 통과
 
@@ -136,7 +136,7 @@
 - [x] `AutoLinkPlugin` import 및 URL/이메일 matcher 설정 (`Comment.tsx`)
 - [x] `ToolbarPlugin`에서 링크 버튼 및 팝업 UI 제거 (B6 취소 버튼 이슈도 함께 해소)
 - [x] `LinkPlugin`은 그대로 유지 (링크 클릭 동작 담당)
-- [x] 브라우저에서 URL 붙여넣기 → 자동 링크 변환 확인 *(2026-03-21 Playwright MCP 확인 — `https://example.com` 타이핑 시 link 노드로 자동 변환)*
+- [x] 브라우저에서 URL 붙여넣기 → 자동 링크 변환 확인 _(2026-03-21 Playwright MCP 확인 — `https://example.com` 타이핑 시 link 노드로 자동 변환)_
 
 ---
 
@@ -165,11 +165,11 @@
 
 ### 2-F. Phase 2 통합 검증 ⚠️ 수동 필요
 
-- [x] 모든 툴바 버튼 브라우저 동작 확인 *(2026-03-20 — 아래 조사 결과 참고)*
-- [x] H1-H3, 리스트, 링크 저장 후 ReadOnlyReview 렌더링 *(2026-03-21 5-H E2E: H1 heading + bold/italic 저장 후 .glow-border h1 / strong 렌더링 확인 — ✅)*
+- [x] 모든 툴바 버튼 브라우저 동작 확인 _(2026-03-20 — 아래 조사 결과 참고)_
+- [x] H1-H3, 리스트, 링크 저장 후 ReadOnlyReview 렌더링 _(2026-03-21 5-H E2E: H1 heading + bold/italic 저장 후 .glow-border h1 / strong 렌더링 확인 — ✅)_
 - [x] 10,000자 제한 경고색 동작 확인
-- [x] 링크 `javascript:` 거부 확인 *(자동화: ToolbarPlugin regex 단위 테스트)*
-- [x] 모바일 툴바 overflow 확인 *(2026-03-21 Playwright MCP 375px 뷰포트 — flex-wrap으로 2줄 래핑, 클리핑 없음)*
+- [x] 링크 `javascript:` 거부 확인 _(자동화: ToolbarPlugin regex 단위 테스트)_
+- [x] 모바일 툴바 overflow 확인 _(2026-03-21 Playwright MCP 375px 뷰포트 — flex-wrap으로 2줄 래핑, 클리핑 없음)_
 - [x] `next build` 성공
 
 ---
@@ -213,30 +213,30 @@
 
 ### ✅ 정상 동작 확인
 
-| 기능 | 결과 |
-|------|------|
-| 굵게/기울임/밑줄/취소선 | 버튼 하이라이트 + 텍스트 적용 정상 |
-| H1/H2/H3 | 블록 변환 동작 |
-| 글머리 기호 목록 | 불릿 표시 정상 |
-| 인용구 | 좌측 테두리 표시 정상 |
-| 글자 수 카운터 | 실시간 업데이트, 9000/10000 경고색 정상 |
-| 별점 입력 | 0.5 단위 선택 정상 |
-| 미인증 등록 시도 | 토스트 1초 후 `/log-in?callbackUrl=...` 리다이렉트 정상 |
-| Undo/Redo | 동작 |
-| ReadOnlyReview 굵은 텍스트 | `<strong>` → prose 스타일 정상 렌더링 |
+| 기능                       | 결과                                                    |
+| -------------------------- | ------------------------------------------------------- |
+| 굵게/기울임/밑줄/취소선    | 버튼 하이라이트 + 텍스트 적용 정상                      |
+| H1/H2/H3                   | 블록 변환 동작                                          |
+| 글머리 기호 목록           | 불릿 표시 정상                                          |
+| 인용구                     | 좌측 테두리 표시 정상                                   |
+| 글자 수 카운터             | 실시간 업데이트, 9000/10000 경고색 정상                 |
+| 별점 입력                  | 0.5 단위 선택 정상                                      |
+| 미인증 등록 시도           | 토스트 1초 후 `/log-in?callbackUrl=...` 리다이렉트 정상 |
+| Undo/Redo                  | 동작                                                    |
+| ReadOnlyReview 굵은 텍스트 | `<strong>` → prose 스타일 정상 렌더링                   |
 
 ### ❌ 발견된 버그 → Phase 4에서 수정 (이 이슈 내 처리)
 
-| ID | 파일 | 우선순위 | 요약 |
-|----|------|----------|------|
-| B1 | `Comment.tsx:116` | Medium | 별점 0 상태로 등록 시 무반응 (toast 없음) |
-| B2 | `ToolbarPlugin.tsx:84-94` | Medium | 글자 크기 드롭다운이 커서 위치에서 새 텍스트에 미적용 |
-| B3 | `ToolbarPlugin.tsx:295-299` | Low | 에디터 초기화 버튼 확인 다이얼로그 없음 |
-| B4 | `ToolbarPlugin.tsx:53-74` | Low | 초기화 후 글자 크기 드롭다운 미리셋 안 됨 |
-| B5 | `ReadOnlyReview.tsx:14-20` | Medium | ReadOnlyReview에 Lexical theme 없음 (heading/quote/link 스타일 불일치) |
-| B6 | `ToolbarPlugin.tsx:266-291` | Low | 링크 팝업 취소 버튼 없음 |
-| B7 | `CommentCard.tsx:73` | Low | 빈 단락이 150px clip을 낭비 → 불필요한 더보기 트리거 |
-| B8 | `app/(base)/games/page.tsx:111-116` | Low | AbortError 미처리 → false-positive 콘솔 에러 |
+| ID  | 파일                                | 우선순위 | 요약                                                                   |
+| --- | ----------------------------------- | -------- | ---------------------------------------------------------------------- |
+| B1  | `Comment.tsx:116`                   | Medium   | 별점 0 상태로 등록 시 무반응 (toast 없음)                              |
+| B2  | `ToolbarPlugin.tsx:84-94`           | Medium   | 글자 크기 드롭다운이 커서 위치에서 새 텍스트에 미적용                  |
+| B3  | `ToolbarPlugin.tsx:295-299`         | Low      | 에디터 초기화 버튼 확인 다이얼로그 없음                                |
+| B4  | `ToolbarPlugin.tsx:53-74`           | Low      | 초기화 후 글자 크기 드롭다운 미리셋 안 됨                              |
+| B5  | `ReadOnlyReview.tsx:14-20`          | Medium   | ReadOnlyReview에 Lexical theme 없음 (heading/quote/link 스타일 불일치) |
+| B6  | `ToolbarPlugin.tsx:266-291`         | Low      | 링크 팝업 취소 버튼 없음                                               |
+| B7  | `CommentCard.tsx:73`                | Low      | 빈 단락이 150px clip을 낭비 → 불필요한 더보기 트리거                   |
+| B8  | `app/(base)/games/page.tsx:111-116` | Low      | AbortError 미처리 → false-positive 콘솔 에러                           |
 
 ---
 
@@ -252,7 +252,7 @@
 
 - [x] `Comment.tsx`의 `theme` 객체를 `lexical/sharedTheme.ts`로 분리
 - [x] `ReadOnlyReview.tsx`에서 동일 theme import + `initialConfig`에 적용
-- [x] heading/blockquote/link CSS 클래스 에디터 뷰와 일치 확인 *(2026-03-21 코드 확인 — Comment.tsx:79 + ReadOnlyReview.tsx:20 모두 sharedTheme import 사용 → 동일 CSS 보장)*
+- [x] heading/blockquote/link CSS 클래스 에디터 뷰와 일치 확인 _(2026-03-21 코드 확인 — Comment.tsx:79 + ReadOnlyReview.tsx:20 모두 sharedTheme import 사용 → 동일 CSS 보장)_
 
 ---
 
@@ -374,9 +374,9 @@
 
 - [x] CommentCard: 닉네임, 날짜, 별점(`X.X`) visible
 - [x] CommentCard: 좋아요 버튼 및 카운트 visible
-- [x] 텍스트 180px 초과 리뷰: `"더보기"` 버튼 visible *(코드 확인: CommentCard.tsx:73 ResizeObserver scrollHeight>180 → isOverflowing=true → 버튼 렌더. 현재 DB 리뷰가 짧아 브라우저 직접 확인 불가)*
-- [x] `"더보기"` 클릭 → 콘텐츠 확장, `"접기"` 버튼으로 전환 *(2026-03-21 E2E 통과 — 친절한이웃스파이 리뷰 page2)*
-- [x] `"접기"` 클릭 → 콘텐츠 다시 접힘 *(동일)*
+- [x] 텍스트 180px 초과 리뷰: `"더보기"` 버튼 visible _(코드 확인: CommentCard.tsx:73 ResizeObserver scrollHeight>180 → isOverflowing=true → 버튼 렌더. 현재 DB 리뷰가 짧아 브라우저 직접 확인 불가)_
+- [x] `"더보기"` 클릭 → 콘텐츠 확장, `"접기"` 버튼으로 전환 _(2026-03-21 E2E 통과 — 친절한이웃스파이 리뷰 page2)_
+- [x] `"접기"` 클릭 → 콘텐츠 다시 접힘 _(동일)_
 
 ---
 
@@ -385,12 +385,12 @@
 > 리뷰 5개 이상인 gameId 사용 필요
 
 - [x] Pager 컴포넌트 visible
-- [x] 2페이지 클릭 → 다른 리뷰 세트 렌더링 *(리뷰 5개 미만 시 조건부 스킵)*
-- [x] 1페이지로 돌아오기 정상 동작 *(2026-03-21 E2E 통과)*
+- [x] 2페이지 클릭 → 다른 리뷰 세트 렌더링 _(리뷰 5개 미만 시 조건부 스킵)_
+- [x] 1페이지로 돌아오기 정상 동작 _(2026-03-21 E2E 통과)_
 
 ---
 
-### 5-H. 인증 필요 항목 *(별도 auth fixture 설정 후)*
+### 5-H. 인증 필요 항목 _(별도 auth fixture 설정 후)_
 
 > `e2e/game-detail-auth.spec.ts` + `e2e/auth.setup.ts` 작성 완료.
 > `E2E_EMAIL` / `E2E_PASSWORD` 환경변수 설정 후 실행. `playwright.config.ts`에 projects 추가.

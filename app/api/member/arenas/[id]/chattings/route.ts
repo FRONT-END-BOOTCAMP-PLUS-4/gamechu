@@ -21,7 +21,10 @@ type RequestParams = {
 export async function POST(req: NextRequest, { params }: RequestParams) {
     const { id } = await params;
     const memberId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/arenas/[id]/chattings", method: "POST" });
+    const log = logger.child({
+        route: "/api/member/arenas/[id]/chattings",
+        method: "POST",
+    });
 
     if (!memberId) {
         return errorResponse("권한이 없습니다.", 401);
@@ -62,26 +65,38 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
             { status: 201 }
         );
     } catch (error: unknown) {
-        log.error({ userId: memberId, arenaId, err: error }, "채팅 메시지 전송 실패");
+        log.error(
+            { userId: memberId, arenaId, err: error },
+            "채팅 메시지 전송 실패"
+        );
         if (typeof error === "object" && error !== null && "message" in error) {
             const message = String((error as { message?: string }).message);
             if (
                 message.includes("메시지 길이가 너무 깁니다") ||
                 message.includes("length limit")
             ) {
-                return errorResponse("메시지 길이는 200자를 초과할 수 없습니다.", 400);
+                return errorResponse(
+                    "메시지 길이는 200자를 초과할 수 없습니다.",
+                    400
+                );
             }
             if (
                 message.includes("메시지 전송 횟수를 초과했습니다") ||
                 message.includes("send count limit")
             ) {
-                return errorResponse(`메시지 전송 횟수(${MAX_SEND_COUNT}번)를 모두 사용했습니다.`, 400);
+                return errorResponse(
+                    `메시지 전송 횟수(${MAX_SEND_COUNT}번)를 모두 사용했습니다.`,
+                    400
+                );
             }
             if (
                 message.includes("참가자가 아닙니다") ||
                 message.includes("Not a participant")
             ) {
-                return errorResponse("아레나 참가자만 메시지를 보낼 수 있습니다.", 403);
+                return errorResponse(
+                    "아레나 참가자만 메시지를 보낼 수 있습니다.",
+                    403
+                );
             }
             if (
                 message.includes(

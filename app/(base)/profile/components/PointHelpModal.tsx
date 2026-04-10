@@ -37,10 +37,7 @@ export default function PointHelpModal({ open, onClose }: PointHelpModalProps) {
     if (!open) return null;
 
     return (
-        <div
-            id="tier-point-help-modal"
-            className="fixed inset-0 z-50"
-        >
+        <div id="tier-point-help-modal" className="fixed inset-0 z-50">
             {/* overlay */}
             <button
                 type="button"

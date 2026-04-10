@@ -27,6 +27,7 @@ import { GetMemberPublicProfileUsecase } from "@/backend/member/application/usec
 `GetMemberProfileByNicknameUsecase.ts` was renamed to `GetMemberPublicProfileUsecase.ts` but the import still points to the old path. This causes `ERR_MODULE_NOT_FOUND` at runtime — the `GET /api/member/profile/[nickname]` endpoint throws on every request. The test suite confirms this: 1 suite currently fails with this exact error.
 
 **Fix — update the import path:**
+
 ```ts
 import { GetMemberPublicProfileUsecase } from "@/backend/member/application/usecase/GetMemberPublicProfileUsecase";
 ```
@@ -125,7 +126,9 @@ const updateArenaDto: UpdateArenaDto = {
     id: arenaId,
     // challengerId intentionally excluded — use POST .../join
     description: validated.data.description,
-    startDate: validated.data.startDate ? new Date(validated.data.startDate) : undefined,
+    startDate: validated.data.startDate
+        ? new Date(validated.data.startDate)
+        : undefined,
 };
 ```
 
@@ -138,6 +141,7 @@ const updateArenaDto: UpdateArenaDto = {
 The test suite covers 401 (no auth) and 200 (owner), but there is no test asserting that a non-owner authenticated caller receives 403. Given that ownership check is the core of CRITICAL-2, this case should be explicitly tested to prevent regression.
 
 **Fix — add test:**
+
 ```ts
 it("PATCH by non-owner returns 403", async () => {
     const { getAuthUserId } = await import("@/utils/GetAuthUserId.server");
@@ -167,60 +171,60 @@ The hook now ignores both `arenaList` and `onStatusUpdate` props (correctly, sin
 
 ## Validation Results
 
-| Check | Result |
-|---|---|
-| Tests | **FAIL** — 1 suite fails (`profile/[nickname]/__tests__/route.test.ts`) due to H-1/H-2 |
-| Type check | Not run (blocked by test failure) |
-| Lint | Not run |
-| Build | Not run — H-1 would cause build failure at `profile/[nickname]/route.ts` |
+| Check      | Result                                                                                 |
+| ---------- | -------------------------------------------------------------------------------------- |
+| Tests      | **FAIL** — 1 suite fails (`profile/[nickname]/__tests__/route.test.ts`) due to H-1/H-2 |
+| Type check | Not run (blocked by test failure)                                                      |
+| Lint       | Not run                                                                                |
+| Build      | Not run — H-1 would cause build failure at `profile/[nickname]/route.ts`               |
 
 ---
 
 ## Plan Coverage
 
-| Issue | Status | Note |
-|---|---|---|
-| CRITICAL-1: Password in profile DTO | ✅ Done | `MemberProfileResponseDto` and usecase clean |
-| CRITICAL-2: Arena PATCH ownership check | ✅ Done | 401/403 split correct — see M-1 for partial gap |
-| CRITICAL-3: Admin endpoints unauthenticated | ✅ Done | `instrumentation.ts` + `ArenaTimerRecovery.ts` + join route + hooks converted |
-| HIGH-1: IDOR wishlist delete | ✅ Done | Route uses `gameId`; hook calls `DELETE /wishlists/${gameId}` |
-| HIGH-2: Score POST ignored validated body | ✅ Done | POST handler removed entirely |
-| HIGH-3: Unauthenticated notification creation | ✅ Done | `notification-records/route.ts` deleted |
-| HIGH-4: IP spoofing bypasses rate limiter | ✅ Done | Option C (last XFF entry) |
-| HIGH-5: CSP in report-only mode | ✅ Done | Header key changed to `Content-Security-Policy` |
-| MEDIUM-1: Unvalidated imageUrl domain | ✅ Done | Allow-list in `UpdateProfileRequestDto.ts` matches `next.config.ts` remotePatterns |
-| MEDIUM-2: No rate limiting on score-mutating endpoints | ✅ Done | `review-likes` has per-user 30/min limiter |
+| Issue                                                  | Status  | Note                                                                               |
+| ------------------------------------------------------ | ------- | ---------------------------------------------------------------------------------- |
+| CRITICAL-1: Password in profile DTO                    | ✅ Done | `MemberProfileResponseDto` and usecase clean                                       |
+| CRITICAL-2: Arena PATCH ownership check                | ✅ Done | 401/403 split correct — see M-1 for partial gap                                    |
+| CRITICAL-3: Admin endpoints unauthenticated            | ✅ Done | `instrumentation.ts` + `ArenaTimerRecovery.ts` + join route + hooks converted      |
+| HIGH-1: IDOR wishlist delete                           | ✅ Done | Route uses `gameId`; hook calls `DELETE /wishlists/${gameId}`                      |
+| HIGH-2: Score POST ignored validated body              | ✅ Done | POST handler removed entirely                                                      |
+| HIGH-3: Unauthenticated notification creation          | ✅ Done | `notification-records/route.ts` deleted                                            |
+| HIGH-4: IP spoofing bypasses rate limiter              | ✅ Done | Option C (last XFF entry)                                                          |
+| HIGH-5: CSP in report-only mode                        | ✅ Done | Header key changed to `Content-Security-Policy`                                    |
+| MEDIUM-1: Unvalidated imageUrl domain                  | ✅ Done | Allow-list in `UpdateProfileRequestDto.ts` matches `next.config.ts` remotePatterns |
+| MEDIUM-2: No rate limiting on score-mutating endpoints | ✅ Done | `review-likes` has per-user 30/min limiter                                         |
 
 ---
 
 ## Files Reviewed
 
-| File | Change |
-|---|---|
-| `app/(base)/arenas/[id]/components/ArenaDetailRecruiting.tsx` | Modified — calls new join endpoint |
-| `app/api/arenas/[id]/route.ts` | Modified — PATCH/DELETE handlers deleted, GET kept |
-| `app/api/arenas/[id]/__tests__/route.test.ts` | Modified — updated for GET-only route |
-| `app/api/member/arenas/[id]/route.ts` | Modified — ownership check added |
-| `app/api/member/arenas/[id]/__tests__/route.test.ts` | Modified — expanded test coverage |
-| `app/api/member/arenas/[id]/join/route.ts` | **Added** — dedicated join endpoint |
-| `app/api/member/profile/[nickname]/route.ts` | Modified — **stale import path (H-1)** |
-| `app/api/member/profile/[nickname]/__tests__/route.test.ts` | Modified — **stale mock path (H-2)** |
-| `app/api/member/review-likes/[reviewId]/route.ts` | Modified — rate limiter added |
-| `app/api/member/scores/route.ts` | Modified — POST handler removed |
-| `app/api/member/wishlists/[id]/route.ts` | Modified — uses gameId, ownership scoped |
-| `app/api/notification-records/route.ts` | **Deleted** |
-| `backend/member/application/usecase/GetMemberProfileUsecase.ts` | Modified — password removed |
-| `backend/member/application/usecase/GetMemberPublicProfileUsecase.ts` | Modified (renamed from `GetMemberProfileByNicknameUsecase.ts`) |
+| File                                                                  | Change                                                          |
+| --------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `app/(base)/arenas/[id]/components/ArenaDetailRecruiting.tsx`         | Modified — calls new join endpoint                              |
+| `app/api/arenas/[id]/route.ts`                                        | Modified — PATCH/DELETE handlers deleted, GET kept              |
+| `app/api/arenas/[id]/__tests__/route.test.ts`                         | Modified — updated for GET-only route                           |
+| `app/api/member/arenas/[id]/route.ts`                                 | Modified — ownership check added                                |
+| `app/api/member/arenas/[id]/__tests__/route.test.ts`                  | Modified — expanded test coverage                               |
+| `app/api/member/arenas/[id]/join/route.ts`                            | **Added** — dedicated join endpoint                             |
+| `app/api/member/profile/[nickname]/route.ts`                          | Modified — **stale import path (H-1)**                          |
+| `app/api/member/profile/[nickname]/__tests__/route.test.ts`           | Modified — **stale mock path (H-2)**                            |
+| `app/api/member/review-likes/[reviewId]/route.ts`                     | Modified — rate limiter added                                   |
+| `app/api/member/scores/route.ts`                                      | Modified — POST handler removed                                 |
+| `app/api/member/wishlists/[id]/route.ts`                              | Modified — uses gameId, ownership scoped                        |
+| `app/api/notification-records/route.ts`                               | **Deleted**                                                     |
+| `backend/member/application/usecase/GetMemberProfileUsecase.ts`       | Modified — password removed                                     |
+| `backend/member/application/usecase/GetMemberPublicProfileUsecase.ts` | Modified (renamed from `GetMemberProfileByNicknameUsecase.ts`)  |
 | `backend/member/application/usecase/dto/GetMemberPublicProfileDto.ts` | Modified (renamed from `MemberProfileByNicknameResponseDto.ts`) |
-| `backend/member/application/usecase/dto/MemberProfileResponseDto.ts` | Modified — password field removed |
-| `backend/member/application/usecase/dto/UpdateProfileRequestDto.ts` | Modified — imageUrl allow-list added |
-| `hooks/useArenaAutoStatus.ts` | Modified — UI-only polling, no PATCH calls |
-| `hooks/useArenaAutoStatusDetail.ts` | Modified — UI-only polling |
-| `hooks/useWishlist.ts` | Modified — DELETE URL uses gameId |
-| `hooks/__tests__/useArenaAutoStatus.test.ts` | Modified |
-| `hooks/__tests__/useArenaAutoStatusDetail.test.ts` | Modified |
-| `hooks/__tests__/useWishlist.test.ts` | Modified |
-| `instrumentation.ts` | **Added** — server startup hook |
-| `lib/ArenaTimerRecovery.ts` | **Added** — timer scheduling and recovery |
-| `lib/RateLimiter.ts` | Modified — IP detection uses last XFF entry |
-| `next.config.ts` | Modified — CSP enforced |
+| `backend/member/application/usecase/dto/MemberProfileResponseDto.ts`  | Modified — password field removed                               |
+| `backend/member/application/usecase/dto/UpdateProfileRequestDto.ts`   | Modified — imageUrl allow-list added                            |
+| `hooks/useArenaAutoStatus.ts`                                         | Modified — UI-only polling, no PATCH calls                      |
+| `hooks/useArenaAutoStatusDetail.ts`                                   | Modified — UI-only polling                                      |
+| `hooks/useWishlist.ts`                                                | Modified — DELETE URL uses gameId                               |
+| `hooks/__tests__/useArenaAutoStatus.test.ts`                          | Modified                                                        |
+| `hooks/__tests__/useArenaAutoStatusDetail.test.ts`                    | Modified                                                        |
+| `hooks/__tests__/useWishlist.test.ts`                                 | Modified                                                        |
+| `instrumentation.ts`                                                  | **Added** — server startup hook                                 |
+| `lib/ArenaTimerRecovery.ts`                                           | **Added** — timer scheduling and recovery                       |
+| `lib/RateLimiter.ts`                                                  | Modified — IP detection uses last XFF entry                     |
+| `next.config.ts`                                                      | Modified — CSP enforced                                         |

@@ -11,7 +11,9 @@ export async function GET() {
     try {
         const repo = new PrismaPlatformRepository();
         const usecase = new GetAllPlatformsUsecase(repo);
-        const platforms = await withCache(platformListKey(), 3600, () => usecase.execute());
+        const platforms = await withCache(platformListKey(), 3600, () =>
+            usecase.execute()
+        );
         return NextResponse.json(platforms);
     } catch (e) {
         log.error({ err: e }, "플랫폼 조회 실패");

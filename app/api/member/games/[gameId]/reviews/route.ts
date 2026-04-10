@@ -14,7 +14,10 @@ export async function POST(
     { params }: { params: Promise<{ gameId: string }> }
 ) {
     const memberId = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/games/[gameId]/reviews", method: "POST" });
+    const log = logger.child({
+        route: "/api/member/games/[gameId]/reviews",
+        method: "POST",
+    });
 
     if (!memberId) {
         return errorResponse("Unauthorized", 401);
@@ -38,7 +41,8 @@ export async function POST(
         return NextResponse.json(result);
     } catch (err) {
         log.error({ userId: memberId, err }, "리뷰 작성 실패");
-        const message = err instanceof Error ? err.message : "Internal Server Error";
+        const message =
+            err instanceof Error ? err.message : "Internal Server Error";
         return errorResponse(message, 400);
     }
 }

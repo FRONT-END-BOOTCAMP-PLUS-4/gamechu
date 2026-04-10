@@ -12,29 +12,30 @@
 
 ## File Map
 
-| Action | File |
-|--------|------|
-| **CREATE** | `utils/apiResponse.ts` |
-| **MODIFY** | `app/api/member/notification-records/[id]/route.ts` |
-| **MODIFY** | `app/api/arenas/[id]/route.ts` |
-| **MODIFY** | `app/api/member/attend/route.ts` |
-| **MODIFY** | `app/api/games/[id]/reviews/route.ts` |
-| **MODIFY** | `app/api/member/profile/[nickname]/route.ts` |
-| **MODIFY** | `app/api/reviews/member/route.ts` |
-| **MODIFY** | `app/api/member/wishlists/route.ts` |
-| **MODIFY** | `app/api/member/review-likes/[reviewId]/route.ts` |
-| **MODIFY** | `app/api/member/profile/route.ts` |
-| **MODIFY** | `app/api/reviews/member/[memberId]/route.ts` |
-| **MODIFY** | `app/api/member/attend/__tests__/route.test.ts` *(add error-path test)* |
-| **CREATE** | `app/api/games/[id]/reviews/__tests__/route.test.ts` |
-| **CREATE** | `app/api/member/profile/[nickname]/__tests__/route.test.ts` |
-| **CREATE** | `app/api/reviews/member/__tests__/route.test.ts` |
+| Action     | File                                                                    |
+| ---------- | ----------------------------------------------------------------------- |
+| **CREATE** | `utils/apiResponse.ts`                                                  |
+| **MODIFY** | `app/api/member/notification-records/[id]/route.ts`                     |
+| **MODIFY** | `app/api/arenas/[id]/route.ts`                                          |
+| **MODIFY** | `app/api/member/attend/route.ts`                                        |
+| **MODIFY** | `app/api/games/[id]/reviews/route.ts`                                   |
+| **MODIFY** | `app/api/member/profile/[nickname]/route.ts`                            |
+| **MODIFY** | `app/api/reviews/member/route.ts`                                       |
+| **MODIFY** | `app/api/member/wishlists/route.ts`                                     |
+| **MODIFY** | `app/api/member/review-likes/[reviewId]/route.ts`                       |
+| **MODIFY** | `app/api/member/profile/route.ts`                                       |
+| **MODIFY** | `app/api/reviews/member/[memberId]/route.ts`                            |
+| **MODIFY** | `app/api/member/attend/__tests__/route.test.ts` _(add error-path test)_ |
+| **CREATE** | `app/api/games/[id]/reviews/__tests__/route.test.ts`                    |
+| **CREATE** | `app/api/member/profile/[nickname]/__tests__/route.test.ts`             |
+| **CREATE** | `app/api/reviews/member/__tests__/route.test.ts`                        |
 
 ---
 
 ## Task 1: Create `utils/apiResponse.ts`
 
 **Files:**
+
 - Create: `utils/apiResponse.ts`
 
 The two helper functions that enforce `{ message }` shape. No unit tests needed — trivial wrappers over `NextResponse.json`.
@@ -72,6 +73,7 @@ git commit -m "[refactor/#277] utils/apiResponse.ts 헬퍼 함수 추가"
 ## Task 2: Fix `notification-records/[id]/route.ts` — `{ error }` guards only
 
 **Files:**
+
 - Modify: `app/api/member/notification-records/[id]/route.ts:19-46`
 
 Only the three early-return guards use `{ error }`. The catch block already uses `{ message }`. No structural changes needed.
@@ -79,12 +81,10 @@ Only the three early-return guards use `{ error }`. The catch block already uses
 - [ ] **Step 1: Fix the three `{ error }` guards**
 
 Current lines 19-46:
+
 ```typescript
 if (!memberId) {
-    return NextResponse.json(
-        { error: "멤버가 아닙니다." },
-        { status: 401 }
-    );
+    return NextResponse.json({ error: "멤버가 아닙니다." }, { status: 401 });
 }
 // ...
 if (!notificationRecord) {
@@ -102,6 +102,7 @@ if (notificationRecord.memberId !== memberId) {
 ```
 
 Replace all three with `errorResponse`:
+
 ```typescript
 import { errorResponse } from "@/utils/apiResponse";
 
@@ -120,6 +121,7 @@ if (notificationRecord.memberId !== memberId) {
 ```
 
 Also update the catch block's two `NextResponse.json` calls to use `errorResponse`:
+
 ```typescript
 } catch (error: unknown) {
     console.error("Error deleting notification records:", error);
@@ -150,6 +152,7 @@ git commit -m "[refactor/#277] notification-records: { error } → { message } �
 ## Task 3: Fix `arenas/[id]/route.ts` — `{ error }` throughout
 
 **Files:**
+
 - Modify: `app/api/arenas/[id]/route.ts`
 
 The GET handler and the business-logic guards in PATCH/DELETE use `{ error }`. The catch blocks in PATCH and DELETE already use `{ message }` correctly.
@@ -157,11 +160,13 @@ The GET handler and the business-logic guards in PATCH/DELETE use `{ error }`. T
 - [ ] **Step 1: Add import and fix all `{ error }` occurrences**
 
 Add import at top:
+
 ```typescript
 import { errorResponse, successResponse } from "@/utils/apiResponse";
 ```
 
 **GET handler** — replace lines 29, 50–55:
+
 ```typescript
 // line 29 (invalid arenaId)
 return errorResponse("Invalid arenaId", 400);
@@ -176,6 +181,7 @@ return errorResponse("Invalid arenaId", 400);
 ```
 
 **PATCH handler** — replace lines 98, 105, 112–118:
+
 ```typescript
 // line 98
 return errorResponse("참여자 정보를 찾을 수 없습니다.", 400);
@@ -184,10 +190,14 @@ return errorResponse("참여자 정보를 찾을 수 없습니다.", 400);
 return errorResponse("회원 정보를 찾을 수 없습니다.", 404);
 
 // line 112
-return errorResponse("투기장 참여를 위해서는 최소 100점 이상의 점수가 필요합니다.", 403);
+return errorResponse(
+    "투기장 참여를 위해서는 최소 100점 이상의 점수가 필요합니다.",
+    403
+);
 ```
 
 **DELETE handler** — replace lines 176–180 (the 404 guard):
+
 ```typescript
 if (!arena) {
     return errorResponse("투기장이 존재하지 않습니다.", 404);
@@ -216,7 +226,8 @@ git commit -m "[refactor/#277] arenas/[id]: { error } → { message } 수정"
 ## Task 4: Fix `attend/route.ts` — `{ error }` + add try-catch (TDD)
 
 **Files:**
-- Modify: `app/api/member/attend/__tests__/route.test.ts` *(add error-path test)*
+
+- Modify: `app/api/member/attend/__tests__/route.test.ts` _(add error-path test)_
 - Modify: `app/api/member/attend/route.ts`
 
 This route has `{ error: "Unauthorized" }` and no try-catch. Write the failing test first.
@@ -230,11 +241,11 @@ it("returns 500 when usecase throws", async () => {
     const { ApplyAttendanceScoreUsecase } = await import(
         "@/backend/score-policy/application/usecase/ApplyAttendanceScoreUsecase"
     );
-    vi.mocked(ApplyAttendanceScoreUsecase).mockImplementationOnce(
-        function (this: Record<string, unknown>) {
-            this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
-        } as unknown as typeof ApplyAttendanceScoreUsecase
-    );
+    vi.mocked(ApplyAttendanceScoreUsecase).mockImplementationOnce(function (
+        this: Record<string, unknown>
+    ) {
+        this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
+    } as unknown as typeof ApplyAttendanceScoreUsecase);
 
     const response = await POST();
     expect(response.status).toBe(500);
@@ -284,9 +295,12 @@ export async function POST() {
 
         let attendedDateStr: string | null = null;
         if (lastAttendedDate) {
-            attendedDateStr = new Date(lastAttendedDate).toLocaleDateString("ko-KR", {
-                timeZone: "Asia/Seoul",
-            });
+            attendedDateStr = new Date(lastAttendedDate).toLocaleDateString(
+                "ko-KR",
+                {
+                    timeZone: "Asia/Seoul",
+                }
+            );
         }
 
         return NextResponse.json({
@@ -295,7 +309,8 @@ export async function POST() {
         });
     } catch (error: unknown) {
         console.error("[attend] error:", error);
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -321,6 +336,7 @@ git commit -m "[refactor/#277] attend: { error } 수정, try-catch 추가, 에�
 ## Task 5: Fix `games/[id]/reviews/route.ts` — try-catch + module-level cleanup (TDD)
 
 **Files:**
+
 - Create: `app/api/games/[id]/reviews/__tests__/route.test.ts`
 - Modify: `app/api/games/[id]/reviews/route.ts`
 
@@ -338,23 +354,36 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
     getAuthUserId: vi.fn().mockResolvedValue(null),
 }));
 
-vi.mock("@/backend/review/infra/repositories/prisma/PrismaReviewRepository", () => ({
-    PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByGameId = vi.fn().mockResolvedValue([]);
-    }),
-}));
+vi.mock(
+    "@/backend/review/infra/repositories/prisma/PrismaReviewRepository",
+    () => ({
+        PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByGameId = vi.fn().mockResolvedValue([]);
+        }),
+    })
+);
 
-vi.mock("@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository", () => ({
-    PrismaReviewLikeRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByReviewId = vi.fn().mockResolvedValue([]);
-    }),
-}));
+vi.mock(
+    "@/backend/review-like/infra/repositories/prisma/PrismaReviewLikeRepository",
+    () => ({
+        PrismaReviewLikeRepository: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.findByReviewId = vi.fn().mockResolvedValue([]);
+        }),
+    })
+);
 
-vi.mock("@/backend/review/application/usecase/GetReviewsByGameIdUsecase", () => ({
-    GetReviewsByGameIdUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue([]);
-    }),
-}));
+vi.mock(
+    "@/backend/review/application/usecase/GetReviewsByGameIdUsecase",
+    () => ({
+        GetReviewsByGameIdUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue([]);
+        }),
+    })
+);
 
 import { GET } from "../route";
 
@@ -367,7 +396,10 @@ const makeParams = (id = "1") => ({
 
 describe("GET /api/games/[id]/reviews", () => {
     it("returns 400 for invalid gameId", async () => {
-        const response = await GET(makeRequest("abc") as never, makeParams("abc"));
+        const response = await GET(
+            makeRequest("abc") as never,
+            makeParams("abc")
+        );
         expect(response.status).toBe(400);
         const body = await response.json();
         expect(body).toHaveProperty("message");
@@ -377,11 +409,11 @@ describe("GET /api/games/[id]/reviews", () => {
         const { GetReviewsByGameIdUsecase } = await import(
             "@/backend/review/application/usecase/GetReviewsByGameIdUsecase"
         );
-        vi.mocked(GetReviewsByGameIdUsecase).mockImplementationOnce(
-            function (this: Record<string, unknown>) {
-                this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
-            } as unknown as typeof GetReviewsByGameIdUsecase
-        );
+        vi.mocked(GetReviewsByGameIdUsecase).mockImplementationOnce(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
+        } as unknown as typeof GetReviewsByGameIdUsecase);
 
         const response = await GET(makeRequest() as never, makeParams());
         expect(response.status).toBe(500);
@@ -432,7 +464,8 @@ export async function GET(
         return NextResponse.json(result);
     } catch (error: unknown) {
         console.error("[games/reviews] error:", error);
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -466,6 +499,7 @@ git commit -m "[refactor/#277] games/[id]/reviews: try-catch 추가, 모듈 스�
 ## Task 6: Fix `profile/[nickname]/route.ts` — try-catch + module-level cleanup (TDD)
 
 **Files:**
+
 - Create: `app/api/member/profile/[nickname]/__tests__/route.test.ts`
 - Modify: `app/api/member/profile/[nickname]/route.ts`
 
@@ -477,21 +511,30 @@ Create `app/api/member/profile/[nickname]/__tests__/route.test.ts`:
 // @vitest-environment node
 import { describe, it, expect, vi } from "vitest";
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByNickname = vi.fn().mockResolvedValue(null);
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByNickname = vi.fn().mockResolvedValue(null);
+        }),
+    })
+);
 
-vi.mock("@/backend/member/application/usecase/GetMemberProfileByNicknameUsecase", () => ({
-    GetMemberProfileByNicknameUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue(null);
-    }),
-}));
+vi.mock(
+    "@/backend/member/application/usecase/GetMemberProfileByNicknameUsecase",
+    () => ({
+        GetMemberProfileByNicknameUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue(null);
+        }),
+    })
+);
 
 import { GET } from "../route";
 
-const makeRequest = () => new Request("http://localhost/api/member/profile/testuser");
+const makeRequest = () =>
+    new Request("http://localhost/api/member/profile/testuser");
 const makeParams = (nickname = "testuser") => ({
     params: Promise.resolve({ nickname }),
 });
@@ -556,7 +599,8 @@ export async function GET(
         return NextResponse.json(profile);
     } catch (error: unknown) {
         console.error("[profile/nickname] error:", error);
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -582,6 +626,7 @@ git commit -m "[refactor/#277] profile/[nickname]: try-catch 추가, 모듈 스�
 ## Task 7: Fix `reviews/member/route.ts` — try-catch + module-level cleanup (TDD)
 
 **Files:**
+
 - Create: `app/api/reviews/member/__tests__/route.test.ts`
 - Modify: `app/api/reviews/member/route.ts`
 
@@ -597,17 +642,25 @@ vi.mock("@/utils/GetAuthUserId.server", () => ({
     getAuthUserId: vi.fn().mockResolvedValue("test-member-id"),
 }));
 
-vi.mock("@/backend/review/infra/repositories/prisma/PrismaReviewRepository", () => ({
-    PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByMemberId = vi.fn().mockResolvedValue([]);
-    }),
-}));
+vi.mock(
+    "@/backend/review/infra/repositories/prisma/PrismaReviewRepository",
+    () => ({
+        PrismaReviewRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByMemberId = vi.fn().mockResolvedValue([]);
+        }),
+    })
+);
 
-vi.mock("@/backend/review/application/usecase/GetReviewsByMemberIdUsecase", () => ({
-    GetReviewsByMemberIdUsecase: vi.fn(function (this: Record<string, unknown>) {
-        this.execute = vi.fn().mockResolvedValue([]);
-    }),
-}));
+vi.mock(
+    "@/backend/review/application/usecase/GetReviewsByMemberIdUsecase",
+    () => ({
+        GetReviewsByMemberIdUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue([]);
+        }),
+    })
+);
 
 import { GET } from "../route";
 
@@ -626,11 +679,11 @@ describe("GET /api/reviews/member", () => {
         const { GetReviewsByMemberIdUsecase } = await import(
             "@/backend/review/application/usecase/GetReviewsByMemberIdUsecase"
         );
-        vi.mocked(GetReviewsByMemberIdUsecase).mockImplementationOnce(
-            function (this: Record<string, unknown>) {
-                this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
-            } as unknown as typeof GetReviewsByMemberIdUsecase
-        );
+        vi.mocked(GetReviewsByMemberIdUsecase).mockImplementationOnce(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockRejectedValue(new Error("DB error"));
+        } as unknown as typeof GetReviewsByMemberIdUsecase);
 
         const response = await GET();
         expect(response.status).toBe(500);
@@ -666,12 +719,15 @@ export async function GET() {
             return errorResponse("Unauthorized", 401);
         }
 
-        const usecase = new GetReviewsByMemberIdUsecase(new PrismaReviewRepository());
+        const usecase = new GetReviewsByMemberIdUsecase(
+            new PrismaReviewRepository()
+        );
         const result = await usecase.execute(memberId);
         return NextResponse.json(result);
     } catch (error: unknown) {
         console.error("[reviews/member] error:", error);
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -697,6 +753,7 @@ git commit -m "[refactor/#277] reviews/member: try-catch 추가, 모듈 스코�
 ## Task 8: Fix `wishlists/route.ts` — move repos inside handlers
 
 **Files:**
+
 - Modify: `app/api/member/wishlists/route.ts`
 
 Three module-level repo instances (`wishlistRepo`, `gameRepo`, `reviewRepo`) at lines 13–15. Move them inside each handler. The catch blocks and `{ message }` responses are already correct — no other changes.
@@ -731,7 +788,10 @@ export async function GET(req: NextRequest) {
     if (gameIdParam !== null) {
         const gameId = Number(gameIdParam);
         if (isNaN(gameId)) {
-            return NextResponse.json({ message: "Invalid gameId" }, { status: 400 });
+            return NextResponse.json(
+                { message: "Invalid gameId" },
+                { status: 400 }
+            );
         }
 
         const wishlistRepo = new PrismaWishListRepository();
@@ -742,7 +802,10 @@ export async function GET(req: NextRequest) {
             return NextResponse.json(result);
         } catch (err) {
             console.error("[WISHLIST_SINGLE_FETCH_ERROR]", err);
-            return NextResponse.json({ message: "단일 위시리스트 조회 실패" }, { status: 500 });
+            return NextResponse.json(
+                { message: "단일 위시리스트 조회 실패" },
+                { status: 500 }
+            );
         }
     }
 
@@ -756,7 +819,10 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(result);
     } catch (error) {
         console.error("[WISHLIST_FETCH_ERROR]", error);
-        return NextResponse.json({ message: "위시리스트 목록 조회 실패" }, { status: 500 });
+        return NextResponse.json(
+            { message: "위시리스트 목록 조회 실패" },
+            { status: 500 }
+        );
     }
 }
 
@@ -778,7 +844,10 @@ export async function POST(req: NextRequest) {
         );
     } catch (error) {
         console.error("[WISHLIST_ADD_ERROR]", error);
-        return NextResponse.json({ message: "위시리스트 등록 실패" }, { status: 400 });
+        return NextResponse.json(
+            { message: "위시리스트 등록 실패" },
+            { status: 400 }
+        );
     }
 }
 ```
@@ -803,6 +872,7 @@ git commit -m "[refactor/#277] wishlists: 모듈 스코프 repo 인스턴스 핸
 ## Task 9: Fix `review-likes/[reviewId]/route.ts` — move all deps inside handler
 
 **Files:**
+
 - Modify: `app/api/member/review-likes/[reviewId]/route.ts`
 
 Lines 12–26 define 7 module-level instances. Move them all inside the POST handler.
@@ -823,7 +893,10 @@ export async function POST(
 
     const parsedReviewId = Number.parseInt((await params).reviewId ?? "", 10);
     if (isNaN(parsedReviewId)) {
-        return NextResponse.json({ message: "Invalid reviewId" }, { status: 400 });
+        return NextResponse.json(
+            { message: "Invalid reviewId" },
+            { status: 400 }
+        );
     }
 
     const likeRepo = new PrismaReviewLikeRepository();
@@ -836,14 +909,24 @@ export async function POST(
         memberRepo,
         scoreRecordRepo
     );
-    const usecase = new ToggleReviewLikeUsecase(likeRepo, reviewRepo, applyReviewScoreUsecase);
+    const usecase = new ToggleReviewLikeUsecase(
+        likeRepo,
+        reviewRepo,
+        applyReviewScoreUsecase
+    );
 
     try {
-        const result = await usecase.execute({ reviewId: parsedReviewId, memberId: userId });
+        const result = await usecase.execute({
+            reviewId: parsedReviewId,
+            memberId: userId,
+        });
         return NextResponse.json(result);
     } catch (err) {
         console.error("리뷰 좋아요 처리 실패", err);
-        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        );
     }
 }
 ```
@@ -868,6 +951,7 @@ git commit -m "[refactor/#277] review-likes/[reviewId]: 모듈 스코프 의존�
 ## Task 10: Fix `profile/route.ts` — move usecases inside handlers + add try-catch to GET
 
 **Files:**
+
 - Modify: `app/api/member/profile/route.ts`
 
 Lines 9–12 define two module-level usecases. Also, the GET handler has no try-catch.
@@ -890,17 +974,19 @@ export async function GET() {
     try {
         const session = await getServerSession(authOptions);
         const memberId = session?.user?.id;
-        if (!memberId)
-            return errorResponse("Unauthorized", 401);
+        if (!memberId) return errorResponse("Unauthorized", 401);
 
-        const usecase = new GetMemberProfileUsecase(new PrismaMemberRepository());
+        const usecase = new GetMemberProfileUsecase(
+            new PrismaMemberRepository()
+        );
         const profile = await usecase.execute(memberId);
         if (!profile) return errorResponse("Not found", 404);
 
         return NextResponse.json(profile);
     } catch (error: unknown) {
         console.error("[profile] GET error:", error);
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }
@@ -920,10 +1006,14 @@ export async function PUT(req: Request) {
             imageUrl: body.imageUrl,
         });
 
-        const usecase = new UpdateMemberProfileUseCase(new PrismaMemberRepository());
+        const usecase = new UpdateMemberProfileUseCase(
+            new PrismaMemberRepository()
+        );
         await usecase.execute(dto);
 
-        return NextResponse.json({ message: "프로필이 성공적으로 수정되었습니다." });
+        return NextResponse.json({
+            message: "프로필이 성공적으로 수정되었습니다.",
+        });
     } catch (err) {
         console.error("[PROFILE_UPDATE_ERROR]", err);
         return errorResponse((err as Error).message || "프로필 수정 실패", 400);
@@ -951,6 +1041,7 @@ git commit -m "[refactor/#277] member/profile: 모듈 스코프 정리, GET try-
 ## Task 11: Fix `reviews/member/[memberId]/route.ts` — move usecase + add try-catch
 
 **Files:**
+
 - Modify: `app/api/reviews/member/[memberId]/route.ts`
 
 Line 6 has a module-level `const usecase = ...`. Move it inside the handler and add try-catch.
@@ -976,12 +1067,15 @@ export async function GET(
             return errorResponse("Not Found", 404);
         }
 
-        const usecase = new GetReviewsByMemberIdUsecase(new PrismaReviewRepository());
+        const usecase = new GetReviewsByMemberIdUsecase(
+            new PrismaReviewRepository()
+        );
         const result = await usecase.execute(memberId);
         return NextResponse.json(result);
     } catch (error: unknown) {
         console.error("[reviews/member/[memberId]] error:", error);
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }

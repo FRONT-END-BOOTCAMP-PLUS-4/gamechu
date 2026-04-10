@@ -24,10 +24,8 @@ export async function GET(
     );
 
     try {
-        const gameDetail = await withCache(
-            gameDetailKey(gameId),
-            600,
-            () => usecase.execute(gameId)
+        const gameDetail = await withCache(gameDetailKey(gameId), 600, () =>
+            usecase.execute(gameId)
         );
         return NextResponse.json(gameDetail);
     } catch (err) {

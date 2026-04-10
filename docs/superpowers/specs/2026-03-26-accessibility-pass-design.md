@@ -14,9 +14,11 @@ Fix accessibility issues across GameChu's frontend. Covers semantic HTML for cli
 ## 1. Clickable Cards — `CardLink` wrapper
 
 ### Problem
+
 All 6 card components (`GameCard`, `RecruitingArenaCard`, `DebatingArenaCard`, `WaitingArenaCard`, `VotingArenaCard`, `CompleteArenaCard`) use `<div onClick={() => router.push(...)}>`. These are invisible to keyboard navigation and not announced as interactive by screen readers.
 
 ### Solution
+
 Create `app/components/CardLink.tsx` — a thin wrapper around Next.js `<Link>` with shared card interaction styling:
 
 ```tsx
@@ -27,7 +29,12 @@ type CardLinkProps = {
     "aria-label"?: string;
 };
 
-export default function CardLink({ href, children, className, "aria-label": ariaLabel }: CardLinkProps) {
+export default function CardLink({
+    href,
+    children,
+    className,
+    "aria-label": ariaLabel,
+}: CardLinkProps) {
     return (
         <Link
             href={href}
@@ -47,6 +54,7 @@ Replace the outer `<div onClick>` in all 6 cards with `<CardLink href={...} aria
 ## 2. ARIA Labels
 
 ### TierBadge (`app/components/TierBadge.tsx`)
+
 Add `role="img"` and `aria-label={tier.label + " 티어"}` to the wrapper `<div>`. Change the inner `<Image>` to `alt=""` to prevent duplicate announcements.
 
 ```tsx
@@ -62,11 +70,13 @@ Add `role="img"` and `aria-label={tier.label + " 티어"}` to the wrapper `<div>
 ```
 
 ### GameCard score + review count (`app/(base)/games/components/GameCard.tsx`)
+
 - Rating container: add `aria-label={`전문가 평점 ${expertRating.toFixed(1)}`}`
 - Review count container: add `aria-label={`리뷰 ${reviewCount}개`}`
 - Inner icon `<Image>` elements: set `alt=""` to avoid duplication
 
 ### Header notification buttons (`app/components/Header.tsx`)
+
 Both desktop and mobile `<button>` elements wrapping the bell icon get `aria-label="알림"`. Inner `<Image>` gets `alt=""`.
 
 ---
@@ -74,9 +84,11 @@ Both desktop and mobile `<button>` elements wrapping the bell icon get `aria-lab
 ## 3. Modal Accessibility (`app/components/ModalWrapper.tsx`)
 
 ### Problem
+
 `ModalWrapper` has no `role="dialog"`, no `aria-modal`, no focus trap, and no focus management. Screen readers do not know a modal is open; keyboard users can tab outside the modal.
 
 ### Solution
+
 Install `focus-trap-react`. Make four changes to `ModalWrapper`:
 
 1. Accept optional `labelId` prop
@@ -95,7 +107,11 @@ type ModalWrapperProps = {
 // Inner structure:
 <FocusTrap
     active={isOpen}
-    focusTrapOptions={{ onDeactivate: onClose, returnFocusOnDeactivate: true, escapeDeactivates: true }}
+    focusTrapOptions={{
+        onDeactivate: onClose,
+        returnFocusOnDeactivate: true,
+        escapeDeactivates: true,
+    }}
 >
     <div
         role="dialog"
@@ -106,7 +122,7 @@ type ModalWrapperProps = {
     >
         {children}
     </div>
-</FocusTrap>
+</FocusTrap>;
 ```
 
 Each modal (`NotificationModal`, `CreateArenaModal`, `PointHelpModal`) adds an `id` to its title element and passes that `id` as `labelId` to `ModalWrapper`.
@@ -118,6 +134,7 @@ Each modal (`NotificationModal`, `CreateArenaModal`, `PointHelpModal`) adds an `
 ### Changes
 
 **Hamburger button:**
+
 ```tsx
 <button
     aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
@@ -128,6 +145,7 @@ Each modal (`NotificationModal`, `CreateArenaModal`, `PointHelpModal`) adds an `
 ```
 
 **Mobile menu panel:**
+
 ```tsx
 <div
     id="mobile-menu"
@@ -163,23 +181,23 @@ Add a visually hidden skip link as the first child of `<body>`. Becomes visible 
 
 ## Files Changed
 
-| File | Change |
-|------|--------|
-| `app/components/CardLink.tsx` | New component |
-| `app/(base)/games/components/GameCard.tsx` | div→CardLink, aria-labels on score/review |
-| `app/(base)/arenas/components/RecruitingArenaCard.tsx` | div→CardLink |
-| `app/(base)/arenas/components/DebatingArenaCard.tsx` | div→CardLink |
-| `app/(base)/arenas/components/WaitingArenaCard.tsx` | div→CardLink |
-| `app/(base)/arenas/components/VotingArenaCard.tsx` | div→CardLink |
-| `app/(base)/arenas/components/CompleteArenaCard.tsx` | div→CardLink |
-| `app/components/TierBadge.tsx` | role="img", aria-label, alt="" on image |
-| `app/components/Header.tsx` | aria-expanded, aria-controls, aria-hidden on menu, aria-label on bell buttons |
-| `app/components/ModalWrapper.tsx` | role="dialog", aria-modal, focus-trap-react, labelId prop |
-| `app/(base)/components/NotificationModal.tsx` | Add title id, pass labelId |
-| `app/(base)/arenas/components/CreateArenaModal.tsx` | Add title id, pass labelId |
-| `app/(base)/profile/components/PointHelpModal.tsx` | Add title id, pass labelId |
-| `app/layout.tsx` | Skip link |
-| `app/(base)/layout.tsx` | id="main-content" on main |
+| File                                                   | Change                                                                        |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| `app/components/CardLink.tsx`                          | New component                                                                 |
+| `app/(base)/games/components/GameCard.tsx`             | div→CardLink, aria-labels on score/review                                     |
+| `app/(base)/arenas/components/RecruitingArenaCard.tsx` | div→CardLink                                                                  |
+| `app/(base)/arenas/components/DebatingArenaCard.tsx`   | div→CardLink                                                                  |
+| `app/(base)/arenas/components/WaitingArenaCard.tsx`    | div→CardLink                                                                  |
+| `app/(base)/arenas/components/VotingArenaCard.tsx`     | div→CardLink                                                                  |
+| `app/(base)/arenas/components/CompleteArenaCard.tsx`   | div→CardLink                                                                  |
+| `app/components/TierBadge.tsx`                         | role="img", aria-label, alt="" on image                                       |
+| `app/components/Header.tsx`                            | aria-expanded, aria-controls, aria-hidden on menu, aria-label on bell buttons |
+| `app/components/ModalWrapper.tsx`                      | role="dialog", aria-modal, focus-trap-react, labelId prop                     |
+| `app/(base)/components/NotificationModal.tsx`          | Add title id, pass labelId                                                    |
+| `app/(base)/arenas/components/CreateArenaModal.tsx`    | Add title id, pass labelId                                                    |
+| `app/(base)/profile/components/PointHelpModal.tsx`     | Add title id, pass labelId                                                    |
+| `app/layout.tsx`                                       | Skip link                                                                     |
+| `app/(base)/layout.tsx`                                | id="main-content" on main                                                     |
 
 ## Dependencies
 

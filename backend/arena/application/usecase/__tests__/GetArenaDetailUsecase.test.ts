@@ -18,8 +18,18 @@ const mockArenaWithRelations = {
     description: "A test arena",
     startDate,
     status: 2,
-    creator: { id: "creator-1", nickname: "Creator", imageUrl: null, score: 100 },
-    challenger: { id: "challenger-1", nickname: "Challenger", imageUrl: null, score: 80 },
+    creator: {
+        id: "creator-1",
+        nickname: "Creator",
+        imageUrl: null,
+        score: 100,
+    },
+    challenger: {
+        id: "challenger-1",
+        nickname: "Challenger",
+        imageUrl: null,
+        score: 80,
+    },
 };
 
 describe("GetArenaDetailUsecase", () => {
@@ -39,7 +49,11 @@ describe("GetArenaDetailUsecase", () => {
             { arenaId: 42, totalCount: 10, leftCount: 7, rightCount: 3 },
         ]);
 
-        const usecase = new GetArenaDetailUsecase(arenaRepo, memberRepo, voteRepo);
+        const usecase = new GetArenaDetailUsecase(
+            arenaRepo,
+            memberRepo,
+            voteRepo
+        );
         const result = await usecase.execute({ arenaId: 42 });
 
         expect(arenaRepo.getArenaById).toHaveBeenCalledWith(42);
@@ -59,7 +73,11 @@ describe("GetArenaDetailUsecase", () => {
             { arenaId: 42, totalCount: 10, leftCount: 3, rightCount: 7 },
         ]);
 
-        const usecase = new GetArenaDetailUsecase(arenaRepo, memberRepo, voteRepo);
+        const usecase = new GetArenaDetailUsecase(
+            arenaRepo,
+            memberRepo,
+            voteRepo
+        );
         const result = await usecase.execute({ arenaId: 42 });
 
         expect(result.leftPercent).toBe(30);
@@ -78,7 +96,11 @@ describe("GetArenaDetailUsecase", () => {
             { arenaId: 42, totalCount: 0, leftCount: 0, rightCount: 0 },
         ]);
 
-        const usecase = new GetArenaDetailUsecase(arenaRepo, memberRepo, voteRepo);
+        const usecase = new GetArenaDetailUsecase(
+            arenaRepo,
+            memberRepo,
+            voteRepo
+        );
         const result = await usecase.execute({ arenaId: 42 });
 
         expect(result.leftPercent).toBe(0);
@@ -97,13 +119,23 @@ describe("GetArenaDetailUsecase", () => {
             { arenaId: 42, totalCount: 0, leftCount: 0, rightCount: 0 },
         ]);
 
-        const usecase = new GetArenaDetailUsecase(arenaRepo, memberRepo, voteRepo);
+        const usecase = new GetArenaDetailUsecase(
+            arenaRepo,
+            memberRepo,
+            voteRepo
+        );
         const result = await usecase.execute({ arenaId: 42 });
 
-        const expectedEndChatting = new Date(startDate.getTime() + 30 * 60 * 1000);
-        const expectedEndVote = new Date(expectedEndChatting.getTime() + 24 * 60 * 60 * 1000);
+        const expectedEndChatting = new Date(
+            startDate.getTime() + 30 * 60 * 1000
+        );
+        const expectedEndVote = new Date(
+            expectedEndChatting.getTime() + 24 * 60 * 60 * 1000
+        );
 
-        expect(result.endChatting.getTime()).toBe(expectedEndChatting.getTime());
+        expect(result.endChatting.getTime()).toBe(
+            expectedEndChatting.getTime()
+        );
         expect(result.endVote.getTime()).toBe(expectedEndVote.getTime());
     });
 });

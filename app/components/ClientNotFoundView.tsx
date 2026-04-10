@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 const NotFoundLottie = dynamic(() => import("./NotFoundLottie"), {
     ssr: false,
     loading: () => (
-        <div className="w-[600px] h-[600px] bg-gray-100 animate-pulse" />
+        <div className="h-[600px] w-[600px] animate-pulse bg-gray-100" />
     ),
 });
 
@@ -24,7 +24,7 @@ export default function ClientNotFoundView() {
     }, [router]);
 
     return (
-        <div className="w-[600px] h-[600px] overflow-hidden">
+        <div className="h-[600px] w-[600px] overflow-hidden">
             <NotFoundLottie />
         </div>
     );

@@ -14,7 +14,10 @@ const PreferredThemesBodySchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-    const log = logger.child({ route: "/api/preferred-themes", method: "POST" });
+    const log = logger.child({
+        route: "/api/preferred-themes",
+        method: "POST",
+    });
     const memberId = await getAuthUserId();
     try {
         if (!memberId) {

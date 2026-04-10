@@ -2,7 +2,7 @@ import Image from "next/image";
 type Props = {
     image: string;
     title: string;
-}
+};
 
 export default function GameTitleImageSection({ image, title }: Props) {
     return (

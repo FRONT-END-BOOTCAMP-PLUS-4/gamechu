@@ -12,32 +12,34 @@
 
 ## File Map
 
-| File | Status | Responsibility |
-|---|---|---|
-| `backend/review/application/usecase/validateReviewContent.ts` | **Create** | Shared validation: byte-size check, Zod parse, text-length, empty check, base64-image reject |
-| `backend/review/application/usecase/CreateReviewUsecase.ts` | **Modify** | Remove local validation code, import from shared util |
-| `backend/review/application/usecase/UpdateReviewUsecase.ts` | **Modify** | Remove local validation code, import from shared util |
-| `backend/review/application/usecase/__tests__/CreateReviewUsecase.test.ts` | **Modify** | Add empty-content + base64 test cases |
-| `backend/review/application/usecase/__tests__/UpdateReviewUsecase.test.ts` | **Modify** | Add empty-content + base64 test cases |
-| `app/(base)/games/[gameId]/components/Comment.tsx` | **Modify** | Surface server errors in toast; wrap `editorConfig` in `useMemo`; add `defaultRating` prop |
-| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx` | **Modify** | Pass `myComment?.rating` as `defaultRating` to `<Comment>` |
-| `app/(base)/games/[gameId]/components/lexical/ReadOnlyReview.tsx` | **Modify** | Add `try/catch` JSON.parse with plain-text fallback |
-| `app/(base)/games/[gameId]/components/lexical/urlMatchers.ts` | **Create** | Export `URL_REGEX` and `AUTOLINK_MATCHERS` |
-| `app/(base)/games/[gameId]/components/Comment.tsx` | **Modify** (M4) | Import `URL_REGEX` / `AUTOLINK_MATCHERS` from shared module |
-| `app/(base)/games/[gameId]/components/lexical/plugins/__tests__/ToolbarPlugin.test.ts` | **Modify** (M4) | Import `URL_REGEX` from shared module instead of duplicating |
-| `app/(base)/games/[gameId]/components/lexical/nodes/ImageNode.tsx` | **Modify** (M1) | Add eslint-disable comment on `<img>` |
-| `scripts/checkReviewEncoding.ts` | **Delete** (M3) | Diagnostic script with hardcoded gameId — no longer needed |
+| File                                                                                   | Status          | Responsibility                                                                               |
+| -------------------------------------------------------------------------------------- | --------------- | -------------------------------------------------------------------------------------------- |
+| `backend/review/application/usecase/validateReviewContent.ts`                          | **Create**      | Shared validation: byte-size check, Zod parse, text-length, empty check, base64-image reject |
+| `backend/review/application/usecase/CreateReviewUsecase.ts`                            | **Modify**      | Remove local validation code, import from shared util                                        |
+| `backend/review/application/usecase/UpdateReviewUsecase.ts`                            | **Modify**      | Remove local validation code, import from shared util                                        |
+| `backend/review/application/usecase/__tests__/CreateReviewUsecase.test.ts`             | **Modify**      | Add empty-content + base64 test cases                                                        |
+| `backend/review/application/usecase/__tests__/UpdateReviewUsecase.test.ts`             | **Modify**      | Add empty-content + base64 test cases                                                        |
+| `app/(base)/games/[gameId]/components/Comment.tsx`                                     | **Modify**      | Surface server errors in toast; wrap `editorConfig` in `useMemo`; add `defaultRating` prop   |
+| `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx`                        | **Modify**      | Pass `myComment?.rating` as `defaultRating` to `<Comment>`                                   |
+| `app/(base)/games/[gameId]/components/lexical/ReadOnlyReview.tsx`                      | **Modify**      | Add `try/catch` JSON.parse with plain-text fallback                                          |
+| `app/(base)/games/[gameId]/components/lexical/urlMatchers.ts`                          | **Create**      | Export `URL_REGEX` and `AUTOLINK_MATCHERS`                                                   |
+| `app/(base)/games/[gameId]/components/Comment.tsx`                                     | **Modify** (M4) | Import `URL_REGEX` / `AUTOLINK_MATCHERS` from shared module                                  |
+| `app/(base)/games/[gameId]/components/lexical/plugins/__tests__/ToolbarPlugin.test.ts` | **Modify** (M4) | Import `URL_REGEX` from shared module instead of duplicating                                 |
+| `app/(base)/games/[gameId]/components/lexical/nodes/ImageNode.tsx`                     | **Modify** (M1) | Add eslint-disable comment on `<img>`                                                        |
+| `scripts/checkReviewEncoding.ts`                                                       | **Delete** (M3) | Diagnostic script with hardcoded gameId — no longer needed                                   |
 
 ---
 
 ## Task 1: Create shared `validateReviewContent.ts` (I1 + C1 + C2)
 
 **Goal:** Single source of truth for all review content validation. Fixes three findings at once:
+
 - I1: no more copy-paste between Create/Update usecases
 - C1: blank editor state no longer accepted (empty-root JSON has `textLength === 0`)
 - C2: base64 image `src` rejected server-side before DB write
 
 **Files:**
+
 - Create: `backend/review/application/usecase/validateReviewContent.ts`
 
 - [ ] **Step 1: Write the new shared module**
@@ -73,7 +75,11 @@ export function extractTextContent(node: unknown): string {
 function rejectBase64Images(node: unknown): void {
     if (typeof node !== "object" || node === null) return;
     const n = node as Record<string, unknown>;
-    if (n.type === "image" && typeof n.src === "string" && n.src.startsWith("data:")) {
+    if (
+        n.type === "image" &&
+        typeof n.src === "string" &&
+        n.src.startsWith("data:")
+    ) {
         throw new Error("이미지는 URL 형식으로만 삽입할 수 있습니다.");
     }
     if (Array.isArray(n.children)) {
@@ -97,7 +103,9 @@ export function validateReviewContent(content: string): string {
         throw new Error("리뷰 내용을 입력해주세요.");
     }
     if (textLength > MAX_TEXT_LENGTH) {
-        throw new Error(`리뷰는 최대 ${MAX_TEXT_LENGTH.toLocaleString()}자까지 작성할 수 있습니다.`);
+        throw new Error(
+            `리뷰는 최대 ${MAX_TEXT_LENGTH.toLocaleString()}자까지 작성할 수 있습니다.`
+        );
     }
     rejectBase64Images(validated.root);
     return content;
@@ -109,6 +117,7 @@ export function validateReviewContent(content: string): string {
 ```bash
 npx tsc --noEmit 2>&1 | grep validateReviewContent
 ```
+
 Expected: no output (no TS errors in this file).
 
 ---
@@ -116,6 +125,7 @@ Expected: no output (no TS errors in this file).
 ## Task 2: Update usecases to import shared validation (I1)
 
 **Files:**
+
 - Modify: `backend/review/application/usecase/CreateReviewUsecase.ts`
 - Modify: `backend/review/application/usecase/UpdateReviewUsecase.ts`
 
@@ -172,6 +182,7 @@ export class UpdateReviewUsecase {
 ```bash
 npx tsc --noEmit 2>&1 | head -30
 ```
+
 Expected: no errors.
 
 ---
@@ -179,10 +190,12 @@ Expected: no errors.
 ## Task 3: Add new test cases for C1 and C2 (Critical fixes)
 
 **Files:**
+
 - Modify: `backend/review/application/usecase/__tests__/CreateReviewUsecase.test.ts`
 - Modify: `backend/review/application/usecase/__tests__/UpdateReviewUsecase.test.ts`
 
 The existing tests already cover XSS payload, empty string, 500KB, invalid structure, and 10,000-char limit. We need to add:
+
 1. Empty Lexical root (C1) — `{"root":{"children":[],...}}`
 2. Base64 image node (C2) — valid JSON but image src starts with `data:`
 
@@ -229,7 +242,11 @@ it("error: empty Lexical root (no text) throws", async () => {
     const repo = MockReviewRepository();
     const usecase = new CreateReviewUsecase(repo);
     await expect(
-        usecase.execute("m1", { gameId: 10, content: emptyLexicalJson, rating: 3 })
+        usecase.execute("m1", {
+            gameId: 10,
+            content: emptyLexicalJson,
+            rating: 3,
+        })
     ).rejects.toThrow("리뷰 내용을 입력해주세요.");
 });
 
@@ -237,7 +254,11 @@ it("error: base64 image src throws", async () => {
     const repo = MockReviewRepository();
     const usecase = new CreateReviewUsecase(repo);
     await expect(
-        usecase.execute("m1", { gameId: 10, content: base64ImageLexicalJson, rating: 3 })
+        usecase.execute("m1", {
+            gameId: 10,
+            content: base64ImageLexicalJson,
+            rating: 3,
+        })
     ).rejects.toThrow("이미지는 URL 형식으로만 삽입할 수 있습니다.");
 });
 ```
@@ -247,6 +268,7 @@ it("error: base64 image src throws", async () => {
 ```bash
 npx vitest run backend/review/application/usecase/__tests__/CreateReviewUsecase.test.ts 2>&1 | tail -20
 ```
+
 Expected: all tests PASS (the shared module from Task 1 already contains the new checks).
 
 - [ ] **Step 3: Add test cases to `UpdateReviewUsecase.test.ts`**
@@ -276,6 +298,7 @@ it("error: base64 image src throws", async () => {
 ```bash
 npx vitest run backend/review/application/usecase/__tests__/ 2>&1 | tail -30
 ```
+
 Expected: all tests PASS (original 5 Create + 5 Update + 2+2 new = 14 total).
 
 - [ ] **Step 5: Run full test suite to check for regressions**
@@ -283,6 +306,7 @@ Expected: all tests PASS (original 5 Create + 5 Update + 2+2 new = 14 total).
 ```bash
 npm test 2>&1 | tail -20
 ```
+
 Expected: all 147+ tests pass.
 
 - [ ] **Step 6: Commit backend changes**
@@ -303,14 +327,13 @@ git commit -m "fix: extract shared review validation, add empty-content and base
 **Problem:** When the API returns `400 { message: "리뷰 내용을 입력해주세요." }`, `handleSubmit` in `Comment.tsx` throws a generic `Error("리뷰 수정 실패")` before reading the body. The user sees a generic toast instead of the server message.
 
 **Files:**
+
 - Modify: `app/(base)/games/[gameId]/components/Comment.tsx:172-175`
 
 Current code at lines 172-175:
+
 ```typescript
-if (!res.ok)
-    throw new Error(
-        isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패"
-    );
+if (!res.ok) throw new Error(isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패");
 ```
 
 - [ ] **Step 1: Replace the `if (!res.ok)` block to read the body first**
@@ -322,11 +345,14 @@ if (!res.ok) {
     let serverMessage: string | undefined;
     try {
         const errData = await res.json();
-        serverMessage = typeof errData?.message === "string" ? errData.message : undefined;
+        serverMessage =
+            typeof errData?.message === "string" ? errData.message : undefined;
     } catch {
         // ignore json parse failure
     }
-    throw new Error(serverMessage ?? (isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패"));
+    throw new Error(
+        serverMessage ?? (isEditing ? "리뷰 수정 실패" : "리뷰 등록 실패")
+    );
 }
 ```
 
@@ -335,6 +361,7 @@ if (!res.ok) {
 After Step 1, any thrown error already has a user-facing message (either the server's or the generic fallback). Use it directly.
 
 Current catch block (lines 179-188):
+
 ```typescript
 } catch (err) {
     console.error("리뷰 저장 실패:", err);
@@ -346,6 +373,7 @@ Current catch block (lines 179-188):
 ```
 
 Replace with:
+
 ```typescript
 } catch (err) {
     console.error("리뷰 저장 실패:", err);
@@ -361,6 +389,7 @@ Replace with:
 ```bash
 npx tsc --noEmit 2>&1 | grep "Comment.tsx"
 ```
+
 Expected: no errors.
 
 ---
@@ -370,6 +399,7 @@ Expected: no errors.
 **Problem:** `editorConfig` is reconstructed on every render. `LexicalComposer` only reads `initialConfig` on mount so the config object is effectively stable, but recreating it on every render is wasteful and fragile.
 
 **Files:**
+
 - Modify: `app/(base)/games/[gameId]/components/Comment.tsx`
 
 - [ ] **Step 1: Add `useMemo` to imports at top of file**
@@ -380,6 +410,7 @@ Replace with: `import React, { useRef, useState, useMemo } from "react";`
 - [ ] **Step 2: Wrap `editorConfig` in `useMemo`**
 
 Current (lines 91-99):
+
 ```typescript
 const editorConfig = {
     namespace: "review-editor",
@@ -393,6 +424,7 @@ const editorConfig = {
 ```
 
 Replace with:
+
 ```typescript
 const editorConfig = useMemo(
     () => ({
@@ -413,6 +445,7 @@ const editorConfig = useMemo(
 ```bash
 npx tsc --noEmit 2>&1 | grep "Comment.tsx"
 ```
+
 Expected: no errors.
 
 ---
@@ -426,12 +459,14 @@ Expected: no errors.
 Note: `myComment.rating` in `ClientContentWrapper` is already divided by 2 (`r.rating / 2`), so it is a 0–5 display value. `handleSubmit` converts back: `Math.round(rating * 2)`.
 
 **Files:**
+
 - Modify: `app/(base)/games/[gameId]/components/Comment.tsx`
 - Modify: `app/(base)/games/[gameId]/components/ClientContentWrapper.tsx`
 
 - [ ] **Step 1: Add `defaultRating` to `CommentProps` in `Comment.tsx`**
 
 Find the `CommentProps` interface (lines 28-34):
+
 ```typescript
 interface CommentProps {
     gameId: string;
@@ -443,6 +478,7 @@ interface CommentProps {
 ```
 
 Replace with:
+
 ```typescript
 interface CommentProps {
     gameId: string;
@@ -457,6 +493,7 @@ interface CommentProps {
 - [ ] **Step 2: Destructure `defaultRating` and use it in `useState`**
 
 Find (lines 68-79):
+
 ```typescript
 export default function Comment({
     gameId,
@@ -473,6 +510,7 @@ export default function Comment({
 ```
 
 Replace with:
+
 ```typescript
 export default function Comment({
     gameId,
@@ -489,6 +527,7 @@ export default function Comment({
 - [ ] **Step 3: Pass `defaultRating` from `ClientContentWrapper.tsx`**
 
 Find in `ClientContentWrapper.tsx` (lines 151-163):
+
 ```typescript
 <Comment
     gameId={String(gameId)}
@@ -503,6 +542,7 @@ Find in `ClientContentWrapper.tsx` (lines 151-163):
 ```
 
 Replace with:
+
 ```typescript
 <Comment
     gameId={String(gameId)}
@@ -522,6 +562,7 @@ Replace with:
 ```bash
 npx tsc --noEmit 2>&1 | grep -E "Comment|ClientContent"
 ```
+
 Expected: no errors.
 
 - [ ] **Step 5: Commit frontend fixes (I2, I3, I5)**
@@ -539,6 +580,7 @@ git commit -m "fix: surface server errors in toast, memoize editorConfig, restor
 **Problem:** If `content` is an HTML string (pre-migration review) or the migration script failed for a record, `LexicalComposer` will silently render nothing. The user sees a blank card.
 
 **Files:**
+
 - Modify: `app/(base)/games/[gameId]/components/lexical/ReadOnlyReview.tsx`
 
 - [ ] **Step 1: Rewrite `ReadOnlyReview.tsx` with JSON validation guard**
@@ -606,6 +648,7 @@ export function ReadOnlyReview({ content }: ReadOnlyReviewProps) {
 ```bash
 npx tsc --noEmit 2>&1 | grep "ReadOnlyReview"
 ```
+
 Expected: no errors.
 
 - [ ] **Step 3: Commit**
@@ -620,6 +663,7 @@ git commit -m "fix: add plain-text fallback in ReadOnlyReview for malformed/lega
 ## Task 8: Minor fixes — ESLint disable, delete script, extract URL_REGEX (M1, M3, M4)
 
 **Files:**
+
 - Modify: `app/(base)/games/[gameId]/components/lexical/nodes/ImageNode.tsx`
 - Create: `app/(base)/games/[gameId]/components/lexical/urlMatchers.ts`
 - Modify: `app/(base)/games/[gameId]/components/Comment.tsx`
@@ -629,6 +673,7 @@ git commit -m "fix: add plain-text fallback in ReadOnlyReview for malformed/lega
 - [ ] **Step 1 (M1): Add ESLint disable in `ImageNode.tsx`**
 
 Find in `ImageNode.tsx` (line 66-67):
+
 ```typescript
     decorate(): JSX.Element {
         return (
@@ -636,6 +681,7 @@ Find in `ImageNode.tsx` (line 66-67):
 ```
 
 Replace with:
+
 ```typescript
     decorate(): JSX.Element {
         return (
@@ -669,6 +715,7 @@ export const AUTOLINK_MATCHERS = [
 - [ ] **Step 3 (M4): Update `Comment.tsx` to import from shared module**
 
 Remove from `Comment.tsx` (lines 51-66):
+
 ```typescript
 const URL_REGEX =
     /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
@@ -689,6 +736,7 @@ const AUTOLINK_MATCHERS = [
 ```
 
 Add import near the top of `Comment.tsx` (after the lexical plugin imports):
+
 ```typescript
 import { AUTOLINK_MATCHERS } from "./lexical/urlMatchers";
 ```
@@ -696,6 +744,7 @@ import { AUTOLINK_MATCHERS } from "./lexical/urlMatchers";
 - [ ] **Step 4 (M4): Update `ToolbarPlugin.test.ts` to import `URL_REGEX` from shared module**
 
 Remove from `ToolbarPlugin.test.ts` (lines 3-5):
+
 ```typescript
 // Mirrors the AutoLink URL detection logic in Comment.tsx (AUTOLINK_MATCHERS).
 const URL_REGEX =
@@ -703,20 +752,24 @@ const URL_REGEX =
 ```
 
 Add import at top of `ToolbarPlugin.test.ts`:
+
 ```typescript
 import { URL_REGEX } from "../urlMatchers";
 ```
 
 Also remove the comment on line 14:
+
 ```typescript
 // Mirrors the LinkPlugin validateUrl in Comment.tsx:
 //   validateUrl={(url) => /^https?:\/\//.test(url)}
 ```
+
 (keep `function isValidLinkUrl` itself, just remove the "mirrors" comment since `URL_REGEX` is now the actual source)
 
 - [ ] **Step 5 (M3): Delete the diagnostic script**
 
 `git rm` both removes the file and stages the deletion in one command:
+
 ```bash
 git rm scripts/checkReviewEncoding.ts
 ```
@@ -726,6 +779,7 @@ git rm scripts/checkReviewEncoding.ts
 ```bash
 npx tsc --noEmit 2>&1 | head -20
 ```
+
 Expected: no errors.
 
 - [ ] **Step 7: Run full test suite**
@@ -733,6 +787,7 @@ Expected: no errors.
 ```bash
 npm test 2>&1 | tail -20
 ```
+
 Expected: all tests pass (new test count ≥ 151: 147 existing + 4 new usecase tests).
 
 - [ ] **Step 8: Commit minor fixes**
@@ -756,6 +811,7 @@ git commit -m "fix: eslint-disable on ImageNode img, extract URL_REGEX to shared
 ```bash
 npm test 2>&1 | tail -10
 ```
+
 Expected: all tests pass.
 
 - [ ] **Build check**
@@ -763,9 +819,10 @@ Expected: all tests pass.
 ```bash
 npm run build 2>&1 | tail -20
 ```
+
 Expected: build succeeds (pre-commit hook will also run this).
 
 - [ ] **Update PR body** to note:
-  - KI-1 (star rating in edit mode) — **RESOLVED** in this branch
-  - Base64 images are now rejected server-side; images must be externally hosted URLs
-  - Deploy order remains: migrate DB first, then deploy code
+    - KI-1 (star rating in edit mode) — **RESOLVED** in this branch
+    - Base64 images are now rejected server-side; images must be externally hosted URLs
+    - Deploy order remains: migrate DB first, then deploy code

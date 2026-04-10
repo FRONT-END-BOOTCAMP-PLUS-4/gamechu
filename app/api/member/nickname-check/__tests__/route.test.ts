@@ -6,7 +6,11 @@ vi.mock("@/lib/Redis", () => ({
 
 vi.mock("@/lib/RateLimiter", () => ({
     RateLimiter: vi.fn(function (this: Record<string, unknown>) {
-        this.check = vi.fn().mockResolvedValue({ allowed: true, remaining: 9, retryAfterMs: 0 });
+        this.check = vi.fn().mockResolvedValue({
+            allowed: true,
+            remaining: 9,
+            retryAfterMs: 0,
+        });
     }),
     getClientIp: vi.fn().mockReturnValue("127.0.0.1"),
     rateLimitResponse: vi.fn(),
@@ -14,11 +18,14 @@ vi.mock("@/lib/RateLimiter", () => ({
 
 const mockFindByNickname = vi.fn().mockResolvedValue(null);
 
-vi.mock("@/backend/member/infra/repositories/prisma/PrismaMemberRepository", () => ({
-    PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
-        this.findByNickname = mockFindByNickname;
-    }),
-}));
+vi.mock(
+    "@/backend/member/infra/repositories/prisma/PrismaMemberRepository",
+    () => ({
+        PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
+            this.findByNickname = mockFindByNickname;
+        }),
+    })
+);
 
 vi.mock("next-auth", () => ({
     getServerSession: vi.fn(),
@@ -63,7 +70,10 @@ describe("GET /api/member/nickname-check", () => {
         vi.mocked(getServerSession).mockResolvedValueOnce({
             user: { id: "session-user-1" },
         } as never);
-        mockFindByNickname.mockResolvedValueOnce({ id: "other-user", nickname: "hello" });
+        mockFindByNickname.mockResolvedValueOnce({
+            id: "other-user",
+            nickname: "hello",
+        });
 
         const req = new Request(
             "http://localhost/api/member/nickname-check?nickname=hello"
@@ -79,7 +89,10 @@ describe("GET /api/member/nickname-check", () => {
         vi.mocked(getServerSession).mockResolvedValueOnce({
             user: { id: "session-user-1" },
         } as never);
-        mockFindByNickname.mockResolvedValueOnce({ id: "session-user-1", nickname: "myname" });
+        mockFindByNickname.mockResolvedValueOnce({
+            id: "session-user-1",
+            nickname: "myname",
+        });
 
         const req = new Request(
             "http://localhost/api/member/nickname-check?nickname=myname"

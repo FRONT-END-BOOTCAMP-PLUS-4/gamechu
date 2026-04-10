@@ -71,17 +71,21 @@ export default function ProfilePage() {
         enabled: isAuthenticated,
     });
 
-    const { data: reviews = [], isLoading: reviewsLoading } = useQuery<Review[]>({
+    const { data: reviews = [], isLoading: reviewsLoading } = useQuery<
+        Review[]
+    >({
         queryKey: queryKeys.myReviews(),
         queryFn: () => fetcher("/api/reviews/member"),
         enabled: isAuthenticated,
     });
 
-    const { data: wishlistPageData, isLoading: wishlistLoading } = useQuery<WishlistPageData>({
-        queryKey: queryKeys.myWishlists(wishlistPage),
-        queryFn: () => fetcher(`/api/member/wishlists?page=${wishlistPage}`),
-        enabled: isAuthenticated,
-    });
+    const { data: wishlistPageData, isLoading: wishlistLoading } =
+        useQuery<WishlistPageData>({
+            queryKey: queryKeys.myWishlists(wishlistPage),
+            queryFn: () =>
+                fetcher(`/api/member/wishlists?page=${wishlistPage}`),
+            enabled: isAuthenticated,
+        });
 
     const isLoading = profileLoading || reviewsLoading || wishlistLoading;
 
@@ -127,7 +131,10 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row md:items-start md:space-x-10">
                 {/* 사이드바 */}
                 <div className="mb-6 w-full md:mb-0 md:w-[250px]">
-                    <ProfileSidebar isOwnProfile={true} onSelect={setActiveTab} />
+                    <ProfileSidebar
+                        isOwnProfile={true}
+                        onSelect={setActiveTab}
+                    />
                 </div>
 
                 {/* 컨텐츠 영역 */}

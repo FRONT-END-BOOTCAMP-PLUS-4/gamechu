@@ -24,7 +24,12 @@ export default function SelectedArenaSection({
     onLoaded,
 }: SelectedArenaSectionProps) {
     const { arenaListDto, loading, error } = useArenas(
-        { status, currentPage, mine: false, pageSize: [1, 5].includes(status) ? 6 : 9 },
+        {
+            status,
+            currentPage,
+            mine: false,
+            pageSize: [1, 5].includes(status) ? 6 : 9,
+        },
         { refetchInterval: 30_000 }
     );
 

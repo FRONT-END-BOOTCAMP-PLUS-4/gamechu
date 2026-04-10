@@ -9,7 +9,7 @@ type PointHistoryCardProps = {
     score: number;
     imageUrl: string;
     createdAt: string;
-}
+};
 
 export default function PointHistoryCard({
     policyName,
@@ -48,7 +48,7 @@ export default function PointHistoryCard({
                             {policyName}
                         </h3>
                         {/* 데스크톱에서만 노출하되, 한 줄로 줄임 처리 */}
-                        <p className="text-font-300 mt-1 hidden truncate text-sm md:mt-2 md:block">
+                        <p className="mt-1 hidden truncate text-sm text-font-300 md:mt-2 md:block">
                             {description}
                         </p>
                     </div>
@@ -65,7 +65,7 @@ export default function PointHistoryCard({
                     >
                         {formattedScore}
                     </span>
-                    <span className="text-font-300 pt-1 text-[11px] md:pt-2 md:text-xs">
+                    <span className="pt-1 text-[11px] text-font-300 md:pt-2 md:text-xs">
                         {formattedDate}
                     </span>
                 </div>

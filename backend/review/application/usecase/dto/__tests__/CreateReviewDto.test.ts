@@ -9,18 +9,26 @@ describe("CreateReviewSchema", () => {
     });
 
     it("content 빈 문자열 → 실패", () => {
-        expect(CreateReviewSchema.safeParse({ ...valid, content: "" }).success).toBe(false);
+        expect(
+            CreateReviewSchema.safeParse({ ...valid, content: "" }).success
+        ).toBe(false);
     });
 
     it("rating 0 → 실패", () => {
-        expect(CreateReviewSchema.safeParse({ ...valid, rating: 0 }).success).toBe(false);
+        expect(
+            CreateReviewSchema.safeParse({ ...valid, rating: 0 }).success
+        ).toBe(false);
     });
 
     it("rating 6 → 실패", () => {
-        expect(CreateReviewSchema.safeParse({ ...valid, rating: 6 }).success).toBe(false);
+        expect(
+            CreateReviewSchema.safeParse({ ...valid, rating: 6 }).success
+        ).toBe(false);
     });
 
     it("rating 소수점 → 실패", () => {
-        expect(CreateReviewSchema.safeParse({ ...valid, rating: 3.5 }).success).toBe(false);
+        expect(
+            CreateReviewSchema.safeParse({ ...valid, rating: 3.5 }).success
+        ).toBe(false);
     });
 });

@@ -44,7 +44,9 @@ test("GET /api/member/scores — 미인증 시 401", async ({ request }) => {
     expect(response.status()).toBe(401);
 });
 
-test("GET /api/member/notification-records — 미인증 시 401", async ({ request }) => {
+test("GET /api/member/notification-records — 미인증 시 401", async ({
+    request,
+}) => {
     const response = await request.get("/api/member/notification-records");
     expect(response.status()).toBe(401);
 });

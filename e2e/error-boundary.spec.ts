@@ -1,15 +1,21 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("에러 바운더리", () => {
-    test("에러 발생 시 SYSTEM ERROR 배지와 버튼이 표시된다", async ({ page }) => {
+    test("에러 발생 시 SYSTEM ERROR 배지와 버튼이 표시된다", async ({
+        page,
+    }) => {
         await page.goto("/test-error");
 
         // SYSTEM ERROR 배지
         await expect(page.getByText("SYSTEM ERROR")).toBeVisible();
 
         // 버튼 두 개
-        await expect(page.getByRole("button", { name: /다시 시도/ })).toBeVisible();
-        await expect(page.getByRole("button", { name: /홈으로/ })).toBeVisible();
+        await expect(
+            page.getByRole("button", { name: /다시 시도/ })
+        ).toBeVisible();
+        await expect(
+            page.getByRole("button", { name: /홈으로/ })
+        ).toBeVisible();
     });
 
     test("홈으로 버튼 클릭 시 홈으로 이동한다", async ({ page }) => {
@@ -20,7 +26,9 @@ test.describe("에러 바운더리", () => {
         await expect(page).toHaveURL("/");
     });
 
-    test("다시 시도 버튼 클릭 시 에러 바운더리가 재실행된다", async ({ page }) => {
+    test("다시 시도 버튼 클릭 시 에러 바운더리가 재실행된다", async ({
+        page,
+    }) => {
         await page.goto("/test-error");
         await expect(page.getByText("SYSTEM ERROR")).toBeVisible();
 

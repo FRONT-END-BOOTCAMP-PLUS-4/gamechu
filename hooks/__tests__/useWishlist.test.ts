@@ -15,10 +15,9 @@ describe("useWishlist", () => {
             json: () => Promise.resolve({ exists: true, wishlistId: 10 }),
         } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useWishlist(1, "user-abc"),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useWishlist(1, "user-abc"), {
+            wrapper: createWrapper(),
+        });
 
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(result.current.isWished).toBe(true);
@@ -28,10 +27,9 @@ describe("useWishlist", () => {
     });
 
     it("does NOT fetch when viewerId is empty string", async () => {
-        const { result } = renderHook(
-            () => useWishlist(1, ""),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useWishlist(1, ""), {
+            wrapper: createWrapper(),
+        });
 
         // enabled=false — TQ skips fetching, isLoading stays false
         await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -43,17 +41,17 @@ describe("useWishlist", () => {
         vi.mocked(fetch)
             .mockResolvedValueOnce({
                 ok: true,
-                json: () => Promise.resolve({ exists: false, wishlistId: null }),
+                json: () =>
+                    Promise.resolve({ exists: false, wishlistId: null }),
             } as unknown as Response)
             .mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve({ wishlistId: 99 }),
             } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useWishlist(1, "user-abc"),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useWishlist(1, "user-abc"), {
+            wrapper: createWrapper(),
+        });
         await waitFor(() => expect(result.current.isLoading).toBe(false));
 
         await act(async () => {
@@ -77,10 +75,9 @@ describe("useWishlist", () => {
                 json: () => Promise.resolve({}),
             } as unknown as Response);
 
-        const { result } = renderHook(
-            () => useWishlist(1, "user-abc"),
-            { wrapper: createWrapper() }
-        );
+        const { result } = renderHook(() => useWishlist(1, "user-abc"), {
+            wrapper: createWrapper(),
+        });
         await waitFor(() => expect(result.current.isLoading).toBe(false));
 
         await act(async () => {

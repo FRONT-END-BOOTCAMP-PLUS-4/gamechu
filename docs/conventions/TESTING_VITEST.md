@@ -54,7 +54,9 @@ Use in tests with `vi.mocked()` for mock assertions:
 import { createMockArenaRepository } from "@/tests/mocks/createMockArenaRepository";
 
 const mockRepo = createMockArenaRepository();
-vi.mocked(mockRepo.findAll).mockResolvedValue([/* ... */]);
+vi.mocked(mockRepo.findAll).mockResolvedValue([
+    /* ... */
+]);
 const usecase = new GetArenaListUsecase(mockRepo);
 ```
 

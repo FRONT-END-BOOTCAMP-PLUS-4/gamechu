@@ -40,7 +40,10 @@ describe("ToggleReviewLikeUsecase", () => {
             reviewRepo,
             applyScore as unknown as ApplyReviewScoreUsecase
         );
-        const result = await usecase.execute({ reviewId: 10, memberId: "user-1" });
+        const result = await usecase.execute({
+            reviewId: 10,
+            memberId: "user-1",
+        });
 
         expect(likeRepo.like).toHaveBeenCalledWith(10, "user-1");
         expect(applyScore.execute).toHaveBeenCalledWith({
@@ -66,7 +69,10 @@ describe("ToggleReviewLikeUsecase", () => {
             reviewRepo,
             applyScore as unknown as ApplyReviewScoreUsecase
         );
-        const result = await usecase.execute({ reviewId: 10, memberId: "user-1" });
+        const result = await usecase.execute({
+            reviewId: 10,
+            memberId: "user-1",
+        });
 
         expect(likeRepo.unlike).toHaveBeenCalledWith(10, "user-1");
         expect(applyScore.execute).toHaveBeenCalledWith({

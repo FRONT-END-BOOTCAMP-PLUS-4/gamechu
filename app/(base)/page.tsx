@@ -13,13 +13,13 @@ export default function Home() {
                     {" "}
                     <h1 className="mb-4 text-2xl font-bold lg:text-5xl">
                         <span
-                            className="animate-fade-in-up-strong inline-block"
+                            className="inline-block animate-fade-in-up-strong"
                             style={{ animationDelay: "0.1s" }}
                         >
                             게임
                         </span>{" "}
                         <span
-                            className="animate-fade-in-up-strong inline-block"
+                            className="inline-block animate-fade-in-up-strong"
                             style={{ animationDelay: "0.2s" }}
                         >
                             <span className="animate-gradient-xy bg-gradient-to-br from-primary-purple-300 via-purple-200 to-primary-purple-300 bg-[length:200%_200%] bg-clip-text text-transparent">
@@ -27,13 +27,13 @@ export default function Home() {
                             </span>
                         </span>
                         <span
-                            className="animate-fade-in-up-strong inline-block"
+                            className="inline-block animate-fade-in-up-strong"
                             style={{ animationDelay: "0.3s" }}
                         >
                             과
                         </span>{" "}
                         <span
-                            className="animate-fade-in-up-strong inline-block"
+                            className="inline-block animate-fade-in-up-strong"
                             style={{ animationDelay: "0.4s" }}
                         >
                             <span className="animate-gradient-xy bg-gradient-to-br from-red-500 via-red-200 to-red-500 bg-[length:200%_200%] bg-clip-text text-transparent">
@@ -41,26 +41,26 @@ export default function Home() {
                             </span>
                         </span>
                         <span
-                            className="animate-fade-in-up-strong inline-block"
+                            className="inline-block animate-fade-in-up-strong"
                             style={{ animationDelay: "0.5s" }}
                         >
                             의
                         </span>{" "}
                         <span
-                            className="animate-fade-in-up-strong inline-block"
+                            className="inline-block animate-fade-in-up-strong"
                             style={{ animationDelay: "0.6s" }}
                         >
                             장
                         </span>
                     </h1>
                     <p
-                        className="animate-typing relative mx-auto max-w-full overflow-hidden whitespace-nowrap text-sm leading-relaxed text-font-200 lg:text-lg"
+                        className="relative mx-auto max-w-full animate-typing overflow-hidden whitespace-nowrap text-sm leading-relaxed text-font-200 lg:text-lg"
                         style={{ animationDelay: "1.5s" }}
                     >
                         원하는 서비스를 선택하여 게임에 대한
                     </p>
                     <p
-                        className="animate-typing relative mx-auto max-w-full overflow-hidden whitespace-nowrap text-sm leading-relaxed text-font-200 lg:text-lg"
+                        className="relative mx-auto max-w-full animate-typing overflow-hidden whitespace-nowrap text-sm leading-relaxed text-font-200 lg:text-lg"
                         style={{ animationDelay: "2.3s" }}
                     >
                         열정을 함께 나눠보세요!

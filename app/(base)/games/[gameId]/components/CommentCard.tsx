@@ -30,7 +30,7 @@ type CommentCardProps = {
     memberId: string;
     onEdit?: (id: number) => void;
     onDelete?: (id: number) => void;
-}
+};
 
 export default function CommentCard({
     id,

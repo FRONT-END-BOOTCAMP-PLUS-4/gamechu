@@ -16,7 +16,10 @@ type RequestParams = {
 
 export async function DELETE(request: Request, { params }: RequestParams) {
     const memberId: string | null = await getAuthUserId();
-    const log = logger.child({ route: "/api/member/notification-records/[id]", method: "DELETE" });
+    const log = logger.child({
+        route: "/api/member/notification-records/[id]",
+        method: "DELETE",
+    });
     try {
         // member validation
         if (!memberId) {
@@ -54,7 +57,8 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         );
     } catch (error: unknown) {
         log.error({ userId: memberId, err: error }, "알림 기록 삭제 실패");
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }

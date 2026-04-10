@@ -12,7 +12,9 @@ test("/arenas 페이지 유효 UI 렌더링", async ({ page }) => {
 test("/arenas 페이지 헤더 '토론 투기장' 제목 렌더링", async ({ page }) => {
     await page.goto("/arenas");
 
-    await expect(page.getByRole("heading", { name: "토론 투기장" })).toBeVisible();
+    await expect(
+        page.getByRole("heading", { name: "토론 투기장" })
+    ).toBeVisible();
 });
 
 test("/arenas 페이지 '도전장 작성하기' 버튼 렌더링", async ({ page }) => {

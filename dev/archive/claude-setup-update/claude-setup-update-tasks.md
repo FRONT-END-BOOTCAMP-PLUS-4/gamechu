@@ -7,22 +7,22 @@ Last Updated: 2026-03-07 (Session 3)
 ## Phase 0: `/dev-docs` Step 6 Git Workflow 수정 ✅
 
 - [x] **0.1** `dev-docs.md` Step 6의 이슈/PR body를 `.github/` 템플릿 참조로 변경
-  - 이슈 → `.github/ISSUE_TEMPLATE/feature_request.md` 형식 참조
-  - PR → `.github/PULL_REQUEST_TEMPLATE.md` 형식 참조
-  - 브랜치/커밋/워크플로 → `docs/CODE_CONVENTIONS.md` "Git & Collaboration" 참조
+    - 이슈 → `.github/ISSUE_TEMPLATE/feature_request.md` 형식 참조
+    - PR → `.github/PULL_REQUEST_TEMPLATE.md` 형식 참조
+    - 브랜치/커밋/워크플로 → `docs/CODE_CONVENTIONS.md` "Git & Collaboration" 참조
 
 ## Phase 1: `/dev-docs` Convention Drift 검사 추가 ✅
 
 - [x] **1.1** `.claude/commands/dev-docs.md`에 Step 2.5 Convention Drift Check 추가
-  - `docs/CODE_CONVENTIONS.md` 읽기 + 계획 대상 코드 비교
-  - drift 발견 시 Risk Assessment에 포함 + 태스크로 추가
+    - `docs/CODE_CONVENTIONS.md` 읽기 + 계획 대상 코드 비교
+    - drift 발견 시 Risk Assessment에 포함 + 태스크로 추가
 
 ## Phase 2: 문서 업데이트 ✅
 
 - [x] **2.1** `automation-task-process-summary.md` 업데이트
-  - Task #4 완료 처리
-  - Task #5는 MASTER_PLAN §4.4로 이동됨을 명시
-  - 변경 파일 목록 반영
+    - Task #4 완료 처리
+    - Task #5는 MASTER_PLAN §4.4로 이동됨을 명시
+    - 변경 파일 목록 반영
 
 ---
 
@@ -74,15 +74,15 @@ Last Updated: 2026-03-07 (Session 3)
 
 ## Execution Summary
 
-| Phase | Description | Status |
-|-------|-------------|--------|
-| Phase 0–2 | dev-docs 개선 | ✅ 완료 |
-| Phase 3 | error-tracking 제거 | ✅ 완료 |
-| Phase 4 | Backend skill rewrite (6 files) | ✅ 완료 |
-| Phase 5 | Agent audit (4 files) | ✅ 완료 |
-| Phase 6 | Route-tester adaptation | ✅ 완료 |
-| Phase 7 | Frontend skill verify | ✅ 완료 |
-| Phase 8 | Cleanup (4 files deleted) | ✅ 완료 |
+| Phase     | Description                     | Status  |
+| --------- | ------------------------------- | ------- |
+| Phase 0–2 | dev-docs 개선                   | ✅ 완료 |
+| Phase 3   | error-tracking 제거             | ✅ 완료 |
+| Phase 4   | Backend skill rewrite (6 files) | ✅ 완료 |
+| Phase 5   | Agent audit (4 files)           | ✅ 완료 |
+| Phase 6   | Route-tester adaptation         | ✅ 완료 |
+| Phase 7   | Frontend skill verify           | ✅ 완료 |
+| Phase 8   | Cleanup (4 files deleted)       | ✅ 완료 |
 
 **All tasks complete.** ✅
 

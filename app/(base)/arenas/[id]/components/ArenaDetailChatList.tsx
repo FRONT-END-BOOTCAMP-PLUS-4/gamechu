@@ -14,7 +14,16 @@ type ArenaChatListProps = {
 };
 
 function ArenaDetailChatListComponent(
-    { chats, status, creatorId, challengerId, creatorName, challengerName, creatorImageUrl, challengerImageUrl }: ArenaChatListProps,
+    {
+        chats,
+        status,
+        creatorId,
+        challengerId,
+        creatorName,
+        challengerName,
+        creatorImageUrl,
+        challengerImageUrl,
+    }: ArenaChatListProps,
     ref: React.Ref<HTMLDivElement>
 ) {
     return (
@@ -63,7 +72,10 @@ function ArenaDetailChatListComponent(
                                             {isCreator && (
                                                 <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
                                                     <Image
-                                                        src={creatorImageUrl || "/icons/teamA.svg"}
+                                                        src={
+                                                            creatorImageUrl ||
+                                                            "/icons/teamA.svg"
+                                                        }
                                                         alt="Team A"
                                                         width={32}
                                                         height={32}
@@ -79,7 +91,10 @@ function ArenaDetailChatListComponent(
                                             {isChallenger && (
                                                 <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
                                                     <Image
-                                                        src={challengerImageUrl || "/icons/teamB.svg"}
+                                                        src={
+                                                            challengerImageUrl ||
+                                                            "/icons/teamB.svg"
+                                                        }
                                                         alt="Team B"
                                                         width={32}
                                                         height={32}

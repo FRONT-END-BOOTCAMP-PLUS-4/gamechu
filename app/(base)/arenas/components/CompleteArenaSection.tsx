@@ -8,7 +8,7 @@ import { GetSectionTitle } from "@/utils/GetSectionTitle";
 
 type Props = {
     onLoaded?: () => void; // ✅ 상위 ArenaPage로 로딩 완료 알림
-}
+};
 
 export default function CompleteArenaSection({ onLoaded }: Props) {
     const status: number = 5;

@@ -22,7 +22,9 @@ describe("Arena cards render semantic links", () => {
                 startDate={baseDate}
             />
         );
-        const link = screen.getByRole("link", { name: "PS5 vs Xbox 논쟁 아레나" });
+        const link = screen.getByRole("link", {
+            name: "PS5 vs Xbox 논쟁 아레나",
+        });
         expect(link.tagName).toBe("A");
         expect(link.getAttribute("href")).toBe("/arenas/1");
     });
@@ -39,7 +41,9 @@ describe("Arena cards render semantic links", () => {
                 debateEndDate={baseDate}
             />
         );
-        const link = screen.getByRole("link", { name: "롤 vs 발로란트 아레나" });
+        const link = screen.getByRole("link", {
+            name: "롤 vs 발로란트 아레나",
+        });
         expect(link.tagName).toBe("A");
         expect(link.getAttribute("href")).toBe("/arenas/2");
     });
@@ -74,7 +78,9 @@ describe("Arena cards render semantic links", () => {
                 voteCount={10}
             />
         );
-        const link = screen.getByRole("link", { name: "젤다 vs 마리오 아레나" });
+        const link = screen.getByRole("link", {
+            name: "젤다 vs 마리오 아레나",
+        });
         expect(link.tagName).toBe("A");
         expect(link.getAttribute("href")).toBe("/arenas/4");
     });
@@ -98,7 +104,9 @@ describe("Arena cards render semantic links", () => {
                 rightPercent={40}
             />
         );
-        const link = screen.getByRole("link", { name: "포켓몬 vs 디지몬 아레나" });
+        const link = screen.getByRole("link", {
+            name: "포켓몬 vs 디지몬 아레나",
+        });
         expect(link.tagName).toBe("A");
         expect(link.getAttribute("href")).toBe("/arenas/5");
     });

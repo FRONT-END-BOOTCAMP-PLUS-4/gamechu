@@ -43,16 +43,16 @@ GameChu centralizes client creation in `lib/` singletons:
 
 ```typescript
 // lib/prisma.ts — Prisma client singleton
-import { PrismaClient } from '@/prisma/generated';
+import { PrismaClient } from "@/prisma/generated";
 
 const prisma = globalThis.prisma ?? new PrismaClient();
-if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
 export default prisma;
 ```
 
 ```typescript
 // lib/redis.ts — Redis client singleton
-import Redis from 'ioredis';
+import Redis from "ioredis";
 
 const redis = new Redis(process.env.REDIS_URL);
 export default redis;
@@ -98,7 +98,7 @@ Check required variables at startup in critical singletons:
 
 ```typescript
 if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is not configured');
+    throw new Error("DATABASE_URL is not configured");
 }
 ```
 
@@ -109,6 +109,7 @@ Set environment variables directly on the server. See `docs/server/SERVER_REFERE
 ---
 
 **Related Files:**
+
 - [SKILL.md](SKILL.md)
 - `lib/prisma.ts` — Prisma singleton
 - `lib/redis.ts` — Redis singleton

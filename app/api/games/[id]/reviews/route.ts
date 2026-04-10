@@ -11,7 +11,10 @@ export async function GET(
     req: NextRequest,
     { params }: { params: Promise<Record<string, string>> }
 ) {
-    const log = logger.child({ route: "/api/games/[id]/reviews", method: "GET" });
+    const log = logger.child({
+        route: "/api/games/[id]/reviews",
+        method: "GET",
+    });
     try {
         const { id } = await params;
         const idValidated = validate(IdSchema, id);
@@ -27,7 +30,8 @@ export async function GET(
         return NextResponse.json(result);
     } catch (error: unknown) {
         log.error({ err: error }, "게임 리뷰 조회 실패");
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }

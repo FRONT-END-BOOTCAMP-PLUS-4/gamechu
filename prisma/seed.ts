@@ -13,7 +13,9 @@ const loadJson = <T = Record<string, unknown>>(filename: string): T[] =>
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/;
 function fixDates<T>(rows: T[]): T[] {
     return rows.map((row) => {
-        const out: Record<string, unknown> = { ...(row as Record<string, unknown>) };
+        const out: Record<string, unknown> = {
+            ...(row as Record<string, unknown>),
+        };
         for (const [k, v] of Object.entries(out)) {
             if (typeof v === "string" && ISO_DATE_RE.test(v)) {
                 out[k] = new Date(v + "Z");
@@ -89,20 +91,77 @@ const THEMES = [
 ];
 
 const SCORE_POLICIES = [
-    { id: 1, name: "출석 완료", description: "일퀘는 생명. 일퀘를 했으면 리워드를 받아야죠. 5포인트가 적립됩니다.", score: 5, imageUrl: "icons/policy-attend.svg" },
-    { id: 2, name: "리뷰 삭제", description: "마따끄 리뷰를 삭제했으면 퍼니시먼트를 받아야겠지. 리뷰에 달린 좋아요 갯수만큼의 포인트가 차감됩니다.", score: 0, imageUrl: "icons/policy-review.svg" },
-    { id: 3, name: "리뷰 좋아요 획득", description: "당신은 따봉겜추의 축복을 받으셨습니다! 5포인트가 적립됩니다.", score: 5, imageUrl: "icons/policy-likes.svg" },
-    { id: 4, name: "투기장 참여", description: "영웅 호걸들의 시간! 투기장 참가비 100포인트 지불합니다", score: -100, imageUrl: "icons/arena.svg" },
-    { id: 5, name: "투기장 승리", description: "겜안분 척결 다섯 글자의 환호성! 투기장에서 승리하셨습니다!! 190포인트가 적립됩니다.", score: 190, imageUrl: "icons/arena.svg" },
-    { id: 6, name: "투기장 무승부", description: "무승부로 하지 않을래....? 참가비 100포인트를 회수합니다.", score: 100, imageUrl: "icons/arena.svg" },
-    { id: 7, name: "투기장 미성립", description: "놀랍게도 그 누구도 관심을 주지 않았다. 참가비 100포인트를 회수합니다.", score: 100, imageUrl: "icons/arena.svg" },
-    { id: 8, name: "리뷰 좋아요 삭제", description: "줬다 뺐는건 좀 아닌데. 5포인트가 지불됩니다.", score: -5, imageUrl: "icons/policy-likes.svg" },
+    {
+        id: 1,
+        name: "출석 완료",
+        description:
+            "일퀘는 생명. 일퀘를 했으면 리워드를 받아야죠. 5포인트가 적립됩니다.",
+        score: 5,
+        imageUrl: "icons/policy-attend.svg",
+    },
+    {
+        id: 2,
+        name: "리뷰 삭제",
+        description:
+            "마따끄 리뷰를 삭제했으면 퍼니시먼트를 받아야겠지. 리뷰에 달린 좋아요 갯수만큼의 포인트가 차감됩니다.",
+        score: 0,
+        imageUrl: "icons/policy-review.svg",
+    },
+    {
+        id: 3,
+        name: "리뷰 좋아요 획득",
+        description:
+            "당신은 따봉겜추의 축복을 받으셨습니다! 5포인트가 적립됩니다.",
+        score: 5,
+        imageUrl: "icons/policy-likes.svg",
+    },
+    {
+        id: 4,
+        name: "투기장 참여",
+        description: "영웅 호걸들의 시간! 투기장 참가비 100포인트 지불합니다",
+        score: -100,
+        imageUrl: "icons/arena.svg",
+    },
+    {
+        id: 5,
+        name: "투기장 승리",
+        description:
+            "겜안분 척결 다섯 글자의 환호성! 투기장에서 승리하셨습니다!! 190포인트가 적립됩니다.",
+        score: 190,
+        imageUrl: "icons/arena.svg",
+    },
+    {
+        id: 6,
+        name: "투기장 무승부",
+        description: "무승부로 하지 않을래....? 참가비 100포인트를 회수합니다.",
+        score: 100,
+        imageUrl: "icons/arena.svg",
+    },
+    {
+        id: 7,
+        name: "투기장 미성립",
+        description:
+            "놀랍게도 그 누구도 관심을 주지 않았다. 참가비 100포인트를 회수합니다.",
+        score: 100,
+        imageUrl: "icons/arena.svg",
+    },
+    {
+        id: 8,
+        name: "리뷰 좋아요 삭제",
+        description: "줬다 뺐는건 좀 아닌데. 5포인트가 지불됩니다.",
+        score: -5,
+        imageUrl: "icons/policy-likes.svg",
+    },
 ];
 
 const NOTIFICATION_TYPES = [
     { id: 1, name: "티어 승급", imageUrl: "/icons/Promote.ico" },
     { id: 2, name: "티어 강등", imageUrl: "/icons/Relegation.ico" },
-    { id: 3, name: "투기장 도전자 참여 완료", imageUrl: "/icons/ArenaMatching.ico" },
+    {
+        id: 3,
+        name: "투기장 도전자 참여 완료",
+        imageUrl: "/icons/ArenaMatching.ico",
+    },
     { id: 4, name: "투기장 토론 시작", imageUrl: "/icons/AranaStart.ico" },
     { id: 5, name: "투기장 투표 완료", imageUrl: "/icons/ArenaFinish.ico" },
 ];
@@ -163,21 +222,46 @@ async function main() {
     // --- Sample Data (from JSON) ---
     console.log("\n=== Seeding sample data from JSON ===");
 
-    const members = fixDates(loadJson<Prisma.MemberCreateManyInput>("members.json"));
+    const members = fixDates(
+        loadJson<Prisma.MemberCreateManyInput>("members.json")
+    );
     const games = fixDates(loadJson<Prisma.GameCreateManyInput>("games.json"));
-    const gameGenresRaw = loadJson<{ game_id: number; genre_id: number }>("game_genres.json");
-    const gamePlatformsRaw = loadJson<{ game_id: number; platform_id: number }>("game_platforms.json");
-    const gameThemesRaw = loadJson<{ game_id: number; theme_id: number }>("game_themes.json");
-    const reviews = fixDates(loadJson<Prisma.ReviewCreateManyInput>("reviews.json"));
-    const reviewLikes = loadJson<Prisma.ReviewLikeCreateManyInput>("review_likes.json");
-    const wishlists = loadJson<Prisma.WishlistCreateManyInput>("wishlists.json");
-    const arenas = fixDates(loadJson<Prisma.ArenaCreateManyInput>("arenas.json"));
-    const chattings = fixDates(loadJson<Prisma.ChattingCreateManyInput>("chattings.json"));
+    const gameGenresRaw = loadJson<{ game_id: number; genre_id: number }>(
+        "game_genres.json"
+    );
+    const gamePlatformsRaw = loadJson<{ game_id: number; platform_id: number }>(
+        "game_platforms.json"
+    );
+    const gameThemesRaw = loadJson<{ game_id: number; theme_id: number }>(
+        "game_themes.json"
+    );
+    const reviews = fixDates(
+        loadJson<Prisma.ReviewCreateManyInput>("reviews.json")
+    );
+    const reviewLikes =
+        loadJson<Prisma.ReviewLikeCreateManyInput>("review_likes.json");
+    const wishlists =
+        loadJson<Prisma.WishlistCreateManyInput>("wishlists.json");
+    const arenas = fixDates(
+        loadJson<Prisma.ArenaCreateManyInput>("arenas.json")
+    );
+    const chattings = fixDates(
+        loadJson<Prisma.ChattingCreateManyInput>("chattings.json")
+    );
     const votes = loadJson<Prisma.VoteCreateManyInput>("votes.json");
-    const preferredGenres = loadJson<Prisma.PreferredGenreCreateManyInput>("preferred_genres.json");
-    const preferredPlatforms = loadJson<Prisma.PreferredPlatformCreateManyInput>("preferred_platforms.json");
-    const preferredThemes = loadJson<Prisma.PreferredThemeCreateManyInput>("preferred_themes.json");
-    const scoreRecords = fixDates(loadJson<Prisma.ScoreRecordCreateManyInput>("score_records.json"));
+    const preferredGenres = loadJson<Prisma.PreferredGenreCreateManyInput>(
+        "preferred_genres.json"
+    );
+    const preferredPlatforms =
+        loadJson<Prisma.PreferredPlatformCreateManyInput>(
+            "preferred_platforms.json"
+        );
+    const preferredThemes = loadJson<Prisma.PreferredThemeCreateManyInput>(
+        "preferred_themes.json"
+    );
+    const scoreRecords = fixDates(
+        loadJson<Prisma.ScoreRecordCreateManyInput>("score_records.json")
+    );
 
     // Map snake_case JSON keys to camelCase Prisma fields for junction tables
     const gameGenres = gameGenresRaw.map((r) => ({

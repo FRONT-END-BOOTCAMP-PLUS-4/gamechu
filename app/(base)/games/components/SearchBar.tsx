@@ -6,7 +6,7 @@ import { Search, X } from "lucide-react";
 
 type SearchBarProps = {
     onSearch: (value: string) => void;
-}
+};
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
     const [localKeyword, setLocalKeyword] = useState("");

@@ -14,7 +14,7 @@ export type MemberReviewItemProps = {
     updatedAt: string | null;
     gameTitle: string;
     imageUrl: string | null;
-}
+};
 
 export default function MemberReviewItem(review: MemberReviewItemProps) {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -103,7 +103,7 @@ export default function MemberReviewItem(review: MemberReviewItemProps) {
                 )}
 
                 {/* 작성일자 */}
-                <p className="text-font-300 mt-1 text-xs">
+                <p className="mt-1 text-xs text-font-300">
                     작성일: {new Date(review.createdAt).toLocaleDateString()}
                 </p>
             </div>

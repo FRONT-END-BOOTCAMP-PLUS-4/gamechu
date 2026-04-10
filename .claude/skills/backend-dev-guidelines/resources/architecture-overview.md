@@ -58,21 +58,25 @@ Complete guide to the layered architecture pattern used in GameChu's Next.js bac
 ### Why This Architecture?
 
 **Testability:**
+
 - Each layer can be tested independently
 - Repositories can be swapped (interface-based)
 - Clear test boundaries
 
 **Maintainability:**
+
 - Changes isolated to specific layers
 - Business logic separate from HTTP concerns
 - Easy to locate bugs
 
 **Reusability:**
+
 - Usecases can be used by different route handlers
 - Repositories hide database implementation
 - Business logic not tied to HTTP
 
 **No DI Container:**
+
 - Repos instantiated inline per request in route handlers
 - Simple, explicit dependency wiring
 - No framework overhead
@@ -150,6 +154,7 @@ export const config = {
 **Purpose:** HTTP request/response handling only
 
 **Structure:**
+
 ```
 app/api/
   arenas/
@@ -163,6 +168,7 @@ app/api/
 ```
 
 **Responsibilities:**
+
 - Parse request parameters
 - Check authentication
 - Instantiate repos + usecases
@@ -174,6 +180,7 @@ app/api/
 **Purpose:** Clean Architecture per feature domain
 
 **Structure:**
+
 ```
 backend/
   arena/
@@ -204,6 +211,7 @@ backend/
 **Purpose:** Singletons and shared configuration
 
 **Contents:**
+
 - `prisma.ts` — Prisma client singleton
 - `redis.ts` — Redis client singleton
 - `cacheKey.ts` — Cache key generators
@@ -212,6 +220,7 @@ backend/
 ### Utilities (`utils/`)
 
 **Contents:**
+
 - `GetAuthUserId.server.ts` — Server-side auth helper
 - `GetAuthUserId.client.ts` — Client-side auth helper
 
@@ -250,6 +259,7 @@ Use `backend/arena/` as the template — it has all layers including cache.
 ### What Goes Where
 
 **Route Handlers (app/api/):**
+
 - ✅ Request parsing (params, body, query)
 - ✅ Authentication check
 - ✅ Repo + usecase instantiation
@@ -260,6 +270,7 @@ Use `backend/arena/` as the template — it has all layers including cache.
 - ❌ Complex validation
 
 **Usecases (backend/[feature]/application/):**
+
 - ✅ Business logic
 - ✅ Business rules enforcement
 - ✅ Orchestration (multiple repos)
@@ -268,6 +279,7 @@ Use `backend/arena/` as the template — it has all layers including cache.
 - ❌ Direct Prisma calls (use repositories)
 
 **Repositories (backend/[feature]/infra/):**
+
 - ✅ Prisma operations
 - ✅ Query construction
 - ✅ Caching (Redis)
@@ -277,6 +289,7 @@ Use `backend/arena/` as the template — it has all layers including cache.
 ### Example: Arena Creation
 
 **Route Handler:**
+
 ```typescript
 export async function POST(request: Request) {
     try {
@@ -286,14 +299,19 @@ export async function POST(request: Request) {
         const repo = new PrismaArenaRepository();
         const memberRepo = new PrismaMemberRepository();
         const usecase = new CreateArenaUsecase(repo, memberRepo);
-        const result = await usecase.execute(new CreateArenaDto(body, memberId));
+        const result = await usecase.execute(
+            new CreateArenaDto(body, memberId)
+        );
 
         return NextResponse.json(result, { status: 201 });
-    } catch (error: unknown) { /* unified error handling */ }
+    } catch (error: unknown) {
+        /* unified error handling */
+    }
 }
 ```
 
 **Usecase:**
+
 ```typescript
 async execute(dto: CreateArenaDto): Promise<Arena> {
     const member = await this.memberRepository.findById(dto.memberId);
@@ -305,6 +323,7 @@ async execute(dto: CreateArenaDto): Promise<Arena> {
 ```
 
 **Repository:**
+
 ```typescript
 async save(data: CreateArenaInput): Promise<Arena> {
     return this.prisma.arena.create({ data });
@@ -316,6 +335,7 @@ async save(data: CreateArenaInput): Promise<Arena> {
 ---
 
 **Related Files:**
+
 - [SKILL.md](SKILL.md) - Main guide
 - [routing-and-controllers.md](routing-and-controllers.md) - Route handler details
 - [services-and-repositories.md](services-and-repositories.md) - Usecase and repository patterns

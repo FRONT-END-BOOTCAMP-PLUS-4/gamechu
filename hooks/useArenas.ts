@@ -4,7 +4,6 @@ import { fetcher } from "@/lib/Fetcher";
 import { queryKeys, type ArenasQueryParams } from "@/lib/QueryKeys";
 import type { ArenaListDto } from "@/backend/arena/application/usecase/dto/ArenaListDto";
 
-
 export default function useFetchArenas(
     {
         currentPage = 1,
@@ -28,8 +27,15 @@ export default function useFetchArenas(
     }
 
     const { data, error, isLoading } = useQuery<ArenaListDto>({
-        queryKey: queryKeys.arenas({ currentPage, status, mine, pageSize, targetMemberId }),
-        queryFn: () => fetcher<ArenaListDto>(`/api/arenas?${params.toString()}`),
+        queryKey: queryKeys.arenas({
+            currentPage,
+            status,
+            mine,
+            pageSize,
+            targetMemberId,
+        }),
+        queryFn: () =>
+            fetcher<ArenaListDto>(`/api/arenas?${params.toString()}`),
         refetchInterval: options?.refetchInterval,
     });
 

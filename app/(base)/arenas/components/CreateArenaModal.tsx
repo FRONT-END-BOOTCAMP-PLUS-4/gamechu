@@ -74,7 +74,9 @@ export default function CreateArenaModal() {
 
             if (!arenaResult.ok) {
                 const errorData = await arenaResult.json();
-                throw new Error(errorData.message || "투기장 생성에 실패했습니다.");
+                throw new Error(
+                    errorData.message || "투기장 생성에 실패했습니다."
+                );
             }
 
             await fetch("/api/member/scores", {
@@ -87,7 +89,10 @@ export default function CreateArenaModal() {
             window.location.reload();
         },
         onError: (err) => {
-            const message = err instanceof Error ? err.message : "투기장 생성에 실패했습니다.";
+            const message =
+                err instanceof Error
+                    ? err.message
+                    : "투기장 생성에 실패했습니다.";
             setNoticeMessage(message);
             setNoticeType("error");
             setShakeKey((prev) => prev + 1);
@@ -101,10 +106,17 @@ export default function CreateArenaModal() {
     };
 
     return (
-        <ModalWrapper isOpen={isOpen} onClose={closeModal} labelId="create-arena-modal-title">
+        <ModalWrapper
+            isOpen={isOpen}
+            onClose={closeModal}
+            labelId="create-arena-modal-title"
+        >
             <div className="flex flex-col gap-4">
                 {/* ✅ 제목 */}
-                <h2 id="create-arena-modal-title" className="flex items-center gap-2 text-xl font-bold text-white">
+                <h2
+                    id="create-arena-modal-title"
+                    className="flex items-center gap-2 text-xl font-bold text-white"
+                >
                     <Image
                         src="/icons/arena2.svg"
                         alt="투기장 아이콘"

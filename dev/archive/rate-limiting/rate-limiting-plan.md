@@ -278,14 +278,14 @@ export async function GET(req: NextRequest) {
 
 ### Risks
 
-| Risk                                            | Severity | Mitigation                                                                              |
-| ----------------------------------------------- | -------- | --------------------------------------------------------------------------------------- |
-| Nginx `x-forwarded-for` 미설정                  | High     | 현재 Nginx conf에 `proxy_set_header X-Forwarded-For` 없음 — 프로덕션 배포 전 추가 필요 |
-| Redis 다운 시 rate limit 우회                    | Medium   | Graceful degradation — 에러 시 요청 허용 (availability 우선)                            |
-| IP 스푸핑                                        | Low      | Nginx가 `X-Forwarded-For`를 덮어쓰도록 설정하면 해결                                    |
-| Shared IP (NAT) false positive                   | Low      | 10회/분은 일반 사용에 충분한 여유                                                       |
-| NextAuth POST는 login 외 signout 등도 포함       | Low      | 모든 POST action에 동일 limit 적용 — signout은 고빈도가 아니므로 무해. 필요 시 `nextauth[0]`로 분기 가능 |
-| 프론트엔드 429 응답 미처리                         | Medium   | NextAuth `signIn()`이 비표준 429를 받을 때 동작 확인 필요. 회원가입/이메일 체크 폼도 429 에러 메시지 표시 검증 |
+| Risk                                       | Severity | Mitigation                                                                                                     |
+| ------------------------------------------ | -------- | -------------------------------------------------------------------------------------------------------------- |
+| Nginx `x-forwarded-for` 미설정             | High     | 현재 Nginx conf에 `proxy_set_header X-Forwarded-For` 없음 — 프로덕션 배포 전 추가 필요                         |
+| Redis 다운 시 rate limit 우회              | Medium   | Graceful degradation — 에러 시 요청 허용 (availability 우선)                                                   |
+| IP 스푸핑                                  | Low      | Nginx가 `X-Forwarded-For`를 덮어쓰도록 설정하면 해결                                                           |
+| Shared IP (NAT) false positive             | Low      | 10회/분은 일반 사용에 충분한 여유                                                                              |
+| NextAuth POST는 login 외 signout 등도 포함 | Low      | 모든 POST action에 동일 limit 적용 — signout은 고빈도가 아니므로 무해. 필요 시 `nextauth[0]`로 분기 가능       |
+| 프론트엔드 429 응답 미처리                 | Medium   | NextAuth `signIn()`이 비표준 429를 받을 때 동작 확인 필요. 회원가입/이메일 체크 폼도 429 에러 메시지 표시 검증 |
 
 ### Nginx 설정 추가 필요 (프로덕션 배포 전)
 

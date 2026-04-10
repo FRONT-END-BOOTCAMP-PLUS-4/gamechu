@@ -6,9 +6,11 @@ description: Test authenticated routes in GameChu using NextAuth.js session-base
 # GameChu Route Tester Skill
 
 ## Purpose
+
 This skill provides patterns for testing API routes in GameChu's Next.js 15 App Router backend with NextAuth.js session-based authentication.
 
 ## When to Use This Skill
+
 - Testing new API endpoints
 - Validating route functionality after changes
 - Debugging authentication issues
@@ -18,6 +20,7 @@ This skill provides patterns for testing API routes in GameChu's Next.js 15 App 
 ## GameChu Authentication Overview
 
 GameChu uses:
+
 - **NextAuth.js v4** with Credentials provider
 - **JWT session strategy** (session stored in cookie, not DB)
 - **Session cookie name**: `next-auth.session-token` (dev) / `__Secure-next-auth.session-token` (prod)
@@ -101,6 +104,7 @@ app/api/
 **Full URL** = `http://localhost:<PORT>/api/<feature>[/<id>]`
 
 Example:
+
 - List arenas: `GET http://localhost:3000/api/arenas?currentPage=1`
 - Get arena: `GET http://localhost:3000/api/arenas/42`
 - Create arena: `POST http://localhost:3000/api/arenas`
@@ -177,11 +181,13 @@ SELECT * FROM "Arena" WHERE id = 42;
 ### 401 Unauthorized
 
 **Possible causes**:
+
 1. Session cookie expired or missing
 2. `getAuthUserId()` returning null
 3. NextAuth not properly configured
 
 **Solutions**:
+
 1. Re-login to get fresh session cookie
 2. Check `lib/auth/authOptions.ts` configuration
 3. Verify `NEXTAUTH_SECRET` and `NEXTAUTH_URL` in `.env`
@@ -189,10 +195,12 @@ SELECT * FROM "Arena" WHERE id = 42;
 ### 403 Forbidden
 
 **Possible causes**:
+
 1. User lacks required permissions/score
 2. Route checks specific conditions (e.g., arena creator only)
 
 **Solutions**:
+
 1. Check the route handler for permission checks
 2. Check the usecase for business rule validations
 3. Test with a user that meets requirements
@@ -200,12 +208,14 @@ SELECT * FROM "Arena" WHERE id = 42;
 ### 404 Not Found
 
 **Possible causes**:
+
 1. Incorrect URL path
 2. Missing `route.ts` file
 3. Missing HTTP method export
 4. Dynamic route param mismatch
 
 **Solutions**:
+
 1. Verify file exists: `ls app/api/<feature>/route.ts`
 2. Check exported function name matches HTTP method
 3. Check Next.js App Router conventions
@@ -213,12 +223,14 @@ SELECT * FROM "Arena" WHERE id = 42;
 ### 500 Internal Server Error
 
 **Possible causes**:
+
 1. Database connection issue
 2. Prisma query error
 3. Missing required fields in body
 4. Usecase throwing unhandled error
 
 **Solutions**:
+
 1. Check dev server terminal for error stack trace
 2. Verify request body matches expected DTO structure
 3. Check Prisma schema matches database

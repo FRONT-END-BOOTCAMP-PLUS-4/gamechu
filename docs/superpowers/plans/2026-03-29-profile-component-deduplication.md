@@ -12,40 +12,41 @@
 
 ## File Map
 
-| Action | File |
-|--------|------|
-| Modify | `app/(base)/profile/components/ProfileSidebar.tsx` |
-| Modify | `app/(base)/profile/components/ProfileSummaryCard.tsx` |
-| Modify | `app/(base)/profile/components/ProfileTierCard.tsx` |
-| Create | `app/(base)/profile/components/RecruitingArenaList.tsx` |
-| Create | `app/(base)/profile/components/WaitingArenaList.tsx` |
-| Create | `app/(base)/profile/components/DebatingArenaList.tsx` |
-| Create | `app/(base)/profile/components/VotingArenaList.tsx` |
-| Create | `app/(base)/profile/components/CompletedArenaList.tsx` |
-| Modify | `app/(base)/profile/components/tabs/ProfileArenaTab.tsx` |
+| Action | File                                                               |
+| ------ | ------------------------------------------------------------------ |
+| Modify | `app/(base)/profile/components/ProfileSidebar.tsx`                 |
+| Modify | `app/(base)/profile/components/ProfileSummaryCard.tsx`             |
+| Modify | `app/(base)/profile/components/ProfileTierCard.tsx`                |
+| Create | `app/(base)/profile/components/RecruitingArenaList.tsx`            |
+| Create | `app/(base)/profile/components/WaitingArenaList.tsx`               |
+| Create | `app/(base)/profile/components/DebatingArenaList.tsx`              |
+| Create | `app/(base)/profile/components/VotingArenaList.tsx`                |
+| Create | `app/(base)/profile/components/CompletedArenaList.tsx`             |
+| Modify | `app/(base)/profile/components/tabs/ProfileArenaTab.tsx`           |
 | Modify | `app/(base)/profile/[nickname]/components/tab/ProfileArenaTab.tsx` |
-| Modify | `app/(base)/profile/page.tsx` |
-| Modify | `app/(base)/profile/[nickname]/page.tsx` |
-| Delete | `app/(base)/profile/components/MyRecrutingArenaList.tsx` |
-| Delete | `app/(base)/profile/components/MyWaitingArenaList.tsx` |
-| Delete | `app/(base)/profile/components/MyDebatingArenaList.tsx` |
-| Delete | `app/(base)/profile/components/MyVotingArenaList.tsx` |
-| Delete | `app/(base)/profile/components/MyCompletedArenaList.tsx` |
-| Delete | `app/(base)/profile/[nickname]/components/ProfileSidebar.tsx` |
-| Delete | `app/(base)/profile/[nickname]/components/ProfileSummaryCard.tsx` |
-| Delete | `app/(base)/profile/[nickname]/components/ProfileTierCard.tsx` |
-| Delete | `app/(base)/profile/[nickname]/components/RecrutingArenaList.tsx` |
-| Delete | `app/(base)/profile/[nickname]/components/WaitingArenaList.tsx` |
-| Delete | `app/(base)/profile/[nickname]/components/DebatingArenaList.tsx` |
-| Delete | `app/(base)/profile/[nickname]/components/VotingArenaList.tsx` |
-| Delete | `app/(base)/profile/[nickname]/components/CompletedArenaList.tsx` |
-| Keep   | `app/(base)/profile/[nickname]/components/tab/` (not duplicated) |
+| Modify | `app/(base)/profile/page.tsx`                                      |
+| Modify | `app/(base)/profile/[nickname]/page.tsx`                           |
+| Delete | `app/(base)/profile/components/MyRecrutingArenaList.tsx`           |
+| Delete | `app/(base)/profile/components/MyWaitingArenaList.tsx`             |
+| Delete | `app/(base)/profile/components/MyDebatingArenaList.tsx`            |
+| Delete | `app/(base)/profile/components/MyVotingArenaList.tsx`              |
+| Delete | `app/(base)/profile/components/MyCompletedArenaList.tsx`           |
+| Delete | `app/(base)/profile/[nickname]/components/ProfileSidebar.tsx`      |
+| Delete | `app/(base)/profile/[nickname]/components/ProfileSummaryCard.tsx`  |
+| Delete | `app/(base)/profile/[nickname]/components/ProfileTierCard.tsx`     |
+| Delete | `app/(base)/profile/[nickname]/components/RecrutingArenaList.tsx`  |
+| Delete | `app/(base)/profile/[nickname]/components/WaitingArenaList.tsx`    |
+| Delete | `app/(base)/profile/[nickname]/components/DebatingArenaList.tsx`   |
+| Delete | `app/(base)/profile/[nickname]/components/VotingArenaList.tsx`     |
+| Delete | `app/(base)/profile/[nickname]/components/CompletedArenaList.tsx`  |
+| Keep   | `app/(base)/profile/[nickname]/components/tab/` (not duplicated)   |
 
 ---
 
 ## Task 1: Merge ProfileSidebar
 
 **Files:**
+
 - Modify: `app/(base)/profile/components/ProfileSidebar.tsx`
 - Modify: `app/(base)/profile/page.tsx` (add `isOwnProfile={true}`)
 - Modify: `app/(base)/profile/[nickname]/page.tsx` (update import + add `isOwnProfile={false}`)
@@ -122,32 +123,41 @@ export default function ProfileSidebar({
 - [ ] **Step 2: Update `app/(base)/profile/page.tsx` — add `isOwnProfile={true}` to ProfileSidebar**
 
 Find this line in `app/(base)/profile/page.tsx`:
+
 ```tsx
-                    <ProfileSidebar onSelect={setActiveTab} />
+<ProfileSidebar onSelect={setActiveTab} />
 ```
+
 Replace with:
+
 ```tsx
-                    <ProfileSidebar isOwnProfile={true} onSelect={setActiveTab} />
+<ProfileSidebar isOwnProfile={true} onSelect={setActiveTab} />
 ```
 
 - [ ] **Step 3: Update `app/(base)/profile/[nickname]/page.tsx` — update import and add `isOwnProfile={false}`**
 
 Change the import:
+
 ```tsx
 import ProfileSidebar from "./components/ProfileSidebar";
 ```
+
 To:
+
 ```tsx
 import ProfileSidebar from "../components/ProfileSidebar";
 ```
 
 Find this line in the JSX:
+
 ```tsx
-                    <ProfileSidebar onSelect={setActiveTab} />
+<ProfileSidebar onSelect={setActiveTab} />
 ```
+
 Replace with:
+
 ```tsx
-                    <ProfileSidebar isOwnProfile={false} onSelect={setActiveTab} />
+<ProfileSidebar isOwnProfile={false} onSelect={setActiveTab} />
 ```
 
 - [ ] **Step 4: Delete the now-redundant file**
@@ -161,6 +171,7 @@ rm "app/(base)/profile/[nickname]/components/ProfileSidebar.tsx"
 ```bash
 npm run build
 ```
+
 Expected: Build succeeds with no TypeScript errors.
 
 - [ ] **Step 6: Commit**
@@ -185,6 +196,7 @@ EOF
 ## Task 2: Merge ProfileSummaryCard
 
 **Files:**
+
 - Modify: `app/(base)/profile/components/ProfileSummaryCard.tsx`
 - Modify: `app/(base)/profile/page.tsx` (add `isOwnProfile={true}`)
 - Modify: `app/(base)/profile/[nickname]/page.tsx` (update import + add `isOwnProfile={false}`)
@@ -277,58 +289,67 @@ export default function ProfileSummaryCard(props: ProfileSummaryCardProps) {
 - [ ] **Step 2: Update `app/(base)/profile/page.tsx` — add `isOwnProfile={true}` to ProfileSummaryCard**
 
 Find:
+
 ```tsx
-                <ProfileSummaryCard
-                    reviewCount={reviewCount}
-                    wishlistCount={wishlistPageData.totalCount}
-                    nickname={nickname}
-                    imageUrl={imageUrl}
-                    score={score}
-                    createdAt={createdAt}
-                />
+<ProfileSummaryCard
+    reviewCount={reviewCount}
+    wishlistCount={wishlistPageData.totalCount}
+    nickname={nickname}
+    imageUrl={imageUrl}
+    score={score}
+    createdAt={createdAt}
+/>
 ```
+
 Replace with:
+
 ```tsx
-                <ProfileSummaryCard
-                    isOwnProfile={true}
-                    reviewCount={reviewCount}
-                    wishlistCount={wishlistPageData.totalCount}
-                    nickname={nickname}
-                    imageUrl={imageUrl}
-                    score={score}
-                    createdAt={createdAt}
-                />
+<ProfileSummaryCard
+    isOwnProfile={true}
+    reviewCount={reviewCount}
+    wishlistCount={wishlistPageData.totalCount}
+    nickname={nickname}
+    imageUrl={imageUrl}
+    score={score}
+    createdAt={createdAt}
+/>
 ```
 
 - [ ] **Step 3: Update `app/(base)/profile/[nickname]/page.tsx` — update import and add `isOwnProfile={false}`**
 
 Change the import:
+
 ```tsx
 import ProfileSummaryCard from "./components/ProfileSummaryCard";
 ```
+
 To:
+
 ```tsx
 import ProfileSummaryCard from "../components/ProfileSummaryCard";
 ```
 
 Find:
+
 ```tsx
-                <ProfileSummaryCard
-                    reviewCount={reviewCount}
-                    nickname={nickname}
-                    imageUrl={imageUrl}
-                    score={score}
-                />
+<ProfileSummaryCard
+    reviewCount={reviewCount}
+    nickname={nickname}
+    imageUrl={imageUrl}
+    score={score}
+/>
 ```
+
 Replace with:
+
 ```tsx
-                <ProfileSummaryCard
-                    isOwnProfile={false}
-                    reviewCount={reviewCount}
-                    nickname={nickname}
-                    imageUrl={imageUrl}
-                    score={score}
-                />
+<ProfileSummaryCard
+    isOwnProfile={false}
+    reviewCount={reviewCount}
+    nickname={nickname}
+    imageUrl={imageUrl}
+    score={score}
+/>
 ```
 
 - [ ] **Step 4: Delete the now-redundant file**
@@ -342,6 +363,7 @@ rm "app/(base)/profile/[nickname]/components/ProfileSummaryCard.tsx"
 ```bash
 npm run build
 ```
+
 Expected: Build succeeds with no TypeScript errors.
 
 - [ ] **Step 6: Commit**
@@ -366,6 +388,7 @@ EOF
 ## Task 3: Merge ProfileTierCard
 
 **Files:**
+
 - Modify: `app/(base)/profile/components/ProfileTierCard.tsx`
 - Modify: `app/(base)/profile/page.tsx` (add `isOwnProfile={true}`)
 - Modify: `app/(base)/profile/[nickname]/page.tsx` (update import + add `isOwnProfile={false}`)
@@ -595,32 +618,41 @@ export default function ProfileTierCard({
 - [ ] **Step 2: Update `app/(base)/profile/page.tsx` — add `isOwnProfile={true}` to ProfileTierCard**
 
 Find:
+
 ```tsx
-                <ProfileTierCard score={score} />
+<ProfileTierCard score={score} />
 ```
+
 Replace with:
+
 ```tsx
-                <ProfileTierCard isOwnProfile={true} score={score} />
+<ProfileTierCard isOwnProfile={true} score={score} />
 ```
 
 - [ ] **Step 3: Update `app/(base)/profile/[nickname]/page.tsx` — update import and add `isOwnProfile={false}`**
 
 Change the import:
+
 ```tsx
 import ProfileTierCard from "./components/ProfileTierCard";
 ```
+
 To:
+
 ```tsx
 import ProfileTierCard from "../components/ProfileTierCard";
 ```
 
 Find:
+
 ```tsx
-                <ProfileTierCard score={score} />
+<ProfileTierCard score={score} />
 ```
+
 Replace with:
+
 ```tsx
-                <ProfileTierCard isOwnProfile={false} score={score} />
+<ProfileTierCard isOwnProfile={false} score={score} />
 ```
 
 - [ ] **Step 4: Delete the now-redundant file**
@@ -634,6 +666,7 @@ rm "app/(base)/profile/[nickname]/components/ProfileTierCard.tsx"
 ```bash
 npm run build
 ```
+
 Expected: Build succeeds with no TypeScript errors.
 
 - [ ] **Step 6: Commit**
@@ -658,6 +691,7 @@ EOF
 ## Task 4: Merge 5 ArenaList components
 
 **Files:**
+
 - Create: `app/(base)/profile/components/RecruitingArenaList.tsx`
 - Create: `app/(base)/profile/components/WaitingArenaList.tsx`
 - Create: `app/(base)/profile/components/DebatingArenaList.tsx`
@@ -1235,7 +1269,7 @@ export default function ProfileArenaTab({ memberId }: { memberId: string }) {
 }
 ```
 
-- [ ] **Step 8: Delete old My* and [nickname] ArenaList files**
+- [ ] **Step 8: Delete old My\* and [nickname] ArenaList files**
 
 ```bash
 rm "app/(base)/profile/components/MyRecrutingArenaList.tsx" \
@@ -1255,6 +1289,7 @@ rm "app/(base)/profile/components/MyRecrutingArenaList.tsx" \
 ```bash
 npm run build
 ```
+
 Expected: Build succeeds with no TypeScript errors.
 
 - [ ] **Step 10: Commit**
@@ -1303,6 +1338,7 @@ npm run dev
 Open `http://localhost:3000/profile` (must be logged in).
 
 Check:
+
 - ProfileSidebar shows 5 tabs: 리뷰, 위시리스트, 포인트 히스토리, 투기장, 계정
 - ProfileSummaryCard shows 가입일, 위시리스트 count
 - ProfileTierCard shows "나의 티어" heading with `?` help button
@@ -1313,6 +1349,7 @@ Check:
 Open `http://localhost:3000/profile/[any-nickname]`.
 
 Check:
+
 - ProfileSidebar shows 2 tabs: 리뷰, 투기장
 - ProfileSummaryCard shows no 가입일, no 위시리스트
 - ProfileTierCard shows "현재 티어" heading with no `?` button

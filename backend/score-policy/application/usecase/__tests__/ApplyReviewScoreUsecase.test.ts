@@ -6,7 +6,9 @@ import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 describe("ApplyReviewScoreUsecase", () => {
     function setup() {
         const scorePolicy = new ScorePolicy();
-        const memberRepo = { incrementScore: vi.fn().mockResolvedValue(undefined) };
+        const memberRepo = {
+            incrementScore: vi.fn().mockResolvedValue(undefined),
+        };
         const scoreRecordRepo = createMockScoreRecordRepository();
         vi.mocked(scoreRecordRepo.createRecord).mockResolvedValue(undefined);
         const usecase = new ApplyReviewScoreUsecase(

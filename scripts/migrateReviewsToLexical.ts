@@ -54,7 +54,9 @@ async function migrate() {
 
         const editor = createHeadlessEditor({
             nodes,
-            onError: (e) => { throw e; },
+            onError: (e) => {
+                throw e;
+            },
         });
 
         try {

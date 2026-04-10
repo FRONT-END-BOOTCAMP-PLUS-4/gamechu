@@ -17,7 +17,10 @@ type RequestParams = {
 };
 
 export async function POST(req: NextRequest, { params }: RequestParams) {
-    const log = logger.child({ route: "/api/member/arenas/[id]/join", method: "POST" });
+    const log = logger.child({
+        route: "/api/member/arenas/[id]/join",
+        method: "POST",
+    });
     try {
         const memberId = await getAuthUserId();
         if (!memberId) return errorResponse("로그인이 필요합니다.", 401);
@@ -32,7 +35,10 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
         if (arena.challengerId)
             return errorResponse("이미 다른 유저가 참가 중입니다.", 409);
         if (arena.creatorId === memberId)
-            return errorResponse("본인이 만든 투기장에는 참가할 수 없습니다.", 403);
+            return errorResponse(
+                "본인이 만든 투기장에는 참가할 수 없습니다.",
+                403
+            );
 
         const memberRepo = new PrismaMemberRepository();
         const member = await memberRepo.findById(memberId);
@@ -68,7 +74,8 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
         return NextResponse.json({ message: "참가 완료" }, { status: 200 });
     } catch (error: unknown) {
         log.error({ err: error }, "투기장 참가 실패");
-        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        const message =
+            error instanceof Error ? error.message : "알 수 없는 오류 발생";
         return errorResponse(message, 500);
     }
 }

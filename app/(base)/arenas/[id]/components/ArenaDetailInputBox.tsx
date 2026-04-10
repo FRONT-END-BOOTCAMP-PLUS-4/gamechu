@@ -14,7 +14,7 @@ type ArenaInputBoxProps = {
     remainingSends: number; // 남은 메시지 전송 횟수
     totalSends: number; // 전체 허용 메시지 전송 횟수
     sendError: string | null; // 메시지 전송 관련 에러 메시지
-}
+};
 
 export default function ArenaDetailInputBox({
     content,

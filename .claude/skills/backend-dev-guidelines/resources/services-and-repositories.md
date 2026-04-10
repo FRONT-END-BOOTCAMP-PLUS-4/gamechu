@@ -27,6 +27,7 @@ Repository executes: "Here's the data you requested"
 ```
 
 **Services are responsible for:**
+
 - ✅ Business rules enforcement
 - ✅ Orchestrating multiple repositories
 - ✅ Transaction management
@@ -35,6 +36,7 @@ Repository executes: "Here's the data you requested"
 - ✅ Business validations
 
 **Services should NOT:**
+
 - ❌ Know about HTTP (Request/Response)
 - ❌ Direct Prisma access (use repositories)
 - ❌ Handle route-specific logic
@@ -47,6 +49,7 @@ Repository executes: "Here's the data you requested"
 ### Why Dependency Injection?
 
 **Benefits:**
+
 - Easy to test (inject mocks)
 - Clear dependencies
 - Flexible configuration
@@ -69,8 +72,12 @@ export class NotificationService {
     private prisma: PrismaClient;
     private batchingService: BatchingService;
     private emailComposer: EmailComposer;
-    private preferencesCache: Map<string, { preferences: UserPreference; timestamp: number }> = new Map();
-    private CACHE_TTL = (notificationConfig.preferenceCacheTTLMinutes || 5) * 60 * 1000;
+    private preferencesCache: Map<
+        string,
+        { preferences: UserPreference; timestamp: number }
+    > = new Map();
+    private CACHE_TTL =
+        (notificationConfig.preferenceCacheTTLMinutes || 5) * 60 * 1000;
 
     // Dependencies injected via constructor
     constructor(dependencies: NotificationServiceDependencies) {
@@ -83,7 +90,16 @@ export class NotificationService {
      * Create a notification and route it appropriately
      */
     async createNotification(params: CreateNotificationParams) {
-        const { recipientID, type, title, message, link, context = {}, channel = 'both', priority = NotificationPriority.NORMAL } = params;
+        const {
+            recipientID,
+            type,
+            title,
+            message,
+            link,
+            context = {},
+            channel = "both",
+            priority = NotificationPriority.NORMAL,
+        } = params;
 
         try {
             // Get template and render content
@@ -92,10 +108,10 @@ export class NotificationService {
 
             // Create in-app notification record
             const notificationId = await createNotificationRecord({
-                instanceId: parseInt(context.instanceId || '0', 10),
+                instanceId: parseInt(context.instanceId || "0", 10),
                 template: type,
                 recipientUserId: recipientID,
-                channel: channel === 'email' ? 'email' : 'inApp',
+                channel: channel === "email" ? "email" : "inApp",
                 contextData: context,
                 title: finalTitle,
                 message: finalMessage,
@@ -103,7 +119,7 @@ export class NotificationService {
             });
 
             // Route notification based on channel
-            if (channel === 'email' || channel === 'both') {
+            if (channel === "email" || channel === "both") {
                 await this.routeNotification({
                     notificationId,
                     userId: recipientID,
@@ -120,7 +136,7 @@ export class NotificationService {
         } catch (error) {
             ErrorLogger.log(error, {
                 context: {
-                    '[NotificationService] createNotification': {
+                    "[NotificationService] createNotification": {
                         type: params.type,
                         recipientID: params.recipientID,
                     },
@@ -133,7 +149,16 @@ export class NotificationService {
     /**
      * Route notification based on user preferences
      */
-    private async routeNotification(params: { notificationId: number; userId: string; type: string; priority: NotificationPriority; title: string; message: string; link?: string; context?: Record<string, any> }) {
+    private async routeNotification(params: {
+        notificationId: number;
+        userId: string;
+        type: string;
+        priority: NotificationPriority;
+        title: string;
+        message: string;
+        link?: string;
+        context?: Record<string, any>;
+    }) {
         // Get user preferences with caching
         const preferences = await this.getUserPreferences(params.userId);
 
@@ -161,7 +186,11 @@ export class NotificationService {
     /**
      * Determine if email should be batched
      */
-    shouldBatchEmail(preferences: UserPreference, notificationType: string, priority: NotificationPriority): boolean {
+    shouldBatchEmail(
+        preferences: UserPreference,
+        notificationType: string,
+        priority: NotificationPriority
+    ): boolean {
         // HIGH priority always immediate
         if (priority === NotificationPriority.HIGH) {
             return false;
@@ -211,13 +240,14 @@ const notificationService = new NotificationService({
 
 // Use in controller
 const notification = await notificationService.createNotification({
-    recipientID: 'user-123',
-    type: 'AFRLWorkflowNotification',
-    context: { workflowName: 'AFRL Monthly Report' },
+    recipientID: "user-123",
+    type: "AFRLWorkflowNotification",
+    context: { workflowName: "AFRL Monthly Report" },
 });
 ```
 
 **Key Takeaways:**
+
 - Dependencies passed via constructor
 - Clear interface defines required dependencies
 - Easy to test (inject mocks)
@@ -231,6 +261,7 @@ const notification = await notificationService.createNotification({
 ### When to Use Singletons
 
 **Use for:**
+
 - Services with expensive initialization
 - Services with shared state (caching)
 - Services accessed from many places
@@ -242,12 +273,15 @@ const notification = await notificationService.createNotification({
 **File:** `/blog-api/src/services/permissionService.ts`
 
 ```typescript
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 class PermissionService {
     private static instance: PermissionService;
     private prisma: PrismaClient;
-    private permissionCache: Map<string, { canAccess: boolean; timestamp: number }> = new Map();
+    private permissionCache: Map<
+        string,
+        { canAccess: boolean; timestamp: number }
+    > = new Map();
     private CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
     // Private constructor prevents direct instantiation
@@ -266,7 +300,10 @@ class PermissionService {
     /**
      * Check if user can complete a workflow step
      */
-    async canCompleteStep(userId: string, stepInstanceId: number): Promise<boolean> {
+    async canCompleteStep(
+        userId: string,
+        stepInstanceId: number
+    ): Promise<boolean> {
         const cacheKey = `${userId}:${stepInstanceId}`;
 
         // Check cache
@@ -293,8 +330,8 @@ class PermissionService {
             }
 
             // Check if user has permission
-            const canEdit = post.authorId === userId ||
-                await this.isUserAdmin(userId);
+            const canEdit =
+                post.authorId === userId || (await this.isUserAdmin(userId));
 
             // Cache result
             this.permissionCache.set(cacheKey, {
@@ -304,7 +341,10 @@ class PermissionService {
 
             return isAssigned;
         } catch (error) {
-            console.error('[PermissionService] Error checking step permission:', error);
+            console.error(
+                "[PermissionService] Error checking step permission:",
+                error
+            );
             return false;
         }
     }
@@ -335,13 +375,15 @@ export const permissionService = PermissionService.getInstance();
 **Usage:**
 
 ```typescript
-import { permissionService } from '../services/permissionService';
+import { permissionService } from "../services/permissionService";
 
 // Use anywhere in the codebase
 const canComplete = await permissionService.canCompleteStep(userId, stepId);
 
 if (!canComplete) {
-    throw new ForbiddenError('You do not have permission to complete this step');
+    throw new ForbiddenError(
+        "You do not have permission to complete this step"
+    );
 }
 ```
 
@@ -359,6 +401,7 @@ Repository: "Here's the Prisma query that does that"
 ```
 
 **Repositories are responsible for:**
+
 - ✅ All Prisma operations
 - ✅ Query construction
 - ✅ Query optimization (select, include)
@@ -366,6 +409,7 @@ Repository: "Here's the Prisma query that does that"
 - ✅ Caching database results
 
 **Repositories should NOT:**
+
 - ❌ Contain business logic
 - ❌ Know about HTTP
 - ❌ Make decisions (that's service layer)
@@ -374,8 +418,8 @@ Repository: "Here's the Prisma query that does that"
 
 ```typescript
 // repositories/UserRepository.ts
-import { PrismaService } from '@project-lifecycle-portal/database';
-import type { User, Prisma } from '@project-lifecycle-portal/database';
+import { PrismaService } from "@project-lifecycle-portal/database";
+import type { User, Prisma } from "@project-lifecycle-portal/database";
 
 export class UserRepository {
     /**
@@ -396,7 +440,7 @@ export class UserRepository {
                 },
             });
         } catch (error) {
-            console.error('[UserRepository] Error finding user by ID:', error);
+            console.error("[UserRepository] Error finding user by ID:", error);
             throw new Error(`Failed to find user: ${userId}`);
         }
     }
@@ -404,11 +448,13 @@ export class UserRepository {
     /**
      * Find all active users
      */
-    async findActive(options?: { orderBy?: Prisma.UserOrderByWithRelationInput }): Promise<User[]> {
+    async findActive(options?: {
+        orderBy?: Prisma.UserOrderByWithRelationInput;
+    }): Promise<User[]> {
         try {
             return await PrismaService.main.user.findMany({
                 where: { isActive: true },
-                orderBy: options?.orderBy || { name: 'asc' },
+                orderBy: options?.orderBy || { name: "asc" },
                 select: {
                     userID: true,
                     email: true,
@@ -417,8 +463,11 @@ export class UserRepository {
                 },
             });
         } catch (error) {
-            console.error('[UserRepository] Error finding active users:', error);
-            throw new Error('Failed to find active users');
+            console.error(
+                "[UserRepository] Error finding active users:",
+                error
+            );
+            throw new Error("Failed to find active users");
         }
     }
 
@@ -431,7 +480,10 @@ export class UserRepository {
                 where: { email },
             });
         } catch (error) {
-            console.error('[UserRepository] Error finding user by email:', error);
+            console.error(
+                "[UserRepository] Error finding user by email:",
+                error
+            );
             throw new Error(`Failed to find user with email: ${email}`);
         }
     }
@@ -443,8 +495,8 @@ export class UserRepository {
         try {
             return await PrismaService.main.user.create({ data });
         } catch (error) {
-            console.error('[UserRepository] Error creating user:', error);
-            throw new Error('Failed to create user');
+            console.error("[UserRepository] Error creating user:", error);
+            throw new Error("Failed to create user");
         }
     }
 
@@ -458,7 +510,7 @@ export class UserRepository {
                 data,
             });
         } catch (error) {
-            console.error('[UserRepository] Error updating user:', error);
+            console.error("[UserRepository] Error updating user:", error);
             throw new Error(`Failed to update user: ${userId}`);
         }
     }
@@ -473,7 +525,7 @@ export class UserRepository {
                 data: { isActive: false },
             });
         } catch (error) {
-            console.error('[UserRepository] Error deleting user:', error);
+            console.error("[UserRepository] Error deleting user:", error);
             throw new Error(`Failed to delete user: ${userId}`);
         }
     }
@@ -488,8 +540,11 @@ export class UserRepository {
             });
             return count > 0;
         } catch (error) {
-            console.error('[UserRepository] Error checking email exists:', error);
-            throw new Error('Failed to check if email exists');
+            console.error(
+                "[UserRepository] Error checking email exists:",
+                error
+            );
+            throw new Error("Failed to check if email exists");
         }
     }
 }
@@ -502,25 +557,33 @@ export const userRepository = new UserRepository();
 
 ```typescript
 // services/userService.ts
-import { userRepository } from '../repositories/UserRepository';
-import { ConflictError, NotFoundError } from '../utils/errors';
+import { userRepository } from "../repositories/UserRepository";
+import { ConflictError, NotFoundError } from "../utils/errors";
 
 export class UserService {
     /**
      * Create new user with business rules
      */
-    async createUser(data: { email: string; name: string; roles: string[] }): Promise<User> {
+    async createUser(data: {
+        email: string;
+        name: string;
+        roles: string[];
+    }): Promise<User> {
         // Business rule: Check if email already exists
         const emailExists = await userRepository.emailExists(data.email);
         if (emailExists) {
-            throw new ConflictError('Email already exists');
+            throw new ConflictError("Email already exists");
         }
 
         // Business rule: Validate roles
-        const validRoles = ['admin', 'operations', 'user'];
-        const invalidRoles = data.roles.filter((role) => !validRoles.includes(role));
+        const validRoles = ["admin", "operations", "user"];
+        const invalidRoles = data.roles.filter(
+            (role) => !validRoles.includes(role)
+        );
         if (invalidRoles.length > 0) {
-            throw new ValidationError(`Invalid roles: ${invalidRoles.join(', ')}`);
+            throw new ValidationError(
+                `Invalid roles: ${invalidRoles.join(", ")}`
+            );
         }
 
         // Create user via repository
@@ -571,9 +634,9 @@ class EmailService {
 // ❌ BAD - Too many responsibilities
 class UserService {
     async createUser() {}
-    async sendWelcomeEmail() {}  // Should be EmailService
-    async logUserActivity() {}   // Should be AuditService
-    async processPayment() {}    // Should be PaymentService
+    async sendWelcomeEmail() {} // Should be EmailService
+    async logUserActivity() {} // Should be AuditService
+    async processPayment() {} // Should be PaymentService
 }
 ```
 
@@ -620,12 +683,12 @@ if (!user) {
 }
 
 if (emailExists) {
-    throw new ConflictError('Email already exists');
+    throw new ConflictError("Email already exists");
 }
 
 // ❌ BAD - Generic errors
 if (!user) {
-    throw new Error('Error');  // What error?
+    throw new Error("Error"); // What error?
 }
 ```
 
@@ -639,9 +702,9 @@ class WorkflowService {
     async startWorkflow() {}
     async completeStep() {}
     async assignRoles() {}
-    async sendNotifications() {}  // Should be NotificationService
-    async validatePermissions() {}  // Should be PermissionService
-    async logAuditTrail() {}  // Should be AuditService
+    async sendNotifications() {} // Should be NotificationService
+    async validatePermissions() {} // Should be PermissionService
+    async logAuditTrail() {} // Should be AuditService
     // ... 50 more methods
 }
 
@@ -722,14 +785,14 @@ class UserService {
 
 ```typescript
 // tests/userService.test.ts
-import { UserService } from '../services/userService';
-import { userRepository } from '../repositories/UserRepository';
-import { ConflictError } from '../utils/errors';
+import { UserService } from "../services/userService";
+import { userRepository } from "../repositories/UserRepository";
+import { ConflictError } from "../utils/errors";
 
 // Mock repository
-jest.mock('../repositories/UserRepository');
+jest.mock("../repositories/UserRepository");
 
-describe('UserService', () => {
+describe("UserService", () => {
     let userService: UserService;
 
     beforeEach(() => {
@@ -737,18 +800,18 @@ describe('UserService', () => {
         jest.clearAllMocks();
     });
 
-    describe('createUser', () => {
-        it('should create user when email does not exist', async () => {
+    describe("createUser", () => {
+        it("should create user when email does not exist", async () => {
             // Arrange
             const userData = {
-                email: 'test@example.com',
-                name: 'Test User',
-                roles: ['user'],
+                email: "test@example.com",
+                name: "Test User",
+                roles: ["user"],
             };
 
             (userRepository.emailExists as jest.Mock).mockResolvedValue(false);
             (userRepository.create as jest.Mock).mockResolvedValue({
-                userID: '123',
+                userID: "123",
                 ...userData,
             });
 
@@ -758,22 +821,26 @@ describe('UserService', () => {
             // Assert
             expect(user).toBeDefined();
             expect(user.email).toBe(userData.email);
-            expect(userRepository.emailExists).toHaveBeenCalledWith(userData.email);
+            expect(userRepository.emailExists).toHaveBeenCalledWith(
+                userData.email
+            );
             expect(userRepository.create).toHaveBeenCalled();
         });
 
-        it('should throw ConflictError when email exists', async () => {
+        it("should throw ConflictError when email exists", async () => {
             // Arrange
             const userData = {
-                email: 'existing@example.com',
-                name: 'Test User',
-                roles: ['user'],
+                email: "existing@example.com",
+                name: "Test User",
+                roles: ["user"],
             };
 
             (userRepository.emailExists as jest.Mock).mockResolvedValue(true);
 
             // Act & Assert
-            await expect(userService.createUser(userData)).rejects.toThrow(ConflictError);
+            await expect(userService.createUser(userData)).rejects.toThrow(
+                ConflictError
+            );
             expect(userRepository.create).not.toHaveBeenCalled();
         });
     });
@@ -783,6 +850,7 @@ describe('UserService', () => {
 ---
 
 **Related Files:**
+
 - [SKILL.md](SKILL.md) - Main guide
 - [routing-and-controllers.md](routing-and-controllers.md) - Controllers that use services
 - [database-patterns.md](database-patterns.md) - Prisma and repository patterns

@@ -15,7 +15,10 @@ type RequestParams = {
 export async function GET(req: Request, { params }: RequestParams) {
     const { id } = await params;
     const memberId: string | null = await getAuthUserId();
-    const log = logger.child({ route: "/api/arenas/[id]/chattings", method: "GET" });
+    const log = logger.child({
+        route: "/api/arenas/[id]/chattings",
+        method: "GET",
+    });
 
     const idValidation = validate(IdSchema, id);
     if (!idValidation.success) return idValidation.response;
