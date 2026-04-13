@@ -7,6 +7,7 @@ import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma
 import { Arena } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate, IdSchema } from "@/utils/Validation";
+import { errorResponse } from "@/utils/ApiResponse";
 import { NextResponse } from "next/server";
 import logger from "@/lib/Logger";
 
@@ -23,35 +24,22 @@ export async function PATCH(request: Request, { params }: RequestParams) {
         if (!idValidated.success) return idValidated.response;
         const arenaId = idValidated.data;
 
+        // member validation — check auth before parsing body
+        const memberId: string | null = await getAuthUserId();
+        if (!memberId) return errorResponse("로그인이 필요합니다.", 401);
+
         // body validation
         const body = await request.json();
         const validated = validate(UpdateArenaSchema, body);
         if (!validated.success) return validated.response;
 
-        // member validation
-        const memberId: string | null = await getAuthUserId();
-        if (!memberId) {
-            return NextResponse.json(
-                { message: "로그인이 필요합니다." },
-                { status: 401 }
-            );
-        }
-
         const arenaRepository: ArenaRepository = new PrismaArenaRepository();
 
         // ownership check
         const arena = await arenaRepository.findById(arenaId);
-        if (!arena) {
-            return NextResponse.json(
-                { message: "투기장이 존재하지 않습니다." },
-                { status: 404 }
-            );
-        }
+        if (!arena) return errorResponse("투기장이 존재하지 않습니다.", 404);
         if (arena.creatorId !== memberId && arena.challengerId !== memberId) {
-            return NextResponse.json(
-                { message: "투기장 변경 권한이 없습니다." },
-                { status: 403 }
-            );
+            return errorResponse("투기장 변경 권한이 없습니다.", 403);
         }
 
         const updateArenaUsecase: UpdateArenaUsecase = new UpdateArenaUsecase(

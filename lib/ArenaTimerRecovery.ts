@@ -71,10 +71,10 @@ export function scheduleArenaTransitions(arena: Arena): void {
     const schedule = (targetMs: number, newStatus: ArenaStatus | "delete") => {
         const delay = Math.max(0, targetMs - now); // fire immediately if past
         const t = setTimeout(() => {
-            transitionArena(arena.id, newStatus).finally(() => {
-                // Clean up registry after the last timer fires.
-                scheduledTimers.delete(arena.id);
-            });
+            // Clear registry before transitioning so the chain call inside
+            // transitionArena can register the next stage without hitting the dedup guard.
+            scheduledTimers.delete(arena.id);
+            transitionArena(arena.id, newStatus);
         }, delay);
         timers.push(t);
     };
@@ -137,6 +137,11 @@ async function transitionArena(
         await redis.del(arenaDetailKey(arenaId));
         await redis.incr(ARENA_LIST_VERSION_KEY);
         log.info({ arenaId, newStatus }, "투기장 상태 전환 완료");
+
+        // Chain the next transition. Registry was cleared before this call so the
+        // dedup guard inside scheduleArenaTransitions will not block registration.
+        const updated = await arenaRepo.findById(arenaId);
+        if (updated) scheduleArenaTransitions(updated);
     } catch (error) {
         log.error({ arenaId, newStatus, err: error }, "투기장 상태 전환 실패");
     }
