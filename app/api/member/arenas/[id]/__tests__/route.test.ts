@@ -50,6 +50,23 @@ describe("PATCH /api/member/arenas/[id]", () => {
         expect(response.status).toBe(401);
     });
 
+    it("PATCH without auth returns 401 even when request body is absent (auth checked before body parse)", async () => {
+        // Regression: before fix, request.json() was called first — a missing body
+        // would throw SyntaxError caught as 400/500 instead of a clean 401.
+        const { getAuthUserId } = await import("@/utils/GetAuthUserId.server");
+        vi.mocked(getAuthUserId).mockResolvedValueOnce(null);
+
+        const req = new Request("http://localhost/api/member/arenas/1", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            // no body — would blow up if request.json() were called first
+        });
+        const response = await PATCH(req, { params });
+        expect(response.status).toBe(401);
+        const body = await response.json();
+        expect(body.message).toBe("로그인이 필요합니다.");
+    });
+
     it("PATCH with empty body returns 400", async () => {
         const req = new Request("http://localhost/api/member/arenas/1", {
             method: "PATCH",
