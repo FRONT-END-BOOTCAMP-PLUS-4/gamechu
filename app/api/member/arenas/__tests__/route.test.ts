@@ -11,6 +11,18 @@ vi.mock(
             this.findById = vi
                 .fn()
                 .mockResolvedValue({ id: "test-user-id", score: 200 });
+            this.incrementScore = vi.fn().mockResolvedValue(undefined);
+        }),
+    })
+);
+
+vi.mock(
+    "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository",
+    () => ({
+        PrismaScoreRecordRepository: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.createRecord = vi.fn().mockResolvedValue(undefined);
         }),
     })
 );

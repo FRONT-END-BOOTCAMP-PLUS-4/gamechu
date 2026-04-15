@@ -4,6 +4,8 @@ import { CreateArenaSchema } from "@/backend/arena/application/usecase/dto/Creat
 import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
 import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
+import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
+import { CreateScoreRecordDto } from "@/backend/score-record/application/usecase/dto/CreateScoreRecordDto";
 import { Arena } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate } from "@/utils/Validation";
@@ -59,6 +61,13 @@ export async function POST(request: Request) {
         );
         const newArena: Arena =
             await createArenaUsecase.execute(createArenaDto);
+
+        await memberRepository.incrementScore(memberId, -100);
+
+        const scoreRecordRepository = new PrismaScoreRecordRepository();
+        await scoreRecordRepository.createRecord(
+            new CreateScoreRecordDto(memberId, 4, -100)
+        );
 
         return NextResponse.json(newArena, { status: 201 });
     } catch (error: unknown) {
