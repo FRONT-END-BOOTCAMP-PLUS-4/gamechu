@@ -29,6 +29,9 @@ export default function ArenaDetailPage() {
 
     useEffect(() => {
         setLoading(isLoading);
+        return () => {
+            setLoading(false);
+        };
     }, [isLoading, setLoading]);
 
     const arenaDto = useMemo(

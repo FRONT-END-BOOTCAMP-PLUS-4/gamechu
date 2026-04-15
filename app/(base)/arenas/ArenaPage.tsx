@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ArenaPageHeader from "./components/ArenaPageHeader";
 import CompleteArenaSection from "./components/CompleteArenaSection";
 import DebatingArenaSection from "./components/DebatingArenaSection";
@@ -18,12 +18,14 @@ export default function ArenaPage() {
 
     const { setLoading } = useLoadingStore();
     const [doneSections, setDoneSections] = useState(0);
+    const [sectionKey, setSectionKey] = useState(0);
 
     const totalSections = 5;
 
     useEffect(() => {
         setLoading(true);
         setDoneSections(0);
+        setSectionKey((prev) => prev + 1);
     }, [status, currentPage, setLoading]);
 
     useEffect(() => {
@@ -31,6 +33,11 @@ export default function ArenaPage() {
             setLoading(false);
         }
     }, [doneSections, status, setLoading]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 10_000);
+        return () => clearTimeout(timer);
+    }, [sectionKey, setLoading]);
 
     const handleSectionLoaded = useCallback(() => {
         setDoneSections((prev) => {
@@ -62,7 +69,7 @@ export default function ArenaPage() {
                         );
                     default:
                         return (
-                            <>
+                            <React.Fragment key={sectionKey}>
                                 <VotingArenaSection
                                     onLoaded={handleSectionLoaded}
                                 />
@@ -78,7 +85,7 @@ export default function ArenaPage() {
                                 <WaitingArenaSection
                                     onLoaded={handleSectionLoaded}
                                 />
-                            </>
+                            </React.Fragment>
                         );
                 }
             })()}
