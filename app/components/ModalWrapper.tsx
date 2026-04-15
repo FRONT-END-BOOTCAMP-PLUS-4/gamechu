@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { createPortal } from "react-dom";
 import FocusTrap from "focus-trap-react";
 
@@ -17,20 +17,28 @@ export default function ModalWrapper({
     children,
     labelId,
 }: ModalWrapperProps) {
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") onClose();
+        };
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen, onClose]);
+
     if (!isOpen) return null;
 
     return createPortal(
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-2 sm:px-4"
+            className="fixed inset-0 z-[10001] flex items-center justify-center bg-black/50 px-2 sm:px-4"
             onClick={onClose}
         >
             <FocusTrap
                 active={isOpen}
                 focusTrapOptions={{
-                    onDeactivate: onClose,
-                    returnFocusOnDeactivate: true,
-                    escapeDeactivates: true,
+                    escapeDeactivates: false,
                     allowOutsideClick: true,
+                    returnFocusOnDeactivate: true,
                 }}
             >
                 <div

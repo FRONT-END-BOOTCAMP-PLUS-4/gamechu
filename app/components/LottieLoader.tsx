@@ -8,7 +8,7 @@ export default function LottieLoader() {
     if (!loading) return null;
 
     return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
             <div className="absolute inset-0 bg-background-400 opacity-50" />
 
             <div className="relative z-10">

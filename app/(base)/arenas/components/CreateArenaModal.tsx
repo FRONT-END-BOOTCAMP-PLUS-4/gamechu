@@ -78,11 +78,6 @@ export default function CreateArenaModal() {
                     errorData.message || "투기장 생성에 실패했습니다."
                 );
             }
-
-            await fetch("/api/member/scores", {
-                method: "POST",
-                body: JSON.stringify({ policyId: 4, actualScore: -100 }),
-            });
         },
         onSuccess: () => {
             closeModal();
