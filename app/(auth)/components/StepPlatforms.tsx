@@ -57,10 +57,6 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
     };
 
     const handleSubmit = () => {
-        if (selectedPlatformIds.length === 0) {
-            onSubmit();
-            return;
-        }
         savePlatforms();
     };
 
