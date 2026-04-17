@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import StepGenres from "../components/StepGenres";
-import StepThemes from "../components/StepThemes";
-import StepPlatforms from "../components/StepPlatforms";
+import StepPreferences from "../components/StepPreferences";
 import StepProfile from "../components/StepProfile";
 import { useRouter } from "next/navigation";
 import Toast from "@/app/components/Toast";
+import { queryKeys } from "@/lib/QueryKeys";
 
 export default function Register() {
     const [step, setStep] = useState(1);
@@ -28,7 +27,7 @@ export default function Register() {
 
         setTimeout(() => {
             router.push("/log-in");
-        }, 2000); // 토스트 표시 후 이동
+        }, 2000);
     };
 
     return (
@@ -44,15 +43,47 @@ export default function Register() {
                 </div>
             </div>
 
-            {/* 스텝 컴포넌트 */}
             {step === 1 && <StepProfile onNext={nextStep} />}
-            {step === 2 && <StepGenres onNext={nextStep} onBack={prevStep} />}
-            {step === 3 && <StepThemes onNext={nextStep} onBack={prevStep} />}
+            {step === 2 && (
+                <StepPreferences
+                    title="선호하는 게임 장르를 선택해주세요"
+                    queryKey={queryKeys.genres()}
+                    fetchUrl="/api/genres"
+                    saveUrl="/api/preferred-genres"
+                    bodyKey="genreIds"
+                    errorMessage="선호 장르 저장에 실패했습니다."
+                    onBack={prevStep}
+                    onComplete={nextStep}
+                    submitLabel="다음 →"
+                />
+            )}
+            {step === 3 && (
+                <StepPreferences
+                    title="선호하는 게임 테마를 선택해주세요"
+                    queryKey={queryKeys.themes()}
+                    fetchUrl="/api/themes"
+                    saveUrl="/api/preferred-themes"
+                    bodyKey="themeIds"
+                    errorMessage="선호 테마 저장에 실패했습니다."
+                    onBack={prevStep}
+                    onComplete={nextStep}
+                    submitLabel="다음 →"
+                />
+            )}
             {step === 4 && (
-                <StepPlatforms onBack={prevStep} onSubmit={handleSubmit} />
+                <StepPreferences
+                    title="이용하는 게임 플랫폼을 선택해주세요"
+                    queryKey={queryKeys.platforms()}
+                    fetchUrl="/api/platforms"
+                    saveUrl="/api/preferred-platforms"
+                    bodyKey="platformIds"
+                    errorMessage="선호 플랫폼 저장에 실패했습니다."
+                    onBack={prevStep}
+                    onComplete={handleSubmit}
+                    submitLabel="가입 완료"
+                />
             )}
 
-            {/* ✅ 토스트 메시지 컴포넌트 */}
             <Toast
                 show={showToast}
                 status={toastStatus}
