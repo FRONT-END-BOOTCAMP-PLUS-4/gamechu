@@ -1,28 +1,17 @@
-import { PreferredGenreRepository } from "@/backend/preferred-genre/domain/repositories/PreferredGenreRepository";
-import { PrismaClient, PreferredGenre } from "@/prisma/generated";
-import { CreatePreferredGenreInput } from "@/backend/preferred-genre/domain/repositories/PreferredGenreRepository";
+import {
+    PreferredGenreRepository,
+    CreatePreferredGenreInput,
+} from "@/backend/preferred-genre/domain/repositories/PreferredGenreRepository";
 import { prisma } from "@/lib/Prisma";
 
 export class PrismaPreferredGenreRepository
     implements PreferredGenreRepository
 {
-    private prisma: PrismaClient;
-
-    constructor() {
-        this.prisma = prisma;
-    }
-
-    async save(
-        preferredGenre: CreatePreferredGenreInput
-    ): Promise<PreferredGenre> {
-        const data = await this.prisma.preferredGenre.create({
-            data: preferredGenre,
-        });
-
-        return data;
+    async saveMany(inputs: CreatePreferredGenreInput[]): Promise<void> {
+        await prisma.preferredGenre.createMany({ data: inputs });
     }
 
     async delete(memberId: string): Promise<void> {
-        await this.prisma.preferredGenre.deleteMany({ where: { memberId } });
+        await prisma.preferredGenre.deleteMany({ where: { memberId } });
     }
 }

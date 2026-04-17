@@ -1,7 +1,4 @@
-import {
-    PreferredThemeRepository,
-    CreatePreferredThemeInput,
-} from "@/backend/preferred-theme/domain/repositories/PreferredThemeRepository";
+import { PreferredThemeRepository } from "@/backend/preferred-theme/domain/repositories/PreferredThemeRepository";
 import { CreatePreferredThemesDto } from "./dto/CreatePreferredThemesDto";
 
 export class CreatePreferredThemesUsecase {
@@ -9,13 +6,11 @@ export class CreatePreferredThemesUsecase {
 
     async execute(dto: CreatePreferredThemesDto): Promise<void> {
         await this.repo.delete(dto.memberId);
-
-        for (const themeId of dto.themeIds) {
-            const theme: CreatePreferredThemeInput = {
+        await this.repo.saveMany(
+            dto.themeIds.map((themeId) => ({
                 memberId: dto.memberId,
                 themeId,
-            };
-            await this.repo.save(theme); // 기존 메서드 재사용
-        }
+            }))
+        );
     }
 }

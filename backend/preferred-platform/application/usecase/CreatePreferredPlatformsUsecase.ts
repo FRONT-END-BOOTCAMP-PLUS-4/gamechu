@@ -1,8 +1,4 @@
-// 📁 backend/preferred-platform/application/usecase/SavePreferredPlatformsUsecase.ts
-import {
-    PreferredPlatformRepository,
-    CreatePreferredPlatformInput,
-} from "@/backend/preferred-platform/domain/repositories/PreferredPlatformRepository";
+import { PreferredPlatformRepository } from "@/backend/preferred-platform/domain/repositories/PreferredPlatformRepository";
 import { CreatePreferredPlatformsDto } from "./dto/CreatePreferredPlatformsDto";
 
 export class CreatePreferredPlatformsUsecase {
@@ -10,13 +6,11 @@ export class CreatePreferredPlatformsUsecase {
 
     async execute(dto: CreatePreferredPlatformsDto): Promise<void> {
         await this.repo.delete(dto.memberId);
-
-        for (const platformId of dto.platformIds) {
-            const platform: CreatePreferredPlatformInput = {
+        await this.repo.saveMany(
+            dto.platformIds.map((platformId) => ({
                 memberId: dto.memberId,
                 platformId,
-            };
-            await this.repo.save(platform);
-        }
+            }))
+        );
     }
 }
