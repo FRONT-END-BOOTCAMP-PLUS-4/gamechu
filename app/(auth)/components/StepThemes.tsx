@@ -54,10 +54,6 @@ export default function StepThemes({ onNext, onBack }: Props) {
     };
 
     const handleNext = () => {
-        if (selectedThemeIds.length === 0) {
-            onNext();
-            return;
-        }
         saveThemes();
     };
 

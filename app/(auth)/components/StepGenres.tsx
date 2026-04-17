@@ -54,10 +54,6 @@ export default function StepGenres({ onNext, onBack }: Props) {
     };
 
     const handleNext = () => {
-        if (selectedGenreIds.length === 0) {
-            onNext();
-            return;
-        }
         saveGenres();
     };
 
