@@ -27,7 +27,7 @@ export default function StepThemes({ onNext, onBack }: Props) {
         queryFn: () => fetcher("/api/themes"),
     });
 
-    const { mutate: saveThemes } = useMutation({
+    const { mutate: saveThemes, isPending } = useMutation({
         mutationFn: () =>
             fetch("/api/preferred-themes", {
                 method: "POST",
@@ -92,6 +92,7 @@ export default function StepThemes({ onNext, onBack }: Props) {
                     size="medium"
                     type="purple"
                     onClick={handleNext}
+                    disabled={isPending}
                 />
             </div>
         </div>

@@ -29,7 +29,7 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
         queryFn: () => fetcher("/api/platforms"),
     });
 
-    const { mutate: savePlatforms } = useMutation({
+    const { mutate: savePlatforms, isPending } = useMutation({
         mutationFn: () =>
             fetch("/api/preferred-platforms", {
                 method: "POST",
@@ -95,6 +95,7 @@ export default function StepPlatforms({ onSubmit, onBack }: Props) {
                     size="medium"
                     type="purple"
                     onClick={handleSubmit}
+                    disabled={isPending}
                 />
             </div>
         </div>
