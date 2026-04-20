@@ -110,6 +110,9 @@ export default function GamePage() {
 
     useEffect(() => {
         setLoading(isLoading);
+        return () => {
+            setLoading(false);
+        };
     }, [isLoading, setLoading]);
 
     // 필터 사이드바가 열린 상태에서 메인 화면 스크롤 방지
