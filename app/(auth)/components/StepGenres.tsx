@@ -27,7 +27,7 @@ export default function StepGenres({ onNext, onBack }: Props) {
         queryFn: () => fetcher("/api/genres"),
     });
 
-    const { mutate: saveGenres } = useMutation({
+    const { mutate: saveGenres, isPending } = useMutation({
         mutationFn: () =>
             fetch("/api/preferred-genres", {
                 method: "POST",
@@ -92,6 +92,7 @@ export default function StepGenres({ onNext, onBack }: Props) {
                     size="medium"
                     type="purple"
                     onClick={handleNext}
+                    disabled={isPending}
                 />
             </div>
         </div>
