@@ -30,7 +30,7 @@ export default function ModalWrapper({
 
     return createPortal(
         <div
-            className="fixed inset-0 z-[10001] flex items-center justify-center bg-black/50 px-2 sm:px-4"
+            className="fixed inset-0 z-[10001] flex items-center justify-center bg-black/50 px-2 sm:px-4" // z-[10001]: LottieLoader(z-[9999]) 위에 표시되도록
             onClick={onClose}
         >
             <FocusTrap

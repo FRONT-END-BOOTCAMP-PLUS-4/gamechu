@@ -8,6 +8,7 @@ export default function LottieLoader() {
     if (!loading) return null;
 
     return (
+        // pointer-events-none: 로딩 중에도 모달 등 하단 UI와 상호작용 가능하도록 의도적으로 허용
         <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
             <div className="absolute inset-0 bg-background-400 opacity-50" />
 

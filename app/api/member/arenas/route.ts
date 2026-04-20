@@ -62,6 +62,9 @@ export async function POST(request: Request) {
         const newArena: Arena =
             await createArenaUsecase.execute(createArenaDto);
 
+        // TODO: 아레나 생성·점수 차감·기록 생성을 prisma.$transaction으로 묶어 원자성 보장 필요
+        // 현재는 순차 실행이므로 중간 단계 실패 시 데이터 불일치가 발생할 수 있음
+        // ref: https://github.com/FRONT-END-BOOTCAMP-PLUS-4/gamechu/issues/307
         await memberRepository.incrementScore(memberId, -100);
 
         const scoreRecordRepository = new PrismaScoreRecordRepository();
