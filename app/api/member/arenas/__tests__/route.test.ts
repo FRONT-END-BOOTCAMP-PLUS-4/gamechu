@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@/utils/GetAuthUserId.server", () => ({
     getAuthUserId: vi.fn().mockResolvedValue("test-user-id"),
@@ -49,8 +49,13 @@ vi.mock("@/backend/arena/application/usecase/CreateArenaUsecase", () => ({
 }));
 
 import { POST } from "../route";
+import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
+import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
 
 describe("POST /api/member/arenas", () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
     it("POST without auth session returns 401", async () => {
         const { getAuthUserId } = await import("@/utils/GetAuthUserId.server");
         vi.mocked(getAuthUserId).mockResolvedValueOnce(null);
@@ -80,5 +85,38 @@ describe("POST /api/member/arenas", () => {
         });
         const response = await POST(req);
         expect(response.status).toBe(201);
+    });
+
+    it("POST calls incrementScore(-100) and createRecord with policyId 4", async () => {
+        const req = new Request("http://localhost/api/member/arenas", {
+            method: "POST",
+            body: JSON.stringify({
+                title: "Test Arena",
+                description: "Some description",
+                startDate: "2026-04-01T00:00:00.000Z",
+            }),
+            headers: { "content-type": "application/json" },
+        });
+
+        await POST(req);
+
+        const memberInst = vi
+            .mocked(PrismaMemberRepository)
+            .mock.instances.at(-1) as unknown as {
+            incrementScore: ReturnType<typeof vi.fn>;
+        };
+        expect(memberInst.incrementScore).toHaveBeenCalledWith(
+            "test-user-id",
+            -100
+        );
+
+        const scoreInst = vi
+            .mocked(PrismaScoreRecordRepository)
+            .mock.instances.at(-1) as unknown as {
+            createRecord: ReturnType<typeof vi.fn>;
+        };
+        expect(scoreInst.createRecord).toHaveBeenCalledWith(
+            expect.objectContaining({ policyId: 4, actualScore: -100 })
+        );
     });
 });
