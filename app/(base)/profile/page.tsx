@@ -91,6 +91,9 @@ export default function ProfilePage() {
 
     useEffect(() => {
         setLoading(isLoading);
+        return () => {
+            setLoading(false);
+        };
     }, [isLoading, setLoading]);
 
     const nickname = profile?.nickname ?? "";

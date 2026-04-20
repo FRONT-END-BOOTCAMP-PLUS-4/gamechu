@@ -63,6 +63,9 @@ export default function ProfilePage({
 
     useEffect(() => {
         setLoading(isLoading);
+        return () => {
+            setLoading(false);
+        };
     }, [isLoading, setLoading]);
 
     useEffect(() => {

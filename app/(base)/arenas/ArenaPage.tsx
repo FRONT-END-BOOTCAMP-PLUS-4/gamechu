@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Fragment } from "react";
 import ArenaPageHeader from "./components/ArenaPageHeader";
 import CompleteArenaSection from "./components/CompleteArenaSection";
 import DebatingArenaSection from "./components/DebatingArenaSection";
@@ -20,6 +20,7 @@ export default function ArenaPage() {
     const [doneSections, setDoneSections] = useState(0);
     const [sectionKey, setSectionKey] = useState(0);
 
+    // default case 섹션 수와 반드시 일치해야 함 (섹션 추가/삭제 시 함께 수정)
     const totalSections = 5;
 
     useEffect(() => {
@@ -34,6 +35,7 @@ export default function ArenaPage() {
         }
     }, [doneSections, status, setLoading]);
 
+    // 섹션 onLoaded가 모두 호출되지 않을 경우를 대비한 안전 타임아웃
     useEffect(() => {
         const timer = setTimeout(() => setLoading(false), 10_000);
         return () => clearTimeout(timer);
@@ -69,7 +71,7 @@ export default function ArenaPage() {
                         );
                     default:
                         return (
-                            <React.Fragment key={sectionKey}>
+                            <Fragment key={sectionKey}>
                                 <VotingArenaSection
                                     onLoaded={handleSectionLoaded}
                                 />
@@ -85,7 +87,7 @@ export default function ArenaPage() {
                                 <WaitingArenaSection
                                     onLoaded={handleSectionLoaded}
                                 />
-                            </React.Fragment>
+                            </Fragment>
                         );
                 }
             })()}
