@@ -44,7 +44,7 @@ export default function StepPreferences({
         queryFn: () => fetcher(fetchUrl),
     });
 
-    const { mutate: save } = useMutation({
+    const { mutate: save, isPending } = useMutation({
         mutationFn: () =>
             fetch(saveUrl, {
                 method: "POST",
@@ -99,6 +99,7 @@ export default function StepPreferences({
                     size="medium"
                     type="purple"
                     onClick={() => save()}
+                    disabled={isPending}
                 />
             </div>
         </div>
