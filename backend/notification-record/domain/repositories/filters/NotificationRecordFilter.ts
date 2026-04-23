@@ -3,6 +3,7 @@ export class NotificationRecordFilter {
         public memberId: string | null,
         public typeId: number | null,
         public createdAt: Date[] | null,
+        public isRead: boolean | null,
         public sortField: string = "createdAt",
         public ascending: boolean = false,
         public offset: number = 0,
