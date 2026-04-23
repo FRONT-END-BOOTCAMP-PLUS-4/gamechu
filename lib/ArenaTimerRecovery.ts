@@ -9,6 +9,10 @@ import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
 import { PrismaVoteRepository } from "@/backend/vote/infra/repositories/prisma/PrismaVoteRepository";
+import { PrismaNotificationRecordRepository } from "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository";
+import { CreateNotificationRecordUsecase } from "@/backend/notification-record/application/usecase/CreateNotificationRecordUsecase";
+import { CreateNotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/CreateNotificationRecordDto";
+import { sendTierNotificationIfChanged } from "@/lib/TierNotification";
 import type { Arena } from "@/prisma/generated";
 import type { ArenaStatus } from "@/types/arena-status";
 import redis from "@/lib/Redis";
@@ -124,6 +128,7 @@ async function transitionArena(
             await updateArenaStatusUsecase.execute(
                 new UpdateArenaDetailDto(arenaId, newStatus)
             );
+
             if (newStatus === 5) {
                 const voteRepo = new PrismaVoteRepository();
                 const endArenaUsecase = new EndArenaUsecase(
@@ -131,7 +136,68 @@ async function transitionArena(
                     applyArenaScoreUsecase,
                     voteRepo
                 );
+                const beforeCreator = await memberRepo.findById(current.creatorId);
+                const beforeChallenger = current.challengerId
+                    ? await memberRepo.findById(current.challengerId)
+                    : null;
+
                 await endArenaUsecase.execute(arenaId);
+
+                // Tier change notifications are non-critical — failure must not block the state machine
+                try {
+                    const afterCreator = await memberRepo.findById(current.creatorId);
+                    if (beforeCreator && afterCreator) {
+                        await sendTierNotificationIfChanged(
+                            current.creatorId,
+                            beforeCreator.score,
+                            afterCreator.score
+                        );
+                    }
+                    if (current.challengerId && beforeChallenger) {
+                        const afterChallenger = await memberRepo.findById(current.challengerId);
+                        if (afterChallenger) {
+                            await sendTierNotificationIfChanged(
+                                current.challengerId,
+                                beforeChallenger.score,
+                                afterChallenger.score
+                            );
+                        }
+                    }
+                } catch (tierErr) {
+                    log.warn({ arenaId, err: tierErr }, "티어 알림 생성 실패");
+                }
+            }
+
+            // Arena event notifications are non-critical — failure must not block the state machine
+            try {
+                const notificationRepo = new PrismaNotificationRecordRepository();
+                const createNotification = new CreateNotificationRecordUsecase(notificationRepo);
+
+                if (newStatus === 3) {
+                    const description = `'${current.title}' 투기장의 토론이 시작되었습니다.`;
+                    await createNotification.execute(
+                        new CreateNotificationRecordDto(current.creatorId, 4, description)
+                    );
+                    if (current.challengerId) {
+                        await createNotification.execute(
+                            new CreateNotificationRecordDto(current.challengerId, 4, description)
+                        );
+                    }
+                }
+
+                if (newStatus === 5) {
+                    const description = `'${current.title}' 투기장의 투표가 종료되었습니다.`;
+                    await createNotification.execute(
+                        new CreateNotificationRecordDto(current.creatorId, 5, description)
+                    );
+                    if (current.challengerId) {
+                        await createNotification.execute(
+                            new CreateNotificationRecordDto(current.challengerId, 5, description)
+                        );
+                    }
+                }
+            } catch (notificationErr) {
+                log.warn({ arenaId, newStatus, err: notificationErr }, "알림 생성 실패");
             }
         }
         await redis.del(arenaDetailKey(arenaId));

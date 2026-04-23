@@ -95,6 +95,33 @@ vi.mock(
     })
 );
 
+vi.mock(
+    "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository",
+    () => ({
+        PrismaNotificationRecordRepository: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.save = vi.fn().mockResolvedValue(undefined);
+            this.count = vi.fn().mockResolvedValue(0);
+        }),
+    })
+);
+
+vi.mock(
+    "@/backend/notification-record/application/usecase/CreateNotificationRecordUsecase",
+    () => ({
+        CreateNotificationRecordUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue(undefined);
+        }),
+    })
+);
+
+vi.mock("@/lib/TierNotification", () => ({
+    sendTierNotificationIfChanged: vi.fn().mockResolvedValue(undefined),
+}));
+
 import { scheduleArenaTransitions } from "../ArenaTimerRecovery";
 
 // Each test uses a unique arenaId to avoid scheduledTimers Map interference

@@ -7,8 +7,8 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { getAuthUserId } from "@/utils/GetAuthUserId.client";
-import useModalStore from "@/stores/ModalStore";
 import Button from "./Button";
+import NotificationBellButton from "./NotificationBellButton";
 import { Menu, User, X } from "lucide-react";
 
 type MenuLinkProps = {
@@ -109,24 +109,9 @@ export default function Header() {
                 {/* 오른쪽  */}
                 <div className="flex hidden flex-shrink-0 items-center space-x-8 sm:flex">
                     {isLoggedIn && (
-                        <button
-                            className="relative rounded-lg p-2 transition-colors hover:bg-white/20"
-                            aria-label="알림"
-                            onClick={() => {
-                                useModalStore
-                                    .getState()
-                                    .openModal("notification", null);
-                                setMenuOpen(false);
-                            }}
-                        >
-                            <Image
-                                src="/icons/bell.svg"
-                                alt=""
-                                width={24}
-                                height={24}
-                                className="text-white"
-                            />
-                        </button>
+                        <NotificationBellButton
+                            onOpen={() => setMenuOpen(false)}
+                        />
                     )}
                     {isLoggedIn ? (
                         <>
@@ -190,27 +175,10 @@ export default function Header() {
                             <>
                                 <div className="flex items-center space-x-4">
                                     {/* 알림 버튼 */}
-                                    <button
-                                        className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-white/10"
-                                        aria-label="알림"
-                                        onClick={() => {
-                                            useModalStore
-                                                .getState()
-                                                .openModal(
-                                                    "notification",
-                                                    null
-                                                );
-                                            setMenuOpen(false);
-                                        }}
-                                    >
-                                        <Image
-                                            src="/icons/bell.svg"
-                                            alt=""
-                                            width={20}
-                                            height={20}
-                                            className="text-white"
-                                        />
-                                    </button>
+                                    <NotificationBellButton
+                                        size={20}
+                                        onOpen={() => setMenuOpen(false)}
+                                    />
 
                                     {/* 마이페이지 버튼 */}
                                     <Link
