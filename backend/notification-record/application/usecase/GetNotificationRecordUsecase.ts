@@ -33,6 +33,7 @@ export class GetNotificationRecordUsecase {
             memberId,
             null,
             null,
+            null,
             "createdAt",
             false,
             offset,
@@ -53,6 +54,7 @@ export class GetNotificationRecordUsecase {
                     memberId: record.memberId,
                     typeId: record.typeId,
                     description: record.description,
+                    isRead: record.isRead,
                     createdAt: record.createdAt,
                     typeName: type?.name || "기타",
                     typeImageUrl:

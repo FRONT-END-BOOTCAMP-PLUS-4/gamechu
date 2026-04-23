@@ -4,8 +4,8 @@ export class NotificationRecordDto {
         public memberId: string,
         public typeId: number,
         public description: string,
+        public isRead: boolean,
         public createdAt: Date,
-
         public typeName: string,
         public typeImageUrl: string
     ) {}

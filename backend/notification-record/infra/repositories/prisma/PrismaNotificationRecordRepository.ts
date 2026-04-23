@@ -18,7 +18,7 @@ export class PrismaNotificationRecordRepository
     private getWhereClause(
         filter: NotificationRecordFilter
     ): Prisma.NotificationRecordWhereInput {
-        const { memberId, typeId, createdAt } = filter;
+        const { memberId, typeId, createdAt, isRead } = filter;
 
         return {
             ...(memberId && {
@@ -27,6 +27,7 @@ export class PrismaNotificationRecordRepository
             ...(typeId && {
                 typeId,
             }),
+            ...(isRead !== null && isRead !== undefined && { isRead }),
             ...(createdAt &&
                 createdAt.length > 0 && {
                     OR: createdAt.map((date) => ({

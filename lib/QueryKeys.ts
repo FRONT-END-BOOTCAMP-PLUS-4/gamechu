@@ -116,7 +116,13 @@ export const queryKeys = {
     /**
      * Paginated notification records.
      * Param name is currentPage (matches /api/member/notification-records route).
+     * Call with no argument for prefix invalidation (invalidates all pages).
      */
-    notifications: (currentPage: number) =>
-        ["notifications", currentPage] as const,
+    notifications: (currentPage?: number) =>
+        currentPage !== undefined
+            ? (["notifications", currentPage] as const)
+            : (["notifications"] as const),
+
+    /** Unread notification count for bell badge. */
+    notificationCount: () => ["notificationCount"] as const,
 };

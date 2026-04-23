@@ -146,6 +146,7 @@ model NotificationRecord {
   memberId    String           @map("member_id")
   typeId      Int              @map("type_id")
   description String
+  isRead      Boolean          @default(false) @map("is_read")
   createdAt   DateTime         @default(now()) @map("created_at")
   member      Member           @relation(fields: [memberId], references: [id])
   type        NotificationType @relation(fields: [typeId], references: [id])
