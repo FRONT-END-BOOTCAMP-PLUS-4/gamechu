@@ -20,5 +20,7 @@ export async function sendTierNotificationIfChanged(
 
     const repo = new PrismaNotificationRecordRepository();
     const usecase = new CreateNotificationRecordUsecase(repo);
-    await usecase.execute(new CreateNotificationRecordDto(memberId, typeId, description));
+    await usecase.execute(
+        new CreateNotificationRecordDto(memberId, typeId, description)
+    );
 }

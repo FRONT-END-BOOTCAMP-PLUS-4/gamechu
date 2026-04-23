@@ -54,7 +54,9 @@ export async function POST(
 
         // Capture review author's score before toggle for tier change detection
         const review = await reviewRepo.findById(parsedReviewId);
-        const authorBefore = review ? await memberRepo.findById(review.memberId) : null;
+        const authorBefore = review
+            ? await memberRepo.findById(review.memberId)
+            : null;
 
         const result = await usecase.execute({
             reviewId: parsedReviewId,

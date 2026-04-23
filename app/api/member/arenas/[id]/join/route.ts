@@ -79,7 +79,9 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
         // Notifications are non-critical — failure must not break the join response
         try {
             const notificationRepo = new PrismaNotificationRecordRepository();
-            const createNotification = new CreateNotificationRecordUsecase(notificationRepo);
+            const createNotification = new CreateNotificationRecordUsecase(
+                notificationRepo
+            );
             await createNotification.execute(
                 new CreateNotificationRecordDto(
                     arena.creatorId,
@@ -89,7 +91,11 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
             );
             const updatedMember = await memberRepo.findById(memberId);
             if (updatedMember) {
-                await sendTierNotificationIfChanged(memberId, beforeScore, updatedMember.score);
+                await sendTierNotificationIfChanged(
+                    memberId,
+                    beforeScore,
+                    updatedMember.score
+                );
             }
         } catch (notificationErr) {
             log.warn({ err: notificationErr }, "참여 알림 생성 실패");

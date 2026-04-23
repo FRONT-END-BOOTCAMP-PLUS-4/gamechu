@@ -28,7 +28,11 @@ vi.mock(
         PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
             this.findById = vi
                 .fn()
-                .mockResolvedValue({ id: "user-id", score: 200, nickname: "테스터" });
+                .mockResolvedValue({
+                    id: "user-id",
+                    score: 200,
+                    nickname: "테스터",
+                });
         }),
     })
 );
