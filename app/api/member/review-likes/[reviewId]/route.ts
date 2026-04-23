@@ -11,6 +11,7 @@ import { IdSchema, validate } from "@/utils/Validation";
 import { errorResponse } from "@/utils/ApiResponse";
 import logger from "@/lib/Logger";
 import { RateLimiter, rateLimitResponse } from "@/lib/RateLimiter";
+import { sendTierNotificationIfChanged } from "@/lib/TierNotification";
 
 const reviewLikeLimiter = new RateLimiter("review-like", 60_000, 30);
 
@@ -51,10 +52,31 @@ export async function POST(
             applyReviewScoreUsecase
         );
 
+        // Capture review author's score before toggle for tier change detection
+        const review = await reviewRepo.findById(parsedReviewId);
+        const authorBefore = review ? await memberRepo.findById(review.memberId) : null;
+
         const result = await usecase.execute({
             reviewId: parsedReviewId,
             memberId: userId,
         });
+
+        // Check if review author's tier changed (non-critical)
+        try {
+            if (review && authorBefore) {
+                const authorAfter = await memberRepo.findById(review.memberId);
+                if (authorAfter) {
+                    await sendTierNotificationIfChanged(
+                        review.memberId,
+                        authorBefore.score,
+                        authorAfter.score
+                    );
+                }
+            }
+        } catch (notificationErr) {
+            log.warn({ userId, err: notificationErr }, "티어 알림 생성 실패");
+        }
+
         return NextResponse.json(result);
     } catch (err: unknown) {
         log.error({ userId, err }, "리뷰 좋아요 토글 실패");
