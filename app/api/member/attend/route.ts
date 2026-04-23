@@ -32,11 +32,18 @@ export async function POST() {
             if (memberBefore) {
                 const memberAfter = await memberRepo.findById(memberId);
                 if (memberAfter) {
-                    await sendTierNotificationIfChanged(memberId, memberBefore.score, memberAfter.score);
+                    await sendTierNotificationIfChanged(
+                        memberId,
+                        memberBefore.score,
+                        memberAfter.score
+                    );
                 }
             }
         } catch (notificationErr) {
-            log.warn({ userId: memberId, err: notificationErr }, "티어 알림 생성 실패");
+            log.warn(
+                { userId: memberId, err: notificationErr },
+                "티어 알림 생성 실패"
+            );
         }
 
         let attendedDateStr: string | null = null;
