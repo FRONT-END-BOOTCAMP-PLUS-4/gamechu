@@ -5,12 +5,9 @@ export class CreatePreferredThemesUsecase {
     constructor(private readonly repo: PreferredThemeRepository) {}
 
     async execute(dto: CreatePreferredThemesDto): Promise<void> {
-        await this.repo.delete(dto.memberId);
-        await this.repo.saveMany(
-            dto.themeIds.map((themeId) => ({
-                memberId: dto.memberId,
-                themeId,
-            }))
+        await this.repo.replaceAll(
+            dto.memberId,
+            dto.themeIds.map((themeId) => ({ memberId: dto.memberId, themeId }))
         );
     }
 }

@@ -7,11 +7,10 @@ import { prisma } from "@/lib/Prisma";
 export class PrismaPreferredGenreRepository
     implements PreferredGenreRepository
 {
-    async saveMany(inputs: CreatePreferredGenreInput[]): Promise<void> {
-        await prisma.preferredGenre.createMany({ data: inputs });
-    }
-
-    async delete(memberId: string): Promise<void> {
-        await prisma.preferredGenre.deleteMany({ where: { memberId } });
+    async replaceAll(memberId: string, inputs: CreatePreferredGenreInput[]): Promise<void> {
+        await prisma.$transaction([
+            prisma.preferredGenre.deleteMany({ where: { memberId } }),
+            prisma.preferredGenre.createMany({ data: inputs }),
+        ]);
     }
 }

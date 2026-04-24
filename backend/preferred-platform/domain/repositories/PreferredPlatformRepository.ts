@@ -4,6 +4,5 @@ export type CreatePreferredPlatformInput = {
 };
 
 export interface PreferredPlatformRepository {
-    saveMany(inputs: CreatePreferredPlatformInput[]): Promise<void>;
-    delete(memberId: string): Promise<void>;
+    replaceAll(memberId: string, inputs: CreatePreferredPlatformInput[]): Promise<void>;
 }

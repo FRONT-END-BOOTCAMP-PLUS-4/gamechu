@@ -30,6 +30,31 @@ export class ArenaFilter {
 - Use `UpdateDto` for `update()`
 - Only implement CRUD methods that are needed — no speculative methods
 
+#### `saveMany` — bulk insert (예외적 허용)
+
+단건 `save()`를 반복 호출하면 N+1 INSERT가 발생하는 경우, `saveMany()`를 Repository 인터페이스에 추가해도 됩니다.
+
+```typescript
+saveMany(inputs: CreateXxxInput[]): Promise<void>; // Bulk insert (N+1 방지용)
+```
+
+**조건**: 실제 호출부가 존재해야 하며, "언젠가 필요할 것 같아서"와 같은 투기성 추가는 금지.
+
+**트랜잭션**: `saveMany` 전에 `delete` 등 다른 쓰기 작업이 선행된다면, 두 연산을 단일 도메인 메서드(`replaceAll` 등)로 묶고 인프라 레이어에서 `prisma.$transaction`으로 원자성을 보장합니다.
+
+```typescript
+// domain: 삭제 + 일괄 삽입을 하나의 의도로 표현
+replaceAll(ownerId: string, inputs: CreateXxxInput[]): Promise<void>;
+
+// infra: 트랜잭션으로 원자성 보장
+async replaceAll(ownerId: string, inputs: CreateXxxInput[]): Promise<void> {
+    await prisma.$transaction([
+        prisma.xxx.deleteMany({ where: { ownerId } }),
+        prisma.xxx.createMany({ data: inputs }),
+    ]);
+}
+```
+
 ```typescript
 import { Arena } from "@/prisma/generated";
 import { ArenaFilter } from "./filters/ArenaFilters";

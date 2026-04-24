@@ -7,11 +7,10 @@ import { prisma } from "@/lib/Prisma";
 export class PrismaPreferredThemeRepository
     implements PreferredThemeRepository
 {
-    async saveMany(inputs: CreatePreferredThemeInput[]): Promise<void> {
-        await prisma.preferredTheme.createMany({ data: inputs });
-    }
-
-    async delete(memberId: string): Promise<void> {
-        await prisma.preferredTheme.deleteMany({ where: { memberId } });
+    async replaceAll(memberId: string, inputs: CreatePreferredThemeInput[]): Promise<void> {
+        await prisma.$transaction([
+            prisma.preferredTheme.deleteMany({ where: { memberId } }),
+            prisma.preferredTheme.createMany({ data: inputs }),
+        ]);
     }
 }

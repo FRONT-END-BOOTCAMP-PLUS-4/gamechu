@@ -4,6 +4,5 @@ export type CreatePreferredGenreInput = {
 };
 
 export interface PreferredGenreRepository {
-    saveMany(inputs: CreatePreferredGenreInput[]): Promise<void>;
-    delete(memberId: string): Promise<void>;
+    replaceAll(memberId: string, inputs: CreatePreferredGenreInput[]): Promise<void>;
 }
