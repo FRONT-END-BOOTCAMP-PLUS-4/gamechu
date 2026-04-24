@@ -9,12 +9,12 @@ import Toast from "@/app/components/Toast";
 
 type Item = { id: number; name: string };
 
-type Props = {
+type StepPreferencesProps = {
     title: string;
     queryKey: readonly unknown[];
     fetchUrl: string;
     saveUrl: string;
-    bodyKey: string;
+    bodyKey: "genreIds" | "themeIds" | "platformIds";
     errorMessage: string;
     onBack: () => void;
     onComplete: () => void;
@@ -31,7 +31,7 @@ export default function StepPreferences({
     onBack,
     onComplete,
     submitLabel,
-}: Props) {
+}: StepPreferencesProps) {
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [toast, setToast] = useState({
         show: false,

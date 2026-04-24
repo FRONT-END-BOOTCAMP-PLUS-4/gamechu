@@ -4,6 +4,5 @@ export type CreatePreferredThemeInput = {
 };
 
 export interface PreferredThemeRepository {
-    saveMany(inputs: CreatePreferredThemeInput[]): Promise<void>;
-    delete(memberId: string): Promise<void>;
+    replaceAll(memberId: string, inputs: CreatePreferredThemeInput[]): Promise<void>;
 }

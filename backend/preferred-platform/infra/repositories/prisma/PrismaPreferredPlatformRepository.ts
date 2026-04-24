@@ -7,11 +7,10 @@ import { prisma } from "@/lib/Prisma";
 export class PrismaPreferredPlatformRepository
     implements PreferredPlatformRepository
 {
-    async saveMany(inputs: CreatePreferredPlatformInput[]): Promise<void> {
-        await prisma.preferredPlatform.createMany({ data: inputs });
-    }
-
-    async delete(memberId: string): Promise<void> {
-        await prisma.preferredPlatform.deleteMany({ where: { memberId } });
+    async replaceAll(memberId: string, inputs: CreatePreferredPlatformInput[]): Promise<void> {
+        await prisma.$transaction([
+            prisma.preferredPlatform.deleteMany({ where: { memberId } }),
+            prisma.preferredPlatform.createMany({ data: inputs }),
+        ]);
     }
 }
