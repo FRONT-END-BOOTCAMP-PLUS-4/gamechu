@@ -1,43 +1,45 @@
 "use client";
-import React from "react";
+
 import Image from "next/image";
 import NotificationRecordItem from "./NotificationRecordItem";
-import { NotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordDto";
+import type { NotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordDto";
 
-type NotificationRecordListProps = {
+type Props = {
     notificationRecords: NotificationRecordDto[];
 };
 
-export default function NotificationRecordList(
-    props: NotificationRecordListProps
-) {
+export default function NotificationRecordList({ notificationRecords }: Props) {
+    if (notificationRecords.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center gap-4 py-12">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-background-200">
+                    <Image
+                        src="/icons/bell.svg"
+                        alt=""
+                        width={28}
+                        height={28}
+                        className="opacity-40"
+                    />
+                </div>
+                <div className="flex flex-col items-center gap-1 text-center">
+                    <span className="text-body font-medium text-font-200">
+                        알림이 없어요
+                    </span>
+                    <span className="text-caption text-font-300">
+                        새로운 알림이 생기면 여기에 표시됩니다.
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="flex w-full flex-col items-center justify-center gap-9">
-            <ol className="m-0 flex w-full list-none flex-col gap-6 p-0">
-                {props.notificationRecords.length === 0 ? (
-                    <li className="font-regular flex w-full flex-col items-center justify-center gap-4 text-center text-body text-font-200">
-                        <Image
-                            src="/images/empty.png"
-                            alt="새 알림 없음 이미지"
-                            width={200}
-                            height={200}
-                            className="-order-1"
-                            priority={true}
-                        />
-                        새로운 알림이 없어요.
-                    </li>
-                ) : (
-                    props.notificationRecords.map(
-                        (record: NotificationRecordDto) => (
-                            <li key={record.id}>
-                                <NotificationRecordItem
-                                    notificationRecordDto={record}
-                                />
-                            </li>
-                        )
-                    )
-                )}
-            </ol>
-        </div>
+        <ol className="flex w-full list-none flex-col gap-1.5 p-0">
+            {notificationRecords.map((record) => (
+                <li key={record.id}>
+                    <NotificationRecordItem notificationRecordDto={record} />
+                </li>
+            ))}
+        </ol>
     );
 }

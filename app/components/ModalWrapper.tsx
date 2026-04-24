@@ -9,6 +9,7 @@ type ModalWrapperProps = {
     onClose: () => void;
     children: ReactNode;
     labelId?: string;
+    dialogClassName?: string;
 };
 
 export default function ModalWrapper({
@@ -16,6 +17,7 @@ export default function ModalWrapper({
     onClose,
     children,
     labelId,
+    dialogClassName = "max-w-[700px]",
 }: ModalWrapperProps) {
     useEffect(() => {
         if (!isOpen) return;
@@ -32,20 +34,21 @@ export default function ModalWrapper({
         <div
             className="fixed inset-0 z-[10001] flex items-center justify-center bg-black/50 px-2 sm:px-4" // z-[10001]: LottieLoader(z-[9999]) 위에 표시되도록
             onClick={onClose}
+            onKeyDown={(e) => e.key === "Escape" && onClose()}
         >
             <FocusTrap
                 active={isOpen}
                 focusTrapOptions={{
+                    returnFocusOnDeactivate: true,
                     escapeDeactivates: false,
                     allowOutsideClick: true,
-                    returnFocusOnDeactivate: true,
                 }}
             >
                 <div
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby={labelId}
-                    className="max-h-[90vh] w-full max-w-[700px] overflow-y-auto rounded-xl bg-background-300 p-6 text-font-100 shadow-xl"
+                    className={`max-h-[90vh] w-full overflow-y-auto rounded-xl bg-background-300 p-6 text-font-100 shadow-xl ${dialogClassName}`}
                     onClick={(e) => e.stopPropagation()}
                 >
                     {children}
