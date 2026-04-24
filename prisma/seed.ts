@@ -155,15 +155,15 @@ const SCORE_POLICIES = [
 ];
 
 const NOTIFICATION_TYPES = [
-    { id: 1, name: "티어 승급", imageUrl: "/icons/Promote.ico" },
-    { id: 2, name: "티어 강등", imageUrl: "/icons/Relegation.ico" },
+    { id: 1, name: "티어 승급", imageUrl: "/icons/promotion.svg" },
+    { id: 2, name: "티어 강등", imageUrl: "/icons/relegation.svg" },
     {
         id: 3,
         name: "투기장 도전자 참여 완료",
-        imageUrl: "/icons/ArenaMatching.ico",
+        imageUrl: "/icons/recruitComplete.svg",
     },
-    { id: 4, name: "투기장 토론 시작", imageUrl: "/icons/AranaStart.ico" },
-    { id: 5, name: "투기장 투표 완료", imageUrl: "/icons/ArenaFinish.ico" },
+    { id: 4, name: "투기장 토론 시작", imageUrl: "/icons/debateStart.svg" },
+    { id: 5, name: "투기장 투표 완료", imageUrl: "/icons/voteComplete.svg" },
 ];
 
 async function main() {
