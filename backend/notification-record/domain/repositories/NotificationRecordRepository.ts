@@ -1,7 +1,7 @@
 import { NotificationRecord } from "@/prisma/generated";
 import { NotificationRecordFilter } from "./filters/NotificationRecordFilter";
 
-export type CreateNotificationRecordInput = Omit<NotificationRecord, "id">;
+export type CreateNotificationRecordInput = Omit<NotificationRecord, "id" | "isRead" | "createdAt">;
 
 export interface NotificationRecordRepository {
     count(filter: NotificationRecordFilter): Promise<number>;

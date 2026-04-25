@@ -12,6 +12,7 @@ export async function sendTierNotificationIfChanged(
     const afterTier = getTier(afterScore);
     if (beforeTier.label === afterTier.label) return;
 
+    // typeId: 1=티어 승급, 2=티어 강등 (notification_types 테이블과 동기화 필요)
     const typeId = afterScore > beforeScore ? 1 : 2;
     const description =
         typeId === 1

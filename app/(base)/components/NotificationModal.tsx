@@ -33,7 +33,7 @@ export default function NotificationModal() {
                             알림
                         </h2>
                         {unreadCount > 0 && (
-                            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-purple-200 px-1.5 text-[11px] font-bold text-white">
+                            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-purple-200 px-1.5 text-caption font-bold text-white">
                                 {unreadCount > 99 ? "99+" : unreadCount}
                             </span>
                         )}

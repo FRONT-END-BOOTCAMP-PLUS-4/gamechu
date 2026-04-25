@@ -19,8 +19,6 @@ export class CreateNotificationRecordUsecase {
             memberId: createNotificationRecordDto.memberId,
             typeId: createNotificationRecordDto.typeId,
             description: createNotificationRecordDto.description,
-            isRead: false,
-            createdAt: new Date(),
         };
 
         const newRecord = await this.notificationRecordRepository.save(record);

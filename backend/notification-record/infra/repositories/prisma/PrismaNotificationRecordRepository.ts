@@ -32,8 +32,8 @@ export class PrismaNotificationRecordRepository
                 createdAt.length > 0 && {
                     OR: createdAt.map((date) => ({
                         createdAt: {
-                            gte: new Date(date.setHours(0, 0, 0, 0)),
-                            lt: new Date(date.setHours(24, 0, 0, 0)),
+                            gte: new Date(new Date(date).setHours(0, 0, 0, 0)),
+                            lt: new Date(new Date(date).setHours(24, 0, 0, 0)),
                         },
                     })),
                 }),
@@ -87,9 +87,10 @@ export class PrismaNotificationRecordRepository
     }
 
     async update(record: NotificationRecord): Promise<NotificationRecord> {
+        const { id, memberId, typeId, description, isRead, createdAt } = record;
         const newData = await this.prisma.notificationRecord.update({
-            where: { id: record.id },
-            data: record,
+            where: { id },
+            data: { memberId, typeId, description, isRead, createdAt },
         });
 
         return newData;

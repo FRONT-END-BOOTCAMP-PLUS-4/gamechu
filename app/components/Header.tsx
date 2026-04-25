@@ -107,7 +107,7 @@ export default function Header() {
                 </nav>
 
                 {/* 오른쪽  */}
-                <div className="flex hidden flex-shrink-0 items-center space-x-8 sm:flex">
+                <div className="hidden flex-shrink-0 items-center space-x-8 sm:flex">
                     {isLoggedIn && (
                         <NotificationBellButton
                             onOpen={() => setMenuOpen(false)}

@@ -48,6 +48,7 @@ export default function ModalWrapper({
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby={labelId}
+                    onKeyDown={(e) => e.key === "Escape" && onClose()}
                     className={`max-h-[90vh] w-full overflow-y-auto rounded-xl bg-background-300 p-6 text-font-100 shadow-xl ${dialogClassName}`}
                     onClick={(e) => e.stopPropagation()}
                 >
