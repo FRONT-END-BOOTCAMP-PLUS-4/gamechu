@@ -29,10 +29,13 @@ export default function NotificationRecordItem({ notificationRecordDto }: Props)
     const queryClient = useQueryClient();
 
     const { mutate: markRead, isPending: isMarking } = useMutation({
-        mutationFn: () =>
-            fetch(`/api/member/notification-records/${notificationRecordDto.id}`, {
-                method: "PATCH",
-            }),
+        mutationFn: async () => {
+            const res = await fetch(
+                `/api/member/notification-records/${notificationRecordDto.id}`,
+                { method: "PATCH" }
+            );
+            if (!res.ok) throw new Error((await res.json()).message ?? "요청 실패");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.notifications() });
             queryClient.invalidateQueries({ queryKey: queryKeys.notificationCount() });
@@ -40,11 +43,13 @@ export default function NotificationRecordItem({ notificationRecordDto }: Props)
     });
 
     const { mutate: deleteNotification, isPending: isDeleting } = useMutation({
-        mutationFn: (id: number) =>
-            fetch(`/api/member/notification-records/${id}`, {
+        mutationFn: async (id: number) => {
+            const res = await fetch(`/api/member/notification-records/${id}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
-            }),
+            });
+            if (!res.ok) throw new Error((await res.json()).message ?? "요청 실패");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.notifications() });
             queryClient.invalidateQueries({ queryKey: queryKeys.notificationCount() });

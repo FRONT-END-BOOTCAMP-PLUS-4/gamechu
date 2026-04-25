@@ -36,7 +36,7 @@ export async function PATCH(_req: Request, { params }: RequestParams) {
         if (record.memberId !== memberId) return errorResponse("권한이 없습니다.", 403);
 
         const usecase = new MarkNotificationReadUsecase(repository);
-        await usecase.execute(v.data);
+        await usecase.execute(record);
 
         return NextResponse.json({ message: "읽음 처리 완료" });
     } catch (error: unknown) {

@@ -182,6 +182,7 @@ async function transitionArena(
                     notificationRepo
                 );
 
+                // typeId: 3=도전자 참가, 4=토론 시작, 5=투표 종료 (notification_types 테이블과 동기화 필요)
                 if (newStatus === 3) {
                     const description = `'${current.title}' 투기장의 토론이 시작되었습니다.`;
                     await createNotification.execute(
