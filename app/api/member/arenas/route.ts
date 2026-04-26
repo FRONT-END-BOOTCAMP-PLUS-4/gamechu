@@ -1,16 +1,10 @@
-import { CreateArenaUsecase } from "@/backend/arena/application/usecase/CreateArenaUsecase";
-import { CreateArenaDto } from "@/backend/arena/application/usecase/dto/CreateArenaDto";
 import { CreateArenaSchema } from "@/backend/arena/application/usecase/dto/CreateArenaDto";
-import { ArenaRepository } from "@/backend/arena/domain/repositories/ArenaRepository";
-import { PrismaArenaRepository } from "@/backend/arena/infra/repositories/prisma/PrismaArenaRepository";
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
-import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
-import { CreateScoreRecordDto } from "@/backend/score-record/application/usecase/dto/CreateScoreRecordDto";
-import { Arena } from "@/prisma/generated";
 import { getAuthUserId } from "@/utils/GetAuthUserId.server";
 import { validate } from "@/utils/Validation";
 import { NextResponse } from "next/server";
 import logger from "@/lib/Logger";
+import { prisma } from "@/lib/Prisma";
 
 export async function POST(request: Request) {
     const memberId: string | null = await getAuthUserId();
@@ -48,29 +42,27 @@ export async function POST(request: Request) {
             );
         }
 
-        // execute usecase
-        const createArenaDto: CreateArenaDto = new CreateArenaDto(
-            memberId,
-            validated.data.title,
-            validated.data.description,
-            new Date(validated.data.startDate)
-        );
-        const arenaRepository: ArenaRepository = new PrismaArenaRepository();
-        const createArenaUsecase: CreateArenaUsecase = new CreateArenaUsecase(
-            arenaRepository
-        );
-        const newArena: Arena =
-            await createArenaUsecase.execute(createArenaDto);
-
-        // TODO: 아레나 생성·점수 차감·기록 생성을 prisma.$transaction으로 묶어 원자성 보장 필요
-        // 현재는 순차 실행이므로 중간 단계 실패 시 데이터 불일치가 발생할 수 있음
-        // ref: https://github.com/FRONT-END-BOOTCAMP-PLUS-4/gamechu/issues/307
-        await memberRepository.incrementScore(memberId, -100);
-
-        const scoreRecordRepository = new PrismaScoreRecordRepository();
-        await scoreRecordRepository.createRecord(
-            new CreateScoreRecordDto(memberId, 4, -100)
-        );
+        // 아레나 생성·점수 차감·기록 생성을 트랜잭션으로 원자적으로 처리
+        const newArena = await prisma.$transaction(async (tx) => {
+            const arena = await tx.arena.create({
+                data: {
+                    creatorId: memberId,
+                    challengerId: null,
+                    title: validated.data.title,
+                    description: validated.data.description,
+                    status: 1,
+                    startDate: new Date(validated.data.startDate),
+                },
+            });
+            await tx.member.update({
+                where: { id: memberId },
+                data: { score: { decrement: 100 } },
+            });
+            await tx.scoreRecord.create({
+                data: { memberId, policyId: 4, actualScore: -100 },
+            });
+            return arena;
+        });
 
         return NextResponse.json(newArena, { status: 201 });
     } catch (error: unknown) {
