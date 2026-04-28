@@ -1,4 +1,5 @@
 import { DeleteNotificationRecordUsecase } from "@/backend/notification-record/application/usecase/DeleteNotificationRecordUsecase";
+import { MarkNotificationReadUsecase } from "@/backend/notification-record/application/usecase/MarkNotificationReadUsecase";
 import { NotificationRecordRepository } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
 import { PrismaNotificationRecordRepository } from "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository";
 import { NotificationRecord } from "@/prisma/generated";
@@ -13,6 +14,37 @@ type RequestParams = {
         id: string;
     }>;
 };
+
+export async function PATCH(_req: Request, { params }: RequestParams) {
+    const memberId = await getAuthUserId();
+    const log = logger.child({
+        route: "/api/member/notification-records/[id]",
+        method: "PATCH",
+    });
+
+    if (!memberId) return errorResponse("알림 읽음 처리 권한이 없습니다.", 401);
+
+    try {
+        const { id: idStr } = await params;
+        const v = validate(IdSchema, idStr);
+        if (!v.success) return v.response;
+
+        const repository: NotificationRecordRepository =
+            new PrismaNotificationRecordRepository();
+        const record: NotificationRecord | null = await repository.findById(v.data);
+        if (!record) return errorResponse("알림을 찾을 수 없습니다.", 404);
+        if (record.memberId !== memberId) return errorResponse("권한이 없습니다.", 403);
+
+        const usecase = new MarkNotificationReadUsecase(repository);
+        await usecase.execute(record);
+
+        return NextResponse.json({ message: "읽음 처리 완료" });
+    } catch (error: unknown) {
+        log.error({ userId: memberId, err: error }, "알림 읽음 처리 실패");
+        const message = error instanceof Error ? error.message : "알 수 없는 오류 발생";
+        return errorResponse(message, 500);
+    }
+}
 
 export async function DELETE(request: Request, { params }: RequestParams) {
     const memberId: string | null = await getAuthUserId();

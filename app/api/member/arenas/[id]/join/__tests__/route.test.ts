@@ -28,7 +28,11 @@ vi.mock(
         PrismaMemberRepository: vi.fn(function (this: Record<string, unknown>) {
             this.findById = vi
                 .fn()
-                .mockResolvedValue({ id: "user-id", score: 200 });
+                .mockResolvedValue({
+                    id: "user-id",
+                    score: 200,
+                    nickname: "테스터",
+                });
         }),
     })
 );
@@ -52,6 +56,33 @@ vi.mock("@/backend/arena/application/usecase/UpdateArenaStatusUsecase", () => ({
 
 vi.mock("@/lib/ArenaTimerRecovery", () => ({
     scheduleArenaTransitions: vi.fn(),
+}));
+
+vi.mock(
+    "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository",
+    () => ({
+        PrismaNotificationRecordRepository: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.save = vi.fn().mockResolvedValue(undefined);
+            this.count = vi.fn().mockResolvedValue(0);
+        }),
+    })
+);
+
+vi.mock(
+    "@/backend/notification-record/application/usecase/CreateNotificationRecordUsecase",
+    () => ({
+        CreateNotificationRecordUsecase: vi.fn(function (
+            this: Record<string, unknown>
+        ) {
+            this.execute = vi.fn().mockResolvedValue(undefined);
+        }),
+    })
+);
+
+vi.mock("@/lib/TierNotification", () => ({
+    sendTierNotificationIfChanged: vi.fn().mockResolvedValue(undefined),
 }));
 
 import { POST } from "../route";

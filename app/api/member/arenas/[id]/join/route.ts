@@ -10,6 +10,10 @@ import { ApplyArenaScoreUsecase } from "@/backend/score-policy/application/useca
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/repositories/prisma/PrismaScoreRecordRepository";
 import { scheduleArenaTransitions } from "@/lib/ArenaTimerRecovery";
+import { sendTierNotificationIfChanged } from "@/lib/TierNotification";
+import { PrismaNotificationRecordRepository } from "@/backend/notification-record/infra/repositories/prisma/PrismaNotificationRecordRepository";
+import { CreateNotificationRecordUsecase } from "@/backend/notification-record/application/usecase/CreateNotificationRecordUsecase";
+import { CreateNotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/CreateNotificationRecordDto";
 import logger from "@/lib/Logger";
 
 type RequestParams = {
@@ -61,6 +65,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
         );
 
         // challengerId comes from session — not from the request body
+        const beforeScore = member.score;
         await updateArenaStatusUsecase.execute(
             new UpdateArenaDetailDto(arenaId, 2, memberId)
         );
@@ -69,6 +74,31 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
         const updatedArena = await arenaRepo.findById(arenaId);
         if (updatedArena) {
             scheduleArenaTransitions(updatedArena);
+        }
+
+        // Notifications are non-critical — failure must not break the join response
+        try {
+            const notificationRepo = new PrismaNotificationRecordRepository();
+            const createNotification = new CreateNotificationRecordUsecase(
+                notificationRepo
+            );
+            await createNotification.execute(
+                new CreateNotificationRecordDto(
+                    arena.creatorId,
+                    3,
+                    `${member.nickname}이(가) 투기장에 참여했습니다.`
+                )
+            );
+            const updatedMember = await memberRepo.findById(memberId);
+            if (updatedMember) {
+                await sendTierNotificationIfChanged(
+                    memberId,
+                    beforeScore,
+                    updatedMember.score
+                );
+            }
+        } catch (notificationErr) {
+            log.warn({ err: notificationErr }, "참여 알림 생성 실패");
         }
 
         return NextResponse.json({ message: "참가 완료" }, { status: 200 });

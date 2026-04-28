@@ -5,6 +5,7 @@ import { PrismaScoreRecordRepository } from "@/backend/score-record/infra/reposi
 import { PrismaMemberRepository } from "@/backend/member/infra/repositories/prisma/PrismaMemberRepository";
 import { ScorePolicy } from "@/backend/score-policy/domain/ScorePolicy";
 import { errorResponse } from "@/utils/ApiResponse";
+import { sendTierNotificationIfChanged } from "@/lib/TierNotification";
 import logger from "@/lib/Logger";
 
 export async function POST() {
@@ -17,6 +18,7 @@ export async function POST() {
 
         const memberRepo = new PrismaMemberRepository();
         const lastAttendedDate = await memberRepo.getLastAttendedDate(memberId);
+        const memberBefore = await memberRepo.findById(memberId);
 
         const usecase = new ApplyAttendanceScoreUsecase(
             new ScorePolicy(),
@@ -25,6 +27,24 @@ export async function POST() {
         );
 
         await usecase.execute({ memberId, lastAttendedDate });
+
+        try {
+            if (memberBefore) {
+                const memberAfter = await memberRepo.findById(memberId);
+                if (memberAfter) {
+                    await sendTierNotificationIfChanged(
+                        memberId,
+                        memberBefore.score,
+                        memberAfter.score
+                    );
+                }
+            }
+        } catch (notificationErr) {
+            log.warn(
+                { userId: memberId, err: notificationErr },
+                "티어 알림 생성 실패"
+            );
+        }
 
         let attendedDateStr: string | null = null;
         if (lastAttendedDate) {

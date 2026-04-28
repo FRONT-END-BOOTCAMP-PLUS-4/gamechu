@@ -2,7 +2,6 @@ import { NotificationTypeRepository } from "@/backend/notification-type/domain/r
 import { NotificationRecordRepository } from "@/backend/notification-record/domain/repositories/NotificationRecordRepository";
 import { GetNotificationRecordDto } from "./dto/GetNotificationRecordDto";
 import { NotificationRecordFilter } from "@/backend/notification-record/domain/repositories/filters/NotificationRecordFilter";
-import { NotificationRecord, NotificationType } from "@/prisma/generated";
 import { NotificationRecordListDto } from "./dto/NotificationRecordListDto";
 import { NotificationRecordDto } from "./dto/NotificationRecordDto";
 
@@ -33,35 +32,37 @@ export class GetNotificationRecordUsecase {
             memberId,
             null,
             null,
+            null,
             "createdAt",
             false,
             offset,
             limit
         );
 
-        const records: NotificationRecord[] =
-            await this.notificationRecordRepository.findAll(filter);
-        const recordDto: NotificationRecordDto[] = await Promise.all(
-            records.map(async (record) => {
-                const type: NotificationType | null =
-                    await this.notificationTypeRepository.findById(
-                        record.typeId
-                    );
+        const [records, totalCount, allTypes] = await Promise.all([
+            this.notificationRecordRepository.findAll(filter),
+            this.notificationRecordRepository.count(filter),
+            this.notificationTypeRepository.findAll(),
+        ]);
 
-                return {
-                    id: record.id,
-                    memberId: record.memberId,
-                    typeId: record.typeId,
-                    description: record.description,
-                    createdAt: record.createdAt,
-                    typeName: type?.name || "기타",
-                    typeImageUrl:
-                        type?.imageUrl || "@/public/icons/defaultTypeImage.ico",
-                };
-            })
+        const typeMap = new Map(allTypes.map((t) => [t.id, t]));
+
+        const recordDto: NotificationRecordDto[] = records.map(
+            (record) => {
+                const type = typeMap.get(record.typeId);
+                return new NotificationRecordDto(
+                    record.id,
+                    record.memberId,
+                    record.typeId,
+                    record.description,
+                    record.isRead,
+                    record.createdAt,
+                    type?.name ?? "기타",
+                    type?.imageUrl ?? "@/public/icons/defaultTypeImage.ico"
+                );
+            }
         );
-        const totalCount: number =
-            await this.notificationRecordRepository.count(filter);
+
         const startPage =
             Math.floor((currentPage - 1) / pageSize) * pageSize + 1;
         const endPage = Math.ceil(totalCount / pageSize);
@@ -69,14 +70,12 @@ export class GetNotificationRecordUsecase {
             (pageNumber) => pageNumber <= endPage
         );
 
-        const recordListDto: NotificationRecordListDto = {
-            records: recordDto,
+        return new NotificationRecordListDto(
+            recordDto,
             totalCount,
             currentPage,
             pages,
-            endPage,
-        };
-
-        return recordListDto;
+            endPage
+        );
     }
 }

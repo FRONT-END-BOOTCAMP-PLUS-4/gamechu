@@ -1,87 +1,118 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/utils/TailwindUtil";
 import { queryKeys } from "@/lib/QueryKeys";
+import type { NotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordDto";
 
-import { NotificationRecordDto } from "@/backend/notification-record/application/usecase/dto/NotificationRecordDto";
-
-type NotificationRecordItemProps = {
+type Props = {
     notificationRecordDto: NotificationRecordDto;
 };
 
-export default function NotificationRecordItem(
-    props: NotificationRecordItemProps
-) {
-    const queryClient = useQueryClient();
-    const notificationRecordDto: NotificationRecordDto =
-        props.notificationRecordDto;
-    const createdAt = new Date(notificationRecordDto.createdAt);
-    const pad = (str: string) => str.toString().padStart(2, "0");
-    const formattedDate = `${createdAt.getFullYear()}-${pad(
-        String(createdAt.getMonth() + 1)
-    )}-${pad(String(createdAt.getDate()))} ${pad(
-        String(createdAt.getHours())
-    )}:${pad(String(createdAt.getMinutes()))}`;
+function getRelativeTime(date: Date): string {
+    const diff = Date.now() - date.getTime();
+    const minutes = Math.floor(diff / 60_000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
 
-    const { mutate: deleteNotification } = useMutation({
-        mutationFn: (id: number) =>
-            fetch(`/api/member/notification-records/${id}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-            }),
+    if (minutes < 1) return "방금";
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    if (days < 7) return `${days}일 전`;
+
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+export default function NotificationRecordItem({ notificationRecordDto }: Props) {
+    const queryClient = useQueryClient();
+
+    const { mutate: markRead, isPending: isMarking } = useMutation({
+        mutationFn: async () => {
+            const res = await fetch(
+                `/api/member/notification-records/${notificationRecordDto.id}`,
+                { method: "PATCH" }
+            );
+            if (!res.ok) throw new Error((await res.json()).message ?? "요청 실패");
+        },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: queryKeys.notifications(1),
-            });
+            queryClient.invalidateQueries({ queryKey: queryKeys.notifications() });
+            queryClient.invalidateQueries({ queryKey: queryKeys.notificationCount() });
         },
     });
 
+    const { mutate: deleteNotification, isPending: isDeleting } = useMutation({
+        mutationFn: async (id: number) => {
+            const res = await fetch(`/api/member/notification-records/${id}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+            });
+            if (!res.ok) throw new Error((await res.json()).message ?? "요청 실패");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: queryKeys.notifications() });
+            queryClient.invalidateQueries({ queryKey: queryKeys.notificationCount() });
+        },
+    });
+
+    const isPending = isMarking || isDeleting;
+    const createdAt = new Date(notificationRecordDto.createdAt);
+
     return (
-        <div className="relative w-full rounded-lg bg-background-300 p-2.5 transition-colors hover:outline hover:outline-1 hover:outline-primary-purple-200">
-            {/* 메시지와 우측 정보 영역을 flex로 정렬 */}
-            <div className="flex items-start justify-between gap-4">
-                {/* 왼쪽: 아이콘 + 메시지 */}
-                <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 min-h-[24px] w-6 min-w-[24px]">
-                        <Image
-                            src={notificationRecordDto.typeImageUrl}
-                            alt="알림 아이콘"
-                            width={24}
-                            height={24}
-                            className="object-contain"
-                        />
-                    </div>
-
-                    <div className="flex flex-col gap-1 text-font-100">
-                        <span className="text-body font-semibold">
-                            {notificationRecordDto.typeName}
-                        </span>
-                        <span className="font-small text-caption text-font-200">
-                            {notificationRecordDto.description}
-                        </span>
-                    </div>
-                </div>
-
-                {/* 오른쪽: 날짜 + 삭제 버튼 (중앙 정렬) */}
-                <div className="flex min-w-max flex-col items-end justify-center gap-2 text-caption text-font-200">
-                    <span>{formattedDate}</span>
-                    <button
-                        className="hover:text-white"
-                        onClick={() =>
-                            deleteNotification(notificationRecordDto.id)
-                        }
-                    >
-                        <Image
-                            src="/icons/delete.svg"
-                            alt="삭제"
-                            width={24}
-                            height={24}
-                        />
-                    </button>
-                </div>
+        <div
+            className={cn(
+                "relative flex items-start gap-3 rounded-lg border-l-2 bg-background-200 p-3 transition-opacity",
+                notificationRecordDto.isRead
+                    ? "border-transparent opacity-60"
+                    : "border-primary-purple-200",
+                !notificationRecordDto.isRead &&
+                    !isPending &&
+                    "cursor-pointer hover:bg-background-200/80",
+                isPending && "pointer-events-none opacity-40"
+            )}
+            onClick={() => {
+                if (!notificationRecordDto.isRead && !isPending) markRead();
+            }}
+        >
+            <div className="mt-0.5 h-8 w-8 shrink-0 overflow-hidden rounded-full bg-background-300 p-1.5">
+                <Image
+                    src={notificationRecordDto.typeImageUrl}
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="h-full w-full object-contain"
+                />
             </div>
+
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <div className="flex items-center gap-2">
+                    <span className="text-button font-semibold text-font-100">
+                        {notificationRecordDto.typeName}
+                    </span>
+                    {!notificationRecordDto.isRead && (
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary-purple-200" />
+                    )}
+                </div>
+                <span className="truncate text-caption text-font-200">
+                    {notificationRecordDto.description}
+                </span>
+                <span className="mt-0.5 text-caption text-font-300">
+                    {getRelativeTime(createdAt)}
+                </span>
+            </div>
+
+            <button
+                className="shrink-0 rounded p-1 text-font-300 transition-colors hover:bg-white/10 hover:text-font-100 disabled:opacity-40"
+                aria-label="알림 삭제"
+                disabled={isPending}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    deleteNotification(notificationRecordDto.id);
+                }}
+            >
+                <Image src="/icons/delete.svg" alt="" width={16} height={16} />
+            </button>
         </div>
     );
 }
