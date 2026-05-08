@@ -82,6 +82,7 @@ export async function POST(req: NextRequest, { params }: RequestParams) {
             const createNotification = new CreateNotificationRecordUsecase(
                 notificationRepo
             );
+            // typeId: 3=도전자 참가 (notification_types 테이블과 동기화 필요)
             await createNotification.execute(
                 new CreateNotificationRecordDto(
                     arena.creatorId,
