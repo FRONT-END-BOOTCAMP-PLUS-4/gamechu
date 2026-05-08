@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import ModalWrapper from "@/app/components/ModalWrapper";
 import useModalStore from "@/stores/ModalStore";
@@ -12,6 +12,10 @@ import { useNotificationCount } from "@/hooks/useNotificationCount";
 export default function NotificationModal() {
     const { isOpen, closeModal } = useModalStore();
     const [currentPage, setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        if (!isOpen) setCurrentPage(1);
+    }, [isOpen]);
     const { data, isLoading } = useNotifications(currentPage);
     const { data: countData } = useNotificationCount();
     const unreadCount = countData?.count ?? 0;

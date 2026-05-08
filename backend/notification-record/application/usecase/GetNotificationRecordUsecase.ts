@@ -21,11 +21,11 @@ export class GetNotificationRecordUsecase {
         getNotificationRecordDto: GetNotificationRecordDto
     ): Promise<NotificationRecordListDto> {
         // page setup
-        const pageSize: number = 5;
+        const PAGE_SIZE = 5;
+        const PAGE_WINDOW = 5;
         const currentPage: number = getNotificationRecordDto.currentPage || 1;
         const memberId: string = getNotificationRecordDto.memberId;
-        const offset: number = (currentPage - 1) * pageSize;
-        const limit: number = pageSize;
+        const offset: number = (currentPage - 1) * PAGE_SIZE;
 
         // data query
         const filter = new NotificationRecordFilter(
@@ -36,7 +36,7 @@ export class GetNotificationRecordUsecase {
             "createdAt",
             false,
             offset,
-            limit
+            PAGE_SIZE
         );
 
         const [records, totalCount, allTypes] = await Promise.all([
@@ -47,28 +47,27 @@ export class GetNotificationRecordUsecase {
 
         const typeMap = new Map(allTypes.map((t) => [t.id, t]));
 
-        const recordDto: NotificationRecordDto[] = records.map(
-            (record) => {
-                const type = typeMap.get(record.typeId);
-                return new NotificationRecordDto(
-                    record.id,
-                    record.memberId,
-                    record.typeId,
-                    record.description,
-                    record.isRead,
-                    record.createdAt,
-                    type?.name ?? "기타",
-                    type?.imageUrl ?? "@/public/icons/defaultTypeImage.ico"
-                );
-            }
-        );
+        const recordDto: NotificationRecordDto[] = records.map((record) => {
+            const type = typeMap.get(record.typeId);
+            return new NotificationRecordDto(
+                record.id,
+                record.memberId,
+                record.typeId,
+                record.description,
+                record.isRead,
+                record.createdAt,
+                type?.name ?? "기타",
+                type?.imageUrl ?? "@/public/icons/defaultTypeImage.ico"
+            );
+        });
 
         const startPage =
-            Math.floor((currentPage - 1) / pageSize) * pageSize + 1;
-        const endPage = Math.ceil(totalCount / pageSize);
-        const pages = Array.from({ length: 5 }, (_, i) => i + startPage).filter(
-            (pageNumber) => pageNumber <= endPage
-        );
+            Math.floor((currentPage - 1) / PAGE_WINDOW) * PAGE_WINDOW + 1;
+        const endPage = Math.ceil(totalCount / PAGE_SIZE);
+        const pages = Array.from(
+            { length: PAGE_WINDOW },
+            (_, i) => i + startPage
+        ).filter((pageNumber) => pageNumber <= endPage);
 
         return new NotificationRecordListDto(
             recordDto,
